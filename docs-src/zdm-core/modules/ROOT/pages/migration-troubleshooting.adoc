@@ -1,0 +1,52 @@
+= Troubleshooting
+
+See the following troubleshooting advice collected from DataStax and open-source community experts.
+
+[NOTE]
+====
+**Team**: we'll create this content during August-September 2022 based on information from João Reis and others on the extended ZDM teams (Eng, PM, Support, Field/Services, ...).
+====
+
+== Title of issue 1
+
+User action: (How to resolve, steps to try, background info)
+
+== Title of issue 2
+
+User action: (How to resolve, steps to try, background info)
+
+== Title of issue 3
+
+User action: (How to resolve, steps to try, background info)
+
+== Title of issue 4
+
+User action: (How to resolve, steps to try, background info)
+
+== Title of issue 5
+
+User action: (How to resolve, steps to try, background info)
+
+== Title of issue 6
+
+User action: (How to resolve, steps to try, background info)
+
+== Title of issue 7
+
+User action: (How to resolve, steps to try, background info)
+
+== Title of issue 8
+
+User action: (How to resolve, steps to try, background info)
+
+== Title of issue 9
+
+User action: (How to resolve, steps to try, background info)
+
+== Title of issue 10
+
+User action: (How to resolve, steps to try, background info)
+
+== What's next? 
+
+See the xref:migration-release-notes.adoc[Migration Release Notes].

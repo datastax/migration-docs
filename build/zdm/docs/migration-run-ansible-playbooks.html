@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Setup and run Ansible playbooks to install ZDM Proxy and Monitoring :: DataStax Zero Downtime Migration Documentation</title>
+    <link rel="prev" href="migration-create-target.html">
+    <link rel="next" href="migration-manage-proxy-instances.html">
+    <meta name="generator" content="Antora 3.0.3">
+    <link rel="stylesheet" href="../assets/css/site.css">
+
+<meta class="swiftype" name="version" data-type="string" content="doc" />
+<meta class="swiftype" name="book" data-type="string" content="DataStax Astra DB Documentation" />
+<meta class="swiftype" name="doc-name" data-type="string" content="astra" />
+<meta class="swiftype" name="site-priority-for-Corporate" data-type="integer" content="60" />
+
+    <link rel="icon" href="https://www.datastax.com/favicon.ico" type="image/x-icon">
+  </head>
+  <body class="article">
+<script>
+  !function(){var analytics=window.analytics=window.analytics||[];if(!analytics.initialize)if(analytics.invoked)window.console&&console.error&&console.error("Segment snippet included twice.");else{analytics.invoked=!0;analytics.methods=["trackSubmit","trackClick","trackLink","trackForm","pageview","identify","reset","group","track","ready","alias","debug","page","once","off","on","addSourceMiddleware","addIntegrationMiddleware","setAnonymousId","addDestinationMiddleware"];analytics.factory=function(e){return function(){var t=Array.prototype.slice.call(arguments);t.unshift(e);analytics.push(t);return analytics}};for(var e=0;e<analytics.methods.length;e++){var key=analytics.methods[e];analytics[key]=analytics.factory(key)}analytics.load=function(key,e){var t=document.createElement("script");t.type="text/javascript";t.async=!0;t.src="https://a.datastax.com/analytics.js/v1/" + key + "/analytics.min.js";var n=document.getElementsByTagName("script")[0];n.parentNode.insertBefore(t,n);analytics._loadOptions=e};analytics._writeKey="d24gQtyKIUu5mLdkp11xjfiXLhRqx0HH";;analytics.SNIPPET_VERSION="4.15.3";
+  analytics.load("d24gQtyKIUu5mLdkp11xjfiXLhRqx0HH");
+  analytics.page();
+  }}();
+</script>
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a href="/zdm">
+        <img height="56px" src="../assets/img/logo.svg"/>
+      </a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-end__group">
+          <form id="alg-search-form" class="ds-search-form" action="https://www.datastax.com/search" target="_blank" method="GET">
+                <div>
+                    <input id="alg-search-input" class="ds-datastax-search-input" type="text" name="query" placeholder="Search docs"/>
+                    <button id="alg-search-button" class="ds-search-button" type="submit" style="display: none"></button>
+                    <input id="dataset" type="hidden" name="dataset" value="docs"/>
+                </div>
+          </form>
+          <a class="navbar-item" href="/en/landing_page/doc/landing_page/current.html">Docs</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="docs" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Zero Downtime Migration Documentation</a></h3>
+<ul class="nav-list">
+  <li class="nav-item toggler" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item toggler" data-depth="1">
+    <a class="nav-link" href="index.html">Migrating</a>
+    <button class="nav-item-toggle">
+      <svg width="14" height="9" viewBox="0 0 14 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 1L7 7L13 1" stroke="currentColor" stroke-width="2" />
+      </svg>
+    </button>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="migration-introduction.html">Introduction</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="migration-faqs.html">FAQs</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="migration-prepare-environment.html">Prepare existing clusters</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="migration-create-target.html">Create target environment for migration</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="2">
+    <a class="nav-link" href="migration-run-ansible-playbooks.html">Setup and run Ansible playbooks</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="migration-manage-proxy-instances.html">Manage proxy instances</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="migration-validate-data.html">Validate migrated data</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="migration-change-read-routing.html">Change read routing to Astra DB</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="migration-connect-apps.html">Connect clients directly to Astra DB</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="migration-troubleshooting.html">Troubleshooting</a>
+  </li>
+  <li class="nav-item" data-depth="2">
+    <a class="nav-link" href="migration-release-notes.html">Release Notes</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Zero Downtime Migration Documentation</span>
+    <span class="version">default</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <span class="title">Zero Downtime Migration Documentation</span>
+      <ul class="versions">
+        <li class="version is-current">
+          <a href="index.html">default</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Zero Downtime Migration Documentation</a></li>
+    <li><a href="index.html">Migrating</a></li>
+    <li><a href="migration-run-ansible-playbooks.html">Setup and run Ansible playbooks</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"></div>
+</div>
+  <div class="content">
+<article class="doc">
+<h1 class="page">Setup and run Ansible playbooks to install ZDM Proxy and Monitoring</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>This topic explains how to use ZDM-Proxy Automation to create a dedicated deployment of the ZDM Proxy and its companion monitoring stack. The script is a Golang (Go) utility that walks you through the entire configuration process, prompting you for values needed by the Ansible playbook with helpful embedded explanations and error handling. It&#8217;s migration made easy.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_introduction"><a class="anchor" href="#_introduction"></a><a class="link" href="#_introduction">Introduction</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The ZDM deployment automation includes <strong>Ansible</strong>, which deploys and configures the proxies and monitoring stack via playbooks. This step expects that the infrastructure has been provisioned already.</p>
+</div>
+<div class="paragraph">
+<p>Ansible is a suite of software tools that enables infrastructure as code. It is open source and the suite includes software provisioning, configuration management, and application deployment functionality.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_prerequisites"><a class="anchor" href="#_prerequisites"></a><a class="link" href="#_prerequisites">Prerequisites</a></h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Create your SSH key pair, which you&#8217;ll use to access the ZDM infrastructure.</p>
+</li>
+<li>
+<p>You must have already provisioned the ZDM infrastructure; which means you must have the server machines ready, and know their IP addresses.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>That&#8217;s it! You&#8217;ll indicate which server machine will serve as the Ansible control host. In this topic, we&#8217;ll use a jumphost. A jumphost is a server on a network used to access and manage devices in a separate security zone, and provides a controlled means of access between them. The jumphost can be, for example, an Ubuntu server machine. On whatever machine you decide, connect to it and run the Go utility that implements the ZDM Automation script.</p>
+</div>
+<div class="paragraph">
+<p>Let&#8217;s get started.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_create_an_ssh_key_pair_for_the_zdm_deployment"><a class="anchor" href="#_create_an_ssh_key_pair_for_the_zdm_deployment"></a><a class="link" href="#_create_an_ssh_key_pair_for_the_zdm_deployment">Create an SSH key pair for the ZDM deployment</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Create a dedicated ssh key pair in your ~/.ssh directory, to use for all instances in the ZDM deployment:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ssh-keygen -t rsa</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Currently we are using <code>cloudgate</code> in our naming convention. This handle may change to <code>zdm</code> in a documentation update.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>When prompted, specify as key path and name ~/.ssh/cloudgate-key-&lt;enterprise_name&gt;. This will result in two files:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-none hljs">cloudgate-key-&lt;enterprise_name&gt;
+cloudgate-key-&lt;enterprise_name&gt;.pub</code></pre>
+</div>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-important" title="Important"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Create this dedicated key pair for each enterprise&#8217;s deployment and ensure you name it according to the pattern shown above. For example, a valid private key name could be <code>cloudgate-key-zdmdemo</code>.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_proxy_deployment_setup_on_the_control_host"><a class="anchor" href="#_proxy_deployment_setup_on_the_control_host"></a><a class="link" href="#_proxy_deployment_setup_on_the_control_host">Proxy deployment setup on the control host</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The Ansible automation performs all the required operations to install and configure the proxy instances and their monitoring stack.</p>
+</div>
+<div class="paragraph">
+<p>The control host needs to be able to connect to all other instances of the Cloudgate deployment. For this reason, it needs to have the key pair required by those instances.</p>
+</div>
+<div class="paragraph">
+<p>The most important server at this point is the jumphost, which we&#8217;ll also use to serve as our Ansible control host. On that server, you can configure the cloudgate-automation/ansible/vars files, and then run the playbooks. This is where we&#8217;ll run the Ansible scripts so that we can provision all the cloudgate (ZDM) proxies.</p>
+</div>
+<div class="paragraph">
+<p>There&#8217;s also a third purpose of the jumphost. We&#8217;ll use this server as a monitoring instance, with Prometheus and Grafana, to get metrics on all these proxies. Having these tools set up is especially useful during migrations when you&#8217;re running large workloads.</p>
+</div>
+<div class="sect2">
+<h3 id="_add_ssh_keys_to_control_host"><a class="anchor" href="#_add_ssh_keys_to_control_host"></a><a class="link" href="#_add_ssh_keys_to_control_host">Add SSH keys to control host</a></h3>
+<div class="paragraph">
+<p>From your local machine, transfer (<code>scp</code>) the Cloudgate key pair that you created in a step above&#8201;&#8212;&#8201;both public and private key files&#8201;&#8212;&#8201;to the ~/.ssh directory on the control host. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">scp -i ~/.ssh/cloudgate-key-&lt;enterprise_name&gt; ~/.ssh/cloudgate-key-&lt;enterprise_name&gt;* ubuntu@&lt;control_host_address&gt;:/home/ubuntu/.ssh/</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now connect to the server that you intend to serve as the jumphost, specifying your private key.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ssh -F ~/.ssh/cloudgate_ssh_config jumphost</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also from your local machine, connect to the servers that comprise your Origin where Cassandra or DSE is running, and where the ZDM Proxy (cloudgate-proxy-&lt;n&gt; here) will run. Examples of separate logins:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ssh -F ~/.ssh/cloudgate-key-zdmdemo cloudgate-proxy-0
+
+ssh -F ~/.ssh/cloudgate-key-zdmdemo cloudgate-proxy-1
+
+ssh -F ~/.ssh/cloudgate-key-zdmdemo cloudgate-proxy-2</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_running_the_automations_go_utility"><a class="anchor" href="#_running_the_automations_go_utility"></a><a class="link" href="#_running_the_automations_go_utility">Running the Automation&#8217;s Go utility</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>After you run the Go utility on the Ansible control host machine, as described in this section, you will have a fully functional Docker container that enables you to run the Ansible playbooks and provision the ZDM proxies.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Login to the server machine you want to use as the Ansible control host.</p>
+</li>
+<li>
+<p>Run the Go utility provided by the ZDM project.  (TODO: where is the executable located?)</p>
+</li>
+<li>
+<p>For now (before executable is ready), <code>git clone</code> the GitHub repo, <a href="https://github.com/riptano/cloudgate-automation" class="bare">https://github.com/riptano/cloudgate-automation</a>.</p>
+</li>
+<li>
+<p><code>cd ~/zdm-ansible-container-init-utility/init-util</code></p>
+</li>
+<li>
+<p>Run the Go utility:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">go run main.go</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(TODO: this may change when this doc is updated with the executable location)</p>
+</div>
+<div class="paragraph">
+<p>The utility creates and initializes the Ansible Control Host container. You&#8217;re initially prompted for any existing configuration file - press ENTER if you&#8217;re using the utility for the first time.  Subsequent steps below assume this is our initial use of the Go utility.</p>
+</div>
+<div class="paragraph">
+<p>The resulting configuration file that the Go utility creates will be named <code>ansible_container_init_config</code> in your working directory. On subsequent runs of the Go utility, you can specify that config file.</p>
+</div>
+</li>
+<li>
+<p>Enter the path to, and name, of your SSH private key to access the proxy hosts. Example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">/home/ubuntu/cloudgate-key-zdm-demo/</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Enter the common prefix of the private IP addresses of the proxy hosts. Example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">172.18.*</code></pre>
+</div>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When you answer prompts from the Go utility, you have five attempts to enter valid parameters. You can always run the utility again, if necessary.</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</li>
+<li>
+<p>You&#8217;re asked if you have an existing Ansible inventory file. The Go utility will create one based on your answers to prompts, and we&#8217;ll assume this is your first time running the script. Enter <code>n</code>.</p>
+<div class="paragraph">
+<p>The created file will be named <code>cloud_inventory</code> in your working directory.</p>
+</div>
+</li>
+<li>
+<p>Next, indicate if this deployment is for local testing and evaluation (such as when you&#8217;re creating a demo or just experimenting with the automation). In this example, we&#8217;ll enter <code>n</code> because this scenario is for a production deployment.</p>
+</li>
+<li>
+<p>Now enter at least three proxy private IP addresses for the machines that will run the ZDM proxies that work with the migration steps, for a production deployment. (If we had indicated above that we&#8217;re doing local testing in dev, only one proxy would have been required.) Example values entered at the utility&#8217;s prompt, for production:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">172.18.10.137
+172.18.11.88
+172.18.12.191</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>+ To finish entering private IP addresses, simply press ENTER at the prompt.</p>
+</div>
+</li>
+<li>
+<p>Optionally, enter the private IP address of your Monitoring instance, which will use Prometheus data and Grafana to visualize the data. You can skip this step if you haven&#8217;t decided which machine to use for monitoring.</p>
+<div class="paragraph">
+<p>In this example, we&#8217;ll enter the same IP of the Ansible control host (the jumphost machine on which we&#8217;re running this Go utility). Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">172.18.100.128</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>At this point, the Go utility:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Has created the Ansible Inventory to the default file, <code>cloudgate_inventory</code>.</p>
+</li>
+<li>
+<p>Has written the ZDM-Proxy configuration to the default file, <code>ansible_container_init_config</code>.</p>
+</li>
+<li>
+<p>Presents a summary of the results thus far, and prompts you to Continue. Example:</p>
+<div class="paragraph">
+<p><span class="image"><img src="_images/zdm-go-utility-results2.png" alt="Go Utility Inventory Results are displayed in the terminal"></span></p>
+</div>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>If you agree, enter <code>Y</code> to proceed.</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>The automation now:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Creates and downloads the image of the Ansible Docker container for you.</p>
+</li>
+<li>
+<p>Runs the proxy configuration within the container.</p>
+</li>
+<li>
+<p>Displays a message. Example:</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/zdm-go-utility-success.png" alt="Ansible Docker container success messages"></span></p>
+</div>
+<div class="paragraph">
+<p>Now you can run the created and configured Ansible playbooks. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">docker exec -it ach-test-container bash</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You&#8217;re connected to the container, at a prompt such as this example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ubuntu@52772568517c:~$</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You can <code>ls</code> to see the resources in the Docker container. The most important resource is the <code>cloudgate-automation</code>.</p>
+</div>
+<div class="paragraph">
+<p>Now, <code>cd</code> into <code>cloudgate-automation</code> and <code>ls</code> to see its content. From there, cd to the ansible subdirectory and <code>ls</code>. Example:</p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="_images/zdm-ansible-container-ls.png" alt="zdm ansible container ls"></span></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_edit_proxy_core_config_input_yml"><a class="anchor" href="#_edit_proxy_core_config_input_yml"></a><a class="link" href="#_edit_proxy_core_config_input_yml">Edit proxy_core_config_input.yml</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The next step is to edit the <code>vars/proxy_core_config_input.yml</code> file in the Docker container. You&#8217;ll want to enter your Cassandra/DSE username, password, and other values.</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>cd to ~/cloudgate-automation/ansible/vars</p>
+</li>
+<li>
+<p>Edit <code>proxy_core_config_input.yml</code></p>
+</li>
+<li>
+<p>Uncomment and enter values for the following Origin settings of your Cassandra or DSE database:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>origin_cassandra_username</code></p>
+</li>
+<li>
+<p><code>origin_cassandra_password</code></p>
+</li>
+<li>
+<p><code>origin_cassandra_contact_points</code></p>
+</li>
+<li>
+<p><code>origin_cassandra_port</code></p>
+</li>
+<li>
+<p>(TODO: brief explanation of <code>origin_cassandra_contact_points</code> here - where to get the IPs.)</p>
+<div class="paragraph">
+<p>Example of a completed proxy_core_config_input.yml file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yml hljs" data-lang="yml">---
+### Origin configuration
+
+# Origin credentials (always required)
+origin_cassandra_username: cassandra
+origin_cassandra_password: cassandra
+
+# Set the following parameter only if Origin is an Astra cluster and you already have its secure connect bundle.
+#origin_secure_connect_bundle_path_name: &lt;path and filename of the secure connect bundle zip file for Origin &gt;
+
+# Set the following two parameters only if Origin is an Astra cluster and you would like the automation to download the secure connect bundle automatically
+#origin_astra_db_id: &lt;cluster id of the Origin Astra cluster&gt;
+#origin_astra_token: &lt;token of the same role as above &gt;
+
+# Set the following two parameters only if Origin is a self-managed, non-Astra cluster
+origin_cassandra_contact_points: 191.100.20.85,191.100.20.61,191.100.20.93
+origin_cassandra_port: 9042
+
+### Target configuration
+
+# Target credentials (always required)
+target_cassandra_username: dqhgDYKvtEGNDDFyrgzrNndY
+target_cassandra_password: Yc+U_2.gu,9woy0wSdBge6l1txjYtLwyD_mdQ.ASf8y+NNgRAy004Z_1DRNFEjgchDayKwXZSxeKu_n-ZcAiBGOXt99o8HD8uTPe5rER4bvYP1EAtpkk9JpAZGt+CCn5
+
+# Set the following parameter only if Target is an Astra cluster and you already have its secure connect bundle.
+target_secure_connect_bundle_path_name: /home/ubuntu/secureBundle.zip
+
+# Set the following two parameters only if Target is an Astra cluster and you would like the automation to download the secure connect bundle automatically
+#target_astra_db_id: &lt;cluster id of the Target Astra cluster&gt;
+#target_astra_token: &lt;token of the same role as above &gt;
+
+# Set the following two parameters only if Target is a self-managed, non-Astra cluster
+#target_cassandra_contact_points: &lt;comma-separated list of private IP addresses, no spaces&gt;
+#target_cassandra_port: &lt;typically 9042&gt;
+
+# Destination for all read requests. Set to false to send all reads to Origin, or true to send all reads to Target
+forward_reads_to_target: false</code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</li>
+<li>
+<p>Copy the <code>proxy_core_config_input.yml</code> file from ~/cloudgate-automation/ansible/vars up a level, to ~/cloudgate-automation/ansible.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_use_ansible_to_run_the_playbook"><a class="anchor" href="#_use_ansible_to_run_the_playbook"></a><a class="link" href="#_use_ansible_to_run_the_playbook">Use Ansible to run the playbook</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Now you can run the playbook that you&#8217;ve configured above.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ansible-playbook cloudgate_proxy_playbook.yml -i cloudgate_inventory</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_indications_of_success_on_origin_and_target_clusters"><a class="anchor" href="#_indications_of_success_on_origin_and_target_clusters"></a><a class="link" href="#_indications_of_success_on_origin_and_target_clusters">Indications of success on Origin and Target clusters</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>The playbook results in bifurcated environments where dual writes are subsequently made to both the origin database (such as Cassandra or DSE) and the target database (such as Astra DB). Importantly during this part of the migration, that means no loss of service to your users, and zero downtime.</p>
+</div>
+<div class="paragraph">
+<p>How can you tell if the playbook deployment is working properly?</p>
+</div>
+<div class="paragraph">
+<p>After running the following command, as shown in the previous section:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ansible-playbook cloudgate_proxy_playbook.yml -i cloudgate_inventory</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Now <code>ssh</code> into one of the servers where one of the deployed ZDM Proxy instances is running. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ssh -F ~/.ssh/cloudgate_ssh_config cloudgate-proxy-0</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">   .
+   .
+   .
+ubuntu@ip-172-18-10-111:~$ sudo docker logs cloudgate-proxy-container
+   .
+   .
+   .
+time="2022-07-27T22:21:42Z" level=info msg="Initialized origin control connection. Cluster Name: OriginCluster, Hosts: map[3025c4ad-7d6a-4398-b56e-87d33509581d:Host{addr: 191.100.20.61,
+port: 9042, host_id: 3025c4ad7d6a4398b56e87d33509581d} 7a6293f7-5cc6-4b37-9952-88a4b15d59f8:Host{addr: 191.100.20.85, port: 9042, host_id: 7a6293f75cc64b37995288a4b15d59f8} 997856cd-0406-45d1-8127-4598508487ed:Host{addr: 191.100.20.93, port: 9042, host_id: 997856cd040645d181274598508487ed}], Assigned Hosts: [Host{addr: 191.100.20.61, port: 9042, host_id: 3025c4ad7d6a4398b56e87d33509581d}]."
+
+time="2022-07-27T22:21:42Z" level=info msg="Initialized target control connection. Cluster Name: cndb, Hosts: map[69732713-3945-4cfe-a5ee-0a84c7377eaa:Host{addr: 10.0.79.213,
+port: 9042, host_id: 6973271339454cfea5ee0a84c7377eaa} 6ec35bc3-4ff4-4740-a16c-03496b74f822:Host{addr: 10.0.86.211, port: 9042, host_id: 6ec35bc34ff44740a16c03496b74f822} 93ded666-501a-4f2c-b77c-179c02a89b5e:Host{addr: 10.0.52.85, port: 9042, host_id: 93ded666501a4f2cb77c179c02a89b5e}], Assigned Hosts: [Host{addr: 10.0.52.85, port: 9042, host_id: 93ded666501a4f2cb77c179c02a89b5e}]."
+time="2022-07-27T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
+time="2022-07-27T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>In the logs, the important information to notice is:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">time="2022-07-27T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
+time="2022-07-27T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also, you can check the status of the running Docker image. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ubuntu@ip-172-18-10-111:~$ sudo docker ps
+CONTAINER ID  IMAGE                         COMMAND  CREATED      STATUS     PORTS   NAMES
+02470bbc1338  datastax/cloudgate-proxy:1.x  "/main"  2 hours ago  Up 2 hours         cloudgate-proxy-container</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_setting_up_monitoring_on_the_control_host"><a class="anchor" href="#_setting_up_monitoring_on_the_control_host"></a><a class="link" href="#_setting_up_monitoring_on_the_control_host">Setting up Monitoring on the control host</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Follow these steps to install the monitoring stack.  We&#8217;ll use <a href="https://grafana.com/">Grafana</a> to visualize the data.</p>
+</div>
+<div class="sect2">
+<h3 id="_configure_the_grafana_credentials"><a class="anchor" href="#_configure_the_grafana_credentials"></a><a class="link" href="#_configure_the_grafana_credentials">Configure the Grafana credentials</a></h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Edit <code>vars/monitoring_config.yml</code>:</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p><code>grafana_admin_user</code>: leave unchanged (defaults to <code>admin</code>)</p>
+</li>
+<li>
+<p><code>grafana_admin_password</code>: <code>migrationdemo</code></p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_run_the_monitoring_playbook"><a class="anchor" href="#_run_the_monitoring_playbook"></a><a class="link" href="#_run_the_monitoring_playbook">Run the monitoring playbook</a></h3>
+<div class="paragraph">
+<p>Use the following command:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-bash hljs" data-lang="bash">ansible-playbook monitoring_playbook.yml -i cloudgate_inventory</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_check_the_grafana_dashboard"><a class="anchor" href="#_check_the_grafana_dashboard"></a><a class="link" href="#_check_the_grafana_dashboard">Check the Grafana dashboard</a></h3>
+<div class="paragraph">
+<p>In a browser, open <a href="http://&lt;jumphost_public_ip&gt;:3000" class="bare">http://&lt;jumphost_public_ip&gt;:3000</a>.</p>
+</div>
+<div class="paragraph">
+<p>Login with:</p>
+</div>
+<div class="paragraph">
+<p><strong>username</strong>: admin</p>
+</div>
+<div class="paragraph">
+<p><strong>password</strong>: migrationdemo</p>
+</div>
+<div class="paragraph">
+<p>(TODO: show Grafana screenshot and details about what to observe.)</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_whats_next"><a class="anchor" href="#_whats_next"></a><a class="link" href="#_whats_next">What&#8217;s next?</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Learn how to <a href="migration-manage-proxy-instances.html" class="xref page">Manage your proxy instances</a> in this next phase of the migration.</p>
+</div>
+</div>
+</div>
+<nav class="pagination">
+  <span class="prev"><a href="migration-create-target.html">Create target environment for migration</a></span>
+  <span class="next"><a href="migration-manage-proxy-instances.html">Manage proxy instances</a></span>
+</nav>
+</article>
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+  </div>
+</main></div>
+<footer class="footer">
+  <div class="footer-row">
+    <div class="footer__notice align-items-center row">
+      <div class="order-1 order-lg-0 col-lg col-12">
+        <p class="small mb-0">
+          © 2022 DataStax |
+          <a href="https://www.datastax.com/legal/datastax-website-privacy-policy">Privacy Policy</a> |
+          <a href="https://www.datastax.com/legal/datastax-website-terms-use">Terms of Use</a>
+              <!-- UNCOMMENT IF USING ONETRUST FOR COOKIES
+                <span><a href="#" id="ot-sdk-btn" class="ot-sdk-show-settings">Do Not Sell My Personal Information</a></span>
+              -->
+        </p>
+      </div>
+    <div class="text-center text-lg-left mb-5 mb-lg-0 col-lg-auto col-12">
+        <a class="ml-1" href="https://www.facebook.com/datastax" target="_blank" rel="noreferrer"><img
+            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTMyIDBIMHYzMS42NWgxNy4wOTVWMTkuNDM2aC00LjE4MlYxNC42Mmg0LjE2di0zLjUxNWMwLTQuMDkzIDIuNTItNi4zMiA2LjIwOS02LjMyYTM1LjI3IDM1LjI3IDAgMDEzLjc1LjIxMnY0LjI3aC0yLjU0OWMtMi4wMDQgMC0yLjM5MS45MzgtMi4zOTEgMi4zMnYzLjA1NWg0LjhsLS42MjMgNC43OTJoLTQuMTc3VjMxLjY1SDMyVjB6IiBmaWxsPSIjMUU3MUQ0Ii8+PC9zdmc+"
+            alt="Facebook logo" loading="lazy"></a>
+        <a class="ml-1" href="https://twitter.com/datastax" target="_blank" rel="noreferrer"><img
+            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTMyLjAwMSAzMS42NWgtMzJWMGgzMnYzMS42NXptLTE5LjcxMi03Ljc4NWM3LjU0NCAwIDExLjY3Mi02LjE4OCAxMS42NzItMTEuNTQ1IDAtLjE3NCAwLS4zNDgtLjAwOC0uNTIyLjgtLjU3IDEuNDk2LTEuMjkgMi4wNDgtMi4xMDVhOC4zODcgOC4zODcgMCAwMS0yLjM2LjY0MSA0LjA5IDQuMDkgMCAwMDEuODA4LTIuMjQ3IDguMjExIDguMjExIDAgMDEtMi42MDguOTgxIDQuMTE2IDQuMTE2IDAgMDAtMi45OTItMS4yODJjLTIuMjY0IDAtNC4xMDQgMS44Mi00LjEwNCA0LjA2IDAgLjMxNi4wNC42MjQuMTA0LjkyNUExMS42OTIgMTEuNjkyIDAgMDE3LjM5MyA4LjUzYTQuMDI0IDQuMDI0IDAgMDAtLjU1MiAyLjA0MSA0LjA2IDQuMDYgMCAwMDEuODI0IDMuMzggNC4xODQgNC4xODQgMCAwMS0xLjg1Ni0uNTA3di4wNTVjMCAxLjk2MiAxLjQxNiAzLjYwOCAzLjI4OCAzLjk4YTQuMDQgNC4wNCAwIDAxLTEuMDguMTQzYy0uMjY0IDAtLjUyLS4wMjQtLjc2OC0uMDcyYTQuMDk3IDQuMDk3IDAgMDAzLjgzMiAyLjgxNyA4LjI4NSA4LjI4NSAwIDAxLTUuMDk2IDEuNzQxYy0uMzI4IDAtLjY1Ni0uMDE2LS45NzYtLjA1NWExMS43NjMgMTEuNzYzIDAgMDA2LjI4IDEuODEyeiIgZmlsbD0iIzFFNzFENCIvPjwvc3ZnPg=="
+            alt="Twitter logo" loading="lazy"></a>
+        <a class="ml-1" href="https://www.linkedin.com/company/datastax/" target="_blank" rel="noreferrer"><img
+            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTS4wMDEgMHYzMS42NWgzMlYwaC0zMnptOS40ODEgMjYuOTYyaC00Ljc0VjExLjg0aDQuNzR2MTUuMTIyek03LjExMiA5Ljc4OGEyLjcwNCAyLjcwNCAwIDAxLTIuNzI2LTIuNjk2YzAtMS41MjQgMS4yNDUtMi42OTYgMi43MjYtMi42OTYgMS41NCAwIDIuNzI2IDEuMjMgMi43MjYgMi42OTYuMDYgMS40NjUtMS4xODUgMi42OTYtMi43MjYgMi42OTZ6TTI3LjI2IDI2Ljk2MmgtNC43NHYtNy4zMjdjMC0xLjc1OC0uMDYtMy45ODUtMi40OS0zLjk4NS0yLjQ4OCAwLTIuODQ0IDEuOTM0LTIuODQ0IDMuODY4djcuNDQ0aC00Ljc0VjExLjg0aDQuNTYydjIuMDUxaC4wNmMuNjUxLTEuMTcyIDIuMTkyLTIuNDYxIDQuNTAzLTIuNDYxIDQuOCAwIDUuNjkgMy4xMDYgNS42OSA3LjIwOXY4LjMyM3oiIGZpbGw9IiMxRTcxRDQiLz48L3N2Zz4="
+            alt="LinkedIn logo" loading="lazy"></a>
+        <a class="ml-1" href="https://github.com/datastax/" target="_blank" rel="noreferrer"><img
+            src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0zMiAwSDB2MzEuNjVoMzJWMHpNNCAxNS44MDVDNCA5LjI4NyA5LjM1OCA0IDE1Ljk2MyA0IDIyLjU3IDQgMjcuOTI3IDkuMjg3IDI4IDE1LjgwNWMwIDUuMjE1LTMuMzc2IDkuNjMyLTguMTQ3IDExLjIyNi0uNTg3LjA3Mi0uODA3LS4yOS0uODA3LS41OHYtMy4yNTljMC0xLjA4Ni0uMzY3LTEuODEtLjgwOC0yLjE3MiAyLjY0My0uMjkgNS40MzItMS4yMzIgNS40MzItNS43OTRhNC42NSA0LjY1IDAgMDAtMS4yNDgtMy4xODdsLjAyMy0uMDg1YTQuNDQgNC40NCAwIDAwLS4xNy0zLjAzcy0xLjAyNy0uMjg5LTMuMzAyIDEuMjMyYTEzLjY4MSAxMy42ODEgMCAwMC0zLjAxLS4zNjJjLTEuMDI3IDAtMi4wNTUuMDcyLTMuMDA5LjM2Mi0yLjI3NS0xLjUyLTMuMzAzLTEuMjMxLTMuMzAzLTEuMjMxLS42NDggMS41NjQtLjIzNSAyLjc4LS4xNSAzLjAyOSAwIC4wMDQuMDAyLjAwOS4wMDQuMDEzLS44MDguODY5LTEuMjQ4IDEuODgzLTEuMjQ4IDMuMTg2IDAgNC41NjMgMi43ODkgNS41NzcgNS40MzEgNS44NjctLjI5My4yOS0uNjYuNzk2LS43MzQgMS41OTMtLjY2LjI5LTIuMzQ5Ljc5Ny0zLjQ1LTEuMDE0IDAgMC0uNjYtMS4xNTktMS44MzQtMS4yMzEgMCAwLTEuMTc1IDAtLjA3NC43MjQgMCAwIC44MDguMzYyIDEuMzIxIDEuNzM4IDAgMCAuNzM0IDIuMzE4IDQuMDM3IDEuNTkzdjIuMDI4YzAgLjI5LS4yMi42NTItLjgwNy41OEM3LjQ1IDI1LjQzNyA0IDIxLjAyIDQgMTUuODA1eiIgZmlsbD0iIzFFNzFENCIvPjwvc3ZnPg=="
+            alt="GitHub logo" loading="lazy"></a>
+    </div>
+   </div>
+  </div>
+</footer>
+<script>window.uiRootPath = '../assets'</script>
+<script src="../assets/js/site.js"></script>
+<script async src="../assets/js/vendor/highlight.js"></script>
+<script>window.intercomSettings = {app_id: "bpbxnnmr"};</script>
+
+<script>// We pre-filled your app ID in the widget URL: 'https://widget.intercom.io/widget/bpbxnnmr'
+    (function(){
+        var w=window;
+        var ic=w.Intercom;
+        if(typeof ic==="function"){
+            ic('reattach_activator');
+            ic('update',w.intercomSettings);
+        }else{
+            var d=document;
+            var i=function(){
+                i.c(arguments);
+            };
+            i.q=[];
+            i.c=function(args){
+                i.q.push(args);
+            };
+            w.Intercom=i;
+            var l=function(){
+                var s=d.createElement('script');
+                s.type='text/javascript';
+                s.async=true;
+                s.src='https://widget.intercom.io/widget/bpbxnnmr';
+                var x=d.getElementsByTagName('script')[0];
+                x.parentNode.insertBefore(s,x);
+            };
+            if(w.attachEvent){
+                w.attachEvent('onload',l);
+            }else{
+                w.addEventListener('load',l,false);
+            }
+        }
+    })();
+</script>
+  </body>
+</html>

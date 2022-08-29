@@ -1,0 +1,44 @@
+= Prepare your existing environment for migration
+
+In this topic, we'll discuss the steps you'll perform to prepare your existing clusters for migration to a new environment. 
+
+We'll use this example scenario: migration an Apache Cassandra&reg; or DataStax Enterprise (DSE) cluster to Astra DB.
+
+(Author's note: let's think about what the user would need to setup in their existing environment, such as downloading the Data Migrator, or building it from the GH source.) 
+
+== Install {company} Bulk Migrator
+
+Of course, your existing Cassandra or DSE cluster has database tables, populated with data, and client apps that interact in real time with the database.
+
+. To begin, download the https://drive.google.com/file/d/179J1NLjpsbNmurxM4Wfe86v9ExIkwscu/view?usp=sharing[DataStax ZDM Bulk Migrator] jar file.
+. Transfer it via `scp` onto the second client instance (origin-user_application_client-1) using the origin-key previously created:
++
+```bash
+scp -i ~/.ssh/origin_key schema-migrator-1.0.0-SNAPSHOT-embedded-dsbulk.jar ubuntu@<public IP of second client instance>:
+```
+. Ssh into this instance and change the permission of this jar to make it executable.
++
+```bash
+ssh -i ~/.ssh/origin_key ubuntu@<public IP of second client instance>
+```
+. Install the default jre:
++
+```bash
+sudo apt-get update
+sudo apt-get install default-jre
+```
+. Make the jar executable:
++
+```bash
+chmod +x schema-migrator-1.0.0-SNAPSHOT-embedded-dsbulk.jar
+```
+. Verify that the ZDM Bulk Migrator's was installed properly:
++
+```bash
+java --version
+java -jar schema-migrator-1.0.0-SNAPSHOT-embedded-dsbulk.jar --version
+```
+
+== What's next? 
+
+Learn how to xref:migration-create-target.adoc[Create the target environment for your migration] for your migration; in this example, we'll set up a DataStax Astra DB cloud-native database instance.

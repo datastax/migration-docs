@@ -1,0 +1,55 @@
+= Validate the migrated data
+
+Follow these steps to validate the migrated data.
+
+== Counting the data
+
+Use DataStax Bulk Loader (`dsbulk`) to count the data in the tables on each cluster, compare the results, and verify that they match.
+
+If you haven't already, install `dsbulk` on your Origin cluster. See link:https://docs.datastax.com/en/dsbulk/docs/install/dsbulkInstall.html[Installing DataStax Bulk Loader for Apache Cassandra] on the DataStax documentation site. 
+
+Once installed, use the `dsbulk count` command, providing your keyspace name. The `-k baselines` value used in examples is from the database used by NoSQLBench app. Your values will be different.
+
+```bash
+cd ~/dsbulk-1.10.0/bin/
+
+./dsbulk count -k baselines -t keyvalue -f ~/dsbulk-1.10.0/conf/origin-app.conf
+./dsbulk count -k baselines -t keyvalue -f ~/dsbulk-1.10.0/conf/astra-app.conf
+
+./dsbulk count -k sample_app_keyspace -t app_data -f ~/dsbulk-1.10.0/conf/origin-app.conf
+./dsbulk count -k sample_app_keyspace -t app_data -f ~/dsbulk-1.10.0/conf/astra-app.conf
+```
+
+In CQLSH, read some sample rows on each cluster and verify that they match.
+
+On Origin, use a `SELECT *` statement to retrieve all the rows. Example:
+
+```cqlsh
+select * from baselines.keyvalue limit 3;
+```
+
+On your target Astra DB database, read the rows with the same tables returned by the query on Origin. On the Astra console Dashboard for your database, on the **CQL Console** tab, enter a `SELECT *` for the same tables. Example:
+
+```cqlsh
+select * from baselines.keyvalue where key in ('key1', 'key2', 'key3');
+```
+
+On Origin and Astra DB, examples:
+
+```cqlsh
+select * from sample_app_keyspace.app_data where app_key = 250
+select * from sample_app_keyspace.app_data where app_key = 1000
+select * from sample_app_keyspace.app_data where app_key = 1080
+```
+
+Read these same rows through the ZDM Demo Client, which is still pointing to the proxy. The read requests will be routed to Origin. 
+
+```bash
+curl -G -d 'rowkey=250' http://localhost:8080/zdm-demo-client/rest/row
+curl -G -d 'rowkey=1000' http://localhost:8080/zdm-demo-client/rest/row
+curl -G -d 'rowkey=1080' http://localhost:8080/zdm-demo-client/rest/row
+```
+
+== What's next? 
+
+Learn about the steps to xref:migration-change-read-routing.adoc[change the read routing] to Astra DB.
