@@ -1,0 +1,45 @@
+= Change the read routing
+
+This topic explains how you can change  the read routing to Astra DB.
+
+If you're not there already, `ssh` back into the jumphost:
+
+```bash
+ssh -F ~/.ssh/cloudgate_ssh_config jumphost
+```
+
+On the jumphost:
+
+```bash
+cd cloudgate-automation/ansible
+```
+
+Open the proxy core configuration file for editing. Example:
+
+```bash
+nano vars/proxy_core_config_input.yml
+```
+
+Change the flag `forward_reads_to_target` to `true`.
+
+Run the playbook that changes the configuration of the existing proxy deployment:
+
+```bash
+ansible-playbook configure_existing_proxy_playbook.yml -i cloudgate_inventory 
+```
+
+Wait for the proxies to be restarted by Ansible, one by one. The proxy will now send all reads to Astra DB instead of Origin. In other words, Astra DB is now the primary source of truth, but the proxy is still keeping Origin up-to-date.
+
+Repeat the same reads through the ZDM Demo Client application:
+
+```bash
+curl -G -d 'rowkey=250' http://localhost:8080/zdm-demo-client/rest/row
+curl -G -d 'rowkey=1000' http://localhost:8080/zdm-demo-client/rest/row
+curl -G -d 'rowkey=1080' http://localhost:8080/zdm-demo-client/rest/row
+```
+
+The resulting data is identical because the two databases are in sync.
+
+== What's next? 
+
+Learn how to xref:migration-connect-apps.adoc[Connect your clients directly to Astra DB].

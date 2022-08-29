@@ -1,0 +1,38 @@
+= DataStax Zero Downtime Migration Release Notes
+
+The open-source Zero Downtime Migration (ZDM) project provides a production-ready set of tools to help you migrate to another version of Apache Cassandra&reg; or DataStax Enterprise, or to cloud-native Astra DB. 
+
+== Release Notes for ZDM 2.0.0
+
+30 September 2022
+
+=== GitHub repos
+
+* https://github.com/riptano/cloud-gate[ZDM Proxy, window="_blank"] GitHub repo
+
+* https://github.com/riptano/cloudgate-automation[Proxy automation, window="_blank"] GitHub repo
+
+* https://github.com/riptano/cloud-gate-schema-migrator[ZDM Bulk Migrator, window="_blank"] GitHub repo
+
+* https://github.com/riptano/zdm-docs/blob/main/docs-src/zdm-core/modules/ROOT/pages/index.adoc[Documentation, window="_blank"] GitHub repo
+
+=== Supported environments
+
+With the {company} {product} 2.0.0 release, you can migrate any Cassandra Query Language (CQL) compliant database cluster from its origin (current) environment to a new target:
+
+* From an existing self-managed Cassandra or DSE cluster to cloud-native Astra DB. For example, migrate:
+** Cassandra 3.11.x or 4.0.x to Astra DB
+** DSE 5.1.x or 6.8.x to Astra DB
+* From an existing Cassandra or DSE cluster to another Cassandra or DSE cluster. For example, migrate:
+** Cassandra 3.11.x to 4.0.x
+** DSE 5.1.x to DSE 6.8.x
+
+=== Deployed components 
+
+* ZDM Proxy
+* ZDM Bulk Migration
+* ZDM Automation
+
+=== ZDM 2.0.0 revisions
+
+( link to CHANGELOG.md file in GH repo )

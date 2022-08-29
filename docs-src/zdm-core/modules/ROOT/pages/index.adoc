@@ -1,0 +1,21 @@
+= Zero Downtime Migration (ZDM)
+
+Enterprises today depend on the ability to reliably migrate their mission-critical apps and data to cloud environments  with **zero downtime** during the migration.
+
+At DataStax, we've developed a set of thoroughly-tested self-service tools, automation scripts, examples, and documented procedures that walk you through a set of well-defined migration phases. 
+
+* xref:migration-introduction.adoc[Introduction]
+* xref:migration-faqs.adoc[FAQs]
+* xref:migration-prepare-environment.adoc[Prepare existing clusters]
+* xref:migration-create-target.adoc[Create target environment for migration]
+// * xref:migration-provision-infrastructure.adoc[Provision ZDM infrastructure]
+// * xref:migration-refine-infrastructure.adoc[Refine infrastructure not provisioned through Terraform]
+// * xref:migration-ansible-control-host.adoc[Choose the Ansible control host and configure]
+* xref:migration-run-ansible-playbooks.adoc[Setup and run Ansible playbooks]
+* xref:migration-manage-proxy-instances.adoc[Manage proxy instances]
+* xref:migration-validate-data.adoc[Validate migrated data]
+* xref:migration-change-read-routing.adoc[Change read routing to Astra DB]
+* xref:migration-connect-apps.adoc[Connect clients directly to Astra DB]
+* xref:migration-troubleshooting.adoc[Troubleshooting]
+// * xref:migration-e2e-demo.adoc[End-to-end demo]
+* xref:migration-release-notes.adoc[Release Notes]

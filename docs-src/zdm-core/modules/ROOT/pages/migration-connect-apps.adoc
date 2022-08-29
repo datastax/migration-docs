@@ -1,0 +1,32 @@
+= Connect your clients directly to Astra DB
+
+The data migration has completed and all our checks have passed, so we are now ready to connect our clients directly to Astra DB.
+
+In this topic, we'll use NoSQLBench as the sample client. It's a simple process. Modify the examples to apply the general steps to your clients.
+
+Stop NoSQLBench and launch it again with the following command. Note that the connection configuration is now pointing directly to Astra DB:
+
+```bash
+./nb cql-keyvalue-astra \
+userfile=my-astra-client-id.txt password=my-astra-client-secret.txt \
+secureconnectbundle=/home/ubuntu/secure-connect-zdm-demo-target.zip \
+rampup-cycles=1000 main-cycles=300000000 stride=300
+```
+
+A second example:
+
+Stop the ZDM Demo Client application and start it again with `connectionMode` set to `TARGET`:
+
+```bash
+mvn jetty:run -DconnectionMode=TARGET
+```
+
+All applications are now connecting directly to Astra DB, and Origin is no longer being updated.
+
+== Migration completed
+
+Until this point, in case of any issues, you could have abandoned the migration and rolled back to connect directly to Origin at any time. From this point onward, the clusters will diverge, and the target Astra DB database is the source of truth for your apps and data. 
+
+== What's next? 
+
+See our xref:migration-troubleshooting.adoc[Troubleshooting tips].
