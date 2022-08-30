@@ -20,38 +20,40 @@ image:zdm-workflow1.png[Migration workflow from client to ZDM Proxy with dual wr
 
 {company} {product} includes the following open-source tools:
 
-* A proxy service called **ZDM Proxy** that operates between your existing ("origin") clusters and the new ("target") Astra clusters.
+* A proxy service called **ZDM-Proxy** that operates between your existing ("origin") clusters and the new ("target") Astra clusters.
 * An interactive **ZDM Automation utility** written in Golang that prompts for values needed to run an Ansible playbook, which create a dedicated deployment of the ZDM Proxy and its (optionally) a companion monitoring stack.
 * Additional self-service tools and Spark examples to copy data.
-* ZDM Bulk Migrator -- enhanced from open-source DataStax Bulk Loader code -- to migrate multiple database schemas and table rows.
+* Database Migrator -- enhanced from open-source DataStax Bulk Loader code -- to migrate multiple database schemas and table rows.
 * Reconciliation scripts to validate successful completion of migration steps.
 * Well-defined steps in this migration documentation, organized as a sequence of phases.
 
 == What challenges does ZDM solve?
 
-Cloud-native, managed services are great once you are able to fully migrate. Before DataStax ZDM was available,  migrations often involved application changes, extensive migration preparation, and potentially a window of downtime to application users.  
+Cloud-native, managed services are great once you are able to fully migrate. Before {product} was available,  migrations often involved application changes, extensive migration preparation, and potentially a window of downtime to application users.  
 
-The ZDM tools from DataStax allow you to leverage mature migration tools that have been used with large scale enterprises and applications to make migrations transparent to application end users.
+The migration tools from DataStax allow you to leverage mature migration tools that have been used with large scale enterprises and applications to make migrations transparent to application end users.
 
-== What exactly is the DataStax ZDM Proxy?
+== What exactly is ZDM-Proxy?
 
-The DataStax ZDM Proxy is a simple and lightweight proxy that stands between the application and the source ("origin") cluster and Astra DB (or any CQL-compatible data store). ZDM Proxy's ensures that every write operation (Insert, Update, Delete) is  passed through to both clusters at the desired consistency level. If the write is successful in both clusters, it returns a successful acknowledgement to the client. If the write fails on either cluster, the failure is passed back to the client so that it can retry the write as appropriate, based on its own retry policy. This implementation allows for write consistency of new data to both clusters. The proxy also passes through reads to the origin cluster and returns the result to the application.
+ZDM-Proxy is a simple and lightweight proxy that stands between the application and the source ("origin") cluster and Astra DB (or any CQL-compatible data store). The ZDM-Proxy ensures that every write operation (Insert, Update, Delete) is passed through to both clusters at the desired consistency level. If the write is successful in both clusters, it returns a successful acknowledgement to the client. If the write fails on either cluster, the failure is passed back to the client so that it can retry the write as appropriate, based on its own retry policy. This implementation allows for write consistency of new data to both clusters. 
 
-ZDM Proxy is highly available. It can be scaled horizontally so typical deployments can be made up of a minimum of 3 servers.  ZDM Proxy can be restarted in a rolling fashion; this capability means you can roll out configuration changes for different phases of the migration.
+The proxy also passes through reads to a single cluster (initially Origin, and then Target once the data has been migrated and validated) and returns the result to the application.
+
+ZDM-Proxy is highly available. It can be scaled horizontally so typical deployments can be made up of a minimum of 3 servers.  ZDM-Proxy can be restarted in a rolling fashion; this capability means you can roll out configuration changes for different phases of the migration.
 
 == What are the benefits and use cases?
 
-You may want to migrate your existing Cassandra or DSE database to a managed service such as DataStax Astra. Other scenarios are supported. For example, you may want to migrate from an older version of Cassandra or DSE to a much newer version, without intermediate upgrades and with simple rollback options. And/or you may may want to split out an application from a shared cluster to be backed by its own cluster.
+You may want to migrate your existing Cassandra or DSE database to a managed service such as DataStax Astra DB. Other scenarios are supported. For example, you may want to migrate from an older version of Cassandra or DSE to a much newer version, without intermediate upgrades and with simple rollback options. And/or you may may want to split out an application from a shared cluster to be backed by its own cluster.
 
-Bottom line: you want to migrate your critical database infrastructure without risk or concern that your users'  experiences will be affected.
+Bottom line: you want to migrate your critical database infrastructure without risk or concern that your users' experiences will be affected.
 
 == What is the pricing model?
 
-The suite of ZDM tools from DataStax is free and open sourced. 
+The suite of {product} tools from DataStax is free and open sourced. 
 
 == Is there support available if I have questions or issues during our migration?
 
-The ZDM Proxy software is supported by https://support.datastax.com/s/[DataStax Support^]. 
+If needed, ZDM-Proxy and related software tools in the migration suite include technical assistance by https://support.datastax.com/s/[DataStax Support^]. 
 
 Additional examples serve as templates, from which others can learn about migrations. As open source, DataStax does not assume responsibility for making the templates work for specific use cases.
 
@@ -65,9 +67,9 @@ Additional examples serve as templates, from which others can learn about migrat
 
 * https://github.com/riptano/cloud-gate-schema-migrator[ZDM Bulk Migrator^] GitHub repo
 
-* This https://github.com/riptano/zdm-docs[source documentation^] GitHub repo
+* This https://github.com/datastax/migration-docs[source documentation^] GitHub repo
 ** From the Asciidoc markdown sources, the build & deployment scripts write the docs to https://coppi.sjc.dsinternal.org/en/zdm/docs/[this documentation site^]. 
-** The draft HTML5 docs are temporarily on an internal server, which requires VPN access. For the external release, the ZDM-Proxy 2.0 docs will reside on docs.datastax.com.
+** The draft HTML5 docs are temporarily on an internal server, which requires VPN access. For the external release, the DataStax {product} 2.0 docs will reside on docs.datastax.com in the Astra DB and DSE topics.
 
 == What's next? 
 
