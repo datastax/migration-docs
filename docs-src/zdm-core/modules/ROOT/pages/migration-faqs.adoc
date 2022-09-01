@@ -6,9 +6,11 @@ If you're new to the {company} {product} features, these FAQs are for you.
 
 ZDM means the ability for you to reliably migrate apps and data with no interruption of service.
 
-In the context of migrating Apache Cassandra&reg; or DataStax Enterprise (DSE) clusters (production apps &amp; data), the topics in this guide focus on migrating with zero downtime to our cloud-native database environment, DataStax Astra DB. 
+In the context of migrating Apache Cassandra&reg; or DataStax Enterprise (DSE) clusters (production apps & data), the topics in this guide focus on migrating with zero downtime to our cloud-native database environment, DataStax Astra DB. However, it is important to underline that the ZDM Proxy can be freely used to migrate without downtime between any combination of CQL clusters of any type.
 
-ZDM lets you accomplish migrations without the need to change your application code. The suite of tools enabled you to both migrate traffic with a simple rollback mechanism, as well as the ability to migrate historical data.
+ZDM lets you accomplish migrations without the need to change your application code, and with only minimal configuration changes. While in some cases you may need to make some minor changes at the application level, often these changes will be minimal and non-invasive, especially if your application uses an externalized property configuration for contact points. 
+
+The suite of ZDM tools enable you to migrate traffic with a simple rollback mechanism, as well as the ability to migrate historical data.
 
 == Can you illustrate the migration process?
 
@@ -21,8 +23,8 @@ image:zdm-workflow1.png[Migration workflow from client to ZDM Proxy with dual wr
 {company} {product} includes the following open-source tools:
 
 * A proxy service called **ZDM-Proxy** that operates between your existing ("origin") clusters and the new ("target") Astra clusters.
-* An interactive **ZDM Automation utility** written in Golang that prompts for values needed to run an Ansible playbook, which create a dedicated deployment of the ZDM Proxy and its (optionally) a companion monitoring stack.
-* Additional self-service tools and Spark examples to copy data.
+* An Ansible-based automation that allows you to deploy and manage the ZDM instances and its associated monitoring stack. ZDM also provides an interactive utility that creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
+* Additional self-service tools and examples to copy data.
 * Database Migrator -- enhanced from open-source DataStax Bulk Loader code -- to migrate multiple database schemas and table rows.
 * Reconciliation scripts to validate successful completion of migration steps.
 * Well-defined steps in this migration documentation, organized as a sequence of phases.
@@ -59,13 +61,11 @@ Additional examples serve as templates, from which others can learn about migrat
 
 == Where is the ZDM open source code?
 
-(Author's note: the URLs will change when these GH repos are public)
+* https://github.com/datastax/zdm-proxy[ZDM-Proxy^] GitHub repo.
 
-* https://github.com/riptano/cloud-gate[ZDM Proxy^] GitHub repo
+* https://github.com/datastax/zdm-proxy-automation[Automation Utility^] GitHub repo.
 
-* https://github.com/riptano/cloudgate-automation[Proxy automation^] GitHub repo
-
-* https://github.com/riptano/cloud-gate-schema-migrator[ZDM Bulk Migrator^] GitHub repo
+* https://github.com/riptano/cloud-gate-schema-migrator[Database Migrator^] GitHub repo. Note: Repo location and name will change - to be determined.
 
 * This https://github.com/datastax/migration-docs[source documentation^] GitHub repo
 ** From the Asciidoc markdown sources, the build & deployment scripts write the docs to https://coppi.sjc.dsinternal.org/en/zdm/docs/[this documentation site^]. 
