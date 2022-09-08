@@ -8,9 +8,9 @@ Now it’s time to assemble the details into external documentation for the ZDM 
 
 ## Local builds
 
-This repo contains the source Asciidoc files and uses the Antora server to build Html5 and related resources. 
+This repo contains source Asciidoc (*.adoc) files and uses Antora to build Html5 files and related resources. 
 
-To build local output to your filesystem, `cd` to the repo's top-level directory. Then:
+To build the docs site locally, `cd` to the repo's top-level directory. Then run:
 
 ```
 ./build-locally.sh zdm
