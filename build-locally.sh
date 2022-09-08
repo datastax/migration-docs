@@ -79,4 +79,5 @@ case $1 in
     ;;
     
 esac
-
+npm i -g serve
+serve
