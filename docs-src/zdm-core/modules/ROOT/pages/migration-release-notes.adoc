@@ -6,15 +6,19 @@ The open-source Zero Downtime Migration (ZDM) project provides a production-read
 
 30 September 2022
 
-=== GitHub repos
+== GitHub repos
 
-* https://github.com/riptano/cloud-gate[ZDM Proxy, window="_blank"] GitHub repo
+The following DataStax migration repos are public. You are welcome to read the source and submit feedback via GitHub Issues per repo. At this time, code contributions from Pull Requests are not supported.
 
-* https://github.com/riptano/cloudgate-automation[Proxy automation, window="_blank"] GitHub repo
+* https://github.com/datastax/zdm-proxy[ZDM-Proxy^] repo.
 
-* https://github.com/riptano/cloud-gate-schema-migrator[ZDM Bulk Migrator, window="_blank"] GitHub repo
+* https://github.com/datastax/migration-docs[Migration documentation^] repo.
 
-* https://github.com/riptano/zdm-docs/blob/main/docs-src/zdm-core/modules/ROOT/pages/index.adoc[Documentation, window="_blank"] GitHub repo
+* https://github.com/datastax/zdm-proxy-automation[ZDM-Proxy Automation utility^] repo. 
+
+* https://github.com/riptano/cloud-gate-schema-migrator[DSBulk Migrator^] repo. (Internal Note: Repo location and name will change - to be determined.)
+
+* https://github.com/Ankitp1342/astra-spark-migration-ranges[Cassandra Data Migrator^] repo. (Internal Note: Repo location and name will change - to be determined.)
 
 === Supported environments
 
@@ -30,8 +34,9 @@ With the {company} {product} 2.0.0 release, you can migrate any Cassandra Query 
 === Deployed components 
 
 * ZDM Proxy
-* ZDM Bulk Migration
-* ZDM Automation
+* ZDM Automation utility
+* DSBulk Migrator
+* Cassandra Data Migrator
 
 === ZDM 2.0.0 revisions
 
