@@ -1,6 +1,6 @@
 = Prepare your existing environment for migration
 
-In this topic, we'll discuss the steps you'll perform to prepare your existing clusters for migration to a new environment. 
+In this topic, we'll discuss the steps you'll perform to prepare your existing cluster for migration to a new environment.
 
 We'll use this example scenario: migration an Apache Cassandra&reg; or DataStax Enterprise (DSE) cluster to Astra DB.
 
@@ -10,16 +10,18 @@ We'll use this example scenario: migration an Apache Cassandra&reg; or DataStax 
 
 Of course, your existing Cassandra or DSE cluster has database tables, populated with data, and client apps that interact in real time with the database.
 
-. To begin, download the https://drive.google.com/file/d/179J1NLjpsbNmurxM4Wfe86v9ExIkwscu/view?usp=sharing[DataStax ZDM Bulk Migrator] jar file.
-. Transfer it via `scp` onto the second client instance (origin-user_application_client-1) using the origin-key previously created:
+(Alice's note: we should briefly define the migrator and include some advice here on the infrastructure specs for the machine(s) used to run it. This is not currently documented anywhere. Experience from the Field team will help.)
+
+. To begin, download the https://drive.google.com/file/d/179J1NLjpsbNmurxM4Wfe86v9ExIkwscu/view?usp=sharing[{company} ZDM Bulk Migrator] jar file.
+. Transfer it via `scp` onto the instance where it will run:
 +
 ```bash
-scp -i ~/.ssh/origin_key schema-migrator-1.0.0-SNAPSHOT-embedded-dsbulk.jar ubuntu@<public IP of second client instance>:
+scp -i <your_ssh_key> schema-migrator-1.0.0-SNAPSHOT-embedded-dsbulk.jar ubuntu@<public IP of migrator instance>:
 ```
 . Ssh into this instance and change the permission of this jar to make it executable.
 +
 ```bash
-ssh -i ~/.ssh/origin_key ubuntu@<public IP of second client instance>
+ssh -i <your_ssh_key> ubuntu@<public IP of migrator instance>
 ```
 . Install the default jre:
 +
@@ -32,7 +34,7 @@ sudo apt-get install default-jre
 ```bash
 chmod +x schema-migrator-1.0.0-SNAPSHOT-embedded-dsbulk.jar
 ```
-. Verify that the ZDM Bulk Migrator's was installed properly:
+. Verify that the ZDM Bulk Migrator was installed properly:
 +
 ```bash
 java --version

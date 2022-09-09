@@ -1,12 +1,16 @@
-= Setup and run Ansible playbooks to install ZDM Proxy and Monitoring 
+= Setup and run Ansible playbooks to deploy the ZDM Proxy and Monitoring
 
-This topic explains how to use ZDM-Proxy Automation to create a dedicated deployment of the ZDM Proxy and its companion monitoring stack. The script is a Golang (Go) utility that walks you through the entire configuration process, prompting you for values needed by the Ansible playbook with helpful embedded explanations and error handling. It's migration made easy.
+This topic explains how to use the ZDM Proxy Automation to create a dedicated deployment of the ZDM Proxy and its companion monitoring stack.
+
+The ZDM Utility is a Golang (Go) executable program that runs anywhere. This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then creates an "Ansible Control Host" container ready for you to use. Using this container, you will be able to easily configure and run the ZDM Ansible playbooks. It's migration made easy.
 
 == Introduction
 
-The ZDM deployment automation includes **Ansible**, which deploys and configures the proxies and monitoring stack via playbooks. This step expects that the infrastructure has been provisioned already.
+The ZDM deployment automation uses **Ansible**, which deploys and configures the proxies and monitoring stack via playbooks. This step expects that the infrastructure has been provisioned already.
 
-Ansible is a suite of software tools that enables infrastructure as code. It is open source and the suite includes software provisioning, configuration management, and application deployment functionality. 
+(Alice's note: TODO add link to a separate page with the infrastructure requirements for ZDM. I have a document that lists them: https://docs.google.com/document/d/1945XEIrQ34gqanXuIsvdnVXP4NeWaN6U_iwNHHgzg_Y/edit#bookmark=id.fyvzoz9af849 - please ignore the following section, which is not relevant here))
+
+link:https://www.ansible.com/[Ansible]  is a suite of software tools that enables infrastructure as code. It is open source and the suite includes software provisioning, configuration management, and application deployment functionality.
 
 == Prerequisites
 
@@ -17,30 +21,7 @@ That's it! You'll indicate which server machine will serve as the Ansible contro
 
 Let's get started.
 
-== Create an SSH key pair for the ZDM deployment
 
-Create a dedicated ssh key pair in your ~/.ssh directory, to use for all instances in the ZDM deployment:
-
-```bash
-ssh-keygen -t rsa
-```
-
-[TIP]
-====
-Currently we are using `cloudgate` in our naming convention. This handle may change to `zdm` in a documentation update.
-====
-
-When prompted, specify as key path and name ~/.ssh/cloudgate-key-<enterprise_name>. This will result in two files:
-
-```
-cloudgate-key-<enterprise_name> 
-cloudgate-key-<enterprise_name>.pub
-```
-
-[IMPORTANT]
-====
-Create this dedicated key pair for each enterprise's deployment and ensure you name it according to the pattern shown above. For example, a valid private key name could be `cloudgate-key-zdmdemo`.
-====
 
 == Proxy deployment setup on the control host
 
