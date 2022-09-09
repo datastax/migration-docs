@@ -1,6 +1,7 @@
 * xref:index.adoc[Migrating]
 ** xref:migration-introduction.adoc[Introduction]
 ** xref:migration-faqs.adoc[FAQs]
+** xref:migration-infrastructure.adoc[Infrastructure requirements]
 ** xref:migration-prepare-environment.adoc[Prepare existing clusters]
 ** xref:migration-create-target.adoc[Create target environment for migration]
 ** xref:migration-run-ansible-playbooks.adoc[Setup and run Ansible playbooks]
@@ -9,4 +10,5 @@
 ** xref:migration-change-read-routing.adoc[Change read routing to Astra DB]
 ** xref:migration-connect-apps.adoc[Connect clients directly to Astra DB]
 ** xref:migration-troubleshooting.adoc[Troubleshooting]
+** xref:migration-contributions.adoc[Contribution guidelines]
 ** xref:migration-release-notes.adoc[Release Notes]

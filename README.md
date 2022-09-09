@@ -8,21 +8,29 @@ Now it’s time to assemble the details into external documentation for the ZDM 
 
 ## Local builds
 
-This repo contains the source Asciidoc files and uses the Antora server to build Html5 and related resources. 
+This repo contains source Asciidoc (*.adoc) files and uses Antora to build Html5 files and related resources. 
 
-To build local output to your filesystem, cd to the repo's top-level directory. Then:
+To build the docs site locally, `cd` to the repo's top-level directory. Then run:
 
 ```
 ./build-locally.sh zdm
-... (ok to ignore warnings) 
-> build:local:zdm
-> antora --log-level error --stacktrace --fetch --clean playbooks/site-local-zdm.yaml
-
-Site generation complete!
-Open file:///Users/<username>/<path-to-github>/migration-docs/build/zdm in a browser to view your site.
+Do you need to rebuild the APIs? (Y or N)N
+...
+(ok to ignore warnings)
+...
+   ┌──────────────────────────────────────────────────┐
+   │                                                  │
+   │   Serving!                                       │
+   │                                                  │
+   │   - Local:            http://localhost:3000      │
+   │   - On Your Network:  http://192.168.0.72:3000   │
+   │                                                  │
+   │   Copied local address to clipboard!             │
+   │                                                  │
+   └──────────────────────────────────────────────────┘
 ```
 
-From the filesystem, navigate into the `docs` subdir, and of course open any of the html files, such as index.html.
+From the running `localhost:3000`, navigate into the `build/zdm/docs` subdir, which will open the index.html page.
 
 ## Production builds and deployments
 

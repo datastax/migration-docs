@@ -59,17 +59,23 @@ If needed, ZDM-Proxy and related software tools in the migration suite include t
 
 Additional examples serve as templates, from which others can learn about migrations. As open source, DataStax does not assume responsibility for making the templates work for specific use cases.
 
-== Where is the ZDM open source code?
+== Where are the public GitHub repos?
 
-* https://github.com/datastax/zdm-proxy[ZDM-Proxy^] GitHub repo.
+The following DataStax migration repos are public. You are welcome to read the source and submit feedback via GitHub Issues per repo. At this time, code contributions from Pull Requests are not supported.
 
-* https://github.com/datastax/zdm-proxy-automation[Automation Utility^] GitHub repo.
+* https://github.com/datastax/zdm-proxy[ZDM-Proxy^] repo.
 
-* https://github.com/riptano/cloud-gate-schema-migrator[Database Migrator^] GitHub repo. Note: Repo location and name will change - to be determined.
+* https://github.com/datastax/migration-docs[Migration documentation^] repo.
 
-* This https://github.com/datastax/migration-docs[source documentation^] GitHub repo
-** From the Asciidoc markdown sources, the build & deployment scripts write the docs to https://coppi.sjc.dsinternal.org/en/zdm/docs/[this documentation site^]. 
-** The draft HTML5 docs are temporarily on an internal server, which requires VPN access. For the external release, the DataStax {product} 2.0 docs will reside on docs.datastax.com in the Astra DB and DSE topics.
+* https://github.com/datastax/zdm-proxy-automation[ZDM-Proxy Automation utility^] repo. 
+
+* https://github.com/riptano/cloud-gate-schema-migrator[DSBulk Migrator^] repo. (Internal Note: Repo location and name will change - to be determined.)
+
+* https://github.com/Ankitp1342/astra-spark-migration-ranges[Cassandra Data Migrator^] repo. (Internal Note: Repo location and name will change - to be determined.)
+
+== Temp FAQ: where's are the built docs located before 2.0 GA?
+
+From the Asciidoc markdown sources, the deployment script writes the docs to https://coppi.sjc.dsinternal.org/en/zdm/docs/[this internal review server^]. Requires VPN access. For the external release, the DataStax {product} 2.0 docs will reside on docs.datastax.com in the Astra DB and DSE online doc sets.
 
 == What's next? 
 
