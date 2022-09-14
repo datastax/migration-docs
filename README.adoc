@@ -1,0 +1,205 @@
+= DataStax Zero Downtime Migration (ZDM) Documentation
+:toc: macro
+:product: Zero Downtime Migration
+:product-repo-name: migration-docs
+:product-repo-name-long: datastax/migration-docs
+:product-repo-link: https://github.com/datastax/migration-docs.git
+:product-branch-name: main
+:docset-name: zdm
+:product-branch-link: https://github.com/datastax/migration-docs/tree/main
+:install-git-link: https://github.com/git-guides/install-git
+:create-pr-link: https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request
+:nvm-link: https://github.com/nvm-sh/nvm
+:homebrew-link: https://brew.sh/
+:asciidoctor-link: https://docs.asciidoctor.org/asciidoc/latest/
+:antora-link: https://docs.antora.org/antora/latest/
+:contributor-docs-link: https://docs.google.com/presentation/d/10RjxURHpJ8gwac0dCZ02pKo31nGhem29Z8-xERApyWU/edit?usp=sharing
+:web-server-link: https://www.npmjs.com/package/serve
+
+This repo contains the documentation source files for the DataStax {product} documentation.
+
+The docs are written in {asciidoctor-link}[AsciiDoc] and use {antora-link}[Antora] to generate the HTML output.
+
+toc::[]
+
+== Contributing to the docs
+
+Although this repo is maintained by the DataStax Docs team, contributions from the community are gratefully accepted, and encouraged.
+
+_Why should you contribute to the {product} docs?_::
+* It makes the Docs team's job easier.
+* It makes your job easier.
+* It helps DataStax and Cassandra users more quickly.
+
+_How do you contribute?_::
+The majority of DataStax documentation source files are written in AsciiDoc, a lightweight, human-readable markup language.
+You can contribute to the documentation by adding content to, or editing, the AsciiDoc files in this repo.
+
+For instructions, see <<writing-asciidoc>> below.
+
+[[writing-asciidoc]]
+== Working with {product} docs
+
+Before following the steps below, first make sure that you have {install-git-link}[git] installed on your computer.
+
+. Using a terminal, clone the {product-repo-link}[{product-repo-name}] repository (this repository) onto your computer.
++
+[source,shell,subs="attributes+"]
+----
+git clone {product-repo-link}
+----
+. `cd` into the cloned repo.
++
+[source,shell,subs="attributes+"]
+----
+cd {product-repo-name}
+----
+. If you have previously cloned the repo, switch to the `{product-branch-name}` branch and do a `git pull` to get the latest changes.
++
+[source,shell,subs="attributes+"]
+----
+git checkout {product-branch-name} && git pull
+----
+. Create a working branch.
++
+[source,shell,subs="attributes+"]
+----
+git checkout -b <working-branch>
+----
++
+Replace `<working-branch>` with a descriptive name or a related JIRA ticket number.
+. Locate the `.adoc` file that you wish to edit and open it in your preferred editor (`.adoc` files are stored in the `docs-src` directory).
+Make sure to save your changes once you're done making edits.
++
+If adding a new page, make sure to add it to the appropriate location in the `docs-src` directory and then update the appropriate navigation file (`nav.adoc`) so that the new page will show up in the left-hand navigation of the docs website.
+. Preview your changes by running a <<build-locally,local build>>.
+. Commit your changes.
++
+[source,shell,subs="attributes+"]
+----
+git commit -m "<description-of-changes>"
+----
+. Push your changes to GitHub.
++
+[source,shell,subs="attributes+"]
+----
+git push -u origin <working-branch>
+----
+
+=== Submitting your changes
+
+Once all of your changes are pushed to GitHub, you'll need to submit them for review by creating a {create-pr-link}[pull request].
+
+. Create your pull request against the {product-branch-link}[{product-branch-name}] branch.
+. Assign someone from the docs team as a reviewer.
+        * https://github.com/jgillenwater[@jgillenwater]
+        * https://github.com/polandll[@polandll]
+
+The docs team will review, ask questions, make requests, and merge your changes.
+The docs team will then update the published documentation to reflect your changes.
+
+For more information on contributing to the docs, click {contributor-docs-link}[here].
+
+[[build-locally]]
+== Generating and viewing the HTML output locally
+
+You can generate the HTML docs locally to view changes and check your work.
+Note that these steps assume you've already cloned the {product-repo-link}[{product-repo-name}] repo and checked out the `{product-branch-name}` branch (see <<writing-asciidoc>> for more information).
+
+Using a terminal, `cd` into the cloned repo directory and run the following command:
+
+[source,shell,subs="attributes+"]
+----
+./build-locally.sh {docset-name}
+----
+
+.Dependencies
+[IMPORTANT]
+====
+The `build-locally.sh` script requires {nvm-link}[`nvm`] to be installed on your system in order to install and update the rest of the required dependencies.
+If you're running macOS and have {homebrew-link}[Homebrew] installed, the script will automatically install `nvm` for you.
+If you're running on another platform (or don't use Homebrew), you'll need to manually install `nvm` before running the above command.
+====
+
+If the docs built successfully, you'll see output similar to the following:
+
+[source,console,subs="attributes+"]
+----
+Site generation complete!
+Open file:///Users/your-user-name/{product-repo-name}/build/{docset-name} in a browser to view your site.
+
+Do you want to start a local web server for viewing the generated docs? (Y or N)
+----
+
+The `build-locally.sh` script prints the local file path of the generated docs, and prompts you about starting a local {web-server-link}[web server] for viewing the docs.
+
+* *Y* - Select to view the site build with the advanced functionality of a web server: <<web-server-instructions>>.
+* *N* - Select to view only the generated docs HTML: <<html-direct-instructions>>.
+
+[#html-direct-instructions]
+.*To view the generated HTML files directly*
+. Copy the entire `\file:///` path from the terminal output, and open it in a web browser.
+. In the file browser, click *docs*, then click on any of the `.html` files.
+. From here, you can browse the documentation just like you would on docs.datastax.com.
+. If you end up making further edits to the documentation, simply run the `build-locally.sh` script again to view your latest changes.
+
+[#web-server-instructions]
+.*To view the docs using the local web server*
+. When prompted to start the local web server, type *Y* and press *Return*.
++
+When the web server starts up, you'll see output similar to the following:
++
+[source,console]
+----
+   ┌────────────────────────────────────────────────────┐
+   │                                                    │
+   │   Serving!                                         │
+   │                                                    │
+   │   - Local:            http://localhost:3000        │
+   │   - On Your Network:  http://192.168.86.141:3000   │
+   │                                                    │
+   │   Copied local address to clipboard!               │
+   │                                                    │
+   └────────────────────────────────────────────────────┘
+----
+. Copy the `Local:` address (in this case, `\http://localhost:3000`) and open it in a web browser.
+. From the *Index of {product-repo-name}/* page, click *build/ > {docset-name}/ > docs/*
+. From here, you can browse the documentation just like you would on docs.datastax.com.
+. Once you're done viewing the documentation, go back to your terminal window and press *Ctrl+C* to shut down the web server.
+. If you end up making further edits to the documentation, simply run the `build-locally.sh` script again to view your latest changes.
+
+== Repo dependencies
+
+The `build-locally.sh` script should take care of installations required to build the docs.
+However, if you get a message that you need to install NodeJS, run the following commands (macOS):
+
+[source,shell,subs="attributes+"]
+----
+brew install node
+----
+
+[source,shell,subs="attributes+"]
+----
+npm install
+----
+
+=== Dependencies in package.json
+
+There are some key dependencies for building DataStax documentation.
+
+[source,json,subs="attributes+"]
+----
+  "dependencies": {
+    "@antora/cli": "~3.0.1",
+    "@antora/site-generator-default": "~3.0.1",
+    "linkinator": "~3.0.3",
+    "async": "~3.2.4",
+    "mobx": "~6.0.4",
+    "react": "~16.8.4",
+    "react-dom": "~16.8.4",
+    "rxjs": "~7.0.1",
+    "styled-components": "~5.1.1"
+  }
+----
+
+`@antora/cli` and `@antora/site-generator-default` are requirements to build with Antora.
