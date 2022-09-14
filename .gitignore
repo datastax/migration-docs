@@ -2,6 +2,8 @@ build
 .DS_store
 *~
 package-lock.json
+.vscode
+.java-version
 
 # Logs
 logs

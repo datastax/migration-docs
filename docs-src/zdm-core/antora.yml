@@ -1,6 +1,1 @@
-name: docs
-version: ~
-title: Zero Downtime Migration Documentation
-# start_page: docs::index.adoc
-nav: 
-  - modules/ROOT/nav.adoc
+antora-zdm.yml
