@@ -2,48 +2,137 @@
 
 See the following troubleshooting advice collected from DataStax and open-source community experts.
 
-[NOTE]
+== Unable to find the proxy log files
+
+If 	ZDM-Proxy was deployed using the ZDM Automation utility, the utility contains an Ansible playbook that retrieves the logs. For details, see the next xref:migration-troubleshooting.adoc#how-to-view-retrieve-logs[troubleshooting tip]. 
+
+If you did not use the ZDM Automation utility, the steps to retrieve the logs depends on how you deployed the ZDM-Proxy. If 
+Docker is used, enter the following command to export the logs of a container to a file:
+
+```bash
+docker logs my-container > log.txt
+```
+
+[TIP]
 ====
-**Team**: we'll create this content during August-September 2022 based on information from João Reis and others on the extended ZDM teams (Eng, PM, Support, Field/Services, ...).
+Keep in mind that docker logs are deleted if the container is recreated or restarted. 
+**TODO**: Decide if users may mount a docker volume to persist the proxy's container log files. 
 ====
 
-== Title of issue 1
+[#how-to-view-retrieve-logs]
+== How to view and retrieve the ZDM-Proxy logs
+
+ZDM-Proxy runs as a Docker container. You can view its logs by connecting to the proxy instance and running the following command:
+
+```bash
+sudo docker container logs zdm-proxy-container
+```
+
+You can retrieve logs of all proxy instances using a dedicated playbook: `collect_proxy_logs.yml`.
+
+If you are using the jumphost as your Ansible control host, no configuration changes are necessary. You can view the playbook's configuration values in `vars/log_collection_playbook_config.yml`.
+
+If you use an external machine as the Ansible control host, open `vars/log_collection_playbook_config.yml` and change the configuration as follows:
+
+. Set `log_collection_playbook_host` to `localhost`
+. Set `archived_log_dir_path_name` to the absolute path of the directory where you would like the log zip file to be stored. The directory will be created if it does not yet exist.
+. Set `tmp_log_dir_path_name` to the absolute path of a directory that can be used to temporarily handle the log files. This directory will be created by the runbook and removed at the end, after the zip file has been created.
+
+The playbook is now ready to be run. Example:
+
+```bash
+ansible-playbook collect_proxy_logs.yml -i zdm_inventory
+```
+
+This playbook creates a single zip file, called `proxy_logs_<current_timestamp>.zip`. It contains the logs from all proxy instances, and stores it on the Ansible control host in the directory specified in `archived_log_dir_path_name`. 
+
+== Not sure what to look for in the logs
+
+Here are the most common messages you'll find in the proxy logs.
+
+=== Proxy startup message
+
+First, verify whether the ZDM-Proxy is starting up correctly. Assuming the Log Level (where to set?) is not filtering out `INFO` entries, to verify proxy startup, look for the following type of log message. Example:
+
+```log
+{"log":"time=\"2022-10-01T11:50:48Z\" level=info 
+msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
+\"\n","stream":"stderr","time":"2022-10-01T11:50:48.522097083Z"}
+```
+
+=== Proxy configuration
+
+The first few lines of the proxy log file contains all the configuration settings and values. They are printed in a long JSON string format. You can copy/paste the string into a JSON formatter/viewer to make it easier to read. Example log message:
+
+```log
+{"log":"time=\"2022-10-01T11:50:48Z\" level=info 
+msg=\"Parsed configuration: {\\\"ProxyIndex\\\":1,\\\"ProxyInstanceCount\\\":-1,
+[remaining of json string removed for simplicity]
+","stream":"stderr","time":"2022-10-01T11:50:48.339225051Z"}
+```
+
+Seeing the configuration settings is useful while troubleshooting issues. However, remember to check the log level setting (TODO: quick command example here) to ensure you're viewing the intended types of messages. Setting the log level setting to `DEBUG` might cause a slight performance degradation.
+
+=== Be aware of current log level
+
+When you find a log message that looks like an error, the most important thing is to check the "log level" of that message.
+
+* A log message with `level=debug` or `level=info` is very likely not an error, but something expected and normal. 
+
+* Log messages with `level=error` must be examined as they usually indicate an issue with the proxy, the client application, or the clusters. 
+
+* Log messages with `level=warn` are usually related to events that are not fatal to the overall running workload, but may cause issues with individual requests or connections.
+
+* In general, log messages with `level=error` or `level=warn` should be brought to the attention of DataStax, if the meaning is not clear.  In the ZDM-Proxy GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^] to ask questions about log messages of type `error` or `warn` that are unclear.
+
+=== Protocol log messages
+
+Here's an example of a log message that looks like an error, but it's actually an expected and normal message:
+
+```bash
+{"log":"time=\"2022-10-01T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR] 
+Protocol v5 detected while decoding a frame. Returning a protocol message 
+to the client to force a downgrade: PROTOCOL (code=Code Protocol [0x0000000A], 
+msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":"2022-10-01T12:02:12.379287735Z"}
+```
+
+There are cases where protocol errors are `Fatal`, which kill an active connection that was being used to serve requests. However, if you find a log message similar to the example above of log level `debug`, it's likely not to be an issue. Instead, it's often part of the handshake process during the connection initialization; that is, the normal protocol version negotiation.
+
+== How to identify the ZDM-Proxy container's image version
+
+On any machine that is running the deployed ZDM-Proxy, use the following docker command to get the version of the image used by the ZDM-proxy container:
+
+```bash
+sudo docker container inspect zdm-proxy-container
+```
+
+== Disaster recovery
+
+Text and subsections coming next... 9/15.
 
 User action: (How to resolve, steps to try, background info)
 
-== Title of issue 2
+== Title of next issue or tip
 
 User action: (How to resolve, steps to try, background info)
 
-== Title of issue 3
+== Title of next issue or tip
 
 User action: (How to resolve, steps to try, background info)
 
-== Title of issue 4
+== Title of next issue or tip
 
 User action: (How to resolve, steps to try, background info)
 
-== Title of issue 5
+== Title of next issue or tip
 
 User action: (How to resolve, steps to try, background info)
 
-== Title of issue 6
+== Title of next issue or tip
 
 User action: (How to resolve, steps to try, background info)
 
-== Title of issue 7
-
-User action: (How to resolve, steps to try, background info)
-
-== Title of issue 8
-
-User action: (How to resolve, steps to try, background info)
-
-== Title of issue 9
-
-User action: (How to resolve, steps to try, background info)
-
-== Title of issue 10
+== Title of next issue or tip
 
 User action: (How to resolve, steps to try, background info)
 
