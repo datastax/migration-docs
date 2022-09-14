@@ -54,7 +54,7 @@ Here are the most common messages you'll find in the proxy logs.
 
 First, verify whether the ZDM-Proxy is starting up correctly. Assuming the Log Level (where to set?) is not filtering out `INFO` entries, to verify proxy startup, look for the following type of log message. Example:
 
-```log
+```json
 {"log":"time=\"2022-10-01T11:50:48Z\" level=info 
 msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
 \"\n","stream":"stderr","time":"2022-10-01T11:50:48.522097083Z"}
@@ -64,14 +64,14 @@ msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
 
 The first few lines of the proxy log file contains all the configuration settings and values. They are printed in a long JSON string format. You can copy/paste the string into a JSON formatter/viewer to make it easier to read. Example log message:
 
-```log
+```json
 {"log":"time=\"2022-10-01T11:50:48Z\" level=info 
 msg=\"Parsed configuration: {\\\"ProxyIndex\\\":1,\\\"ProxyInstanceCount\\\":-1,
 [remaining of json string removed for simplicity]
 ","stream":"stderr","time":"2022-10-01T11:50:48.339225051Z"}
 ```
 
-Seeing the configuration settings is useful while troubleshooting issues. However, remember to check the log level setting (TODO: quick command example here) to ensure you're viewing the intended types of messages. Setting the log level setting to `DEBUG` might cause a slight performance degradation.
+Seeing the configuration settings is useful while troubleshooting issues. However, remember to check the log level setting to ensure you're viewing the intended types of messages. Setting the log level setting to `DEBUG` might cause a slight performance degradation.
 
 === Be aware of current log level
 
@@ -89,7 +89,7 @@ When you find a log message that looks like an error, the most important thing i
 
 Here's an example of a log message that looks like an error, but it's actually an expected and normal message:
 
-```bash
+```json
 {"log":"time=\"2022-10-01T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR] 
 Protocol v5 detected while decoding a frame. Returning a protocol message 
 to the client to force a downgrade: PROTOCOL (code=Code Protocol [0x0000000A], 
@@ -106,15 +106,54 @@ On any machine that is running the deployed ZDM-Proxy, use the following docker 
 sudo docker container inspect zdm-proxy-container
 ```
 
-== Disaster recovery
+== Disaster Recovery
 
-Text and subsections coming next... 9/15.
+The following sections present a series of Disaster Recovery (DR) troubleshooting recommendations. 
 
-User action: (How to resolve, steps to try, background info)
+=== Cluster node failure occurs
 
-== Title of next issue or tip
+First, some background information. ZDM-Proxy pairs one client connection with one unique origin connection and one unique target connection. If read mirroring (async reads) is enabled, there is one additional origin or target connection per "pairing," depending on where the reads are being routed; check the proxy configuration settings.
 
-User action: (How to resolve, steps to try, background info)
+Each proxy instance is assigned a unique set of cluster nodes for the origin, and a unique set of cluster nodes for the target. Two proxy instances will never be assigned the same cluster node at the same time, unless there are more proxy instances than cluster nodes. These assignments change whenever a topology protocol event is received by the ZDM-Proxy's control connections. The ZDM-Proxy always has one open control connection for origin and one for target.
+
+If a cluster node fails, regardless of whether it is an origin or target node, and the connections to that node get closed or time out, then all the connections associated with that "pairing" will also be closed (both client and cluster connections).
+
+If the ZDM-Proxy does not receive a protocol event removing the failing node from the topology, the proxy will keep assigning that node to new client connection attempts. The client application's driver will keep trying to open new connections to the proxy instance and eventually it will consider the proxy unhealthy until a new connection is opened successfully. If the proxy instance is assigned more than one cluster node, the subsequent connection attempts by the client will result in the proxy choosing one node other than the failing one --  because the proxy goes through the cluster nodes in a round robin fashion -- and the connection will succeed.
+
+Therefore, if there is a cluster node failure, the client application and ZDM-Proxy should be able to function normally, although some connection errors may show up in the logs. 
+
+[NOTE]
+====
+Because the ZDM-Proxy's round-robin process goes through the set of cluster nodes per connection attempt, some connection attempts will fail, and some will succeed, until the failing node is removed from the cluster or it recovers. Removing the node from the cluster is not always recommended, but this scenario falls into standard DataStax Enterprise (DSE) or Apache Cassandra&reg; operational issues. 
+====
+
+The cluster node failure symptoms that show up on the client application would be different than if ZDM software wasn't in this environment, because normally the driver would be able to mark the node as DOWN and only attempt to use it whenever a reconnection succeeds. However, with ZDM being part of this environment, connection issue will appear as *intermittent* unless the proxy is only assigned that single failing node and no other nodes.
+
+If multiple cluster nodes fail, the way to handle it is the same as if only one node failed, but the symptoms on the client application might be different. If all the failing nodes are assigned to one ZDM-Proxy, the client application will only see one failing node. However, if the nodes are assigned to different ZDM-Proxy instances, the client application will see the condition as multiple failing nodes.  
+
+In the proxy logs, you may notice the following **disconnected** message. It means that the remote peer terminated the connection. Here's an example with the IP address obfuscated:
+
+```log
+[INFO] [TARGET-CONNECTOR] x.xx.x.xxx:xxxxx disconnected
+```
+
+The prefix of the log message lets us know which **peer** terminated the connection. In this example, we can see by the `TARGET-CONNECTOR` prefix that the IP address refers to a target cluster node, and that node terminated a connection. As mentioned, if one connection of the **pairing** is closed, the other **ends** are also closed. So in this case, a client connection and an origin connection were terminated by the ZDM-Proxy because the target connection was closed.
+
+Reasons for cluster nodes to close connections are usually node restarts or decommission operations. Astra DB will sometimes terminate a connection if it is idle for more than 10 minutes. This scenario may happen if a client connection is sending only reads, because those reads will be routed to one cluster only. 
+
+You may also notice the following `connection timed out` message in the logs. It's much different from the previous example:
+
+```log
+[ERROR] [CLIENT-CONNECTOR] error reading: cannot decode frame header: 
+cannot decode header version and direction: cannot read [byte]: 
+read tcp 172.18.100.106:9042->xxx.xxx.xx.xxx:xxxxx: read: connection timed out
+```
+
+This message above indicates that the remote peer became unresponsive, or a network issue caused packets to time out. Because of the `CLIENT-CONNECTOR” prefix, we can see here that the issue occurred between the proxy and the client application, or the client application became unresponsive.
+
+=== Proxy instance failure
+
+More text coming...
 
 == Title of next issue or tip
 
