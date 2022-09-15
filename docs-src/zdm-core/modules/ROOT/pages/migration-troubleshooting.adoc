@@ -153,7 +153,27 @@ This message above indicates that the remote peer became unresponsive, or a netw
 
 === Proxy instance failure
 
-More text coming...
+In rare cases, your client application may encounter a ZDM-Proxy instance that failed if its host cluster node failed, or if multiple proxies crashed. If either scenario happens, you may see a `panic` message at the end of the log file, with a stack trace. Here's a truncated example:
+
+```log
+{"log":"panic: send on closed channel\n","stream":"stderr","time":"2021-10-21T12:15:04.120202983Z"}
+{"log":"\n","stream":"stderr","time":"2021-10-21T12:15:04.120218988Z"}
+{"log":"goroutine 38 [running]:\n","stream":"stderr","time":"2021-10-21T12:15:04.120224194Z"}
+{"log":"github.com/riptano/cloud-gate/proxy/pkg/zdmproxy.(*writeCoalescer).Enqueue(0xc0000b2850, 0xc000f95ee0)\n","stream":"stderr","time":"2021-10-21T12:15:04.120248153Z"}
+{"log":"\u0009/build/proxy/pkg/zdmproxy/coalescer.go:168 
+(truncated for simplicity)
+```
+
+How you'll recover the ZDM-Proxy instance depends on how it was deployed. If the proxy was deployed through our ZDM Automation utility, the docker container should be set up with a restart policy, which automatically attempts to restart the proxy whenever it crashes. If this policy was not set up, the container should be started manually.
+
+If the ZDM-Proxy container keeps crashing on every restart attempt, please submit an issue in the ZDM-Proxy GitHub site. Usually, having a ZDM-Proxy instance in the topology that is not receiving connections shouldn't be a problem. The driver will treat this scenario as if a cluster node was down, and avoid using the node until a reconnection is successful. 
+
+However, if you need to remove this ZDM-Proxy instance from the proxy **virtual cluster**, to prevent client applications from connecting to it:
+
+* The failing proxy's IP address should be removed from the `PROXY_ADDRESSES` setting
+* And the `PROXY_INSTANCE_COUNT` and `PROXY_INDEX` variables should be updated accordingly
+
+If you're using the ZDM Automation utility, it's easier and faster to create a new ZDM deployment, and move the client applications to use those new instances.
 
 == Title of next issue or tip
 
