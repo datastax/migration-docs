@@ -2,48 +2,176 @@
 
 See the following troubleshooting advice collected from DataStax and open-source community experts.
 
+== Unable to find the proxy log files
+
+If 	ZDM-Proxy was deployed using the ZDM Automation utility, the utility contains an Ansible playbook that retrieves the logs. For details, see the next xref:migration-troubleshooting.adoc#how-to-view-retrieve-logs[troubleshooting tip]. 
+
+If you did not use the ZDM Automation utility, the steps to retrieve the logs depends on how you deployed the ZDM-Proxy. If 
+Docker is used, enter the following command to export the logs of a container to a file:
+
+```bash
+docker logs my-container > log.txt
+```
+
+[TIP]
+====
+Keep in mind that docker logs are deleted if the container is recreated or restarted. 
+**TODO**: Decide if users may mount a docker volume to persist the proxy's container log files. 
+====
+
+[#how-to-view-retrieve-logs]
+== How to view and retrieve the ZDM-Proxy logs
+
+ZDM-Proxy runs as a Docker container. You can view its logs by connecting to the proxy instance and running the following command:
+
+```bash
+sudo docker container logs zdm-proxy-container
+```
+
+You can retrieve logs of all proxy instances using a dedicated playbook: `collect_proxy_logs.yml`.
+
+If you are using the jumphost as your Ansible control host, no configuration changes are necessary. You can view the playbook's configuration values in `vars/log_collection_playbook_config.yml`.
+
+If you use an external machine as the Ansible control host, open `vars/log_collection_playbook_config.yml` and change the configuration as follows:
+
+. Set `log_collection_playbook_host` to `localhost`
+. Set `archived_log_dir_path_name` to the absolute path of the directory where you would like the log zip file to be stored. The directory will be created if it does not yet exist.
+. Set `tmp_log_dir_path_name` to the absolute path of a directory that can be used to temporarily handle the log files. This directory will be created by the runbook and removed at the end, after the zip file has been created.
+
+The playbook is now ready to be run. Example:
+
+```bash
+ansible-playbook collect_proxy_logs.yml -i zdm_inventory
+```
+
+This playbook creates a single zip file, called `proxy_logs_<current_timestamp>.zip`. It contains the logs from all proxy instances, and stores it on the Ansible control host in the directory specified in `archived_log_dir_path_name`. 
+
+== Not sure what to look for in the logs
+
+Here are the most common messages you'll find in the proxy logs.
+
+=== Proxy startup message
+
+First, verify whether the ZDM-Proxy is starting up correctly. Assuming the Log Level (where to set?) is not filtering out `INFO` entries, to verify proxy startup, look for the following type of log message. Example:
+
+```json
+{"log":"time=\"2022-10-01T11:50:48Z\" level=info 
+msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
+\"\n","stream":"stderr","time":"2022-10-01T11:50:48.522097083Z"}
+```
+
+=== Proxy configuration
+
+The first few lines of the proxy log file contains all the configuration settings and values. They are printed in a long JSON string format. You can copy/paste the string into a JSON formatter/viewer to make it easier to read. Example log message:
+
+```json
+{"log":"time=\"2022-10-01T11:50:48Z\" level=info 
+msg=\"Parsed configuration: {\\\"ProxyIndex\\\":1,\\\"ProxyInstanceCount\\\":-1,
+[remaining of json string removed for simplicity]
+","stream":"stderr","time":"2022-10-01T11:50:48.339225051Z"}
+```
+
+Seeing the configuration settings is useful while troubleshooting issues. However, remember to check the log level setting to ensure you're viewing the intended types of messages. Setting the log level setting to `DEBUG` might cause a slight performance degradation.
+
+=== Be aware of current log level
+
+When you find a log message that looks like an error, the most important thing is to check the "log level" of that message.
+
+* A log message with `level=debug` or `level=info` is very likely not an error, but something expected and normal. 
+
+* Log messages with `level=error` must be examined as they usually indicate an issue with the proxy, the client application, or the clusters. 
+
+* Log messages with `level=warn` are usually related to events that are not fatal to the overall running workload, but may cause issues with individual requests or connections.
+
+* In general, log messages with `level=error` or `level=warn` should be brought to the attention of DataStax, if the meaning is not clear.  In the ZDM-Proxy GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^] to ask questions about log messages of type `error` or `warn` that are unclear.
+
+=== Protocol log messages
+
+Here's an example of a log message that looks like an error, but it's actually an expected and normal message:
+
+```json
+{"log":"time=\"2022-10-01T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR] 
+Protocol v5 detected while decoding a frame. Returning a protocol message 
+to the client to force a downgrade: PROTOCOL (code=Code Protocol [0x0000000A], 
+msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":"2022-10-01T12:02:12.379287735Z"}
+```
+
+There are cases where protocol errors are `Fatal`, which kill an active connection that was being used to serve requests. However, if you find a log message similar to the example above of log level `debug`, it's likely not to be an issue. Instead, it's often part of the handshake process during the connection initialization; that is, the normal protocol version negotiation.
+
+== How to identify the ZDM-Proxy container's image version
+
+On any machine that is running the deployed ZDM-Proxy, use the following docker command to get the version of the image used by the ZDM-proxy container:
+
+```bash
+sudo docker container inspect zdm-proxy-container
+```
+
+== Disaster Recovery
+
+The following sections present a series of Disaster Recovery (DR) troubleshooting recommendations. 
+
+=== Cluster node failure occurs
+
+First, some background information. ZDM-Proxy pairs one client connection with one unique origin connection and one unique target connection. If read mirroring (async reads) is enabled, there is one additional origin or target connection per "pairing," depending on where the reads are being routed; check the proxy configuration settings.
+
+Each proxy instance is assigned a unique set of cluster nodes for the origin, and a unique set of cluster nodes for the target. Two proxy instances will never be assigned the same cluster node at the same time, unless there are more proxy instances than cluster nodes. These assignments change whenever a topology protocol event is received by the ZDM-Proxy's control connections. The ZDM-Proxy always has one open control connection for origin and one for target.
+
+If a cluster node fails, regardless of whether it is an origin or target node, and the connections to that node get closed or time out, then all the connections associated with that "pairing" will also be closed (both client and cluster connections).
+
+If the ZDM-Proxy does not receive a protocol event removing the failing node from the topology, the proxy will keep assigning that node to new client connection attempts. The client application's driver will keep trying to open new connections to the proxy instance and eventually it will consider the proxy unhealthy until a new connection is opened successfully. If the proxy instance is assigned more than one cluster node, the subsequent connection attempts by the client will result in the proxy choosing one node other than the failing one --  because the proxy goes through the cluster nodes in a round robin fashion -- and the connection will succeed.
+
+Therefore, if there is a cluster node failure, the client application and ZDM-Proxy should be able to function normally, although some connection errors may show up in the logs. 
+
 [NOTE]
 ====
-**Team**: we'll create this content during August-September 2022 based on information from João Reis and others on the extended ZDM teams (Eng, PM, Support, Field/Services, ...).
+Because the ZDM-Proxy's round-robin process goes through the set of cluster nodes per connection attempt, some connection attempts will fail, and some will succeed, until the failing node is removed from the cluster or it recovers. Removing the node from the cluster is not always recommended, but this scenario falls into standard DataStax Enterprise (DSE) or Apache Cassandra&reg; operational issues. 
 ====
 
-== Title of issue 1
+The cluster node failure symptoms that show up on the client application would be different than if ZDM software wasn't in this environment, because normally the driver would be able to mark the node as DOWN and only attempt to use it whenever a reconnection succeeds. However, with ZDM being part of this environment, connection issue will appear as *intermittent* unless the proxy is only assigned that single failing node and no other nodes.
+
+If multiple cluster nodes fail, the way to handle it is the same as if only one node failed, but the symptoms on the client application might be different. If all the failing nodes are assigned to one ZDM-Proxy, the client application will only see one failing node. However, if the nodes are assigned to different ZDM-Proxy instances, the client application will see the condition as multiple failing nodes.  
+
+In the proxy logs, you may notice the following **disconnected** message. It means that the remote peer terminated the connection. Here's an example with the IP address obfuscated:
+
+```log
+[INFO] [TARGET-CONNECTOR] x.xx.x.xxx:xxxxx disconnected
+```
+
+The prefix of the log message lets us know which **peer** terminated the connection. In this example, we can see by the `TARGET-CONNECTOR` prefix that the IP address refers to a target cluster node, and that node terminated a connection. As mentioned, if one connection of the **pairing** is closed, the other **ends** are also closed. So in this case, a client connection and an origin connection were terminated by the ZDM-Proxy because the target connection was closed.
+
+Reasons for cluster nodes to close connections are usually node restarts or decommission operations. Astra DB will sometimes terminate a connection if it is idle for more than 10 minutes. This scenario may happen if a client connection is sending only reads, because those reads will be routed to one cluster only. 
+
+You may also notice the following `connection timed out` message in the logs. It's much different from the previous example:
+
+```log
+[ERROR] [CLIENT-CONNECTOR] error reading: cannot decode frame header: 
+cannot decode header version and direction: cannot read [byte]: 
+read tcp 172.18.100.106:9042->xxx.xxx.xx.xxx:xxxxx: read: connection timed out
+```
+
+This message above indicates that the remote peer became unresponsive, or a network issue caused packets to time out. Because of the `CLIENT-CONNECTOR” prefix, we can see here that the issue occurred between the proxy and the client application, or the client application became unresponsive.
+
+=== Proxy instance failure
+
+More text coming...
+
+== Title of next issue or tip
 
 User action: (How to resolve, steps to try, background info)
 
-== Title of issue 2
+== Title of next issue or tip
 
 User action: (How to resolve, steps to try, background info)
 
-== Title of issue 3
+== Title of next issue or tip
 
 User action: (How to resolve, steps to try, background info)
 
-== Title of issue 4
+== Title of next issue or tip
 
 User action: (How to resolve, steps to try, background info)
 
-== Title of issue 5
-
-User action: (How to resolve, steps to try, background info)
-
-== Title of issue 6
-
-User action: (How to resolve, steps to try, background info)
-
-== Title of issue 7
-
-User action: (How to resolve, steps to try, background info)
-
-== Title of issue 8
-
-User action: (How to resolve, steps to try, background info)
-
-== Title of issue 9
-
-User action: (How to resolve, steps to try, background info)
-
-== Title of issue 10
+== Title of next issue or tip
 
 User action: (How to resolve, steps to try, background info)
 

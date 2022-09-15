@@ -1,26 +1,31 @@
 site:
-  title: DataStax Migration Documentation
-  url: /zdm/
-# start_page: docs::index.adoc
+  title: DataStax Zero Downtime Migration
+  url: https://docs.datastax.com/en/zdm/docs
 
-output: 
+output:
+  # The output.dir in the site-local playbook should take the form
+  # "./../build/<docset-name>". The reason for this is because DataStax docs are
+  # often stored on separate branches of the same repo. Using the docset name
+  # for the output directory ensures that different docset builds within the
+  # same repo don't overwrite each other
   dir: ./../build/zdm
 
 content:
-  edit_url: ~
+  edit_url: false
   sources:
-#    - url: ./..
-#      branches: HEAD
-#      start_path: docs-src/zdm-develop
-    - url: ./..
-      branches: HEAD
-      start_path: docs-src/zdm-core
+  - url: ./..
+    branches: HEAD
+    start_path: docs-src/zdm-core
 
 ui:
   bundle:
-    url: https://github.com/riptano/antora-ui-docs/raw/main/releases/download/v0.8/ui-bundle.zip
+    url: https://github.com/riptano/antora-ui-docs/releases/latest/download/ui-bundle.zip
     snapshot: true
-  supplemental_files: ./supplemental-ui
+  # Uncomment the "supplemental_files" line below ONLY IF you're trying to
+  # change the banner logo to something other than the default logo provided by
+  # the UI bundle. NOTE: The non-default logo must be named "logo.svg" and be
+  # located @ "playbooks/supplemental-ui/img/logo.svg".
+  #supplemental_files: ./supplemental-ui
   output_dir: assets
 
 asciidoc:
@@ -33,7 +38,7 @@ asciidoc:
     id-separator: '-'
     company: 'DataStax'
     product: 'Zero Downtime Migration'
-    shortproduct: 'zdm'
+    shortproduct: 'ZDM'
     database: 'Astra DB'
     astra_db: 'Astra DB'
     astra_generic: 'Astra'
@@ -70,7 +75,7 @@ asciidoc:
     base_rest_url: 'https://$ASTRA_CLUSTER_ID-$ASTRA_REGION.apps.astra.datastax.com'
     base_doc_url: 'https://$ASTRA_CLUSTER_ID-$ASTRA_REGION.apps.astra.datastax.com'
     base_graphql_url: 'https://$ASTRA_CLUSTER_ID-$ASTRA_REGION.apps.astra.datastax.com:8080'
-    
+
     base_rest_schema: '/api/rest/v2/schemas/keyspaces'
     base_doc_schema: '/api/rest/v2/schemas/namespaces'
     base_gql_schema: '/api/graphql-schema'
@@ -105,9 +110,12 @@ asciidoc:
     support_url: 'https://houston.datastax.com/hc/requests/new'
     astra_docs_base_url: 'https://docs.datastax.com/en/astra/docs'
 
-    zdm-docs: 'ssh://github.com/datastax/migration-docs.git'
-    postman-base-url: 'https:/github.com/stargate/docs/blob/main/modules/developers-guide'
-    # change postman-base-url to 'https:/github.com/stargate/docs/blob/main/docs-src/stargate-develop/modules/develop' after test-multi-repos merge
+    # The "glossary-url" attribute below is used by writers when linking to a
+    # term in the glossary. Referencing this attribute in an adoc file will
+    # automatically insert the root URL where the glossary pages are located.
+    # For example, the following syntax will generate a link to the glossary
+    # page for "agent": {glossary-url}gloss_agent.html[agent,window="_blank"]
+    glossary-url: 'https://docs.datastax.com/en/glossary/docs/'
 
   extensions:
   - ./lib/tabs-block.js
