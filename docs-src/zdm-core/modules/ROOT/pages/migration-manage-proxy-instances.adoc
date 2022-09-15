@@ -7,12 +7,23 @@ In this topic, we'll learn how to perform simple operations on your ZDM Proxy de
 * Change a mutable configuration property
 * Upgrade the proxy version
 
+All these operations can be easily done by running Ansible playbooks.
+
+Make sure you are connected to the Ansible Control Host docker container. As explained before, you can do so from the jumphost machine by running:
+```bash
+docker exec -it zdm-ansible-container bash
+```
+You will see a prompt like:
+```bash
+ubuntu@52772568517c:~$
+```
+
 == Rolling restart of the proxies
 
-From the Ansible control host, run:
+Connect to the Ansible Control Host container as explained above and run:
 
 ```bash
-ansible-playbook rolling_restart_proxy_playbook.yml -i cloudgate_inventory
+ansible-playbook rolling_restart_zdm_proxy.yml -i zdm_ansible_inventory
 ```
 
 This is all that is needed.
@@ -22,7 +33,7 @@ This playbook restarts each proxy container one by one, automating the following
 . It stops one container gracefully, waiting for it to shut down
 . It starts the container again
 . It checks that the container has come up successfully by checking the readiness endpoint:
-.. If unsuccessful, it repeat the check for six times at 5-second intervals and eventually aborts the whole process if the check still fails
+.. If unsuccessful, it repeats the check for six times at 5-second intervals and eventually interrupts the whole process if the check still fails
 .. If successful, it waits for 10 seconds and then moves on to the next container
 
 == Use the proxy logs
@@ -34,71 +45,65 @@ You can view or collect the logs.
 The proxy runs as a Docker container. Its logs can be viewed by connecting to the proxy instance and running the following command:
 
 ```bash
-sudo docker container logs cloudgate-proxy-container
+sudo docker container logs zdm-proxy-container
 ```
 
 === Collect the logs
 
-The logs of all proxy instances can be easily retrieved using a dedicated playbook (`collect_proxy_logs.yml`). You can view the playbook's configuration values in `vars/log_collection_playbook_config.yml`.
+The logs of all proxy instances can be easily retrieved using a dedicated playbook (`collect_zdm_proxy_logs.yml`). You can view the playbook's configuration values in `vars/zdm_proxy_log_collection_config.yml`, but no changes to it are required.
 
 Run the playbook:
 
 ```bash
-ansible-playbook collect_proxy_logs_playbook.yml -i cloudgate_inventory
+ansible-playbook collect_zdm_proxy_logs.yml -i zdm_ansible_inventory
 ```
 
-This playbook creates a single zip file, called `proxy_logs_<current_timestamp>.zip`, containing the logs from all proxy instances, and stores it on the Ansible control host in the directory specified in `archived_log_dir_path_name` (default `/home/ubuntu/proxy_archived_logs`).
+This playbook creates a single zip file, called `zdm_proxy_logs_<current_timestamp>.zip`, containing the logs from all proxy instances, and stores it on the Ansible control host docker container in the directory `/home/ubuntu/zdm_proxy_archived_logs` (this can be overridden in the `archived_log_dir_path_name` variable in `vars/zdm_proxy_log_collection_config.yml`). [ TODO is it necessary to explain how to override this, now that the control host is a container? ]
 
 == Change a mutable configuration property
 
-The following configuration values are considered mutable and can therefore be changed in a rolling fashion on an existing proxy deployment.
+The following configuration values are considered mutable and can be changed in a rolling fashion on an existing ZDM proxy deployment.
 
 Commonly changed values:
 
 * `forward_reads_to_target` boolean flag: 
 ** This flag determines the routing of the read requests. The default is `false`, which routes reads to Origin. In later stages of the migration, once all the existing data has been transferred, you can set this flag as `true` to make the Target the primary source of truth.
-** You can find this parameter in `vars/proxy_core_config_input.yml`
-* `log_level`: 
+** You can find this parameter in `vars/zdm_proxy_core_config.yml`
+* `zdm_log_level`:
 ** Defaults to `INFO`. 
 ** Only set to `DEBUG` if necessary and revert to `INFO` as soon as possible, as the extra logging can have a noticeable performance impact.
-** This `log_level` parameter can be found in `vars/proxy_advanced_config_input.yml`.
+** This `zdm_log_level` parameter can be found in `vars/zdm_proxy_advanced_config.yml`.
 
 Other, rarely changed values:
 
-* Origin username / password, in `vars/proxy_core_config_input.yml`)
-* Target username / password, in `vars/proxy_core_config_input.yml`)
-* Advanced configuration values, in `vars/proxy_advanced_config_input.yml`
+* Origin username / password, in `vars/zdm_proxy_core_config.yml`)
+* Target username / password, in `vars/zdm_proxy_core_config.yml`)
+* Advanced configuration values, in `vars/zdm_proxy_advanced_config.yml`
 //  - see [here] for more details) ... 
 // https://docs.google.com/document/d/1jttOwFT2gifpp6ASYNPubyFvH7Hnon8aGgiBdKcdTgI/edit#heading=h.m788tga7trxz.
 ** `forward_client_credentials_to_origin`
-*** Whether the credentials provided by the client application are for the Origin cluster. 
-*** Mutable
-*** Defaults to `false`, can be set to `true` if the client passes credentials for the Target.
+*** Whether the credentials provided by the client application are for the Origin cluster.
+*** Defaults to `false`, can be set to `true` if the client passes credentials for Origin cluster instead.
 ** `cluster_connection_timeout_ms`
 *** Timeout (in ms) when attempting to establish a connection from the proxy to one of the clusters.
-*** Mutable
 *** Defaults to `30000` ms
 ** `request_timeout_ms`
-*** Timeout (in ms) of a request on either cluster from the vantage point of the proxy
-*** Mutable
+*** Timeout (in ms) of a request on either cluster from the vantage point of the ZDM proxy
 *** Defaults to `10000` ms
 ** `enable_metrics`
 *** Whether metrics collection should be enabled
-*** Mutable
-*** Defaults to `true`, but can be set to `false` to completely disable metrics collection.
+*** Defaults to `true`, but can be set to `false` to completely disable metrics collection. This is not recommended.
 ** `max_clients_threshold`
 *** Maximum number of client connections that the proxy should accept. Each client connection causes the allocation of several in-memory structures, so this parameter can be tweaked to limit the total number on each instance. A high number of connections per proxy instance will cause performance degradation at high throughput.
-*** Mutable
 *** Defaults to `500`
 
-To change any of these settings, edit the desired values in `vars/proxy_core_config_input.yml` and/or `vars/proxy_advanced_config_input.yml`.
+To change any of these settings, edit the desired values in `vars/zdm_proxy_core_config.yml` and/or `vars/zdm_proxy_advanced_config.yml`.
+[ TODO is this necessary, given that we indicate the file for each variable? ]
 
-== Run the playbook
-
-Run the playbook with the following command:
+To apply the configuration changes to the ZDM proxies in a rolling fashion, run the playbook with the following command:
 
 ```bash
-ansible-playbook configure_existing_proxy_playbook.yml -i cloudgate_inventory  
+ansible-playbook update_zdm_proxy.yml -i zdm_ansible_inventory
 ```
 
 This playbook recreates each proxy container one by one, automating the following steps:
@@ -108,7 +113,7 @@ This playbook recreates each proxy container one by one, automating the followin
 .. This is because containers are considered immutable, so a configuration change is a destructive action
 .. Please note that this will remove the previous container and its logs. Make sure you collect the logs prior to this operation if you want to keep them.
 . It checks that the container has come up successfully by checking the readiness endpoint:
-.. If unsuccessful, it repeat the check for six times at 5-second intervals and eventually aborts the whole process if the check still fails
+.. If unsuccessful, it repeats the check for six times at 5-second intervals and eventually interrupts the whole process if the check still fails
 .. If successful, it waits for 10 seconds and then moves on to the next container
 
 == Upgrade the proxy version
@@ -116,17 +121,17 @@ This playbook recreates each proxy container one by one, automating the followin
 The version of the image that is used by the currently running proxy container can be viewed by using the docker container inspect command on any proxy machine:
 
 ```bash
-sudo docker container inspect cloudgate-proxy-container
+sudo docker container inspect zdm-proxy-container
 ```
 
 The playbook for configuration changes can also be used to upgrade the proxy version in a rolling fashion. All containers will be recreated with the image of the specified version. The same behavior and observations as above apply here.
 
-Change the version tag number to the desired version in `vars/proxy_container.yml`.
+Change the version tag number to the desired version in `vars/zdm_proxy_container.yml`.
 
 Run the playbook with the following command (same as noted in the previous section):
 
 ```bash
-ansible-playbook configure_existing_proxy_playbook.yml -i cloudgate_inventory  
+ansible-playbook update_zdm_proxy.yml -i zdm_ansible_inventory
 ```
 
 == What's next? 
