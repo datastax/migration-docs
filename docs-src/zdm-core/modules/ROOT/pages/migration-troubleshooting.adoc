@@ -166,7 +166,9 @@ In rare cases, your client application may encounter a ZDM-Proxy instance that f
 
 How you'll recover the ZDM-Proxy instance depends on how it was deployed. If the proxy was deployed through our ZDM Automation utility, the docker container should be set up with a restart policy, which automatically attempts to restart the proxy whenever it crashes. If this policy was not set up, the container should be started manually.
 
-If the ZDM-Proxy container keeps crashing on every restart attempt, please submit an issue in the ZDM-Proxy GitHub site. Usually, having a ZDM-Proxy instance in the topology that is not receiving connections shouldn't be a problem. The driver will treat this scenario as if a cluster node was down, and avoid using the node until a reconnection is successful. 
+If the ZDM-Proxy container keeps crashing on every restart attempt, please contact us. In the ZDM-Proxy GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. 
+
+Usually, having a ZDM-Proxy instance in the topology that is not receiving connections shouldn't be a problem. The driver will treat this scenario as if a cluster node was down, and avoid using the node until a reconnection is successful. 
 
 However, if you need to remove this ZDM-Proxy instance from the proxy **virtual cluster**, to prevent client applications from connecting to it:
 
@@ -175,9 +177,89 @@ However, if you need to remove this ZDM-Proxy instance from the proxy **virtual 
 
 If you're using the ZDM Automation utility, it's easier and faster to create a new ZDM deployment, and move the client applications to use those new instances.
 
-== Title of next issue or tip
+== Use metrics to identify any issues 
 
-User action: (How to resolve, steps to try, background info)
+The ZDM-Proxy exposes an HTTP endpoint that returns metrics in the Prometheus format. You can use a variety of metrics providers with ZDM. The ZDM Automation utility can deploy Prometheus and Grafana, configuring them automatically. The Grafana dashboards are ready to go with metrics that are being scraped from the ZDM-Proxy instances.
+
+=== Grafana dashboard for ZDM-Proxy metrics
+
+There are three groups of metrics in this dashboard:
+
+* Proxy level
+* Node level
+* Async requests
+
+image:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of ZDM metrics for the proxy.]
+
+==== Proxy level metrics
+
+* Latency
+** Origin - total latency measured by the ZDM-Proxy (including post processing like response aggregation) for requests that were sent to ORIGIN only (reads, if reads are being forwarded to ORIGIN)
+** Both - total latency measured by the ZDM-Proxy (including post processing like response aggregation) for requests that were sent to both clusters (writes)
+** **Target** - total latency measured by the ZDM-Proxy (including post processing like response aggregation) for requests that were sent to TARGET only (reads, if reads are being forwarded to TARGET)
+
+* Throughput (same thing as the previous latency metrics but for throughput)
+** Origin
+** Both
+** Target
+
+* Number of client connections
+
+* In-flight requests
+
+* Prepared Statement cache misses - meaning, a prepared statement was sent to the ZDM-Proxy, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again
+
+* Number of entries in the prepared statement cache
+
+==== Node level metrics
+
+* Latency - metrics on this bucket are not split by request type like the proxy level latency metrics so writes and reads are mixed together
+** Origin - latency measured by the ZDM-Proxy up to the point it received a response from the Origin connection
+** Target - latency measured by the ZDM-Proxy up to the point it received a response from the Target connection
+
+* Throughput - same as node level latency metrics, reads and writes are mixed together
+
+* Number of connections per ORIGIN node
+
+* Number of connections per TARGET node
+
+* Number of errors per error type per ORIGIN node
+
+* Number of errors per error type per TARGET node
+
+==== Async requests
+
+These metrics are specific to async reads so they are only populated if dual reads are enabled in the `ASYNC` mode.
+
+* Latency
+* Throughput
+* Number of dedicated connections per node for async reads - whether it's origin or target connections depends on the proxy configuration. That is, if reads are being forwarded to ORIGIN then the async reads are forwarded to TARGET
+* Number of errors per error type per node
+
+==== Insights via the proxy metrics
+
+Keep in mind that the error metrics in this dashboard are not using a **rate** function. Even if you see a high value at a given point in time, it is possible that the increase in errors happened much earlier.
+
+Some examples of ZDM problems manifesting on these metrics would be:
+
+* Number of client connections around 500 per proxy (the proxy starts rejecting client connections after 500, by default)
+* Always increasing PS cache metrics - both the **entries** and **misses** metrics
+* Error metrics depending on the error type - these need to be evaluated on a per-case basis; some errors may be normal
+
+=== Golang (Automation utility?) metrics dashboard
+
+This dashboard in Grafana is not as important as the proxy dashboard. However, it may be useful to troubleshoot performance issues. Here you can see memory usage, GC duration, open fds (file descriptors - useful to detect leaked connections), and the number of goroutines. Example dashboard:
+
+image:zdm-golang-dashboard.png[Golang metrics dashboard example is shown.]
+
+Some examples of problem areas on these golang metrics:
+
+* An always increasing “open fds” metric
+* GC taking several milliseconds frequently
+* Always increasing memory usage
+* Always increasing number of goroutines
+
+If any issues are found, please contact us. In the ZDM-Proxy GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. 
 
 == Title of next issue or tip
 
