@@ -196,7 +196,7 @@ image:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories 
 * Latency
 ** Origin - total latency measured by the ZDM-Proxy (including post processing like response aggregation) for requests that were sent to ORIGIN only (reads, if reads are being forwarded to ORIGIN)
 ** Both - total latency measured by the ZDM-Proxy (including post processing like response aggregation) for requests that were sent to both clusters (writes)
-** **Target** - total latency measured by the ZDM-Proxy (including post processing like response aggregation) for requests that were sent to TARGET only (reads, if reads are being forwarded to TARGET)
+** Target - total latency measured by the ZDM-Proxy (including post processing like response aggregation) for requests that were sent to TARGET only (reads, if reads are being forwarded to TARGET)
 
 * Throughput (same thing as the previous latency metrics but for throughput)
 ** Origin
@@ -238,7 +238,7 @@ These metrics are specific to async reads so they are only populated if dual rea
 
 ==== Insights via the proxy metrics
 
-Keep in mind that the error metrics in this dashboard are not using a **rate** function. Even if you see a high value at a given point in time, it is possible that the increase in errors happened much earlier.
+Keep in mind that the error metrics in the proxy dashboard are not using a **rate** function. Even if you see a high value at a given point in time, it is possible that the increase in errors happened much earlier.
 
 Some examples of ZDM problems manifesting on these metrics would be:
 
@@ -259,23 +259,64 @@ Some examples of problem areas on these golang metrics:
 * Always increasing memory usage
 * Always increasing number of goroutines
 
-If any issues are found, please contact us. In the ZDM-Proxy GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. 
+== Scaling recommendation
 
-== Title of next issue or tip
+The ZDM Automation utility does not provide a way to perform scaling up/down operations. Instead, we recommend that you deploy a new proxy cluster on the side, and move the client applications to the new proxy cluster (if absolutely necessary).
 
-User action: (How to resolve, steps to try, background info)
+If you want to remove or add a proxy **manually**, follow these steps:
 
-== Title of next issue or tip
+. Update the `ADDRESSES` configuration setting on all proxy instances - removing or adding the proxy instance's address to the list
+. Perform a rolling restart on all proxy instances
 
-User action: (How to resolve, steps to try, background info)
+Keep in mind that if the client applications are not configured to retry requests in case of `connection closed` errors, there may be a short downtime while the rolling restart is being done.
 
-== Title of next issue or tip
+== Offline deployment of ZDM with docker for local testing
 
-User action: (How to resolve, steps to try, background info)
+While not specifically a ZDM issue, you can use `docker save` and `docker load` to troubleshoot the container. Examples:
 
-== Title of next issue or tip
+. Run the following commands where you have Internet access:
++
+```bash
+docker pull datastax/zdm-proxy:2.0.0
+docker save --output zdm-proxy2.tar datastax/zdm-proxy:2.0.0
+```
+. Move the tar file to the host node and run the following command:
++
+```bash
+docker load --input zdm-proxy2.tar
+```
+. At this point, `docker run` should work as the image is already on the local repo.
 
-User action: (How to resolve, steps to try, background info)
+If you're using the ZDM Automation utility, there may be other steps required deployment to be successful without Internet access. **TODO: provide those steps here.**
+
+== Checklist of what to include when submitting problem reports
+
+=== ZDM-Proxy issues
+
+If you encounter a problem during your migration, please contact us. In the ZDM-Proxy GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Include the following:
+
+* ZDM version
+* ZDM logs - ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change
+* Version of database software on Origin and Target clusters, whether DSE, Apache Cassandra, Astra DB
+* If Astra DB is being used, your Astra DB organization id, database id; or links to your Astra DB dashboard; if you agree, we'll view your Astra DB health metrics
+* Screenshots of both Proxy metrics dashboards from Grafana or whatever visualization tool you use
+* Application/Driver logs
+* Driver and version that the application is using
+
+=== Performance issues
+
+If the issue is related to performance, troubleshooting can be more complicated and dynamic. Still, here are some common questions that will help diagnose issues in addition to the ones from the prior section:
+
+* Which statement types are being used, simple, prepared, batch?
+* If batch statements are being used, which driver API is being used to create these batches? Are you passing a `BEGIN BATCH` cql query string to a simple/prepared statement? Or are you using the actual batch statement objects that drivers allow you to create?
+* If the server-side function replacement feature is enabled, how many parameters does each statement have? You can see if this feature is enabled by looking at the configuration settings; it's disabled by default.
+* If permissible, please provide your proxy metrics. Those metrics allow the ZDM team to know what latencies the ZDM-Proxy is encountering, compared to the latencies that the client application is encountering. If you are using the ZDM Automation utility, you should have two Grafana dashboards that the automation sets up. These dashboards contain the metrics that the ZDM team will want to check. Alternatively, please submit screenshots of the dashboards.  
+
+== Regarding lightweight transactions and non-idempotent operations
+
+The ZDM-Proxy can bifurcate lightweight transactions to the ORIGIN and TARGET clusters. However, it only returns the applied flag from one cluster. Meaning, from the cluster that is the source of truth -- the cluster from where it returns synchronous read results to the client. By default, that is the ORIGIN cluster. However, if you set `FORWARD_READS_TO_TARGET`, the TARGET cluster will be considered the primary and read results from the TARGET cluster will be returned to the client, as well as the applied flag from any lightweight transactions. 
+
+Given that there are two separate clusters involved, the state of each cluster may be different. For conditional writes, this may create a divergent state for a time. It may not make a difference in many cases, but if lightweight transactions (or other non-idempotent operations) are used, we recommend a reconciliation phase in the migration before and after switching reads to rely on the TARGET cluster.
 
 == What's next? 
 
