@@ -10,11 +10,11 @@ The ZDM deployment automation uses **Ansible**, which deploys and configures the
 
 (Alice's note: TODO add link to a separate page with the infrastructure requirements for ZDM. I have a document that lists them: https://docs.google.com/document/d/1945XEIrQ34gqanXuIsvdnVXP4NeWaN6U_iwNHHgzg_Y/edit#bookmark=id.fyvzoz9af849 - please ignore the following section, which is not relevant here)
 
-link:https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code. It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
+https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code. It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
 
 The Ansible automation is organized into playbooks, each implementing a specific operation. The machine from which the playbooks are run is known as the Ansible Control Host. In ZDM, the Ansible Control Host will run as a Docker container.
 
-Configuring a machine to serve as the Ansible Control Host is very easy using the ZDM Utility. This is a Golang (Go) executable program that runs anywhere. This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use. From this container, you will be able to easily configure and run the ZDM Ansible playbooks. It's migration made easy.
+Configuring a machine to serve as the Ansible Control Host is very easy using the ZDM Automation utility. This is a Golang (Go) executable program that runs anywhere. This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use. From this container, you will be able to easily configure and run the ZDM Ansible playbooks. It's migration made easy.
 
 == Prerequisites
 

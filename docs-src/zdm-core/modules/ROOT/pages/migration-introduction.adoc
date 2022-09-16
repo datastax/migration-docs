@@ -6,7 +6,7 @@ At DataStax, we've developed a set of thoroughly-tested self-service tools, auto
 
 For example, to lower your total cost of ownership, you may want to migrate your on-premise Apache Cassandra&reg; or DataStax Enterprise (DSE) clusters, apps, and data to our cloud-native database, DataStax Astra DB.
 
-We call this feature DataStax Zero Downtime Migration (ZDM). It provides the following functionality:
+We call this feature {company} {product} (ZDM). It provides the following functionality:
 
 * You can move your application to Astra DB with no downtime and with minimal configuration changes
 * Your clusters will be kept in sync at all times by a **dual-write logic** configuration
@@ -48,7 +48,7 @@ Here's a diagram to illustrate the overall migration strategy when moving apps a
 image:zdm-workflow1.png[Migration workflow from client to ZDM-Proxy with dual writes to origin and target clusters]
 
 * With no changes required to your client app code itself, ZDM-Proxy does the work to route writes to your origin cluster and to the target Astra DB instance. 
-* Database Migrator can migrate the data between clusters of any supported types. See the next section for an introduction to schema migration with the Database Migrator.
+* Cassandra Data Migrator can migrate the data between clusters of any supported types. See the next section for an introduction to this tool.
 * Initially during the migration, ZDM-Proxy always reads from the origin cluster.
 * Later during the migration, the read routing is switched to the target so that all reads are executed on it, while writes are still sent to both clusters. In other words, the target becomes the primary source of truth.
 * Finally, the client can be moved off the proxy and connected directly to the target, at which point the migration is complete.
@@ -59,30 +59,9 @@ The primary component of the migration tool set is **ZDM-Proxy**, which by desig
 
 ZDM-Proxy itself doesn't have any capability to migrate data or knowledge that a migration may be ongoing, and it is not coupled to the migration process in any way. 
 
-{company} {product} provides an Ansible-based automation tool. It allows you to deploy and manage the ZDM instances and its associated monitoring stack. There's an interactive utility that creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
+{company} {product} provides an Ansible-based ZDM Automation utility. It allows you to deploy and manage the ZDM instances and its associated monitoring stack. There's an interactive utility that creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
 
-A separate process performs the work to migrate the existing data. The Database Migrator tool is an enhanced version of DataStax Bulk Loader (`dsbulk`). You can use Database Migrator to unload data from your Cassandra-based database into CSV or JSON files, and subsequently load the extracted data into the corresponding tables of the target database. Dual writes during the migration process ensure that your updates are sent to your existing origin database and simultaneously to your target database. 
-
-Schema migration is also supported, with a preliminary step to verify that the schemas match between origin and target.  
-
-=== Schema migration
-
-For migration from the origin cluster to an **Astra DB target**, Database Migrator is able to:
-
-* Connect to your origin cluster.
-* Discover your user keyspaces - or the subset of keyspaces and tables that you want to migrate, if you specify them explicitly.
-* Generate a set of Astra-friendly CQL DDL statements to create all these tables. This capability includes DDL for any User Defined Types (UDT). These CQL DDL statements are output to a file.
-
-Your task for schema migration to an Astra DB target database will be to:
-
-* Manually create the keyspaces from the Astra Portal, because keyspace creation through CQL is not supported on Astra DB.
-* Take the generated CQL DDL file and run it either from the Astra Portal's CQL console, or from a standalone `cqlsh` client pointing to Astra DB.
-
-Any secondary indexes, Storage-Attached Indexes (SAI), or Materialized Views that may have existed in the origin's schema are ignored, and must be dealt with manually by the user, in compliance with the Astra DB guidelines.
-
-This schema preparation is a preliminary step that must be done before connecting your clients to the ZDM-Proxy. The goal is to ensure that database writes will not fail due to schema differences between origin and target.
-
-For migrations to a target that is not an Astra DB, you can simply extract the schema definition from your Origin cluster via a CQL `DESCRIBE` statement, and then run that schema DDL on your target cluster. You may need to adapt the schema due to any differences in the features of the database software (such as compact storage).
+A separate tool performs the work to migrate the existing data. The Cassandra Data Migrator copies the schemas and data from the Origin environment to the Target database, notes any discrepancies, and can help you reconcile differences. 
 
 === Role of ZDM-Proxy
 
@@ -114,6 +93,47 @@ ZDM-Proxy:
 When using Read Mirroring, any additional read load on the target cluster may impact the target cluster's ability to keep up with writes. This behavior is expected and desired. The idea is to mimic the full read and write load on the target cluster so there are no surprises during the last migration phase; that is, after cutting over completely to the target cluster.
 ====
 
+=== ZDM Automation utility
+
+The ZDM deployment automation uses **Ansible**, which deploys and configures the proxies and monitoring stack via playbooks. The utility expects that you have already provisioned the infrastructure.
+
+https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code. It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
+
+The Ansible automation is organized into playbooks, each implementing a specific operation. The machine from which the playbooks are run is known as the Ansible Control Host. In ZDM, the Ansible Control Host will run as a Docker container.
+
+For details, see xref:migration-run-ansible-playbooks.adoc[Setup and run Ansible playbooks to deploy the ZDM Proxy and Monitoring, window="_blank"]
+
+=== Cassandra Data Migrator for schema + data migration
+
+As part of the overall migration process, you can use Cassandra Data Migrator to:
+
+* Migrate the schema and data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB)
+* Validate migration accuracy and performance using examples that provide a smaller, randomized data set
+* Count tables
+* Preserve writetimes and Time To Live (TTL) values
+* Take advantage of advanced data types (Sets, Lists, Maps, UDTs)
+* Filter records from the origin data, using writetime
+* Use SSL Support, including custom cipher algorithms
+
+Cassandra Data Migrator is able to:
+
+* Connect to your origin cluster.
+* Discover your user keyspaces - or the subset of keyspaces and tables that you want to migrate, if you specify them explicitly.
+* Generate a set of Astra-friendly CQL DDL statements to create all these tables. This capability includes DDL for any User Defined Types (UDT). These CQL DDL statements are output to a file.
+
+Your task for schema migration to an Astra DB target database will be to:
+
+* Manually create the keyspaces from the Astra Portal, because keyspace creation through CQL is not supported on Astra DB.
+* Take the generated CQL DDL file and run it either from the Astra Portal's CQL console, or from a standalone `cqlsh` client pointing to Astra DB.
+
+Any secondary indexes, Storage-Attached Indexes (SAI), or Materialized Views that may have existed in the origin's schema are ignored, and must be dealt with manually by the user, in compliance with the Astra DB guidelines.
+
+This schema preparation is a preliminary step that must be done before connecting your clients to the ZDM-Proxy. The goal is to ensure that database writes will not fail due to schema differences between origin and target.
+
+For migrations to a target that is not an Astra DB, you can simply extract the schema definition from your Origin cluster via a CQL `DESCRIBE` statement, and then run that schema DDL on your target cluster. You may need to adapt the schema due to any differences in the features of the database software (such as compact storage).
+
+For details, see xref:migration-validate-data[Validate the migrated schema and data, window="_blank"].
+
 == Benefits
 
 When moving your apps &amp; data from on-premise Cassandra Query Language (CQL) based data stores (Apache Cassandra or DSE) to a cloud-native database (CNDB) like Astra DB, it's important to acknowledge the fundamental differences ahead. With "on-prem," of course, you have total control of the data center's physical infrastructure, software configurations, and your custom procedures. At the same time, with on-prem clusters you take on the cost of infrastructure resources, maintenance, operations, personnel. 
@@ -126,4 +146,4 @@ A CNDB like Astra DB is a different environment. Running on proven cloud provide
 
 If you're new here, check out our xref:migration-faqs.adoc[FAQs]. 
 
-Or jump right in and learn how to xref:migration-prepare-environment.adoc[prepare your existing environment for migration, window="_blank"].
+Or jump right in and learn how to set up recommended xref:migration-infrastructure.adoc[infrastructure] to enable the migration, window="_blank"].
