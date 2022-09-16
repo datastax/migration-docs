@@ -121,18 +121,7 @@ Cassandra Data Migrator is able to:
 * Discover your user keyspaces - or the subset of keyspaces and tables that you want to migrate, if you specify them explicitly.
 * Generate a set of Astra-friendly CQL DDL statements to create all these tables. This capability includes DDL for any User Defined Types (UDT). These CQL DDL statements are output to a file.
 
-Your task for schema migration to an Astra DB target database will be to:
-
-* Manually create the keyspaces from the Astra Portal, because keyspace creation through CQL is not supported on Astra DB.
-* Take the generated CQL DDL file and run it either from the Astra Portal's CQL console, or from a standalone `cqlsh` client pointing to Astra DB.
-
-Any secondary indexes, Storage-Attached Indexes (SAI), or Materialized Views that may have existed in the origin's schema are ignored, and must be dealt with manually by the user, in compliance with the Astra DB guidelines.
-
-This schema preparation is a preliminary step that must be done before connecting your clients to the ZDM-Proxy. The goal is to ensure that database writes will not fail due to schema differences between origin and target.
-
-For migrations to a target that is not an Astra DB, you can simply extract the schema definition from your Origin cluster via a CQL `DESCRIBE` statement, and then run that schema DDL on your target cluster. You may need to adapt the schema due to any differences in the features of the database software (such as compact storage).
-
-For details, see xref:migration-validate-data[Validate the migrated schema and data, window="_blank"].
+For details, see xref:migration-validate-data[Migrate and validate the migrated schema and data, window="_blank"].
 
 == Benefits
 

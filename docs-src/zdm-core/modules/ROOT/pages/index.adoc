@@ -12,7 +12,7 @@ Welcome to the {company} {product} documentation. The following topics walk you 
 * xref:migration-manage-proxy-instances.adoc[Manage proxy instances]
 // * xref:migration-dsbulk.adoc[Loading data with DSBulk Migrator]
 * xref:migration-change-read-routing.adoc[Change read routing to Astra DB]
-* xref:migration-validate-data.adoc[Validate migrated data]
+* xref:migration-validate-data.adoc[Migrate and validate migrated data]
 * xref:migration-connect-apps.adoc[Connect clients directly to Astra DB]
 * xref:migration-verifications.adoc[Verify full migration and move off proxy]
 * xref:migration-troubleshooting.adoc[Troubleshooting]
