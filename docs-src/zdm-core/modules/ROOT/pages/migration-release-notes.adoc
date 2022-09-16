@@ -1,10 +1,22 @@
 = DataStax Zero Downtime Migration Release Notes
 
-The open-source Zero Downtime Migration (ZDM) project provides a production-ready set of tools to help you migrate to another version of Apache Cassandra&reg; or DataStax Enterprise, or to cloud-native Astra DB. 
+The Zero Downtime Migration (ZDM) project provides a production-ready set of tools to help you migrate to another version of Apache Cassandra&reg; or DataStax Enterprise, or to cloud-native Astra DB. 
 
 == Release Notes for ZDM 2.0.0
 
-30 September 2022
+03 October 2022
+
+=== Components 
+
+Open source:
+
+* ZDM-Proxy
+
+Tools and examples in public GitHub repos for your use, but not open source or available for code contributions:
+
+* ZDM Automation utility
+* DSBulk Migrator
+* Cassandra Data Migrator
 
 == GitHub repos
 
@@ -18,11 +30,11 @@ The following DataStax migration repos are public. You are welcome to read the s
 
 * https://github.com/riptano/cloud-gate-schema-migrator[DSBulk Migrator^] repo. (Internal Note: Repo location and name will change - to be determined.)
 
-* https://github.com/Ankitp1342/astra-spark-migration-ranges[Cassandra Data Migrator^] repo. (Internal Note: Repo location and name will change - to be determined.)
+* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo. (Internal Note: To be setup.)
 
 === Supported environments
 
-With the {company} {product} 2.0.0 release, you can migrate any Cassandra Query Language (CQL) compliant database cluster from its origin (current) environment to a new target:
+With the {company} {product} 2.0.0 release, you can migrate any Cassandra Query Language (CQL) compliant database cluster from its origin (current) environment to a new target. Migration examples:
 
 * From an existing self-managed Cassandra or DSE cluster to cloud-native Astra DB. For example, migrate:
 ** Cassandra 3.11.x or 4.0.x to Astra DB
@@ -30,14 +42,9 @@ With the {company} {product} 2.0.0 release, you can migrate any Cassandra Query 
 * From an existing Cassandra or DSE cluster to another Cassandra or DSE cluster. For example, migrate:
 ** Cassandra 3.11.x to 4.0.x
 ** DSE 5.1.x to DSE 6.8.x
+* From Astra DB Classic to Astra DB Serverless
 
-=== Deployed components 
+=== ZDM-Proxy 2.0.0 revisions
 
-* ZDM Proxy
-* ZDM Automation utility
-* DSBulk Migrator
-* Cassandra Data Migrator
+See the https://github.com/datastax/zdm-proxy/blob/main/CHANGELOG/CHANGELOG-2.0.md(CHANGELOG-2.0) for details about ZDM-Proxy open-source code.
 
-=== ZDM 2.0.0 revisions
-
-( link to CHANGELOG.md file in GH repo )

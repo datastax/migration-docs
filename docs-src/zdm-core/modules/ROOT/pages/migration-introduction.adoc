@@ -19,10 +19,10 @@ ZDM makes it possible to migrate your apps and data across many scenarios, inclu
 * From an existing self-managed Cassandra or DSE cluster to cloud-native Astra DB. For example, migrate:
 ** Cassandra 3.11.x or 4.0.x to Astra DB
 ** DSE 5.1.x or 6.8.x to Astra DB
-** Astra DB Classic to Astra DB Serverless
 * From an existing Cassandra or DSE cluster to another Cassandra or DSE cluster. For example, migrate:
 ** Cassandra 3.11.x to 4.0.x
 ** DSE 5.1.x to DSE 6.8.x
+* From Astra DB Classic to Astra DB Serverless
 
 == Migration phases
 

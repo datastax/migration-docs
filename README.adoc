@@ -92,6 +92,8 @@ Once all of your changes are pushed to GitHub, you'll need to submit them for re
 
 . Create your pull request against the {product-branch-link}[{product-branch-name}] branch.
 . Assign someone from the docs team as a reviewer.
+        * https://github.com/johnsmartco[@johnsmartco]
+        * https://github.com/emeliawilkinson24[@emeliawilkinson24]
         * https://github.com/jgillenwater[@jgillenwater]
         * https://github.com/polandll[@polandll]
 
@@ -110,7 +112,7 @@ Using a terminal, `cd` into the cloned repo directory and run the following comm
 
 [source,shell,subs="attributes+"]
 ----
-./build-locally.sh {docset-name}
+./build-locally.sh zdm
 ----
 
 .Dependencies
