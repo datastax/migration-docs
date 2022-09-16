@@ -2,3 +2,10 @@
 
 Text coming soon. 
 
+...
+
+== What's next? 
+
+Learn how to xref:migration-create-target.adoc[Create the target environment for migration].
+
+

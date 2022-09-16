@@ -59,9 +59,9 @@ The primary component of the migration tool set is **ZDM-Proxy**, which by desig
 
 ZDM-Proxy itself doesn't have any capability to migrate data or knowledge that a migration may be ongoing, and it is not coupled to the migration process in any way. 
 
-{company} {product} provides an Ansible-based ZDM Automation utility. It allows you to deploy and manage the ZDM instances and its associated monitoring stack. There's an interactive utility that creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
+{company} {product} provides an Ansible-based ZDM-Proxy Automation utility. It allows you to deploy and manage the ZDM-Proxy instances and its associated monitoring stack. ZDM-Proxy Automation utility creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
 
-A separate tool performs the work to migrate the existing data. The Cassandra Data Migrator copies the schemas and data from the Origin environment to the Target database, notes any discrepancies, and can help you reconcile differences. 
+A separate tool performs the work to migrate the existing schema and data. The Cassandra Data Migrator compares the Origin environment to the Target, notes any discrepancies, and (if enabled) can automatically apply reconcilation updates to the target.
 
 === Role of ZDM-Proxy
 
@@ -93,15 +93,15 @@ ZDM-Proxy:
 When using Read Mirroring, any additional read load on the target cluster may impact the target cluster's ability to keep up with writes. This behavior is expected and desired. The idea is to mimic the full read and write load on the target cluster so there are no surprises during the last migration phase; that is, after cutting over completely to the target cluster.
 ====
 
-=== ZDM Automation utility
+=== ZDM-Proxy Automation utility
 
-The ZDM deployment automation uses **Ansible**, which deploys and configures the proxies and monitoring stack via playbooks. The utility expects that you have already provisioned the infrastructure.
+The ZDM-Proxy Automation utility uses **Ansible** to deploy and configure the ZDM Proxy and monitoring stack via playbooks. The utility expects that you have already provisioned the infrastructure.
 
 https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code. It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
 
 The Ansible automation is organized into playbooks, each implementing a specific operation. The machine from which the playbooks are run is known as the Ansible Control Host. In ZDM, the Ansible Control Host will run as a Docker container.
 
-For details, see xref:migration-run-ansible-playbooks.adoc[Setup and run Ansible playbooks to deploy the ZDM Proxy and Monitoring, window="_blank"]
+For details, see xref:migration-run-ansible-playbooks.adoc[Setup and run Ansible playbooks to deploy ZDM-Proxy and Monitoring, window="_blank"]
 
 === Cassandra Data Migrator for schema + data migration
 
@@ -114,12 +114,6 @@ As part of the overall migration process, you can use Cassandra Data Migrator to
 * Take advantage of advanced data types (Sets, Lists, Maps, UDTs)
 * Filter records from the origin data, using writetime
 * Use SSL Support, including custom cipher algorithms
-
-Cassandra Data Migrator is able to:
-
-* Connect to your origin cluster.
-* Discover your user keyspaces - or the subset of keyspaces and tables that you want to migrate, if you specify them explicitly.
-* Generate a set of Astra-friendly CQL DDL statements to create all these tables. This capability includes DDL for any User Defined Types (UDT). These CQL DDL statements are output to a file.
 
 For details, see xref:migration-validate-data[Migrate and validate the migrated schema and data, window="_blank"].
 
@@ -135,4 +129,5 @@ A CNDB like Astra DB is a different environment. Running on proven cloud provide
 
 If you're new here, check out our xref:migration-faqs.adoc[FAQs]. 
 
-Or jump right in and learn how to set up recommended xref:migration-infrastructure.adoc[infrastructure] to enable the migration, window="_blank"].
+Or jump right in and learn how to set up the recommended xref:migration-infrastructure.adoc[infrastructure] to support the migration steps.
+

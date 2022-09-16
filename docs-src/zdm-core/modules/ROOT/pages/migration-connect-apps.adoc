@@ -32,4 +32,4 @@ Until this point, in case of any issues, you could have abandoned the migration 
 
 == What's next? 
 
-See our xref:migration-troubleshooting.adoc[Troubleshooting tips].
+Learn how to xref:migration-manage-proxy-instances.adoc[Manage proxy instances].

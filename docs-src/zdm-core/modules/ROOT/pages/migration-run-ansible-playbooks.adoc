@@ -1,6 +1,6 @@
 = Setup and run Ansible playbooks to deploy the ZDM Proxy and Monitoring
 
-This topic explains how to use the ZDM Proxy Automation to create a dedicated deployment of the ZDM Proxy and its companion monitoring stack.
+This topic explains how to use the ZDM-Proxy Automation utility to create a dedicated deployment of the ZDM Proxy and its companion monitoring stack.
 
 We will see how to configure the machine from which the automation is run, and then how to execute the automation. At the end, you will have a working and fully monitored ZDM proxy deployment.
 

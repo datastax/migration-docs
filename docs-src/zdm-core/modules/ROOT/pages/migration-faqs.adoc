@@ -20,13 +20,14 @@ image:zdm-workflow1.png[Migration workflow from client to ZDM Proxy with dual wr
 
 == What components are provided with ZDM?
 
-{company} {product} includes the following open-source tools:
+{company} {product} includes the following:
 
-* A proxy service called **ZDM-Proxy** that operates between your existing ("origin") clusters and the new ("target") Astra clusters.
-* An Ansible-based automation that allows you to deploy and manage the ZDM instances and its associated monitoring stack. ZDM also provides an interactive utility that creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
-* Additional self-service tools and examples to copy data.
-* Database Migrator -- enhanced from open-source DataStax Bulk Loader code -- to migrate multiple database schemas and table rows.
-* Reconciliation scripts to validate successful completion of migration steps.
+* **ZDM-Proxy** is a proxy service that operates between your existing ("origin") clusters and the new ("target") Astra clusters.
+* **ZDM Automation utility** is an Ansible-based tool that allows you to deploy and manage the ZDM-Proxy instances and its associated monitoring stack. ZDM Automation is an interactive utility that creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
+* **Cassandra Data Migrator** is designed to:
+** Connect to, and compare, your origin and target databases
+** Report differences in a detailed log file
+** Reconcile any missing records and fix inconsistencies between the origin and target, if you enable `autocorrect` in a config file
 * Well-defined steps in this migration documentation, organized as a sequence of phases.
 
 == What challenges does ZDM solve?
@@ -63,22 +64,22 @@ Additional examples serve as templates, from which others can learn about migrat
 
 == Where are the public GitHub repos?
 
-The following DataStax migration repos are public. You are welcome to read the source and submit feedback via GitHub Issues per repo. At this time, code contributions from Pull Requests are not supported.
+All the {company} {product} GitHub repos are public. You are welcome to read the source and submit feedback via GitHub Issues per repo. 
 
-* https://github.com/datastax/zdm-proxy[ZDM-Proxy^] repo.
+* https://github.com/datastax/zdm-proxy[ZDM-Proxy^] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion.
+
+* https://github.com/datastax/zdm-proxy-automation[ZDM-Proxy Automation utility^] repo.
+
+// * https://github.com/riptano/cloud-gate-schema-migrator[DSBulk Migrator^] repo.
+
+* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo. (Temporarily https://github.com/Ankitp1342/astra-spark-migration-ranges[here].)
 
 * https://github.com/datastax/migration-docs[Migration documentation^] repo.
 
-* https://github.com/datastax/zdm-proxy-automation[ZDM-Proxy Automation utility^] repo. 
+== Internal FAQ: where's are the built docs located before 2.0 GA?
 
-* https://github.com/riptano/cloud-gate-schema-migrator[DSBulk Migrator^] repo. (Internal Note: Repo location and name will change - to be determined.)
-
-* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo. (Internal Note: To be setup)
-
-== Temp FAQ: where's are the built docs located before 2.0 GA?
-
-From the Asciidoc markdown sources, the deployment script writes the docs to https://coppi.sjc.dsinternal.org/en/zdm/docs/[this internal review server^]. Requires VPN access. For the external release, the DataStax {product} 2.0 docs will reside on docs.datastax.com in the Astra DB and DSE online doc sets.
+From the Asciidoc markdown sources, the deployment script writes the topics to https://coppi.sjc.dsinternal.org/en/zdm/docs/[this internal review server^]. Requires VPN access. For the external release, the DataStax {product} 2.0 docs will reside on docs.datastax.com in the Astra DB docs, and will be referenced from the DSE docs.
 
 == What's next? 
 
-Learn about the steps to xref:migration-prepare-environment.adoc[Prepare your existing clusters, window="_blank"] in the first phase of the migration. 
+Learn about the xref:migration-infrastructure.adoc[Infrastructure requirements] in the first phase of the migration. 

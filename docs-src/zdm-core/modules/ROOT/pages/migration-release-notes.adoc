@@ -4,33 +4,19 @@ The Zero Downtime Migration (ZDM) project provides a production-ready set of too
 
 == Release Notes for ZDM 2.0.0
 
-03 October 2022
+17 October 2022
 
-=== Components 
+== Components and GitHub repos
 
-Open source:
+All the {company} {product} repos are public. You are welcome to read the source and submit feedback via GitHub Issues per repo. 
 
-* ZDM-Proxy
-
-Tools and examples in public GitHub repos for your use, but not open source or available for code contributions:
-
-* ZDM Automation utility
-* DSBulk Migrator
-* Cassandra Data Migrator
-
-== GitHub repos
-
-The following DataStax migration repos are public. You are welcome to read the source and submit feedback via GitHub Issues per repo. At this time, code contributions from Pull Requests are not supported.
-
-* https://github.com/datastax/zdm-proxy[ZDM-Proxy^] repo.
-
-* https://github.com/datastax/migration-docs[Migration documentation^] repo.
+* https://github.com/datastax/zdm-proxy[ZDM-Proxy^] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion.
 
 * https://github.com/datastax/zdm-proxy-automation[ZDM-Proxy Automation utility^] repo. 
 
-* https://github.com/riptano/cloud-gate-schema-migrator[DSBulk Migrator^] repo. (Internal Note: Repo location and name will change - to be determined.)
+* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo.
 
-* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo. (Internal Note: To be setup.)
+* This https://github.com/datastax/migration-docs[Migration documentation^] repo.
 
 === Supported environments
 
