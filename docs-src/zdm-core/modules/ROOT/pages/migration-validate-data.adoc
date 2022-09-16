@@ -1,8 +1,8 @@
-= Validate the migrated data
+= Validate the migrated schema and data
 
-Follow these steps to validate the migrated data.
+Follow these steps to validate the migrated schema and data.
 
-Validation checks are an additional way to verify that all the data has been migrated successfully. For data written by indempotent writes these checks are optional, as any errors, timeouts or other failures during the migration are made visible by the data migrator and also by the ZDM proxy. However, they can provide extra peace of mind.
+Validation checks are an additional way to verify that all the data has been migrated successfully. For data written by idempotent writes these checks are optional, as any errors, timeouts or other failures during the migration are made visible by the data migrator and also by the ZDM proxy. However, they can provide extra peace of mind.
 
 In case of data written by non-idempotent writes, it is necessary to reconcile and realign any discrepancies before starting to use the Target cluster as the primary source of truth.
 
@@ -10,6 +10,8 @@ In case of data written by non-idempotent writes, it is necessary to reconcile a
 [ TODO add instructions to validate and reconcile the data through the Cassandra Data Migrator ]
 
 == Counting the data
+
+[ TODO - This is older content based on DSBulk Migrator, which we decided 16-Sept-2022 to downplay. Instead, we'll add info here about using Cassandra Data Migrator. ]
 
 Use DataStax Bulk Loader (`dsbulk`) to count the data in the tables on each cluster, compare the results, and verify that they match.
 
