@@ -5,20 +5,21 @@ In this topic, we'll use a DataStax Astra DB serverless database as the Target c
 == Overview
 
 * Create an Astra DB serverless cluster
-* Retrieve its Secure Connect Bundle (SCB) and upload it to the client instances
+* Retrieve its Secure Connect Bundle (SCB) and upload it to the application instances
 * Create Astra DB access credentials for the cluster
-* Create the client application schema
+* Create the application schema
 
 == Prerequisites
 
 * Access to https://astra.datastax.com[Astra console, window="_blank"] on astra.datastax.com.
-* DataStax Bulk Migrator, as installed in the xref:migration-prepare-environment.adoc[prior topic, window="_blank"]. 
 
 == Create an Astra DB serverless cluster
 
-Log into the Astra console and create a Serverless Astra DB database. You can start with a Free plan, but consider upgrading during your Origin to Target migration project to am Astra DB Pay As You Go (PAYG) or Enterprise plan, to take advantage of additional functionality -- such as Exporting Metrics to external third-party apps, Bring Your Own Keys, and other features. 
+Log into the Astra console and create a Serverless Astra DB database. You can start with a Free plan, but consider upgrading during your migration project to an Astra DB Pay As You Go (PAYG) or Enterprise plan, to take advantage of additional functionality -- such as Exporting Metrics to external third-party apps, Bring Your Own Keys, and other features.
 
-Assign your preferred valus for the serverless database:
+(Alice's note: should we also mention the ability to lift rate limiting as one of the benefits of a paid-for account?)
+
+Assign your preferred values for the serverless database:
 
 * **Name**
 * **Keyspace** - this is a handle that establishes the database's context in subsequent DDL and DML statements
@@ -35,7 +36,7 @@ Then click **Generate Token**. Astra console displays the generated values. Exam
 
 image:zdm-tokens-generated.png[]
 
-Save all credentials (Client ID, Client Secret, and Token) in a clearly named file. For example, you can save all three parts of the new credentials to a file called `zdm_demo_readwrite_user` and store it safely.
+Save all credentials (Client ID, Client Secret, and Token) in a clearly named file. For example, you can save all three parts of the new credentials to a file called `my_app_readwrite_user` and store it safely.
 
 For more information about role permissions, see link:https://docs.datastax.com/en/astra/docs/manage/org/user-permissions.html[User permissions] in the Astra DB documentation.
 
@@ -43,36 +44,39 @@ For more information about role permissions, see link:https://docs.datastax.com/
 
 Your cluster's Secure Connect Bundle (SCB) will be needed by:
 
-* Your client application (`NoSQLBench` in this example), to connect directly to Astra at the end of the migration
+* Your application, to connect directly to Astra at the end of the migration
 * The DataStax Bulk Migrator to import the existing data into Astra
 
-With the Astra DB in an **Active** status, download its SCB from Astra console. It's a zip file that contains the security certificates and credentials for your database.  
+With the Astra DB in an **Active** status, download its SCB from Astra console. It's a zip file that contains the security certificates and other metadata to connect to your database (note that the credentials are not contained in the SCB).
 
 . In Astra console, go to the Dashboard and select the serverless database that you created in the prior step. 
 . Click on **Connect**
 . Select the **Java driver** and click on **Download bundle**.
-. Copy the SCB to both client instances:
+. Copy the SCB to your application instance:
 +
 ```bash
-scp -i ~/.ssh/origin_key secure-connect-zdm-demo-target.zip ubuntu@<public IP of client instance>:
+scp -i <your_ssh_key> secure-connect-<target cluster name>.zip ubuntu@<public IP of application instance>:
 ```
 
-== Create the client application schema
+== Create the application schema
 
 Finally for the prep work on the migration target, create the application schema in your newly created Astra DB database. Make it identical to the schema on the origin cluster.
 
 In Astra console, create each corresponding keyspace and one or more database tables, and (if any) indexes.
 
-(**TODO**: introduce the NoSQLBench client, how to set it up, etc.)
+(**TODO**: introduce the application used as example, how to set it up, etc.)
 
-In the sample scenario for these topics, we'll create the schema for the client application that we are using, which again in this case is `NoSQLBench`.
+In the sample scenario for these topics, we'll create the schema for the application that we are using:
 
 . From Astra console, go to the **Dashboard** and select the database. 
 . Go to the **CQL console** tab.
-. The `baselines` keyspace exists. 
+. Create the `zdm_demo` keyspace if it does not yet exists.
 . Create the following table:
 ```bash
-create table baselines.keyvalue (key text primary key, value text);
+create table zdm_demo.app_data (
+    app_key int PRIMARY KEY,
+    app_value text
+);
 ```
 
 == What's next? 

@@ -1,104 +1,95 @@
-= Setup and run Ansible playbooks to install ZDM Proxy and Monitoring 
+= Setup and run Ansible playbooks to deploy the ZDM Proxy and Monitoring
 
-This topic explains how to use ZDM-Proxy Automation to create a dedicated deployment of the ZDM Proxy and its companion monitoring stack. The script is a Golang (Go) utility that walks you through the entire configuration process, prompting you for values needed by the Ansible playbook with helpful embedded explanations and error handling. It's migration made easy.
+This topic explains how to use the ZDM Proxy Automation to create a dedicated deployment of the ZDM Proxy and its companion monitoring stack.
+
+We will see how to configure the machine from which the automation is run, and then how to execute the automation. At the end, you will have a working and fully monitored ZDM proxy deployment.
 
 == Introduction
 
-The ZDM deployment automation includes **Ansible**, which deploys and configures the proxies and monitoring stack via playbooks. This step expects that the infrastructure has been provisioned already.
+The ZDM deployment automation uses **Ansible**, which deploys and configures the proxies and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.
 
-Ansible is a suite of software tools that enables infrastructure as code. It is open source and the suite includes software provisioning, configuration management, and application deployment functionality. 
+(Alice's note: TODO add link to a separate page with the infrastructure requirements for ZDM. I have a document that lists them: https://docs.google.com/document/d/1945XEIrQ34gqanXuIsvdnVXP4NeWaN6U_iwNHHgzg_Y/edit#bookmark=id.fyvzoz9af849 - please ignore the following section, which is not relevant here)
+
+link:https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code. It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
+
+The Ansible automation is organized into playbooks, each implementing a specific operation. The machine from which the playbooks are run is known as the Ansible Control Host. In ZDM, the Ansible Control Host will run as a Docker container.
+
+Configuring a machine to serve as the Ansible Control Host is very easy using the ZDM Utility. This is a Golang (Go) executable program that runs anywhere. This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use. From this container, you will be able to easily configure and run the ZDM Ansible playbooks. It's migration made easy.
 
 == Prerequisites
 
-. Create your SSH key pair, which you'll use to access the ZDM infrastructure.
-. You must have already provisioned the ZDM infrastructure; which means you must have the server machines ready, and know their IP addresses. 
+. You must have already provisioned the ZDM infrastructure; which means you must have the server machines ready, and know their IP addresses. These can be in the cloud provider of your choice or on-premise.
+. Docker needs to be installed on the machine that will be used as the Ansible Control Host, and the `docker` command must not require superuser privileges. The instructions to do this are available for each platform in the official Docker documentation. (Alice's note: add links)
 
-That's it! You'll indicate which server machine will serve as the Ansible control host. In this topic, we'll use a jumphost. A jumphost is a server on a network used to access and manage devices in a separate security zone, and provides a controlled means of access between them. The jumphost can be, for example, an Ubuntu server machine. On whatever machine you decide, connect to it and run the Go utility that implements the ZDM Automation script.  
+That's it!
+
+== Jumphost
+
+In this topic, we'll use a jumphost as our Ansible Control Host.
+
+A jumphost is a server on a network used to access and manage devices in a separate security zone, providing a controlled means of access between them. The jumphost can be, for example, a Ubuntu server machine that is able to access the server machines that you wish to use for your ZDM Proxy deployment. [TODO is the last bit of this sentence redundant?]
+
+The jumphost will serve three purposes:
+
+* Accessing the ZDM Proxy machines
+* Serving as the Ansible Control Host to run the automation
+* Running the ZDM monitoring stack, which uses Prometheus and Grafana to expose the metrics of all the ZDM proxies in a preconfigured dashboard.
+
+[TODO this is about the monitoring -- move to later]
+Having these tools set up is especially useful during migrations when you're running large workloads.
 
 Let's get started.
 
-== Create an SSH key pair for the ZDM deployment
+== Proxy deployment setup on the jumphost
 
-Create a dedicated ssh key pair in your ~/.ssh directory, to use for all instances in the ZDM deployment:
+To run the automation, the Ansible Control Host needs to be able to connect to all other instances of the ZDM Proxy deployment. For this reason, it needs to have the SSH key required by those instances.
 
-```bash
-ssh-keygen -t rsa
-```
+=== Add SSH keys to the jumphost
 
-[TIP]
-====
-Currently we are using `cloudgate` in our naming convention. This handle may change to `zdm` in a documentation update.
-====
-
-When prompted, specify as key path and name ~/.ssh/cloudgate-key-<enterprise_name>. This will result in two files:
-
-```
-cloudgate-key-<enterprise_name> 
-cloudgate-key-<enterprise_name>.pub
-```
-
-[IMPORTANT]
-====
-Create this dedicated key pair for each enterprise's deployment and ensure you name it according to the pattern shown above. For example, a valid private key name could be `cloudgate-key-zdmdemo`.
-====
-
-== Proxy deployment setup on the control host
-
-The Ansible automation performs all the required operations to install and configure the proxy instances and their monitoring stack. 
-
-The control host needs to be able to connect to all other instances of the Cloudgate deployment. For this reason, it needs to have the key pair required by those instances.
-
-The most important server at this point is the jumphost, which we'll also use to serve as our Ansible control host. On that server, you can configure the cloudgate-automation/ansible/vars files, and then run the playbooks. This is where we'll run the Ansible scripts so that we can provision all the cloudgate (ZDM) proxies.
-
-There's also a third purpose of the jumphost. We'll use this server as a monitoring instance, with Prometheus and Grafana, to get metrics on all these proxies. Having these tools set up is especially useful during migrations when you're running large workloads.
-
-=== Add SSH keys to control host
-
-From your local machine, transfer (`scp`) the Cloudgate key pair that you created in a step above -- both public and private key files -- to the ~/.ssh directory on the control host. Example:
+From your local machine, transfer (`scp`) the SSH private key for the ZDM deployment to the jumphost. Example:
 
 ```bash
-scp -i ~/.ssh/cloudgate-key-<enterprise_name> ~/.ssh/cloudgate-key-<enterprise_name>* ubuntu@<control_host_address>:/home/ubuntu/.ssh/
+scp -F zdm_ssh_config <zdm key> jumphost:
 ```
 
-Now connect to the server that you intend to serve as the jumphost, specifying your private key. 
-
+Now connect to the jumphost.
 ```bash
-ssh -F ~/.ssh/cloudgate_ssh_config jumphost
+ssh -F zdm_ssh_config <zdm key> jumphost
 ```
 
-Also from your local machine, connect to the servers that comprise your Origin where Cassandra or DSE is running, and where the ZDM Proxy (cloudgate-proxy-<n> here) will run. Examples of separate logins:
-
-```bash
-ssh -F ~/.ssh/cloudgate-key-zdmdemo cloudgate-proxy-0
-
-ssh -F ~/.ssh/cloudgate-key-zdmdemo cloudgate-proxy-1
-
-ssh -F ~/.ssh/cloudgate-key-zdmdemo cloudgate-proxy-2
-```
+(Alice's note: add a separate section in the infrastructure preparation to document creating the custom SSH config file. In that section. show how to connect to the jumphost and proxies using the custom SSH file)
 
 == Running the Automation's Go utility
 
-After you run the Go utility on the Ansible control host machine, as described in this section, you will have a fully functional Docker container that enables you to run the Ansible playbooks and provision the ZDM proxies.
-
-. Login to the server machine you want to use as the Ansible control host. 
-. Run the Go utility provided by the ZDM project.  (TODO: where is the executable located?)
-. For now (before executable is ready), `git clone` the GitHub repo, https://github.com/riptano/cloudgate-automation. 
-. `cd ~/zdm-ansible-container-init-utility/init-util`
-. Run the Go utility:
-+
+From the jumphost, download the ZDM Utility executable:
 ```bash
-go run main.go  
+curl .... [TODO add exact command with download URL]
 ```
-+
-(TODO: this may change when this doc is updated with the executable location)
-+ 
-The utility creates and initializes the Ansible Control Host container. You're initially prompted for any existing configuration file - press ENTER if you're using the utility for the first time.  Subsequent steps below assume this is our initial use of the Go utility. 
-+
-The resulting configuration file that the Go utility creates will be named `ansible_container_init_config` in your working directory. On subsequent runs of the Go utility, you can specify that config file. 
-. Enter the path to, and name, of your SSH private key to access the proxy hosts. Example:
+
+Run the ZDM Utility:
+```bash
+go run main.go  [TODO add correct command once the executable has been created]
+```
+
+The utility prompts you for a few configuration values, then creates and initializes the Ansible Control Host container.
+[TIP]
+====
+The utility will store the configuration that you provide into a file named `ansible_container_init_config`. If you run the utility again, it will detect the file  and ask you if you wish to use that configuration or discard it. If the configuration si not fully valid, you will be prompted for the missing or invalid parameters only.
+
+You can also pass a custom configuration file to the utility with the optional command-line parameter `-utilConfigFile` [TODO add example command]
+====
+
+[TIP]
+====
+The ZDM utility will validate each parameter that you enter. In case of invalid parameters, it will display specific messages to help you fix the problem.
+
+You have five attempts to enter valid parameters. You can always run the utility again, if necessary.
+====
+
+. Enter the path to, and name, of the SSH private key to access the proxy hosts. Example:
 +
 ```bash
-/home/ubuntu/cloudgate-key-zdm-demo/
+/home/ubuntu/my-zdm-key
 ```
 . Enter the common prefix of the private IP addresses of the proxy hosts. Example:
 +
@@ -106,15 +97,11 @@ The resulting configuration file that the Go utility creates will be named `ansi
 172.18.*
 ```
 +
-[TIP]
-====
-When you answer prompts from the Go utility, you have five attempts to enter valid parameters. You can always run the utility again, if necessary.
-====
-. You're asked if you have an existing Ansible inventory file. The Go utility will create one based on your answers to prompts, and we'll assume this is your first time running the script. Enter `n`. 
+. You're asked if you have an existing Ansible inventory file. If you do, you can just specify it. If you do not, the Go utility will create one based on your answers to prompts and save it. Here we'll assume that you do not have one. Enter `n`.
 +
-The created file will be named `cloud_inventory` in your working directory.
+The created file will be named `zdm_ansible_inventory` in your working directory.
 . Next, indicate if this deployment is for local testing and evaluation (such as when you're creating a demo or just experimenting with the automation). In this example, we'll enter `n` because this scenario is for a production deployment.
-. Now enter at least three proxy private IP addresses for the machines that will run the ZDM proxies that work with the migration steps, for a production deployment. (If we had indicated above that we're doing local testing in dev, only one proxy would have been required.) Example values entered at the utility's prompt, for production:
+. Now enter at least three proxy private IP addresses for the machines that will run the ZDM proxies, for a production deployment. (If we had indicated above that we're doing local testing in dev, only one proxy would have been required.) Example values entered at the utility's prompt, for production:
 +
 ```bash
 172.18.10.137
@@ -122,7 +109,7 @@ The created file will be named `cloud_inventory` in your working directory.
 172.18.12.191
 ```
 + To finish entering private IP addresses, simply press ENTER at the prompt.
-. Optionally, enter the private IP address of your Monitoring instance, which will use Prometheus data and Grafana to visualize the data. You can skip this step if you haven't decided which machine to use for monitoring. 
+. Optionally, when prompted, you can enter the private IP address of your Monitoring instance, which will use Prometheus to store data and Grafana to visualize it into a preconfigured dashboard. You can skip this step if you haven't decided which machine to use for monitoring, or if you wish to use your own monitoring stack.
 +
 In this example, we'll enter the same IP of the Ansible control host (the jumphost machine on which we're running this Go utility). Example:
 +
@@ -132,25 +119,27 @@ In this example, we'll enter the same IP of the Ansible control host (the jumpho
 +
 At this point, the Go utility:
 +
-* Has created the Ansible Inventory to the default file, `cloudgate_inventory`.
+* Has created the Ansible Inventory to the default file, `zdm_ansible_inventory`.
 * Has written the ZDM-Proxy configuration to the default file, `ansible_container_init_config`. 
 * Presents a summary of the results thus far, and prompts you to Continue. Example:
 +
-image:zdm-go-utility-results2.png[Go Utility Inventory Results are displayed in the terminal] 
+image:zdm-go-utility-results2.png[Go Utility Inventory Results are displayed in the terminal]
+[ TODO replace prompt image with one with updated names]
 . If you agree, enter `Y` to proceed.
 
 The automation now:
 
 * Creates and downloads the image of the Ansible Docker container for you.
-* Runs the proxy configuration within the container.
+* Creates, configures and starts the Ansible Control Host container.
 * Displays a message. Example:
 
 image:zdm-go-utility-success.png[Ansible Docker container success messages] 
+[ TODO replace with updated message]
 
 Now you can run the created and configured Ansible playbooks. Example:
 
 ```bash
-docker exec -it ach-test-container bash
+docker exec -it zdm-ansible-container bash
 ```
 
 You're connected to the container, at a prompt such as this example:
@@ -159,41 +148,44 @@ You're connected to the container, at a prompt such as this example:
 ubuntu@52772568517c:~$
 ```
 
-You can `ls` to see the resources in the Docker container. The most important resource is the `cloudgate-automation`. 
+You can `ls` to see the resources in the Docker container. The most important resource is the `zdm-proxy-automation`.
 
-Now, `cd` into `cloudgate-automation` and `ls` to see its content. From there, cd to the ansible subdirectory and `ls`. Example:
+Now, `cd` into `zdm-proxy-automation` and `ls` to see its content. From there, cd to the ansible subdirectory and `ls`. Example:
 
 image:zdm-ansible-container-ls.png[]
 
-== Edit proxy_core_config_input.yml 
+== Edit zdm_proxy_core_config.yml
 
-The next step is to edit the `vars/proxy_core_config_input.yml` file in the Docker container. You'll want to enter your Cassandra/DSE username, password, and other values. 
+The next step is to edit the `zdm_proxy_core_config.yml` file in the Docker container. You'll want to enter your Cassandra/DSE username, password, and other values.
 
-. cd to ~/cloudgate-automation/ansible/vars
-. Edit `proxy_core_config_input.yml`
+. cd to ~/zdm-proxy-automation/ansible/vars
+. Edit `zdm_proxy_core_config.yml`
 . Uncomment and enter values for the following Origin settings of your Cassandra or DSE database:
 .. `origin_cassandra_username`
 .. `origin_cassandra_password`
 .. `origin_cassandra_contact_points`
 .. `origin_cassandra_port`
 .. (TODO: brief explanation of `origin_cassandra_contact_points` here - where to get the IPs.)
+.. Remove all other Origin-related parameters, or ignore them (leaving them commented out)
+. Uncomment and enter values for the following Target settings of your new Astra database:
+.. `target_cassandra_username`: Client ID of your Astra Read / Write User role
+.. `target_cassandra_password`: Client Secret of your Astra Read / Write User role
+.. `target_astra_db_id`: database ID of your Astra cluster (can be found in the Dashboard of the Astra UI)
+.. `target_astra_token`: Token of your Astra Read / Write User role
+.. Remove all other Target-related parameters, or ignore them (leaving them commented out)
+. Leave `forward_reads_to_target` set to its default value of `false`
+. Save the file and exit the editor
+
 +
-Example of a completed proxy_core_config_input.yml file:
+Example of a completed zdm_proxy_core_config.yml file [ TODO update variable names and populate target db id and token ] :
 +
 ```yml
 ---
 ### Origin configuration
 
 # Origin credentials (always required)
-origin_cassandra_username: cassandra
-origin_cassandra_password: cassandra
-
-# Set the following parameter only if Origin is an Astra cluster and you already have its secure connect bundle.
-#origin_secure_connect_bundle_path_name: <path and filename of the secure connect bundle zip file for Origin >
-
-# Set the following two parameters only if Origin is an Astra cluster and you would like the automation to download the secure connect bundle automatically
-#origin_astra_db_id: <cluster id of the Origin Astra cluster>
-#origin_astra_token: <token of the same role as above >
+origin_cassandra_username: my_user
+origin_cassandra_password: my_password
 
 # Set the following two parameters only if Origin is a self-managed, non-Astra cluster 
 origin_cassandra_contact_points: 191.100.20.85,191.100.20.61,191.100.20.93
@@ -205,12 +197,9 @@ origin_cassandra_port: 9042
 target_cassandra_username: dqhgDYKvtEGNDDFyrgzrNndY
 target_cassandra_password: Yc+U_2.gu,9woy0wSdBge6l1txjYtLwyD_mdQ.ASf8y+NNgRAy004Z_1DRNFEjgchDayKwXZSxeKu_n-ZcAiBGOXt99o8HD8uTPe5rER4bvYP1EAtpkk9JpAZGt+CCn5
 
-# Set the following parameter only if Target is an Astra cluster and you already have its secure connect bundle.
-target_secure_connect_bundle_path_name: /home/ubuntu/secureBundle.zip
-
 # Set the following two parameters only if Target is an Astra cluster and you would like the automation to download the secure connect bundle automatically
-#target_astra_db_id: <cluster id of the Target Astra cluster>
-#target_astra_token: <token of the same role as above >
+target_astra_db_id: <cluster id of the Target Astra cluster>
+target_astra_token: <token of the same role as above >
 
 # Set the following two parameters only if Target is a self-managed, non-Astra cluster
 #target_cassandra_contact_points: <comma-separated list of private IP addresses, no spaces>
@@ -219,39 +208,31 @@ target_secure_connect_bundle_path_name: /home/ubuntu/secureBundle.zip
 # Destination for all read requests. Set to false to send all reads to Origin, or true to send all reads to Target
 forward_reads_to_target: false
 ```
-. Copy the `proxy_core_config_input.yml` file from ~/cloudgate-automation/ansible/vars up a level, to ~/cloudgate-automation/ansible.
 
 == Use Ansible to run the playbook
 
 Now you can run the playbook that you've configured above.
 
 ```bash
-ansible-playbook cloudgate_proxy_playbook.yml -i cloudgate_inventory
+ansible-playbook deploy_zdm_proxy.yml -i zdm_ansible_inventory
 ```
 
 == Indications of success on Origin and Target clusters
 
-The playbook results in bifurcated environments where dual writes are subsequently made to both the origin database (such as Cassandra or DSE) and the target database (such as Astra DB). Importantly during this part of the migration, that means no loss of service to your users, and zero downtime. 
+The playbook will create one ZDM proxy instance for each proxy host listed in the inventory file. It will indicate the operations that it is performing and print out any errors, or a success confirmation message at the end.
 
-How can you tell if the playbook deployment is working properly?  
+How can you confirm that the ZDM proxies are up and running?
 
-After running the following command, as shown in the previous section:
-
+After running the playbook, you can `ssh` into one of the servers where one of the deployed ZDM Proxy instances is running. You can do so from within the Ansible container, or directly from the jumphost machine:
 ```bash
-ansible-playbook cloudgate_proxy_playbook.yml -i cloudgate_inventory
+ssh ubuntu@<zdm proxy ip address>
 ```
-
-Now `ssh` into one of the servers where one of the deployed ZDM Proxy instances is running. Example:
-
-```bash
-ssh -F ~/.ssh/cloudgate_ssh_config cloudgate-proxy-0
-```
-
+Then, use the `docker logs` command to view the logs of this ZDM proxy instance:
 ```bash
    .
    .
    .
-ubuntu@ip-172-18-10-111:~$ sudo docker logs cloudgate-proxy-container
+ubuntu@ip-172-18-10-111:~$ sudo docker logs zdm-proxy-container
    .
    .
    .
@@ -263,6 +244,7 @@ port: 9042, host_id: 6973271339454cfea5ee0a84c7377eaa} 6ec35bc3-4ff4-4740-a16c-0
 time="2022-07-27T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
 time="2022-07-27T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
 ```
+[ TODO change screenshots with updated names]
 
 In the logs, the important information to notice is:
 
@@ -270,6 +252,7 @@ In the logs, the important information to notice is:
 time="2022-07-27T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
 time="2022-07-27T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
 ```
+[ TODO change screenshots with updated names]
 
 Also, you can check the status of the running Docker image. Example:
 
@@ -282,18 +265,27 @@ CONTAINER ID  IMAGE                         COMMAND  CREATED      STATUS     POR
 
 Follow these steps to install the monitoring stack.  We'll use https://grafana.com/[Grafana] to visualize the data.
 
+Make sure you are connected to the Ansible Control Host docker container. As above, you can do so from the jumphost machine by running:
+```bash
+docker exec -it zdm-ansible-container bash
+```
+You will see a prompt like:
+```bash
+ubuntu@52772568517c:~$
+```
+
 === Configure the Grafana credentials
 
-. Edit `vars/monitoring_config.yml`:
-.. `grafana_admin_user`: leave unchanged (defaults to `admin`)
-.. `grafana_admin_password`: `migrationdemo`
+Edit the file `zdm_monitoring_config.yml`, located in `zdm-proxy-automation/ansible/vars`:
+. `grafana_admin_user`: leave unchanged (defaults to `admin`)
+. `grafana_admin_password`: set to the password of your choice
 
 === Run the monitoring playbook
 
 Use the following command:
 
 ```bash
-ansible-playbook monitoring_playbook.yml -i cloudgate_inventory 
+ansible-playbook deploy_zdm_monitoring.yml -i zdm_ansible_inventory
 ```
 
 === Check the Grafana dashboard
@@ -304,7 +296,7 @@ Login with:
 
 **username**: admin
 
-**password**: migrationdemo
+**password**: the password you configured
 
 (TODO: show Grafana screenshot and details about what to observe.)
 
