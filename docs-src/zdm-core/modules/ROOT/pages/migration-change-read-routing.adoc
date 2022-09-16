@@ -1,23 +1,31 @@
 = Change the read routing
 
-This topic explains how you can change  the read routing to Astra DB.
+This topic explains how you can configure the ZDM proxy to route all reads to the target database (in our case Astra DB) instead of your Origin database.
+
+You would typically do this once you have migrated all the existing data from your Origin cluster and completed all validation checks and reconciliation if necessary.
+
+This operation is a configuration change that can be carried out as explained xref:migration-manage-proxy-instances.adoc#change-mutable-config-property[here].
 
 If you're not there already, `ssh` back into the jumphost:
 
 ```bash
-ssh -F ~/.ssh/cloudgate_ssh_config jumphost
+ssh -F ~/.ssh/zdm_ssh_config jumphost
 ```
 
-On the jumphost:
-
+On the jumphost, connect to the Ansible Control Host container:
 ```bash
-cd cloudgate-automation/ansible
+docker exec -it zdm-ansible-container bash
+```
+You will see a prompt like:
+```bash
+ubuntu@52772568517c:~$
 ```
 
-Open the proxy core configuration file for editing. Example:
+Now open the proxy core configuration file for editing. Example:
 
 ```bash
-nano vars/proxy_core_config_input.yml
+cd zdm-proxy-automation/ansible
+nano vars/zdm_proxy_core_config.yml
 ```
 
 Change the flag `forward_reads_to_target` to `true`.
@@ -25,11 +33,12 @@ Change the flag `forward_reads_to_target` to `true`.
 Run the playbook that changes the configuration of the existing proxy deployment:
 
 ```bash
-ansible-playbook configure_existing_proxy_playbook.yml -i cloudgate_inventory 
+ansible-playbook update_zdm_proxy.yml -i zdm_ansible_inventory
 ```
 
-Wait for the proxies to be restarted by Ansible, one by one. The proxy will now send all reads to Astra DB instead of Origin. In other words, Astra DB is now the primary source of truth, but the proxy is still keeping Origin up-to-date.
+Wait for the proxies to be restarted by Ansible, one by one. All proxy instances will now send all reads to Target (Astra DB) instead of Origin. In other words, Target is now the primary source of truth, but the proxy is still keeping Origin up-to-date.
 
+[ TODO ensure this ties in with the examples so far ]
 Repeat the same reads through the ZDM Demo Client application:
 
 ```bash

@@ -60,6 +60,7 @@ ansible-playbook collect_zdm_proxy_logs.yml -i zdm_ansible_inventory
 
 This playbook creates a single zip file, called `zdm_proxy_logs_<current_timestamp>.zip`, containing the logs from all proxy instances, and stores it on the Ansible control host docker container in the directory `/home/ubuntu/zdm_proxy_archived_logs` (this can be overridden in the `archived_log_dir_path_name` variable in `vars/zdm_proxy_log_collection_config.yml`). [ TODO is it necessary to explain how to override this, now that the control host is a container? ]
 
+[#change-mutable-config-property]
 == Change a mutable configuration property
 
 The following configuration values are considered mutable and can be changed in a rolling fashion on an existing ZDM proxy deployment.
@@ -71,7 +72,7 @@ Commonly changed values:
 ** You can find this parameter in `vars/zdm_proxy_core_config.yml`
 * `zdm_log_level`:
 ** Defaults to `INFO`. 
-** Only set to `DEBUG` if necessary and revert to `INFO` as soon as possible, as the extra logging can have a noticeable performance impact.
+** Only set to `DEBUG` if necessary and revert to `INFO` as soon as possible, as the extra logging can have a slight performance impact.
 ** This `zdm_log_level` parameter can be found in `vars/zdm_proxy_advanced_config.yml`.
 
 Other, rarely changed values:

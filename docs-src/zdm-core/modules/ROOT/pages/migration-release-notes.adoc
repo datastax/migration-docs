@@ -36,7 +36,7 @@ The following DataStax migration repos are public. You are welcome to read the s
 
 With the {company} {product} 2.0.0 release, you can migrate any Cassandra Query Language (CQL) compliant database cluster from its origin (current) environment to a new target. Migration examples:
 
-* From an existing self-managed Cassandra or DSE cluster to cloud-native Astra DB. For example, migrate:
+* From an existing self-managed Cassandra or DSE cluster to cloud-native Astra DB or vice versa. For example, migrate:
 ** Cassandra 3.11.x or 4.0.x to Astra DB
 ** DSE 5.1.x or 6.8.x to Astra DB
 * From an existing Cassandra or DSE cluster to another Cassandra or DSE cluster. For example, migrate:

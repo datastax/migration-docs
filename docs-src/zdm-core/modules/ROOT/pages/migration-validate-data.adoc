@@ -2,11 +2,18 @@
 
 Follow these steps to validate the migrated data.
 
+Validation checks are an additional way to verify that all the data has been migrated successfully. For data written by indempotent writes these checks are optional, as any errors, timeouts or other failures during the migration are made visible by the data migrator and also by the ZDM proxy. However, they can provide extra peace of mind.
+
+In case of data written by non-idempotent writes, it is necessary to reconcile and realign any discrepancies before starting to use the Target cluster as the primary source of truth.
+
+[ TODO review all content here once we decide which client to use ]
+[ TODO add instructions to validate and reconcile the data through the Cassandra Data Migrator ]
+
 == Counting the data
 
 Use DataStax Bulk Loader (`dsbulk`) to count the data in the tables on each cluster, compare the results, and verify that they match.
 
-If you haven't already, install `dsbulk` on your Origin cluster. See link:https://docs.datastax.com/en/dsbulk/docs/install/dsbulkInstall.html[Installing DataStax Bulk Loader for Apache Cassandra] on the DataStax documentation site. 
+If you haven't already, install `dsbulk` on a machine that can connect to your Origin cluster and to Astra. This could be the same machine that you used to migrate your existing data. See link:https://docs.datastax.com/en/dsbulk/docs/install/dsbulkInstall.html[Installing DataStax Bulk Loader for Apache Cassandra] on the DataStax documentation site.
 
 Once installed, use the `dsbulk count` command, providing your keyspace name. The `-k baselines` value used in examples is from the database used by NoSQLBench app. Your values will be different.
 
