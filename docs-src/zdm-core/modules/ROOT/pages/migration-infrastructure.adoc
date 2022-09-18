@@ -1,8 +1,110 @@
-= Infrastructure requirements
+= Deployment considerations
 
-Text coming soon. 
+== Choosing where to deploy the proxy
+A typical ZDM Proxy deployment is made up of multiple proxy instances. A minimum of three proxy instances is recommended for any deployment apart from those for demo or local testing purposes.
 
-...
+All ZDM proxy instances must be reachable by the client application and must be able to connect to your Origin and Target clusters. The ZDM Proxy process is lightweight, requiring only a small amount of resources and no storage to persist state (apart from logs).
+
+The ZDM proxy should be deployed close to your client application instances. This can be on any cloud provider as well as on premises, depending on your existing infrastructure.
+
+If you have a multi-DC cluster with multiple set of client application instances deployed to geographically distributed data centers, you should plan for a ZDM Proxy deployment for each data center.
+
+[ TODO we should have a diagram here to show a typical deployment with client applications, proxy instances and clusters and highlight connectivity.
+Maybe something similar to link:[https://lucid.app/lucidchart/fec2e0b4-2384-4494-b7df-4c0132274883/edit?invitationId=inv_06b6d2b0-72ea-4560-8637-b416aea1d787#] ?]
+
+== Infrastructure requirements
+
+To deploy the ZDM proxy and its companion monitoring stack, you will have to provision infrastructure provisioned that meets the following requirements:
+
+=== Machines
+
+We will use the term "machine" to indicate a cloud instance (on any cloud provider), a VM or a physical server.
+
+* N machines to run the desired number of ZDM proxy instances
+** You will need one instance / VM / server for each ZDM proxy instance
+** Requirements for each ZDM proxy instance:
+*** Ubuntu Linux 18.04 or newer
+*** 4 vCPUs
+*** 8GB RAM
+*** 20GB - 100GB root volume
+*** Equivalent to AWS `c5.xlarge` / GCP `e2-standard-4` / [ TODO add Azure ]
+* One machine for the jumphost, which is typically also used as Ansible Control Host and to run the monitoring stack (Prometheus + Grafana)
+** The most common option is using a single machine for all these functions, but you could split these functions across different machines if you prefer.
+** Requirements:
+*** Ubuntu Linux 18.04 or newer
+*** 8 vCPUs
+*** 16GB RAM
+*** 200GB - 500GB storage (depending on the amount of metrics history that you wish to retain)
+*** Equivalent to AWS `c5.2xlarge` / GCP `e2-standard-8` / [ TODO add Azure ]
+
+=== Connectivity
+The ZDM Proxy machines must be reachable by:
+
+* The client application instances, on port 9042
+* The monitoring machine on port 14001
+* The jumphost on port 22
+* Important: the ZDM proxy machines should not be directly accessible by external machines. The only direct access to these
+
+The ZDM Proxy machines must be able to connect to:
+
+* The Origin cluster nodes on the Cassandra native protocol port (typically 9042)
+* The Target cluster nodes:
+** If Target is an Astra cluster, you will need to ensure outbound connectivity to the Astra endpoint indicated in the Secure Connect Bundle. Connectivity over Private Link is also supported.
+** If Target is a self-managed cluster, connectivity is needed to the Target cluster nodes on the Cassandra native protocol port (typically 9042)
+
+The connectivity requirements for the jumphost / monitoring machine are:
+
+* Connecting to the ZDM proxy instances: on port 14001 for metrics collection, and on port 22 to run the Ansible automation and for log inspection or troubleshooting
+* Allowing incoming ssh connections from outside, potentially from allowed IP ranges only
+* Exposing the Grafana UI on port 3000
+* Important: it is strongly recommended **restricting external access** to this machine to specific IP ranges (for example, the IP range of your corporate networks or trusted VPNs)
+
+The ZDM proxy and monitoring machines must be able to connect externally to download:
+
+* Various software packages (Docker, Prometheus, Grafana)
+* ZDM Proxy image from DockerHub repo
+
+=== Connecting to the ZDM infrastructure from an external machine
+
+To connect to the jumphost from an external machine, ensure that its IP address belongs to a permitted IP range. If you are connecting through a VPN that only intercepts connections to selected destinations, you may have to add a route from your VPN IP gateway to the public IP of the jumphost.
+
+To simplify connecting to the jumphost and, through it, to the ZDM Proxy instances you can create a custom SSH config file. You can use this template and replace all the placeholders in angle brackets with the appropriate values for your deployment, adding more entries if you have more than three proxy instances. Save this file, for example calling it `zdm_ssh_config`.
+
+```bash
+Host <jumphost_private_IP_address> jumphost
+  Hostname <jumphost_public_IP_address>
+  Port 22
+
+Host <private_IP_address_of_proxy_instance_0> zdm-proxy-0
+  Hostname <private_IP_address_of_proxy_instance_0>
+  ProxyJump jumphost
+
+Host <private_IP_address_of_proxy_instance_1> zdm-proxy-1
+  Hostname <private_IP_address_of_proxy_instance_1>
+  ProxyJump jumphost
+
+Host <private_IP_address_of_proxy_instance_2> zdm-proxy-2
+  Hostname <private_IP_address_of_proxy_instance_2>
+  ProxyJump jumphost
+
+Host *
+    User ubuntu
+    IdentityFile < Filename (with absolute path) of the locally-generated key pair for the ZDM infrastructure. Example ~/.ssh/zdm-key-XXX >
+    IdentitiesOnly yes
+    StrictHostKeyChecking no
+    GlobalKnownHostsFile /dev/null
+    UserKnownHostsFile /dev/null
+```
+
+With this file, you can connect to your jumphost simply with:
+```bash
+ssh -F zdm_ssh_config jumphost
+```
+
+Likewise, connecting to any ZDM proxy instance is as easy as this (replacing the instance number as desired):
+```bash
+ssh -F zdm_ssh_config zdm-proxy-0
+```
 
 == What's next? 
 
