@@ -1,6 +1,6 @@
 = Manage your proxy instances
 
-In this topic, we'll learn how to perform simple operations on your ZDM Proxy deployment with no interruption to its availability:
+In this topic, we'll learn how to perform simple operations on your {proxy} deployment with no interruption to its availability:
 
 * Do a simple rolling restart of the proxies
 * View or collect the logs of all proxies

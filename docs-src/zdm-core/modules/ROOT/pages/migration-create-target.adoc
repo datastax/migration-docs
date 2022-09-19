@@ -81,4 +81,4 @@ create table zdm_demo.app_data (
 
 == What's next? 
 
-Learn how to xref:migration-run-ansible-playbooks.adoc[configure Ansible] by easily setting just a few variables for your environment. Once configured, Ansible will run Playbooks that deploy the ZDM Proxy on your servers.
+Learn how to xref:migration-run-ansible-playbooks.adoc[configure Ansible] by setting just a few variables for your environment. Once configured, Ansible will run a playbook that deploys the {proxy} on your servers.

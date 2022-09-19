@@ -1,6 +1,6 @@
 = DataStax Zero Downtime Migration Release Notes
 
-The Zero Downtime Migration (ZDM) project provides a production-ready set of tools to help you migrate to another version of Apache Cassandra&reg; or DataStax Enterprise, or to cloud-native Astra DB. 
+The {company} {product} (ZDM) project provides a production-ready set of tools to help you migrate to another version of Apache Cassandra&reg; or DataStax Enterprise, or to cloud-native Astra DB. 
 
 == Release Notes for ZDM 2.0.0
 
@@ -10,9 +10,9 @@ The Zero Downtime Migration (ZDM) project provides a production-ready set of too
 
 All the {company} {product} repos are public. You are welcome to read the source and submit feedback via GitHub Issues per repo. 
 
-* https://github.com/datastax/zdm-proxy[ZDM-Proxy^] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion.
+* https://github.com/datastax/zdm-proxy[{proxy}^] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion.
 
-* https://github.com/datastax/zdm-proxy-automation[ZDM-Proxy Automation utility^] repo. 
+* https://github.com/datastax/zdm-proxy-automation[{zdm-automation}] repo for Ansible-based automation. 
 
 * https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo.
 
@@ -30,7 +30,7 @@ With the {company} {product} 2.0.0 release, you can migrate any Cassandra Query 
 ** DSE 5.1.x to DSE 6.8.x
 * From Astra DB Classic to Astra DB Serverless
 
-=== ZDM-Proxy 2.0.0 revisions
+=== {proxy} 2.0.0 revisions
 
-See the https://github.com/datastax/zdm-proxy/blob/main/CHANGELOG/CHANGELOG-2.0.md(CHANGELOG-2.0) for details about ZDM-Proxy open-source code.
+See the https://github.com/datastax/zdm-proxy/blob/main/CHANGELOG/CHANGELOG-2.0.md(CHANGELOG-2.0) for details about the {proxy} open-source code.
 

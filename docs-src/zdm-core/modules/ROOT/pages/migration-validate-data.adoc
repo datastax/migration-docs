@@ -9,7 +9,7 @@ Cassandra Data Migrator is designed to:
 * Report differences in a detailed log file
 * Reconcile any missing records and fix inconsistencies between the origin and target, if you enable `autocorrect` in a config file
 
-The validation checks are a way to verify that all the data has been migrated successfully. For data written by idempotent writes these checks are optional, as any errors, timeouts or other failures during the migration are made visible by the Cassandra Data Migrator and by ZDM-Proxy. 
+The validation checks are a way to verify that all the data has been migrated successfully. For data written by idempotent writes these checks are optional, as any errors, timeouts or other failures during the migration are made visible by the Cassandra Data Migrator and by {proxy}. 
 
 In the case of data written by non-idempotent writes, it is necessary to reconcile and realign any discrepancies before starting to use the target cluster as the primary source of truth.
 
@@ -67,7 +67,7 @@ spark.migrate.target.autocorrect.mismatch                  false
 mvn clean package
 ```
 
-. Run the 'Data Migration' job using `spark-submit` command. Example:
+. Run the 'Data Migration' job using a `spark-submit` command. Example:
 +
 ```bash
 ./spark-submit --properties-file sparkConf.properties /
@@ -138,7 +138,7 @@ If the target of your migration is an Astra DB database, your task for schema mi
 
 Any secondary indexes, Storage-Attached Indexes (SAI), or Materialized Views that may have existed in the origin's schema are ignored, and must be dealt with manually by the user, in compliance with the Astra DB guidelines.
 
-This schema preparation is a preliminary step that must be done before connecting your clients to the ZDM-Proxy. The goal is to ensure that database writes will not fail due to schema differences between origin and target.
+This schema preparation is a preliminary step that must be done before connecting your clients to the {proxy}. The goal is to ensure that database writes will not fail due to schema differences between origin and target.
 
 For migrations to a target that is not an Astra DB, you can simply extract the schema definition from your Origin cluster via a CQL `DESCRIBE` statement, and then run that schema DDL on your target cluster. You may need to adapt the schema due to any differences in the features of the database software (such as compact storage).
 

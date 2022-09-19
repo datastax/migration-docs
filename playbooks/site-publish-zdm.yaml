@@ -43,6 +43,8 @@ asciidoc:
     company: 'DataStax'
     product: 'Zero Downtime Migration'
     product_name: 'ZDM'
+    proxy: 'ZDM Proxy'
+    zdm-automation: 'ZDM Utility'    
     evalproduct: 'DB Classic'
     shortproduct: 'classic'
     database: 'Astra DB'

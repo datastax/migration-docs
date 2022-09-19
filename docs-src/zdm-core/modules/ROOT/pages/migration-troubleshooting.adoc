@@ -4,9 +4,9 @@ See the following troubleshooting advice collected from DataStax and open-source
 
 == Unable to find the proxy log files
 
-If 	ZDM-Proxy was deployed using the ZDM Automation utility, the utility contains an Ansible playbook that retrieves the logs. For details, see the next xref:migration-troubleshooting.adoc#how-to-view-retrieve-logs[troubleshooting tip]. 
+If {proxy} was deployed using the {zdm-automation}, the utility contains an Ansible playbook that retrieves the logs. For details, see the next xref:migration-troubleshooting.adoc#how-to-view-retrieve-logs[troubleshooting tip]. 
 
-If you did not use the ZDM Automation utility, the steps to retrieve the logs depends on how you deployed the ZDM-Proxy. If 
+If you did not use the {zdm-automation}, the steps to retrieve the logs depends on how you deployed the {proxy}. If 
 Docker is used, enter the following command to export the logs of a container to a file:
 
 ```bash
@@ -24,9 +24,9 @@ Keep in mind that docker logs are deleted if the container is recreated or resta
 ====
 
 [#how-to-view-retrieve-logs]
-== How to view and retrieve the ZDM-Proxy logs
+== How to view and retrieve the {proxy} logs
 
-When deployed though teh ZDM Proxy Automation, each ZDM Proxy instance runs as a Docker container. You can view its logs by connecting to the proxy machine and running the following command:
+When deployed through {zdm-automation}, each {proxy} instance runs as a Docker container. You can view its logs by connecting to the proxy machine and running the following command:
 
 ```bash
 sudo docker container logs zdm-proxy-container
@@ -36,7 +36,8 @@ You can retrieve logs of all proxy instances using a dedicated playbook: `collec
 
 If you are using the jumphost as your Ansible control host, no configuration changes are necessary. You can view the playbook's configuration values in `vars/zdm_proxy_log_collection_config.yml`. All default values are fine in most cases.
 
-[ TODO we have not mentioned the possibility of using an external machine as the jumphost - maybe this should be left out as it could be confusing ]
+[ **TODO**: we have not mentioned the possibility of using an external machine as the jumphost - maybe this should be left out as it could be confusing ]
+
 If your Ansible Control Host is an external machine rather than the jumphost, open `vars/zdm_proxy_log_collection_config.yml` and change the configuration as follows:
 
 . Set `log_collection_playbook_host` to `localhost`
@@ -53,15 +54,17 @@ This playbook creates a single zip file, called `zdm_proxy_logs_<current_timesta
 
 == Not sure what to look for in the logs
 
-First of all, make sure that the log level of the ZDM proxy is set to the appropriate value:
- . If you deployed the proxy through the ZDM Proxy Automation, the log level is determined by the property `zdm_log_level` in `vars/zdm_proxy_advanced_config.yml`. This value can be changed in a rolling fashion by editing this property and running the playbook `update_zdm_proxy.yml` (see xref:migration-manage-proxy-instances.adoc#change-mutable-config-property[here] for more information)
- . If you did not use the ZDM Proxy Automation to deploy the proxy, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
+First of all, make sure that the log level of the {proxy} is set to the appropriate value:
+
+. If you deployed the proxy through the {proxy} Automation, the log level is determined by the property `zdm_log_level` in `vars/zdm_proxy_advanced_config.yml`. This value can be changed in a rolling fashion by editing this property and running the playbook `update_zdm_proxy.yml` (see xref:migration-manage-proxy-instances.adoc#change-mutable-config-property[here] for more information)
+
+. If you did not use the {proxy} Automation to deploy the proxy, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
 
 Here are the most common messages you'll find in the proxy logs.
 
 === Proxy startup message
 
-First, verify whether the ZDM Proxy is starting up correctly. Assuming the Log Level is not filtering out `INFO` entries, to verify proxy startup, look for the following type of log message. Example:
+Verify whether the {proxy} is starting up correctly. Assuming the Log Level is not filtering out `INFO` entries, to verify proxy startup, look for the following type of log message. Example:
 
 ```json
 {"log":"time=\"2022-10-01T11:50:48Z\" level=info 
@@ -92,7 +95,7 @@ When you find a log message that looks like an error, the most important thing i
 
 * Log messages with `level=warn` are usually related to events that are not fatal to the overall running workload, but may cause issues with individual requests or connections.
 
-* In general, log messages with `level=error` or `level=warn` should be brought to the attention of DataStax, if the meaning is not clear.  In the ZDM-Proxy GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^] to ask questions about log messages of type `error` or `warn` that are unclear.
+* In general, log messages with `level=error` or `level=warn` should be brought to the attention of DataStax, if the meaning is not clear.  In the {proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^] to ask questions about log messages of type `error` or `warn` that are unclear.
 
 === Protocol log messages
 
@@ -107,9 +110,9 @@ msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":
 
 There are cases where protocol errors are `Fatal`, which kill an active connection that was being used to serve requests. However, if you find a log message similar to the example above of log level `debug`, it's likely not to be an issue. Instead, it's often part of the handshake process during the connection initialization; that is, the normal protocol version negotiation.
 
-== How to identify the ZDM-Proxy container's image version
+== How to identify the {proxy} container's image version
 
-On any machine that is running the deployed ZDM-Proxy, use the following docker command to get the version of the image used by the ZDM-proxy container:
+On any machine that is running the deployed {proxy}, use the following docker command to get the version of the image used by the {proxy} container:
 
 ```bash
 sudo docker container inspect zdm-proxy-container
@@ -121,24 +124,24 @@ The following sections present a series of Disaster Recovery (DR) troubleshootin
 
 === Cluster node failure occurs
 
-First, some background information. ZDM-Proxy pairs one client connection with one unique origin connection and one unique target connection. If read mirroring (async reads) is enabled, there is one additional origin or target connection per "pairing," depending on where the reads are being routed; check the proxy configuration settings.
+First, some background information. {proxy} pairs one client connection with one unique origin connection and one unique target connection. If read mirroring (async reads) is enabled, there is one additional origin or target connection per "pairing," depending on where the reads are being routed; check the proxy configuration settings.
 
-Each proxy instance is assigned a unique set of cluster nodes for the origin, and a unique set of cluster nodes for the target. Two proxy instances will never be assigned the same cluster node at the same time, unless there are more proxy instances than cluster nodes. These assignments change whenever a topology protocol event is received by the ZDM-Proxy's control connections. The ZDM-Proxy always has one open control connection for origin and one for target.
+Each proxy instance is assigned a unique set of cluster nodes for the origin, and a unique set of cluster nodes for the target. Two proxy instances will never be assigned the same cluster node at the same time, unless there are more proxy instances than cluster nodes. These assignments change whenever a topology protocol event is received by the {proxy}'s control connections. The {proxy} always has one open control connection for origin and one for target.
 
 If a cluster node fails, regardless of whether it is an origin or target node, and the connections to that node get closed or time out, then all the connections associated with that "pairing" will also be closed (both client and cluster connections). The client will normally open a new connection to the proxy, resulting in a new "pairing" being established.
 
-If the ZDM-Proxy does not receive a protocol event removing the failing node from the topology, the proxy will keep assigning that node to new client connection attempts. The client application's driver will keep trying to open new connections to the proxy instance and eventually it will consider the proxy unhealthy until a new connection is opened successfully. If the proxy instance is assigned more than one cluster node, the subsequent connection attempts by the client will result in the proxy choosing one node other than the failing one --  because the proxy goes through the cluster nodes in a round-robin fashion -- and the connection will succeed.
+If the {proxy} does not receive a protocol event removing the failing node from the topology, the proxy will keep assigning that node to new client connection attempts. The client application's driver will keep trying to open new connections to the proxy instance and eventually it will consider the proxy unhealthy until a new connection is opened successfully. If the proxy instance is assigned more than one cluster node, the subsequent connection attempts by the client will result in the proxy choosing one node other than the failing one --  because the proxy goes through the cluster nodes in a round-robin fashion -- and the connection will succeed.
 
-Therefore, if there is a cluster node failure, the client application and ZDM-Proxy should be able to function normally, although some connection errors may show up in the logs. 
+Therefore, if there is a cluster node failure, the client application and {proxy} should be able to function normally, although some connection errors may show up in the logs. 
 
 [NOTE]
 ====
-Because the ZDM-Proxy's round-robin process goes through the set of cluster nodes per connection attempt, some connection attempts will fail, and some will succeed, until the failing node is either removed from the cluster or it recovers. Removing the node from the cluster is not always recommended, but this scenario falls into standard DataStax Enterprise (DSE) or Apache Cassandra&reg; operational issues.
+Because the {proxy}'s round-robin process goes through the set of cluster nodes per connection attempt, some connection attempts will fail, and some will succeed, until the failing node is either removed from the cluster or it recovers. Removing the node from the cluster is not always recommended, but this scenario falls into standard DataStax Enterprise (DSE) or Apache Cassandra&reg; operational issues.
 ====
 
-The cluster node failure symptoms that show up on the client application would be different if the ZDM Proxy wasn't in this environment, because normally the driver would be able to mark the node as DOWN and only attempt to use it whenever a reconnection succeeds. However, with ZDM being part of this environment, connection issue will appear as *intermittent* unless the proxy is only assigned that single failing node and no other nodes.
+The cluster node failure symptoms that show up on the client application would be different if the {proxy} wasn't in this environment, because normally the driver would be able to mark the node as DOWN and only attempt to use it whenever a reconnection succeeds. However, with ZDM being part of this environment, connection issue will appear as *intermittent* unless the proxy is only assigned that single failing node and no other nodes.
 
-If multiple cluster nodes fail, the way to handle it is the same as if only one node failed, but the symptoms on the client application might be different. If all the failing nodes are assigned to one ZDM-Proxy, the client application will only see one failing node. However, if the nodes are assigned to different ZDM-Proxy instances, the client application will see the condition as multiple failing nodes.  
+If multiple cluster nodes fail, the way to handle it is the same as if only one node failed, but the symptoms on the client application might be different. If all the failing nodes are assigned to one {proxy}, the client application will only see one failing node. However, if the nodes are assigned to different {proxy} instances, the client application will see the condition as multiple failing nodes.  
 
 In the proxy logs, you may notice the following **disconnected** message. It means that the remote peer terminated the connection. Here's an example with the IP address obfuscated:
 
@@ -146,7 +149,7 @@ In the proxy logs, you may notice the following **disconnected** message. It mea
 [INFO] [TARGET-CONNECTOR] x.xx.x.xxx:xxxxx disconnected
 ```
 
-The prefix of the log message lets us know which **peer** terminated the connection. In this example, we can see by the `TARGET-CONNECTOR` prefix that the IP address refers to a target cluster node, and that node terminated a connection. As mentioned, if one connection of the **pairing** is closed, the other **ends** are also closed. So in this case, a client connection and an origin connection were terminated by the ZDM-Proxy because the target connection was closed.
+The prefix of the log message lets us know which **peer** terminated the connection. In this example, we can see by the `TARGET-CONNECTOR` prefix that the IP address refers to a target cluster node, and that node terminated a connection. As mentioned, if one connection of the **pairing** is closed, the other **ends** are also closed. So in this case, a client connection and an origin connection were terminated by the {proxy} because the target connection was closed.
 
 Reasons for cluster nodes to close connections are usually node restarts or decommission operations. Astra DB will sometimes terminate a connection if it is idle for more than 10 minutes. This scenario may happen if a client connection is sending only reads, because those reads will be routed to one cluster only. 
 
@@ -160,9 +163,9 @@ read tcp 172.18.100.106:9042->xxx.xxx.xx.xxx:xxxxx: read: connection timed out
 
 This message above indicates that the remote peer became unresponsive, or a network issue caused packets to time out. Because of the `CLIENT-CONNECTOR” prefix, we can see here that the issue occurred between the proxy and the client application, or the client application became unresponsive.
 
-=== Proxy instance failure
+=== {proxy} instance failure
 
-In rare cases, your client application may encounter a ZDM-Proxy instance that failed if its host cluster node failed, or if multiple proxies crashed. If either scenario happens, you may see a `panic` message at the end of the log file, with a stack trace. Here's a truncated example:
+In rare cases, your client application may encounter a {proxy} instance that failed if its host cluster node failed, or if multiple proxies crashed. If either scenario happens, you may see a `panic` message at the end of the log file, with a stack trace. Here's a truncated example:
 
 ```log
 {"log":"panic: send on closed channel\n","stream":"stderr","time":"2021-10-21T12:15:04.120202983Z"}
@@ -173,24 +176,24 @@ In rare cases, your client application may encounter a ZDM-Proxy instance that f
 (truncated for simplicity)
 ```
 
-How you'll recover the ZDM-Proxy instance depends on how it was deployed. If the proxy was deployed through our ZDM Automation utility, the docker container should be set up with a restart policy, which automatically attempts to restart the proxy whenever it crashes. If this policy was not set up, the container should be started manually.
+The way in which you'll recover the {proxy} instance depends on how it was deployed. If the {proxy} was deployed through our {zdm-automation} Ansible-based automation, the docker container should be set up with a restart policy, which automatically attempts to restart the proxy whenever it crashes. If this policy was not set up, the container should be started manually.
 
-If the ZDM-Proxy container keeps crashing on every restart attempt, please contact us. In the ZDM-Proxy GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. 
+If the {proxy} container keeps crashing on every restart attempt, please contact us. In the {proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. 
 
-Usually, having a ZDM-Proxy instance in the topology that is not receiving connections shouldn't be a problem. The driver will treat this scenario as if a cluster node was down, and avoid using the node until a reconnection is successful. 
+Usually, having a {proxy} instance in the topology that is not receiving connections shouldn't be a problem. The driver will treat this scenario as if a cluster node was down, and avoid using the node until a reconnection is successful. 
 
-However, if you need to remove this ZDM-Proxy instance from the proxy deployment, to prevent client applications from connecting to it:
+However, if you need to remove this {proxy} instance from the proxy deployment, to prevent client applications from connecting to it:
 
 * The failing proxy's IP address should be removed from the `PROXY_ADDRESSES` setting
 * And the `PROXY_INDEX` variable should be updated accordingly
 
-If you're using the ZDM Automation utility, it's easier and faster to create a new ZDM deployment, and move the client applications to use those new instances. To do so, you need to edit the inventory file, deleting the line corresponding to the machine being removed, and run the `deploy_zdm_proxy.yml` playbook again.
+If you're using the {zdm-automation}, it's easier and faster to create a new ZDM deployment, and move the client applications to use those new instances. To do so, you need to edit the inventory file, deleting the line corresponding to the machine being removed, and run the `deploy_zdm_proxy.yml` playbook again.
 
 == Use metrics to identify any issues 
 
-The ZDM-Proxy exposes an HTTP endpoint that returns metrics in the Prometheus format. You can use a variety of metrics providers with ZDM. The ZDM Automation utility can deploy Prometheus and Grafana, configuring them automatically. The Grafana dashboards are ready to go with metrics that are being scraped from the ZDM-Proxy instances.
+The {proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format. You can use a variety of metrics providers with ZDM. The {zdm-automation} can deploy Prometheus and Grafana, configuring them automatically. The Grafana dashboards are ready to go with metrics that are being scraped from the {proxy} instances.
 
-=== Grafana dashboard for ZDM-Proxy metrics
+=== Grafana dashboard for {proxy} metrics
 
 There are three groups of metrics in this dashboard:
 
@@ -200,12 +203,12 @@ There are three groups of metrics in this dashboard:
 
 image:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of ZDM metrics for the proxy.]
 
-==== Proxy level metrics
+==== Proxy-level metrics
 
 * Latency
-** Origin - total latency measured by the ZDM-Proxy (including post processing like response aggregation) for requests that were sent to ORIGIN only (reads, if reads are being forwarded to ORIGIN)
-** Both - total latency measured by the ZDM-Proxy (including post processing like response aggregation) for requests that were sent to both clusters (writes)
-** Target - total latency measured by the ZDM-Proxy (including post processing like response aggregation) for requests that were sent to TARGET only (reads, if reads are being forwarded to TARGET)
+** Origin - total latency measured by the {proxy} (including post processing like response aggregation) for requests that were sent to ORIGIN only (reads, if reads are being forwarded to ORIGIN)
+** Both - total latency measured by the {proxy} (including post processing like response aggregation) for requests that were sent to both clusters (writes)
+** Target - total latency measured by the {proxy} (including post processing like response aggregation) for requests that were sent to TARGET only (reads, if reads are being forwarded to TARGET)
 
 * Throughput (same thing as the previous latency metrics but for throughput)
 ** Origin
@@ -216,15 +219,15 @@ image:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories 
 
 * In-flight requests
 
-* Prepared Statement cache misses - meaning, a prepared statement was sent to the ZDM-Proxy, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again
+* Prepared Statement cache misses - meaning, a prepared statement was sent to the {proxy}, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again
 
 * Number of entries in the prepared statement cache
 
-==== Node level metrics
+==== Node-level metrics
 
 * Latency - metrics on this bucket are not split by request type like the proxy level latency metrics so writes and reads are mixed together
-** Origin - latency measured by the ZDM-Proxy up to the point it received a response from the Origin connection
-** Target - latency measured by the ZDM-Proxy up to the point it received a response from the Target connection
+** Origin - latency measured by the {proxy} up to the point it received a response from the Origin connection
+** Target - latency measured by the {proxy} up to the point it received a response from the Target connection
 
 * Throughput - same as node level latency metrics, reads and writes are mixed together
 
@@ -245,13 +248,13 @@ These metrics are specific to async reads so they are only populated if dual rea
 * Number of dedicated connections per node for async reads - whether it's origin or target connections depends on the proxy configuration. That is, if reads are being forwarded to ORIGIN then the async reads are forwarded to TARGET
 * Number of errors per error type per node
 
-==== Insights via the proxy metrics
+==== Insights via the {proxy} metrics
 
 Keep in mind that the error metrics in the proxy dashboard are not using a **rate** function. Even if you see a high value at a given point in time, it is possible that the increase in errors happened much earlier.
 
-Some examples of ZDM problems manifesting on these metrics would be:
+Some examples of ZDM problems manifesting on these metrics:
 
-* Number of client connections around 500 per proxy (the proxy starts rejecting client connections after 500, by default)
+* Number of client connections around 500 per {proxy} -  By default, {proxy} starts rejecting client connections after 500.
 * Always increasing PS cache metrics - both the **entries** and **misses** metrics
 * Error metrics depending on the error type - these need to be evaluated on a per-case basis; some errors may be normal
 
@@ -272,7 +275,7 @@ The ZDM monitoring stack also includes a system-level dashboard collected throug
 
 == Scaling recommendation
 
-The ZDM Automation utility does not provide a way to perform scaling up/down operations in a rolling fashion. Instead, we recommend that you deploy a new proxy cluster on the side, and move the client applications to the new proxy cluster (if absolutely necessary). To do so, edit the inventory file so that it contains one line for each machine where you want a proxy instance to be deployed and run the `deploy_zdm_proxy.yml` playbook again. This will result in a brief interruption of availability of the whole ZDM proxy deployment.
+The {zdm-automation} doesn't provide a way to perform scaling up/down operations in a rolling fashion. Instead, we recommend that you deploy a new proxy cluster on the side, and move the client applications to the new proxy cluster (if absolutely necessary). To do so, edit the inventory file so that it contains one line for each machine where you want a proxy instance to be deployed and run the `deploy_zdm_proxy.yml` playbook again. This will result in a brief interruption of availability of the whole ZDM proxy deployment.
 
 If you want to remove or add a proxy **manually**, follow these steps:
 
@@ -298,13 +301,13 @@ docker load --input zdm-proxy2.tar
 ```
 . At this point, `docker run` should work as the image is already on the local repo.
 
-If you're using the ZDM Automation utility, there may be other steps required deployment to be successful without Internet access. **TODO: provide those steps here.**
+If you're using the {zdm-automation}, there may be other steps required deployment to be successful without Internet access. **TODO: provide those steps here.**
 
 == Checklist of what to include when submitting problem reports
 
-=== ZDM-Proxy issues
+=== {proxy} issues
 
-If you encounter a problem during your migration, please contact us. In the ZDM-Proxy GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Include the following:
+If you encounter a problem during your migration, please contact us. In the {proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Include the following:
 
 * ZDM version
 * ZDM logs - ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change
@@ -321,13 +324,13 @@ If the issue is related to performance, troubleshooting can be more complicated 
 * Which statement types are being used, simple, prepared, batch?
 * If batch statements are being used, which driver API is being used to create these batches? Are you passing a `BEGIN BATCH` cql query string to a simple/prepared statement? Or are you using the actual batch statement objects that drivers allow you to create?
 * If the CQL function replacement feature is enabled, how many parameters does each statement have? You can see if this feature is enabled by looking at the configuration settings; it's disabled by default. [ TODO add detail of configuration variable with new name ]
-* If permissible, please provide your proxy metrics. Those metrics allow the ZDM team to know what latencies the ZDM-Proxy is encountering, compared to the latencies that the client application is encountering. If you are using the ZDM Proxy Automation, you should have two Grafana dashboards that the automation sets up. These dashboards contain the metrics that the ZDM team will want to check. Alternatively, please submit screenshots of the dashboards.
+* If permissible within your security rules, please provide the proxy metrics. Those metrics would allow the ZDM team to know what latencies the {proxy} is encountering, compared to the latencies that the client application is encountering. If you are using the {proxy} Automation, you should have two Grafana dashboards that the automation sets up. These dashboards contain the metrics that the ZDM team will want to check. Alternatively, please submit screenshots of the dashboards.
 
 == Regarding lightweight transactions and non-idempotent operations
 
-The ZDM-Proxy can bifurcate lightweight transactions to the ORIGIN and TARGET clusters. However, it only returns the applied flag from one cluster. Meaning, from the "primary" cluster, i.e. the source of truth -- the cluster from where it returns synchronous read results to the client. By default, that is the ORIGIN cluster. However, if you set `FORWARD_READS_TO_TARGET`, the TARGET cluster will be considered the primary and read results from the TARGET cluster will be returned to the client, as well as the applied flag from any lightweight transactions.
+{proxy} can bifurcate lightweight transactions to the Origin and Target clusters. However, it only returns the applied flag from one cluster. Meaning, from the "primary" cluster, i.e. the source of truth -- the cluster from where it returns synchronous read results to the client. By default, that is the Origin cluster. However, if you set `FORWARD_READS_TO_TARGET`, the Target cluster will be considered the primary and read results from the Target cluster will be returned to the client, as well as the applied flag from any lightweight transactions.
 
-Given that there are two separate clusters involved, the state of each cluster may be different. For conditional writes, this may create a divergent state for a time. It may not make a difference in many cases, but if lightweight transactions (or other non-idempotent operations) are used, we recommend a reconciliation phase in the migration before and after switching reads to rely on the TARGET cluster. [ TODO link to the reconciliation / validation docs ]
+Given that there are two separate clusters involved, the state of each cluster may be different. For conditional writes, this may create a divergent state for a time. It may not make a difference in many cases, but if lightweight transactions (or other non-idempotent operations) are used, we recommend a reconciliation phase in the migration before and after switching reads to rely on the Target cluster. For details about using the Cassandra Data Migrator to validate your migration (comparing the Origin and Target environments), see xref:migration-validate-data.adoc[Migrate and validate your schema and data].
 
 == What's next? 
 
