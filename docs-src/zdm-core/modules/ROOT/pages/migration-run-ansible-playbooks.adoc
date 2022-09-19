@@ -1,20 +1,21 @@
-= Setup and run Ansible playbooks to deploy the ZDM Proxy and Monitoring
+= Setup and run Ansible playbooks to deploy {proxy} and Monitoring
 
-This topic explains how to use the ZDM-Proxy Automation utility to create a dedicated deployment of the ZDM Proxy and its companion monitoring stack.
+This topic explains how to use the {zdm-automation} to create a dedicated deployment of the {proxy} and its companion monitoring stack.
 
-We will see how to configure the machine from which the automation is run, and then how to execute the automation. At the end, you will have a working and fully monitored ZDM proxy deployment.
+We will see how to configure the machine from which the {zdm-automation} automation is run, and then how to execute the automation. At the end, you will have a working and fully monitored {proxy} deployment.
 
 == Introduction
 
-The ZDM deployment automation uses **Ansible**, which deploys and configures the proxies and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.
+The {zdm-automation} deployment automation uses **Ansible**, which deploys and configures the proxies and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:migration-infrastructure.adoc[Deployment considerations], which include the infrastructure requirements.
 
-(Alice's note: TODO add link to a separate page with the infrastructure requirements for ZDM. I have a document that lists them: https://docs.google.com/document/d/1945XEIrQ34gqanXuIsvdnVXP4NeWaN6U_iwNHHgzg_Y/edit#bookmark=id.fyvzoz9af849 - please ignore the following section, which is not relevant here)
+(Alice's note: TODO add link to a separate page with the infrastructure requirements for ZDM (JS note: that's Done ^^^). 
+... I have a document that lists them: https://docs.google.com/document/d/1945XEIrQ34gqanXuIsvdnVXP4NeWaN6U_iwNHHgzg_Y/edit#bookmark=id.fyvzoz9af849 - please ignore the following section, which is not relevant here)
 
 https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code. It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
 
-The Ansible automation is organized into playbooks, each implementing a specific operation. The machine from which the playbooks are run is known as the Ansible Control Host. In ZDM, the Ansible Control Host will run as a Docker container.
+The Ansible automation in {zdm-automation} is organized into playbooks, each implementing a specific operation. The machine from which the playbooks are run is known as the Ansible Control Host. In ZDM, the Ansible Control Host will run as a Docker container.
 
-Configuring a machine to serve as the Ansible Control Host is very easy using the ZDM Automation utility. This is a Golang (Go) executable program that runs anywhere. This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use. From this container, you will be able to easily configure and run the ZDM Ansible playbooks. It's migration made easy.
+Configuring a machine to serve as the Ansible Control Host is very easy using the {zdm-automation}. This is a Golang (Go) executable program that runs anywhere. This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use. From this container, you will be able to easily configure and run the {zdm-automation} Ansible playbooks. It's migration made easy.
 
 == Prerequisites
 
@@ -27,11 +28,11 @@ That's it!
 
 In this topic, we'll use a jumphost as our Ansible Control Host.
 
-A jumphost is a server on a network used to access and manage devices in a separate security zone, providing a controlled means of access between them. The jumphost can be, for example, a Ubuntu server machine that is able to access the server machines that you wish to use for your ZDM Proxy deployment. [TODO is the last bit of this sentence redundant?]
+A jumphost is a server on a network used to access and manage devices in a separate security zone, providing a controlled means of access between them. The jumphost can be, for example, a Ubuntu server machine that is able to access the server machines that you wish to use for your {proxy} deployment. [TODO is the last bit of this sentence redundant?]
 
 The jumphost will serve three purposes:
 
-* Accessing the ZDM Proxy machines
+* Accessing the {proxy} machines
 * Serving as the Ansible Control Host to run the automation
 * Running the ZDM monitoring stack, which uses Prometheus and Grafana to expose the metrics of all the ZDM proxies in a preconfigured dashboard.
 
@@ -42,7 +43,7 @@ Let's get started.
 
 == Proxy deployment setup on the jumphost
 
-To run the automation, the Ansible Control Host needs to be able to connect to all other instances of the ZDM Proxy deployment. For this reason, it needs to have the SSH key required by those instances.
+To run the automation, the Ansible Control Host needs to be able to connect to all other instances of the {proxy} deployment. For this reason, it needs to have the SSH key required by those instances.
 
 === Add SSH keys to the jumphost
 
@@ -57,16 +58,16 @@ Now connect to the jumphost.
 ssh -F zdm_ssh_config <zdm key> jumphost
 ```
 
-(Alice's note: add a separate section in the infrastructure preparation to document creating the custom SSH config file. In that section. show how to connect to the jumphost and proxies using the custom SSH file)
+(Alice's note: add a separate section in the infrastructure preparation to document creating the custom SSH config file. In that section, show how to connect to the jumphost and proxies using the custom SSH file.)
 
-== Running the Automation's Go utility
+== Running the {zdm-automation} automation
 
-From the jumphost, download the ZDM Utility executable:
+From the jumphost, download the {zdm-automation}'s executable:
 ```bash
 curl .... [TODO add exact command with download URL]
 ```
 
-Run the ZDM Utility:
+Run the {zdm-automation}:
 ```bash
 go run main.go  [TODO add correct command once the executable has been created]
 ```
@@ -74,16 +75,16 @@ go run main.go  [TODO add correct command once the executable has been created]
 The utility prompts you for a few configuration values, then creates and initializes the Ansible Control Host container.
 [TIP]
 ====
-The utility will store the configuration that you provide into a file named `ansible_container_init_config`. If you run the utility again, it will detect the file  and ask you if you wish to use that configuration or discard it. If the configuration si not fully valid, you will be prompted for the missing or invalid parameters only.
+The {zdm-automation} will store the configuration that you provide into a file named `ansible_container_init_config`. If you run the utility again, it will detect the file  and ask you if you wish to use that configuration or discard it. If the configuration is not fully valid, you will be prompted for the missing or invalid parameters only.
 
 You can also pass a custom configuration file to the utility with the optional command-line parameter `-utilConfigFile` [TODO add example command]
 ====
 
 [TIP]
 ====
-The ZDM utility will validate each parameter that you enter. In case of invalid parameters, it will display specific messages to help you fix the problem.
+The {zdm-automation} will validate each parameter that you enter. In case of invalid parameters, it will display specific messages to help you fix the problem.
 
-You have five attempts to enter valid parameters. You can always run the utility again, if necessary.
+You have five attempts to enter valid parameters. You can always run the {zdm-automation} again, if necessary.
 ====
 
 . Enter the path to, and name, of the SSH private key to access the proxy hosts. Example:
@@ -97,11 +98,11 @@ You have five attempts to enter valid parameters. You can always run the utility
 172.18.*
 ```
 +
-. You're asked if you have an existing Ansible inventory file. If you do, you can just specify it. If you do not, the Go utility will create one based on your answers to prompts and save it. Here we'll assume that you do not have one. Enter `n`.
+. You're asked if you have an existing Ansible inventory file. If you do, you can just specify it. If you do not, the {zdm-automation} will create one based on your answers to prompts and save it. Here we'll assume that you do not have one. Enter `n`.
 +
 The created file will be named `zdm_ansible_inventory` in your working directory.
 . Next, indicate if this deployment is for local testing and evaluation (such as when you're creating a demo or just experimenting with the automation). In this example, we'll enter `n` because this scenario is for a production deployment.
-. Now enter at least three proxy private IP addresses for the machines that will run the ZDM proxies, for a production deployment. (If we had indicated above that we're doing local testing in dev, only one proxy would have been required.) Example values entered at the utility's prompt, for production:
+. Now enter at least three proxy private IP addresses for the machines that will run the ZDM proxies, for a production deployment. (If we had indicated above that we're doing local testing in dev, only one proxy would have been required.) Example values entered at the {zdm-automation}'s prompt, for production:
 +
 ```bash
 172.18.10.137
@@ -111,19 +112,19 @@ The created file will be named `zdm_ansible_inventory` in your working directory
 + To finish entering private IP addresses, simply press ENTER at the prompt.
 . Optionally, when prompted, you can enter the private IP address of your Monitoring instance, which will use Prometheus to store data and Grafana to visualize it into a preconfigured dashboard. You can skip this step if you haven't decided which machine to use for monitoring, or if you wish to use your own monitoring stack.
 +
-In this example, we'll enter the same IP of the Ansible control host (the jumphost machine on which we're running this Go utility). Example:
+In this example, we'll enter the same IP of the Ansible control host (the jumphost machine on which we're running this {zdm-automation}). Example:
 +
 ```bash
 172.18.100.128
 ```
 +
-At this point, the Go utility:
+At this point, the {zdm-automation}:
 +
 * Has created the Ansible Inventory to the default file, `zdm_ansible_inventory`.
-* Has written the ZDM-Proxy configuration to the default file, `ansible_container_init_config`. 
+* Has written the {proxy} configuration to the default file, `ansible_container_init_config`. 
 * Presents a summary of the results thus far, and prompts you to Continue. Example:
 +
-image:zdm-go-utility-results2.png[Go Utility Inventory Results are displayed in the terminal]
+image:zdm-go-utility-results2.png[{zdm-automation} Inventory Results are displayed in the terminal]
 [ TODO replace prompt image with one with updated names]
 . If you agree, enter `Y` to proceed.
 
@@ -223,11 +224,14 @@ The playbook will create one ZDM proxy instance for each proxy host listed in th
 
 How can you confirm that the ZDM proxies are up and running?
 
-After running the playbook, you can `ssh` into one of the servers where one of the deployed ZDM Proxy instances is running. You can do so from within the Ansible container, or directly from the jumphost machine:
+After running the playbook, you can `ssh` into one of the servers where one of the deployed {proxy} instances is running. You can do so from within the Ansible container, or directly from the jumphost machine:
+
 ```bash
 ssh ubuntu@<zdm proxy ip address>
 ```
+
 Then, use the `docker logs` command to view the logs of this ZDM proxy instance:
+
 ```bash
    .
    .
@@ -236,15 +240,16 @@ ubuntu@ip-172-18-10-111:~$ sudo docker logs zdm-proxy-container
    .
    .
    .
-time="2022-07-27T22:21:42Z" level=info msg="Initialized origin control connection. Cluster Name: OriginCluster, Hosts: map[3025c4ad-7d6a-4398-b56e-87d33509581d:Host{addr: 191.100.20.61, 
+time="2022-10-01T22:21:42Z" level=info msg="Initialized origin control connection. Cluster Name: OriginCluster, Hosts: map[3025c4ad-7d6a-4398-b56e-87d33509581d:Host{addr: 191.100.20.61, 
 port: 9042, host_id: 3025c4ad7d6a4398b56e87d33509581d} 7a6293f7-5cc6-4b37-9952-88a4b15d59f8:Host{addr: 191.100.20.85, port: 9042, host_id: 7a6293f75cc64b37995288a4b15d59f8} 997856cd-0406-45d1-8127-4598508487ed:Host{addr: 191.100.20.93, port: 9042, host_id: 997856cd040645d181274598508487ed}], Assigned Hosts: [Host{addr: 191.100.20.61, port: 9042, host_id: 3025c4ad7d6a4398b56e87d33509581d}]."
 
-time="2022-07-27T22:21:42Z" level=info msg="Initialized target control connection. Cluster Name: cndb, Hosts: map[69732713-3945-4cfe-a5ee-0a84c7377eaa:Host{addr: 10.0.79.213, 
+time="2022-10-01T22:21:42Z" level=info msg="Initialized target control connection. Cluster Name: cndb, Hosts: map[69732713-3945-4cfe-a5ee-0a84c7377eaa:Host{addr: 10.0.79.213, 
 port: 9042, host_id: 6973271339454cfea5ee0a84c7377eaa} 6ec35bc3-4ff4-4740-a16c-03496b74f822:Host{addr: 10.0.86.211, port: 9042, host_id: 6ec35bc34ff44740a16c03496b74f822} 93ded666-501a-4f2c-b77c-179c02a89b5e:Host{addr: 10.0.52.85, port: 9042, host_id: 93ded666501a4f2cb77c179c02a89b5e}], Assigned Hosts: [Host{addr: 10.0.52.85, port: 9042, host_id: 93ded666501a4f2cb77c179c02a89b5e}]."
 time="2022-07-27T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
 time="2022-07-27T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
 ```
-[ TODO change screenshots with updated names]
+
+[ TODO change screenshots with updated names ]
 
 In the logs, the important information to notice is:
 
@@ -259,7 +264,7 @@ Also, you can check the status of the running Docker image. Example:
 ```bash
 ubuntu@ip-172-18-10-111:~$ sudo docker ps
 CONTAINER ID  IMAGE                         COMMAND  CREATED      STATUS     PORTS   NAMES
-02470bbc1338  datastax/cloudgate-proxy:1.x  "/main"  2 hours ago  Up 2 hours         cloudgate-proxy-container
+02470bbc1338  datastax/zdm-proxy:1.x  "/main"  2 hours ago  Up 2 hours         zdm-proxy-container
 ```
 == Setting up Monitoring on the control host
 
@@ -302,4 +307,4 @@ Login with:
 
 == What's next? 
 
-Learn how to xref:migration-manage-proxy-instances.adoc[Manage your proxy instances] in this next phase of the migration. 
+Learn how to xref:migration-manage-proxy-instances.adoc[Manage your proxy instances]. 

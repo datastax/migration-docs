@@ -1,7 +1,7 @@
 * xref:index.adoc[Migrating]
 ** xref:migration-introduction.adoc[Introduction]
 ** xref:migration-faqs.adoc[FAQs]
-** xref:migration-infrastructure.adoc[Infrastructure requirements]
+** xref:migration-infrastructure.adoc[Deployment considerations]
 ** xref:migration-create-target.adoc[Create target environment for migration]
 ** xref:migration-run-ansible-playbooks.adoc[Setup and run Ansible playbooks]
 ** xref:migration-connect-clients-to-proxy.adoc[Connecting your client apps to proxy]

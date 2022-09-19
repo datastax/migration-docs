@@ -39,6 +39,8 @@ asciidoc:
     company: 'DataStax'
     product: 'Zero Downtime Migration'
     shortproduct: 'ZDM'
+    proxy: 'ZDM Proxy'
+    zdm-automation: 'ZDM Utility'
     database: 'Astra DB'
     astra_db: 'Astra DB'
     astra_generic: 'Astra'
