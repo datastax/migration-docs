@@ -59,9 +59,9 @@ The primary component of the migration tool set is **{proxy}**, which by design 
 
 The {proxy} itself doesn't have any capability to migrate data or knowledge that a migration may be ongoing, and it is not coupled to the migration process in any way. 
 
-{company} {product} provides an Ansible-based {zdm-automation}. It allows you to deploy and manage the {proxy} instances and its associated monitoring stack. The {zdm-automation} creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
+{company} {product} also provides an Ansible-based {zdm-automation}. It allows you to deploy and manage the {proxy} instances and its associated monitoring stack. The {zdm-automation} creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
 
-A separate tool performs the work to migrate the existing schema and data. The Cassandra Data Migrator compares the Origin environment to the Target, notes any discrepancies, and (if enabled) can automatically apply reconciliation updates to the target.
+A separate tool, Cassandra Data Migrator, performs the work to migrate and validate your data. See the xref:migration-introduction.adoc#_cassandra_data_migrator[summary of features] below. 
 
 === Role of {proxy}
 
@@ -110,11 +110,11 @@ The Ansible automation is organized into playbooks, each implementing a specific
 
 For details, see xref:migration-run-ansible-playbooks.adoc[Setup and run Ansible playbooks to deploy {proxy} instances and Monitoring, window="_blank"].
 
-=== Cassandra Data Migrator for schema + data migration
+=== Cassandra Data Migrator
 
 As part of the overall migration process, you can use Cassandra Data Migrator to:
 
-* Migrate the schema and data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB)
+* Migrate your data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB)
 * Validate migration accuracy and performance using examples that provide a smaller, randomized data set
 * Count tables
 * Preserve writetimes and Time To Live (TTL) values
@@ -122,7 +122,18 @@ As part of the overall migration process, you can use Cassandra Data Migrator to
 * Filter records from the origin data, using writetime
 * Use SSL Support, including custom cipher algorithms
 
-For details, see xref:migration-validate-data[Migrate and validate your schema and data, window="_blank"].
+Cassandra Data Migrator is designed to:
+
+* Connect to, and compare your target database with the origin
+* Report differences in a detailed log file
+* Reconcile any missing records and fix any data inconsistencies in the target, if you enable `autocorrect` in a config file
+
+[TIP]
+====
+An important **prerequisite** is that you already have the matching schema on the target database.
+====
+
+For details, see xref:migration-validate-data[Migrate and validate data, window="_blank"].
 
 == Benefits
 

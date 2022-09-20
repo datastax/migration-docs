@@ -7,7 +7,7 @@
 ** xref:migration-connect-clients-to-proxy.adoc[Connecting your client apps to proxy]
 ** xref:migration-manage-proxy-instances.adoc[Manage proxy instances]
 ** xref:migration-change-read-routing.adoc[Change read routing to Astra DB]
-** xref:migration-validate-data.adoc[Migrate and validate migrated data]
+** xref:migration-validate-data.adoc[Migrate and validate your data]
 ** xref:migration-connect-apps.adoc[Connect clients directly to Astra DB]
 ** xref:migration-verifications.adoc[Verify full migration and move off proxy]
 ** xref:migration-troubleshooting.adoc[Troubleshooting]
