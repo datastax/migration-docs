@@ -1,13 +1,18 @@
-= Migrate and validate your schema and data
+= Migrate and validate your data
 
-Follow these steps to migrate and validate your database's schema and data using Cassandra Data Migrator. This tool can 
-help you migrate schema and data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB).
+Follow these steps to migrate and validate your data using Cassandra Data Migrator. This tool can 
+help you migrate data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB).
 
 Cassandra Data Migrator is designed to:
 
-* Connect to, and compare, your origin and target databases
+* Connect to, and compare your target database with the origin
 * Report differences in a detailed log file
-* Reconcile any missing records and fix inconsistencies between the origin and target, if you enable `autocorrect` in a config file
+* Reconcile any missing records and fix any data inconsistencies in the target, if you enable `autocorrect` in a config file
+
+[TIP]
+====
+An important **prerequisite** is that you already have the matching schema on the target database. For every table migrated by Cassandra Data Migrator, the tool takes a mapping configuration that links every origin column to every target column. 
+====
 
 The validation checks are a way to verify that all the data has been migrated successfully. For data written by idempotent writes these checks are optional, as any errors, timeouts or other failures during the migration are made visible by the Cassandra Data Migrator and by {proxy}. 
 
@@ -21,7 +26,7 @@ In the case of data written by non-idempotent writes, it is necessary to reconci
 git clone git@github.com:datastax/cassandra-data-migrator.git
 ```
 +
-Note: 16-Sept-2022, it's temporarily https://github.com/Ankitp1342/astra-spark-migration-ranges[here, window="_blank")].
+Note: 20-Sept-2022, it's temporarily https://github.com/Ankitp1342/astra-spark-migration-ranges[here, window="_blank")].
 
 . Install Java8 or later as a prerequisite, because the spark binaries are compiled with Java. 
 
@@ -32,6 +37,9 @@ wget https://downloads.apache.org/spark/spark-2.4.8/
 
 tar -xvzf <spark downloaded file name>
 ```
+
+. You must already have the matching schema on the target database.
+
 
 == Set up Cassandra Data Migrator
 
@@ -107,8 +115,8 @@ The `spark-submit` command above also generates a log file, `logfile_name.txt`, 
 
 . The Data Validation job can also be run in an **AutoCorrect** mode. This mode can:
 +
-** Add any missing records from origin to target
-** Fix any inconsistencies between origin and target (makes the target the same as the origin)
+** Add any missing records to the target that are present in the origin.
+** Fix any data inconsistencies in the target
 
 . Enable/disable this feature using one or both of the below setting in the config file:
 +
@@ -116,6 +124,11 @@ The `spark-submit` command above also generates a log file, `logfile_name.txt`, 
 spark.migrate.target.autocorrect.missing                   true|false
 spark.migrate.origin.autocorrect.mismatch                  true|false
 ```
++
+[NOTE]
+====
+Regarding the `mismatch` setting: if Cassandra Data Migrator finds that the origin row exists in the target, but some or all column data doesn't match, the tool (if enabled) will overwrite the values in the target. The result is Cassandra Data Migrator makes the target the same as the origin.
+====
 
 == Additional features
 
@@ -141,6 +154,9 @@ Any secondary indexes, Storage-Attached Indexes (SAI), or Materialized Views tha
 This schema preparation is a preliminary step that must be done before connecting your clients to the {proxy}. The goal is to ensure that database writes will not fail due to schema differences between origin and target.
 
 For migrations to a target that is not an Astra DB, you can simply extract the schema definition from your Origin cluster via a CQL `DESCRIBE` statement, and then run that schema DDL on your target cluster. You may need to adapt the schema due to any differences in the features of the database software (such as compact storage).
+
+////
+Commenting out DSBulk info 16-Sept-2022:
 
 == Counting the table data 
 
@@ -191,6 +207,7 @@ curl -G -d 'rowkey=250' http://localhost:8080/zdm-demo-client/rest/row
 curl -G -d 'rowkey=1000' http://localhost:8080/zdm-demo-client/rest/row
 curl -G -d 'rowkey=1080' http://localhost:8080/zdm-demo-client/rest/row
 ```
+////
 
 == What's next? 
 
