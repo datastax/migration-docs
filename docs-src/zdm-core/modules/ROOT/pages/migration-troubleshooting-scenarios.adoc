@@ -1,10 +1,80 @@
 = Troubleshooting scenarios
 
-Refer the following troubleshooting senarios for information about resolving common migration issues.
+Refer the following troubleshooting scenarios for information about resolving common migration issues. Each section presents:
 
-== title 1
+* Symptoms
+* Cause
+* Workaround
 
-Coming in next PR - tonight - 20-Sept! :-) 
+== Unsupported protocol version error on the client application
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+== Performance degradation with ZDM
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+== Syntax error “no viable alternative at input 'CALL'” in proxy logs
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+== Protocol errors in the proxy logs but clients can connect successfully
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+== Client application driver takes too long to reconnect to a proxy instance
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+== Error with Astra DevOps API when using the automation ({zdm-automation})
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+== Metadata service (Astra) returned not successful status code 403
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+== Proxy starts but client cannot connect (connection timeout/closed)
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+
+== Error during proxy startup: `Invalid or unsupported protocol version: 3`
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+
+== Authentication errors
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+
+== The proxy listens on a custom port, and all applications are able to connect to one proxy instance only
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+
+== Default Grafana credentials don't work
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+
+== Users cannot use docker in their environment
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+
+== Async read timeouts / stream id map exhausted
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+
+== Client application closed connection errors every 10 minutes when migrating to Astra DB
+
+Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+
+
+
 
 == What's next? 
 
