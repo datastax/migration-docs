@@ -8,70 +8,256 @@ Refer the following troubleshooting scenarios for information about resolving co
 
 == Unsupported protocol version error on the client application
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms: 
+
+**Java 4.x driver logs.**
+
+This issue can manifest during session initialization or after initialization.
+
+Failure during session initialization:
+
+Failed to connect with protocol DSE_V2, retrying with DSE_V1
+
+Fatal error while initializing pool, forcing the node down (UnsupportedProtocolVersionException: [/10.169.241.224:9042] Host does not support protocol version DSE_V2)
+
+Failure after initialization, error is logged and the node is “forced down”.
+
+```log
+[s0|/10.169.241.224:9042] Fatal error while initializing pool, forcing the node down (UnsupportedProtocolVersionException: [/10.169.241.224:9042] Host does not support protocol version DSE_V2)
+
+[s0|/10.169.241.24:9042] Fatal error while initializing pool, forcing the node down (UnsupportedProtocolVersionException: [/10.169.241.24:9042] Host does not support protocol version DSE_V2)
+
+[s0|/10.169.241.251:9042] Fatal error while initializing pool, forcing the node down (UnsupportedProtocolVersionException: [/10.169.241.251:9042] Host does not support protocol version DSE_V2)
+
+[s0] Failed to connect with protocol DSE_V1, retrying with V4
+
+[s0] Failed to connect with protocol DSE_V2, retrying with DSE_V1
+```
+
+=== Cause
+
+https://datastax-oss.atlassian.net/browse/JAVA-2905[JAVA-2905^] is a driver bug that manifests itself in this way. It affects java driver 4.x and was fixed on the 4.10.0 release.
+
+=== Workaround
+
+If you are using spring boot and/or spring-data-cassandra then an upgrade of these dependencies will be necessary to a version that has the java driver fix.
+
+Alternatively, you can force the protocol version on the driver to the max supported version by both clusters. V4 is a good recommendation that usually fits all but if the user is migrating from DSE to DSE then DSE_V1 should be used for DSE 5.x and DSE_V2 should be used for DSE 6.x.
+
+To force the protocol version on the Java driver, check this section of the https://docs.datastax.com/en/developer/java-driver/3.11/manual/native_protocol/#controlling-the-protocol-version[driver manual, window="_blank"]. We don't believe this issue affects Java driver 3.x but here is the https://docs.datastax.com/en/developer/java-driver/3.11/manual/native_protocol/#controlling-the-protocol-version[instructions, window="_blank"] on how to force the version on 3.x, just in case.
 
 == Performance degradation with ZDM
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+User runs benchmarks against Astra DB directly, Origin directly, and ZDM (with Astra DB and Origin). The results of these tests show latency/throughput values are worse with ZDM than when connecting to Astra DB or Origin directly.
+
+=== Cause 
+
+ZDM will always add additional latency which, depending on the nature of the test, will also result in a lower throughput. Whether this performance hit is expected or not depends on the difference between the ZDM test results and the test results with the cluster that performed the worst. 
+
+Writes in ZDM require an “ACK” from both clusters while reads only require the result from the Origin cluster (or target if the proxy is set up to route reads to the target cluster). This means that if Origin has better performance than Target then ZDM will inevitably have a worse performance for writes.
+
+From our testing benchmarks, a performance degradation of up to 2x latency is not unheard of even without external factors adding more latency, but it is still worth checking some things that might add additional latency like whether the proxy is deployed on the same Availability Zone (AZ) as the Origin cluster or application instances. 
+
+Simple statements and batch statements are things that will make the proxy add additional latency compared to normal prepared statements. Simple statements should be discouraged especially with the zdm-proxy because currently the proxy takes a considerable amount of time just parsing the queries and with prepared statements the proxy only has to parse them once.
+
+=== Workaround
+
+If you are using simple statements, consider using prepared statements as the best first step.
+
+Increasing the number of proxies might help, but only if the VMs resources (CPU, RAM or network IO) are near capacity. The {proxy} doesn't use a lot of RAM, but it uses a lot of CPU and network IO. 
+
+Deploying the proxy instances on VMs with faster CPUs and faster network IO might help, but only your own tests will reveal  whether it helps, because it depends on the workload type and details about your environment. Such as, network/VPC configurations, hardware, and so on.
 
 == Syntax error “no viable alternative at input 'CALL'” in proxy logs
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+Coming soon...
+
+=== Cause 
+
+Coming soon...
+
+=== Workaround
+
+Coming soon... 
 
 == Protocol errors in the proxy logs but clients can connect successfully
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+Coming soon...
+
+=== Cause 
+
+Coming soon...
+
+=== Workaround
+
+Coming soon... 
 
 == Client application driver takes too long to reconnect to a proxy instance
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+Coming soon...
+
+=== Cause 
+
+Coming soon...
+
+=== Workaround
+
+Coming soon... 
 
 == Error with Astra DevOps API when using the automation ({zdm-automation})
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+Coming soon...
+
+=== Cause 
+
+Coming soon...
+
+=== Workaround
+
+Coming soon... 
 
 == Metadata service (Astra) returned not successful status code 403
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+Coming soon...
+
+=== Cause 
+
+Coming soon...
+
+=== Workaround
+
+Coming soon... 
 
 == Proxy starts but client cannot connect (connection timeout/closed)
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+Coming soon...
+
+=== Cause 
+
+Coming soon...
+
+=== Workaround
+
+Coming soon... 
 
 
 == Error during proxy startup: `Invalid or unsupported protocol version: 3`
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+Coming soon...
+
+=== Cause 
+
+Coming soon...
+
+=== Workaround
+
+Coming soon... 
 
 
 == Authentication errors
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+Coming soon...
+
+=== Cause 
+
+Coming soon...
+
+=== Workaround
+
+Coming soon... 
 
 
 == The proxy listens on a custom port, and all applications are able to connect to one proxy instance only
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+Coming soon...
+
+=== Cause 
+
+Coming soon...
+
+=== Workaround
+
+Coming soon... 
 
 
 == Default Grafana credentials don't work
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+Coming soon...
+
+=== Cause 
+
+Coming soon...
+
+=== Workaround
+
+Coming soon... 
 
 
 == Users cannot use docker in their environment
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+Coming soon...
+
+=== Cause 
+
+Coming soon...
+
+=== Workaround
+
+Coming soon... 
 
 
 == Async read timeouts / stream id map exhausted
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+Coming soon...
+
+=== Cause 
+
+Coming soon...
+
+=== Workaround
+
+Coming soon... 
 
 
 == Client application closed connection errors every 10 minutes when migrating to Astra DB
 
-Symptoms, Cause, Workaround text being added this evening, Sept 20-21.
+=== Symptoms
+
+Coming soon...
+
+=== Cause 
+
+Coming soon...
+
+=== Workaround
+
+Coming soon... 
 
 
 

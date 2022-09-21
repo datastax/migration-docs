@@ -6,124 +6,8 @@ This advanced troubleshooting topic presents solutions to error conditions that 
 ====
 **Reviewers:** We have a TODO task to narrow down the sections in this topic to just **advanced troubleshooting** sections. 
 
-Many thanks for your advice on which sections below to keep or delete.
+Many thanks for your advice on which sections below to keep or delete.  I made some guesses below about which sections are more Advanced, thus keeping DR, Scaling, and performance issues in this advanced topic.
 ====
-
-== Unable to find the proxy log files
-
-If {proxy} was deployed using the {zdm-automation}, the utility contains an Ansible playbook that retrieves the logs. For details, see the next xref:migration-troubleshooting.adoc#how-to-view-retrieve-logs[troubleshooting tip]. 
-
-If you did not use the {zdm-automation}, the steps to retrieve the logs depends on how you deployed the {proxy}. If 
-Docker is used, enter the following command to export the logs of a container to a file:
-
-```bash
-docker logs my-container > log.txt
-```
-[TIP]
-====
-You may need to use `sudo` to run the `docker` command.
-====
-
-[TIP]
-====
-Keep in mind that docker logs are deleted if the container is recreated or restarted. 
-**TODO**: Decide if users may mount a docker volume to persist the proxy's container log files. 
-====
-
-[#how-to-view-retrieve-logs]
-== How to view and retrieve the {proxy} logs
-
-When deployed through {zdm-automation}, each {proxy} instance runs as a Docker container. You can view its logs by connecting to the proxy machine and running the following command:
-
-```bash
-sudo docker container logs zdm-proxy-container
-```
-
-You can retrieve logs of all proxy instances using a dedicated playbook: `collect_zdm_proxy_logs.yml`.
-
-If you are using the jumphost as your Ansible control host, no configuration changes are necessary. You can view the playbook's configuration values in `vars/zdm_proxy_log_collection_config.yml`. All default values are fine in most cases.
-
-[ **TODO**: we have not mentioned the possibility of using an external machine as the jumphost - maybe this should be left out as it could be confusing ]
-
-If your Ansible Control Host is an external machine rather than the jumphost, open `vars/zdm_proxy_log_collection_config.yml` and change the configuration as follows:
-
-. Set `log_collection_playbook_host` to `localhost`
-. Set `archived_log_dir_path_name` to the absolute path of the directory where you would like the log zip file to be stored. The directory will be created if it does not yet exist.
-. Set `tmp_log_dir_path_name` to the absolute path of a directory that can be used to temporarily handle the log files. This directory will be created by the runbook and removed at the end, after the zip file has been created.
-
-The playbook is now ready to be run. Example:
-
-```bash
-ansible-playbook collect_proxy_logs.yml -i zdm_ansible_inventory
-```
-
-This playbook creates a single zip file, called `zdm_proxy_logs_<current_timestamp>.zip`, in the desired directory (this defaults to `/home/ubuntu/zdm_proxy_archived_logs` in the Ansible Control Host container). This zip file contains the logs from all proxy instances.
-
-== Not sure what to look for in the logs
-
-First of all, make sure that the log level of the {proxy} is set to the appropriate value:
-
-. If you deployed the proxy through the {proxy} Automation, the log level is determined by the property `zdm_log_level` in `vars/zdm_proxy_advanced_config.yml`. This value can be changed in a rolling fashion by editing this property and running the playbook `update_zdm_proxy.yml` (see xref:migration-manage-proxy-instances.adoc#change-mutable-config-property[here] for more information)
-
-. If you did not use the {proxy} Automation to deploy the proxy, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
-
-Here are the most common messages you'll find in the proxy logs.
-
-=== Proxy startup message
-
-Verify whether the {proxy} is starting up correctly. Assuming the Log Level is not filtering out `INFO` entries, to verify proxy startup, look for the following type of log message. Example:
-
-```json
-{"log":"time=\"2022-10-01T11:50:48Z\" level=info 
-msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
-\"\n","stream":"stderr","time":"2022-10-01T11:50:48.522097083Z"}
-```
-
-=== Proxy configuration
-
-The first few lines of the proxy log file contains all the configuration settings and values. They are printed in a long JSON string format. You can copy/paste the string into a JSON formatter/viewer to make it easier to read. Example log message:
-
-```json
-{"log":"time=\"2022-10-01T11:50:48Z\" level=info 
-msg=\"Parsed configuration: {\\\"ProxyIndex\\\":1,\\\"ProxyAddresses\\\":"...",
-[remaining of json string removed for simplicity]
-","stream":"stderr","time":"2022-10-01T11:50:48.339225051Z"}
-```
-
-Seeing the configuration settings is useful while troubleshooting issues. However, remember to check the log level setting to ensure you're viewing the intended types of messages. Setting the log level setting to `DEBUG` might cause a slight performance degradation.
-
-=== Be aware of current log level
-
-When you find a log message that looks like an error, the most important thing is to check the "log level" of that message.
-
-* A log message with `level=debug` or `level=info` is very likely not an error, but something expected and normal. 
-
-* Log messages with `level=error` must be examined as they usually indicate an issue with the proxy, the client application, or the clusters. 
-
-* Log messages with `level=warn` are usually related to events that are not fatal to the overall running workload, but may cause issues with individual requests or connections.
-
-* In general, log messages with `level=error` or `level=warn` should be brought to the attention of DataStax, if the meaning is not clear.  In the {proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^] to ask questions about log messages of type `error` or `warn` that are unclear.
-
-=== Protocol log messages
-
-Here's an example of a log message that looks like an error, but it's actually an expected and normal message:
-
-```json
-{"log":"time=\"2022-10-01T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR] 
-Protocol v5 detected while decoding a frame. Returning a protocol message 
-to the client to force a downgrade: PROTOCOL (code=Code Protocol [0x0000000A], 
-msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":"2022-10-01T12:02:12.379287735Z"}
-```
-
-There are cases where protocol errors are `Fatal`, which kill an active connection that was being used to serve requests. However, if you find a log message similar to the example above of log level `debug`, it's likely not to be an issue. Instead, it's often part of the handshake process during the connection initialization; that is, the normal protocol version negotiation.
-
-== How to identify the {proxy} container's image version
-
-On any machine that is running the deployed {proxy}, use the following docker command to get the version of the image used by the {proxy} container:
-
-```bash
-sudo docker container inspect zdm-proxy-container
-```
 
 == Disaster Recovery
 
@@ -196,90 +80,6 @@ However, if you need to remove this {proxy} instance from the proxy deployment, 
 
 If you're using the {zdm-automation}, it's easier and faster to create a new ZDM deployment, and move the client applications to use those new instances. To do so, you need to edit the inventory file, deleting the line corresponding to the machine being removed, and run the `deploy_zdm_proxy.yml` playbook again.
 
-== Use metrics to identify any issues 
-
-The {proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format. You can use a variety of metrics providers with ZDM. The {zdm-automation} can deploy Prometheus and Grafana, configuring them automatically. The Grafana dashboards are ready to go with metrics that are being scraped from the {proxy} instances.
-
-=== Grafana dashboard for {proxy} metrics
-
-There are three groups of metrics in this dashboard:
-
-* Proxy level
-* Node level
-* Async requests
-
-image:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of ZDM metrics for the proxy.]
-
-==== Proxy-level metrics
-
-* Latency
-** Origin - total latency measured by the {proxy} (including post processing like response aggregation) for requests that were sent to ORIGIN only (reads, if reads are being forwarded to ORIGIN)
-** Both - total latency measured by the {proxy} (including post processing like response aggregation) for requests that were sent to both clusters (writes)
-** Target - total latency measured by the {proxy} (including post processing like response aggregation) for requests that were sent to TARGET only (reads, if reads are being forwarded to TARGET)
-
-* Throughput (same thing as the previous latency metrics but for throughput)
-** Origin
-** Both
-** Target
-
-* Number of client connections
-
-* In-flight requests
-
-* Prepared Statement cache misses - meaning, a prepared statement was sent to the {proxy}, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again
-
-* Number of entries in the prepared statement cache
-
-==== Node-level metrics
-
-* Latency - metrics on this bucket are not split by request type like the proxy level latency metrics so writes and reads are mixed together
-** Origin - latency measured by the {proxy} up to the point it received a response from the Origin connection
-** Target - latency measured by the {proxy} up to the point it received a response from the Target connection
-
-* Throughput - same as node level latency metrics, reads and writes are mixed together
-
-* Number of connections per ORIGIN node
-
-* Number of connections per TARGET node
-
-* Number of errors per error type per ORIGIN node
-
-* Number of errors per error type per TARGET node
-
-==== Async requests
-
-These metrics are specific to async reads so they are only populated if dual reads are enabled in the `ASYNC` mode.
-
-* Latency
-* Throughput
-* Number of dedicated connections per node for async reads - whether it's origin or target connections depends on the proxy configuration. That is, if reads are being forwarded to ORIGIN then the async reads are forwarded to TARGET
-* Number of errors per error type per node
-
-==== Insights via the {proxy} metrics
-
-Keep in mind that the error metrics in the proxy dashboard are not using a **rate** function. Even if you see a high value at a given point in time, it is possible that the increase in errors happened much earlier.
-
-Some examples of ZDM problems manifesting on these metrics:
-
-* Number of client connections around 500 per {proxy} -  By default, {proxy} starts rejecting client connections after 500.
-* Always increasing PS cache metrics - both the **entries** and **misses** metrics
-* Error metrics depending on the error type - these need to be evaluated on a per-case basis; some errors may be normal
-
-=== Golang runtime metrics dashboard and system dashboard
-
-This dashboard in Grafana is not as important as the proxy dashboard. However, it may be useful to troubleshoot performance issues. Here you can see memory usage, GC duration, open fds (file descriptors - useful to detect leaked connections), and the number of goroutines. Example dashboard:
-
-image:zdm-golang-dashboard.png[Golang metrics dashboard example is shown.]
-
-Some examples of problem areas on these golang metrics:
-
-* An always increasing “open fds” metric
-* GC taking several milliseconds frequently
-* Always increasing memory usage
-* Always increasing number of goroutines
-
-The ZDM monitoring stack also includes a system-level dashboard collected through the Prometheus Node Exporter. This dashboard contains hardware and OS-level metrics for the host on which the proxy runs. This can be useful to check the available resources and identify low-level bottlenecks or issues.
-
 == Scaling recommendation
 
 The {zdm-automation} doesn't provide a way to perform scaling up/down operations in a rolling fashion. Instead, we recommend that you deploy a new proxy cluster on the side, and move the client applications to the new proxy cluster (if absolutely necessary). To do so, edit the inventory file so that it contains one line for each machine where you want a proxy instance to be deployed and run the `deploy_zdm_proxy.yml` playbook again. This will result in a brief interruption of availability of the whole ZDM proxy deployment.
@@ -314,7 +114,7 @@ If you're using the {zdm-automation}, there may be other steps required deployme
 
 === {proxy} issues
 
-If you encounter a problem during your migration, please contact us. In the {proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Include the following:
+If you encounter a problem during your migration, please contact us. In the {proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
 
 * ZDM version
 * ZDM logs - ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change
@@ -331,7 +131,7 @@ If the issue is related to performance, troubleshooting can be more complicated 
 * Which statement types are being used, simple, prepared, batch?
 * If batch statements are being used, which driver API is being used to create these batches? Are you passing a `BEGIN BATCH` cql query string to a simple/prepared statement? Or are you using the actual batch statement objects that drivers allow you to create?
 * If the CQL function replacement feature is enabled, how many parameters does each statement have? You can see if this feature is enabled by looking at the configuration settings; it's disabled by default. [ TODO add detail of configuration variable with new name ]
-* If permissible within your security rules, please provide the proxy metrics. Those metrics would allow the ZDM team to know what latencies the {proxy} is encountering, compared to the latencies that the client application is encountering. If you are using the {proxy} Automation, you should have two Grafana dashboards that the automation sets up. These dashboards contain the metrics that the ZDM team will want to check. Alternatively, please submit screenshots of the dashboards.
+* If permissible within your security rules, please provide the proxy metrics. Those metrics would allow the ZDM team to know what latencies the {proxy} is encountering, compared to the latencies that the client application is encountering. If you are using the {proxy}, you should have two Grafana dashboards that the automation sets up. These dashboards contain the metrics that the ZDM team will want to check. Alternatively, please submit screenshots of the dashboards.
 
 == Regarding lightweight transactions and non-idempotent operations
 
