@@ -3,7 +3,7 @@
 Follow these steps to migrate and validate your data using Cassandra Data Migrator. This tool can 
 help you migrate data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB).
 
-Cassandra Data Migrator is designed to:
+{data-migrator} is designed to:
 
 * Connect to, and compare your target database with the origin
 * Report differences in a detailed log file
@@ -129,6 +129,19 @@ spark.migrate.origin.autocorrect.mismatch                  true|false
 ====
 Regarding the `mismatch` setting: if Cassandra Data Migrator finds that the origin row exists in the target, but some or all column data doesn't match, the tool (if enabled) will overwrite the values in the target. The result is Cassandra Data Migrator makes the target the same as the origin.
 ====
+
+== Example mapping for config file
+
+Consider the following example:
+
+* Origin table: `User` with fields `id uuid, first_name text, last_name text, age int`
+* Target table: `Customer` with fields `cust_id uuid, fn text, ln text, contact text`
+
+In this example, the schema is not identical. However, mapping the fields is possible to enable the data migration. That is, map `User` to `Customer`; map `id` to `cust_id`; map `first_name` to `fn`, and so on. The data for this scenario can be migrated. You would need to first define define this mapping in the config file used by {data-migrator}.  
+
+Here's a sample config that include the mappings:
+
+**TODO: Add the example here.**
 
 == Additional features
 

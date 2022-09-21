@@ -63,9 +63,9 @@ This playbook creates a single zip file, called `zdm_proxy_logs_<current_timesta
 
 First of all, make sure that the log level of the {proxy} is set to the appropriate value:
 
-. If you deployed the proxy through the {proxy} Automation, the log level is determined by the property `zdm_log_level` in `vars/zdm_proxy_advanced_config.yml`. This value can be changed in a rolling fashion by editing this property and running the playbook `update_zdm_proxy.yml` (see xref:migration-manage-proxy-instances.adoc#change-mutable-config-property[here] for more information)
+. If you deployed the proxy through the {proxy}, the log level is determined by the property `zdm_log_level` in `vars/zdm_proxy_advanced_config.yml`. This value can be changed in a rolling fashion by editing this property and running the playbook `update_zdm_proxy.yml` (see xref:migration-manage-proxy-instances.adoc#change-mutable-config-property[here] for more information)
 
-. If you did not use the {proxy} Automation to deploy the proxy, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
+. If you did not use the {proxy} to deploy the proxy, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
 
 Here are the most common messages you'll find in the proxy logs.
 
@@ -331,7 +331,7 @@ If the issue is related to performance, troubleshooting can be more complicated 
 * Which statement types are being used, simple, prepared, batch?
 * If batch statements are being used, which driver API is being used to create these batches? Are you passing a `BEGIN BATCH` cql query string to a simple/prepared statement? Or are you using the actual batch statement objects that drivers allow you to create?
 * If the CQL function replacement feature is enabled, how many parameters does each statement have? You can see if this feature is enabled by looking at the configuration settings; it's disabled by default. [ TODO add detail of configuration variable with new name ]
-* If permissible within your security rules, please provide the proxy metrics. Those metrics would allow the ZDM team to know what latencies the {proxy} is encountering, compared to the latencies that the client application is encountering. If you are using the {proxy} Automation, you should have two Grafana dashboards that the automation sets up. These dashboards contain the metrics that the ZDM team will want to check. Alternatively, please submit screenshots of the dashboards.
+* If permissible within your security rules, please provide the proxy metrics. Those metrics would allow the ZDM team to know what latencies the {proxy} is encountering, compared to the latencies that the client application is encountering. If you are using the {proxy}, you should have two Grafana dashboards that the automation sets up. These dashboards contain the metrics that the ZDM team will want to check. Alternatively, please submit screenshots of the dashboards.
 
 == Regarding lightweight transactions and non-idempotent operations
 
