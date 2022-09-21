@@ -3,7 +3,6 @@
 The data migration has completed and all our checks have passed, so we are now ready to connect our clients directly to Astra DB.
 
 [ TODO change to point to the relevant Astra docs section on connecting clients to Astra]
-[ TODO change to point to the relevant Astra docs section on connecting clients to Astra]
 
 In this topic, we'll use NoSQLBench as the sample client. It's a simple process. Modify the examples to apply the general steps to your clients.
 
@@ -32,4 +31,4 @@ Until this point, in case of any issues, you could have abandoned the migration 
 
 == What's next? 
 
-Learn how to xref:migration-manage-proxy-instances.adoc[Manage proxy instances].
+Learn how to xref:migration-verifications.adoc[].

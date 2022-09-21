@@ -51,4 +51,4 @@ The resulting data is identical because the two databases are in sync.
 
 == What's next? 
 
-Learn how to xref:migration-connect-apps.adoc[Connect your clients directly to Astra DB].
+Learn how to xref:migration-validate-data.adoc[].

@@ -11,13 +11,13 @@ In this topic, we'll use a DataStax Astra DB serverless database as the Target c
 
 == Prerequisites
 
-* Access to https://astra.datastax.com[Astra console, window="_blank"] on astra.datastax.com.
+* Access to https://astra.datastax.com[Astra Portal, window="_blank"] on astra.datastax.com.
 
 == Create an Astra DB serverless cluster
 
 Log into the Astra console and create a Serverless Astra DB database. You can start with a Free plan, but consider upgrading during your migration project to an Astra DB Pay As You Go (PAYG) or Enterprise plan, to take advantage of additional functionality -- such as Exporting Metrics to external third-party apps, Bring Your Own Keys, and other features.
 
-(Alice's note: should we also mention the ability to lift rate limiting as one of the benefits of a paid-for account?)
+The PAYG and Enterprise plans have many benefits over the Free plan, such as the ability to lift rate limiting, and avoiding hibernation timeouts.
 
 Assign your preferred values for the serverless database:
 
@@ -28,7 +28,7 @@ Assign your preferred values for the serverless database:
 
 When the Astra DB reaches **Active** status, perform the following steps in an Astra DB user account. Create an IAM token with the "Read/Write User" role. This role will be used by the application, the ZDM proxy, and the ZDM automation.
 
-In Astra console, choose **Organization Settings** (upper left) from the drop-down menu, and then **Token Management**.  Select the **Read/Write User** role:
+In Astra Portal, choose **Organization Settings** (upper left) from the drop-down menu, and then **Token Management**.  Select the **Read/Write User** role:
 
 image:zdm-token-management1.png[]
 
@@ -44,12 +44,14 @@ For more information about role permissions, see link:https://docs.datastax.com/
 
 Your cluster's Secure Connect Bundle (SCB) will be needed by:
 
-* Your application, to connect directly to Astra at the end of the migration
-* The DataStax Bulk Migrator to import the existing data into Astra
+* Your application, to connect directly to Astra DB near the end of the migration
+* Cassandra Data Migrator to migrate and validate data into Astra DB
 
-With the Astra DB in an **Active** status, download its SCB from Astra console. It's a zip file that contains the security certificates and other metadata to connect to your database (note that the credentials are not contained in the SCB).
+// * The DataStax Bulk Migrator to import the existing data into Astra
 
-. In Astra console, go to the Dashboard and select the serverless database that you created in the prior step. 
+With the Astra DB in an **Active** status, download its SCB from Astra Portal. It's a zip file that contains the security certificates and other metadata to connect to your database (note that the credentials are not contained in the SCB).
+
+. In Astra Portal, go to the Dashboard and select the serverless database that you created in the prior step. 
 . Click on **Connect**
 . Select the **Java driver** and click on **Download bundle**.
 . Copy the SCB to your application instance:
@@ -62,13 +64,13 @@ scp -i <your_ssh_key> secure-connect-<target cluster name>.zip ubuntu@<public IP
 
 Finally for the prep work on the migration target, create the application schema in your newly created Astra DB database. Make it identical to the schema on the origin cluster.
 
-In Astra console, create each corresponding keyspace and one or more database tables, and (if any) indexes.
+In Astra Portal, create each corresponding keyspace and one or more database tables, and (if any) indexes.
 
 (**TODO**: introduce the application used as example, how to set it up, etc.)
 
 In the sample scenario for these topics, we'll create the schema for the application that we are using:
 
-. From Astra console, go to the **Dashboard** and select the database. 
+. From Astra Portal, go to the **Dashboard** and select the database. 
 . Go to the **CQL console** tab.
 . Create the `zdm_demo` keyspace if it does not yet exists.
 . Create the following table:

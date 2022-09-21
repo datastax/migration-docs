@@ -82,4 +82,4 @@ From the Asciidoc markdown sources, the deployment script writes the topics to h
 
 == What's next? 
 
-Learn about the xref:migration-infrastructure.adoc[Deployment considerations], including infrastrucxture requirements. 
+Learn about the xref:migration-infrastructure.adoc[Deployment considerations], including infrastructure requirements. 

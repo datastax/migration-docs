@@ -74,7 +74,7 @@ This design allows for write consistency of new data to both clusters. {proxy} a
 
 {proxy} is designed to be highly available. It can be scaled horizontally so typical deployments are made up of a minimum of 3 servers. {proxy} can be restarted in a rolling fashion, for example, to change configuration for different phases of the migration.
 
-[IMPORTANT]
+[TIP]
 ====
 {proxy} has been designed to run in a clustered fashion so that it is never a single point of failure. Unless it is for a demo or local testing environment, a {proxy} deployment always comprises multiple {proxy} instances.
 
@@ -133,7 +133,7 @@ Cassandra Data Migrator is designed to:
 An important **prerequisite** is that you already have the matching schema on the target database.
 ====
 
-For details, see xref:migration-validate-data[Migrate and validate data, window="_blank"].
+For details, see xref:migration-validate-data.adoc[Migrate and validate data, window="_blank"].
 
 == Benefits
 
@@ -147,4 +147,4 @@ A CNDB like Astra DB is a different environment. Running on proven cloud provide
 
 If you're new here, check out our xref:migration-faqs.adoc[FAQs]. 
 
-Or jump right in and learn about the recommended xref:migration-infrastructure.adoc[Deployment considerations, including infrastructure requirements] to support your migration.
+Or jump right in and learn about the recommended xref:migration-infrastructure.adoc[deployment considerations], which include  infrastructure requirements to support your migration.

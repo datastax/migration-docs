@@ -5,6 +5,7 @@ Welcome to the {company} {product} documentation. The following topics walk you 
 * xref:migration-introduction.adoc[Introduction]
 * xref:migration-faqs.adoc[FAQs]
 * xref:migration-infrastructure.adoc[Deployment considerations], which include infrastructure requirements
+* xref:migration-prepare-environment.adoc[Prepare your existing environment for migration]
 * xref:migration-create-target.adoc[Create target environment for migration]
 * xref:migration-run-ansible-playbooks.adoc[Setup and run Ansible playbooks]
 * xref:migration-connect-clients-to-proxy.adoc[Connecting your client apps to proxy]
@@ -14,5 +15,8 @@ Welcome to the {company} {product} documentation. The following topics walk you 
 * xref:migration-connect-apps.adoc[Connect clients directly to Astra DB]
 * xref:migration-verifications.adoc[Verify full migration and move off proxy]
 * xref:migration-troubleshooting.adoc[Troubleshooting]
+** xref:migration-troubleshooting-tips.adoc[Tips] 
+** xref:migration-troubleshooting-scenarios.adoc[Scenarios]
+** xref:migration-troubleshooting-advanced.adoc[Advanced]
 * xref:migration-contributions.adoc[Contribution guidelines]
 * xref:migration-release-notes.adoc[Release Notes]
