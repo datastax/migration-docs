@@ -41,6 +41,7 @@ asciidoc:
     shortproduct: 'ZDM'
     proxy: 'ZDM Proxy'
     zdm-automation: 'ZDM Utility'
+    data-migrator: 'Cassandra Data Migrator'
     database: 'Astra DB'
     astra_db: 'Astra DB'
     astra_generic: 'Astra'
