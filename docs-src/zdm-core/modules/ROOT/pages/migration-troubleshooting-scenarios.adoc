@@ -1,0 +1,11 @@
+= Troubleshooting scenarios
+
+Refer the following troubleshooting senarios for information about resolving common migration issues.
+
+== title 1
+
+Coming in next PR - tonight - 20-Sept! :-) 
+
+== What's next? 
+
+Refer to the xref:migration-troubleshooting-advanced.adoc[advanced troubleshooting] topic.
