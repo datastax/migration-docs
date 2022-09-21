@@ -80,7 +80,7 @@ The {zdm-automation} will store the configuration that you provide into a file n
 You can also pass a custom configuration file to the utility with the optional command-line parameter `-utilConfigFile` [TODO add example command]
 ====
 
-[TIP]
+[NOTE]
 ====
 The {zdm-automation} will validate each parameter that you enter. In case of invalid parameters, it will display specific messages to help you fix the problem.
 
