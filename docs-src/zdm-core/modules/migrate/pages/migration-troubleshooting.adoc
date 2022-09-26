@@ -1,6 +1,6 @@
 = Troubleshooting
 
-Welcome to the {product} (ZDM) troubleshooting topics. We've organized the descriptions into three areas:
+Welcome to the {zdm-product} (ZDM) troubleshooting topics. We've organized the descriptions into three areas:
 
 * xref:migration-troubleshooting-tips.adoc[] - general advice and some common issues you may encounter.
 * xref:migration-troubleshooting-scenarios.adoc[] - specific descriptions of error conditions, and advice on how to solve the issues.
@@ -10,14 +10,14 @@ Welcome to the {product} (ZDM) troubleshooting topics. We've organized the descr
 ====
 If you still have questions, please submit a GitHub Issue in the relevant public repo:
 
-* https://github.com/datastax/zdm-proxy/issues[{proxy}^]
+* https://github.com/datastax/zdm-proxy/issues[{zdm-proxy}^]
 * https://github.com/datastax/zdm-proxy-automation/issues[{zdm-automation}^]
-* https://github.com/datastax/cassandra-data-migrator/issues[{data-migrator}^]
-* https://github.com/datastax/migration-docs/issues[Migration documentation^] 
+* https://github.com/datastax/cassandra-data-migrator/issues[{cstar-data-migrator}^]
+* https://github.com/datastax/migration-docs/issues[Migration documentation^]
 
 You may also contact your {company} account representative, or our https://support.datastax.com/s/[Support team^] if you have a service contract with {company}.
 ====
 
-== What's next? 
+== What's next?
 
 See the xref:migration-troubleshooting-tips.adoc[Troubleshooting tips].

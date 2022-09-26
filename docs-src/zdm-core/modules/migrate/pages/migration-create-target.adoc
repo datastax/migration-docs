@@ -1,6 +1,6 @@
 = Create the target environment for your migration
 
-In this topic, we'll use a DataStax Astra DB serverless database as the Target cluster. However, you can choose a different target such as a more recent release of Cassandra 4.0.x or DSE 6.8.x. 
+In this topic, we'll use a DataStax Astra DB serverless database as the Target cluster. However, you can choose a different target such as a more recent release of Cassandra 4.0.x or DSE 6.8.x.
 
 == Overview
 
@@ -51,7 +51,7 @@ Your cluster's Secure Connect Bundle (SCB) will be needed by:
 
 With the Astra DB in an **Active** status, download its SCB from Astra Portal. It's a zip file that contains the security certificates and other metadata to connect to your database (note that the credentials are not contained in the SCB).
 
-. In Astra Portal, go to the Dashboard and select the serverless database that you created in the prior step. 
+. In Astra Portal, go to the Dashboard and select the serverless database that you created in the prior step.
 . Click on **Connect**
 . Select the **Java driver** and click on **Download bundle**.
 . Copy the SCB to your application instance:
@@ -70,7 +70,7 @@ In Astra Portal, create each corresponding keyspace and one or more database tab
 
 In the sample scenario for these topics, we'll create the schema for the application that we are using:
 
-. From Astra Portal, go to the **Dashboard** and select the database. 
+. From Astra Portal, go to the **Dashboard** and select the database.
 . Go to the **CQL console** tab.
 . Create the `zdm_demo` keyspace if it does not yet exists.
 . Create the following table:
@@ -81,6 +81,6 @@ create table zdm_demo.app_data (
 );
 ```
 
-== What's next? 
+== What's next?
 
-Learn how to xref:migration-run-ansible-playbooks.adoc[configure Ansible] by setting just a few variables for your environment. Once configured, Ansible will run a playbook that deploys the {proxy} on your servers.
+Learn how to xref:migration-run-ansible-playbooks.adoc[configure Ansible] by setting just a few variables for your environment. Once configured, Ansible will run a playbook that deploys the {zdm-proxy} on your servers.

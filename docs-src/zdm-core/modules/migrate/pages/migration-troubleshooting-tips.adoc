@@ -11,9 +11,9 @@ Many thanks for your advice on which sections below to keep or delete.  I made s
 
 == Unable to find the proxy log files
 
-If {proxy} was deployed using the {zdm-automation}, the utility contains an Ansible playbook that retrieves the logs. For details, see the next xref:migration-troubleshooting-tips.adoc#how-to-view-retrieve-logs[troubleshooting tip]. 
+If {zdm-proxy} was deployed using the {zdm-automation}, the utility contains an Ansible playbook that retrieves the logs. For details, see the next xref:migration-troubleshooting-tips.adoc#how-to-view-retrieve-logs[troubleshooting tip].
 
-If you did not use the {zdm-automation}, the steps to retrieve the logs depends on how you deployed the {proxy}. If 
+If you did not use the {zdm-automation}, the steps to retrieve the logs depends on how you deployed the {zdm-proxy}. If
 Docker is used, enter the following command to export the logs of a container to a file:
 
 ```bash
@@ -26,14 +26,14 @@ You may need to use `sudo` to run the `docker` command.
 
 [TIP]
 ====
-Keep in mind that docker logs are deleted if the container is recreated or restarted. 
-**TODO**: Decide if users may mount a docker volume to persist the proxy's container log files. 
+Keep in mind that docker logs are deleted if the container is recreated or restarted.
+**TODO**: Decide if users may mount a docker volume to persist the proxy's container log files.
 ====
 
 [#how-to-view-retrieve-logs]
-== How to view and retrieve the {proxy} logs
+== How to view and retrieve the {zdm-proxy} logs
 
-When deployed through {zdm-automation}, each {proxy} instance runs as a Docker container. You can view its logs by connecting to the proxy machine and running the following command:
+When deployed through {zdm-automation}, each {zdm-proxy} instance runs as a Docker container. You can view its logs by connecting to the proxy machine and running the following command:
 
 ```bash
 sudo docker container logs zdm-proxy-container
@@ -61,20 +61,20 @@ This playbook creates a single zip file, called `zdm_proxy_logs_<current_timesta
 
 == Not sure what to look for in the logs
 
-First of all, make sure that the log level of the {proxy} is set to the appropriate value:
+First of all, make sure that the log level of the {zdm-proxy} is set to the appropriate value:
 
-. If you deployed the proxy through the {proxy}, the log level is determined by the property `zdm_log_level` in `vars/zdm_proxy_advanced_config.yml`. This value can be changed in a rolling fashion by editing this property and running the playbook `update_zdm_proxy.yml` (see xref:migration-manage-proxy-instances.adoc#change-mutable-config-property[here] for more information)
+. If you deployed the proxy through the {zdm-proxy}, the log level is determined by the property `zdm_log_level` in `vars/zdm_proxy_advanced_config.yml`. This value can be changed in a rolling fashion by editing this property and running the playbook `update_zdm_proxy.yml` (see xref:migration-manage-proxy-instances.adoc#change-mutable-config-property[here] for more information)
 
-. If you did not use the {proxy} to deploy the proxy, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
+. If you did not use the {zdm-proxy} to deploy the proxy, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
 
 Here are the most common messages you'll find in the proxy logs.
 
 === Proxy startup message
 
-Verify whether the {proxy} is starting up correctly. Assuming the Log Level is not filtering out `INFO` entries, to verify proxy startup, look for the following type of log message. Example:
+Verify whether the {zdm-proxy} is starting up correctly. Assuming the Log Level is not filtering out `INFO` entries, to verify proxy startup, look for the following type of log message. Example:
 
 ```json
-{"log":"time=\"2022-10-01T11:50:48Z\" level=info 
+{"log":"time=\"2022-10-01T11:50:48Z\" level=info
 msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
 \"\n","stream":"stderr","time":"2022-10-01T11:50:48.522097083Z"}
 ```
@@ -84,7 +84,7 @@ msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
 The first few lines of the proxy log file contains all the configuration settings and values. They are printed in a long JSON string format. You can copy/paste the string into a JSON formatter/viewer to make it easier to read. Example log message:
 
 ```json
-{"log":"time=\"2022-10-01T11:50:48Z\" level=info 
+{"log":"time=\"2022-10-01T11:50:48Z\" level=info
 msg=\"Parsed configuration: {\\\"ProxyIndex\\\":1,\\\"ProxyAddresses\\\":"...",
 [remaining of json string removed for simplicity]
 ","stream":"stderr","time":"2022-10-01T11:50:48.339225051Z"}
@@ -96,40 +96,40 @@ Seeing the configuration settings is useful while troubleshooting issues. Howeve
 
 When you find a log message that looks like an error, the most important thing is to check the "log level" of that message.
 
-* A log message with `level=debug` or `level=info` is very likely not an error, but something expected and normal. 
+* A log message with `level=debug` or `level=info` is very likely not an error, but something expected and normal.
 
-* Log messages with `level=error` must be examined as they usually indicate an issue with the proxy, the client application, or the clusters. 
+* Log messages with `level=error` must be examined as they usually indicate an issue with the proxy, the client application, or the clusters.
 
 * Log messages with `level=warn` are usually related to events that are not fatal to the overall running workload, but may cause issues with individual requests or connections.
 
-* In general, log messages with `level=error` or `level=warn` should be brought to the attention of DataStax, if the meaning is not clear.  In the {proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^] to ask questions about log messages of type `error` or `warn` that are unclear.
+* In general, log messages with `level=error` or `level=warn` should be brought to the attention of DataStax, if the meaning is not clear.  In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^] to ask questions about log messages of type `error` or `warn` that are unclear.
 
 === Protocol log messages
 
 Here's an example of a log message that looks like an error, but it's actually an expected and normal message:
 
 ```json
-{"log":"time=\"2022-10-01T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR] 
-Protocol v5 detected while decoding a frame. Returning a protocol message 
-to the client to force a downgrade: PROTOCOL (code=Code Protocol [0x0000000A], 
+{"log":"time=\"2022-10-01T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR]
+Protocol v5 detected while decoding a frame. Returning a protocol message
+to the client to force a downgrade: PROTOCOL (code=Code Protocol [0x0000000A],
 msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":"2022-10-01T12:02:12.379287735Z"}
 ```
 
 There are cases where protocol errors are `Fatal`, which kill an active connection that was being used to serve requests. However, if you find a log message similar to the example above of log level `debug`, it's likely not to be an issue. Instead, it's often part of the handshake process during the connection initialization; that is, the normal protocol version negotiation.
 
-== How to identify the {proxy} container's image version
+== How to identify the {zdm-proxy} container's image version
 
-On any machine that is running the deployed {proxy}, use the following docker command to get the version of the image used by the {proxy} container:
+On any machine that is running the deployed {zdm-proxy}, use the following docker command to get the version of the image used by the {zdm-proxy} container:
 
 ```bash
 sudo docker container inspect zdm-proxy-container
 ```
 
-== Use metrics to identify any issues 
+== Use metrics to identify any issues
 
-The {proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format. You can use a variety of metrics providers with ZDM. The {zdm-automation} can deploy Prometheus and Grafana, configuring them automatically. The Grafana dashboards are ready to go with metrics that are being scraped from the {proxy} instances.
+The {zdm-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format. You can use a variety of metrics providers with ZDM. The {zdm-automation} can deploy Prometheus and Grafana, configuring them automatically. The Grafana dashboards are ready to go with metrics that are being scraped from the {zdm-proxy} instances.
 
-=== Grafana dashboard for {proxy} metrics
+=== Grafana dashboard for {zdm-proxy} metrics
 
 There are three groups of metrics in this dashboard:
 
@@ -142,9 +142,9 @@ image:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories 
 ==== Proxy-level metrics
 
 * Latency
-** Origin - total latency measured by the {proxy} (including post processing like response aggregation) for requests that were sent to ORIGIN only (reads, if reads are being forwarded to ORIGIN)
-** Both - total latency measured by the {proxy} (including post processing like response aggregation) for requests that were sent to both clusters (writes)
-** Target - total latency measured by the {proxy} (including post processing like response aggregation) for requests that were sent to TARGET only (reads, if reads are being forwarded to TARGET)
+** Origin - total latency measured by the {zdm-proxy} (including post processing like response aggregation) for requests that were sent to ORIGIN only (reads, if reads are being forwarded to ORIGIN)
+** Both - total latency measured by the {zdm-proxy} (including post processing like response aggregation) for requests that were sent to both clusters (writes)
+** Target - total latency measured by the {zdm-proxy} (including post processing like response aggregation) for requests that were sent to TARGET only (reads, if reads are being forwarded to TARGET)
 
 * Throughput (same thing as the previous latency metrics but for throughput)
 ** Origin
@@ -155,15 +155,15 @@ image:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories 
 
 * In-flight requests
 
-* Prepared Statement cache misses - meaning, a prepared statement was sent to the {proxy}, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again
+* Prepared Statement cache misses - meaning, a prepared statement was sent to the {zdm-proxy}, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again
 
 * Number of entries in the prepared statement cache
 
 ==== Node-level metrics
 
 * Latency - metrics on this bucket are not split by request type like the proxy level latency metrics so writes and reads are mixed together
-** Origin - latency measured by the {proxy} up to the point it received a response from the Origin connection
-** Target - latency measured by the {proxy} up to the point it received a response from the Target connection
+** Origin - latency measured by the {zdm-proxy} up to the point it received a response from the Origin connection
+** Target - latency measured by the {zdm-proxy} up to the point it received a response from the Target connection
 
 * Throughput - same as node level latency metrics, reads and writes are mixed together
 
@@ -184,13 +184,13 @@ These metrics are specific to async reads so they are only populated if dual rea
 * Number of dedicated connections per node for async reads - whether it's origin or target connections depends on the proxy configuration. That is, if reads are being forwarded to ORIGIN then the async reads are forwarded to TARGET
 * Number of errors per error type per node
 
-==== Insights via the {proxy} metrics
+==== Insights via the {zdm-proxy} metrics
 
 Keep in mind that the error metrics in the proxy dashboard are not using a **rate** function. Even if you see a high value at a given point in time, it is possible that the increase in errors happened much earlier.
 
 Some examples of ZDM problems manifesting on these metrics:
 
-* Number of client connections around 500 per {proxy} -  By default, {proxy} starts rejecting client connections after 500.
+* Number of client connections around 500 per {zdm-proxy} -  By default, {zdm-proxy} starts rejecting client connections after 500.
 * Always increasing PS cache metrics - both the **entries** and **misses** metrics
 * Error metrics depending on the error type - these need to be evaluated on a per-case basis; some errors may be normal
 
@@ -211,9 +211,9 @@ The ZDM monitoring stack also includes a system-level dashboard collected throug
 
 == Checklist of what to include when submitting problem reports
 
-=== {proxy} issues
+=== {zdm-proxy} issues
 
-If you encounter a problem during your migration, please contact us. In the {proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
+If you encounter a problem during your migration, please contact us. In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
 
 * ZDM version
 * ZDM logs - ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change
@@ -223,6 +223,6 @@ If you encounter a problem during your migration, please contact us. In the {pro
 * Application/Driver logs
 * Driver and version that the application is using
 
-== What's next? 
+== What's next?
 
 Refer to the xref:migration-troubleshooting-scenarios.adoc[].

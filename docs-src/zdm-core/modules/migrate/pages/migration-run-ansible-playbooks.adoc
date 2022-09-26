@@ -1,14 +1,14 @@
-= Setup and run Ansible playbooks to deploy {proxy} and Monitoring
+= Setup and run Ansible playbooks to deploy {zdm-proxy} and Monitoring
 
-This topic explains how to use the {zdm-automation} to create a dedicated deployment of the {proxy} and its companion monitoring stack.
+This topic explains how to use the {zdm-automation} to create a dedicated deployment of the {zdm-proxy} and its companion monitoring stack.
 
-We will see how to configure the machine from which the {zdm-automation} automation is run, and then how to execute the automation. At the end, you will have a working and fully monitored {proxy} deployment.
+We will see how to configure the machine from which the {zdm-automation} automation is run, and then how to execute the automation. At the end, you will have a working and fully monitored {zdm-proxy} deployment.
 
 == Introduction
 
 The {zdm-automation} deployment automation uses **Ansible**, which deploys and configures the proxies and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:migration-infrastructure.adoc[Deployment considerations], which include the infrastructure requirements.
 
-(Alice's note: TODO add link to a separate page with the infrastructure requirements for ZDM (JS note: that's Done ^^^). 
+(Alice's note: TODO add link to a separate page with the infrastructure requirements for ZDM (JS note: that's Done ^^^).
 ... I have a document that lists them: https://docs.google.com/document/d/1945XEIrQ34gqanXuIsvdnVXP4NeWaN6U_iwNHHgzg_Y/edit#bookmark=id.fyvzoz9af849 - please ignore the following section, which is not relevant here)
 
 https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code. It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
@@ -28,11 +28,11 @@ That's it!
 
 In this topic, we'll use a jumphost as our Ansible Control Host.
 
-A jumphost is a server on a network used to access and manage devices in a separate security zone, providing a controlled means of access between them. The jumphost can be, for example, a Ubuntu server machine that is able to access the server machines that you wish to use for your {proxy} deployment. [TODO is the last bit of this sentence redundant?]
+A jumphost is a server on a network used to access and manage devices in a separate security zone, providing a controlled means of access between them. The jumphost can be, for example, a Ubuntu server machine that is able to access the server machines that you wish to use for your {zdm-proxy} deployment. [TODO is the last bit of this sentence redundant?]
 
 The jumphost will serve three purposes:
 
-* Accessing the {proxy} machines
+* Accessing the {zdm-proxy} machines
 * Serving as the Ansible Control Host to run the automation
 * Running the ZDM monitoring stack, which uses Prometheus and Grafana to expose the metrics of all the ZDM proxies in a preconfigured dashboard.
 
@@ -43,7 +43,7 @@ Let's get started.
 
 == Proxy deployment setup on the jumphost
 
-To run the automation, the Ansible Control Host needs to be able to connect to all other instances of the {proxy} deployment. For this reason, it needs to have the SSH key required by those instances.
+To run the automation, the Ansible Control Host needs to be able to connect to all other instances of the {zdm-proxy} deployment. For this reason, it needs to have the SSH key required by those instances.
 
 === Add SSH keys to the jumphost
 
@@ -121,7 +121,7 @@ In this example, we'll enter the same IP of the Ansible control host (the jumpho
 At this point, the {zdm-automation}:
 +
 * Has created the Ansible Inventory to the default file, `zdm_ansible_inventory`.
-* Has written the {proxy} configuration to the default file, `ansible_container_init_config`. 
+* Has written the {zdm-proxy} configuration to the default file, `ansible_container_init_config`.
 * Presents a summary of the results thus far, and prompts you to Continue. Example:
 +
 image:zdm-go-utility-results2.png[{zdm-automation} Inventory Results are displayed in the terminal]
@@ -134,7 +134,7 @@ The automation now:
 * Creates, configures and starts the Ansible Control Host container.
 * Displays a message. Example:
 
-image:zdm-go-utility-success.png[Ansible Docker container success messages] 
+image:zdm-go-utility-success.png[Ansible Docker container success messages]
 [ TODO replace with updated message]
 
 Now you can run the created and configured Ansible playbooks. Example:
@@ -188,7 +188,7 @@ Example of a completed zdm_proxy_core_config.yml file [ TODO update variable nam
 origin_cassandra_username: my_user
 origin_cassandra_password: my_password
 
-# Set the following two parameters only if Origin is a self-managed, non-Astra cluster 
+# Set the following two parameters only if Origin is a self-managed, non-Astra cluster
 origin_cassandra_contact_points: 191.100.20.85,191.100.20.61,191.100.20.93
 origin_cassandra_port: 9042
 
@@ -224,7 +224,7 @@ The playbook will create one ZDM proxy instance for each proxy host listed in th
 
 How can you confirm that the ZDM proxies are up and running?
 
-After running the playbook, you can `ssh` into one of the servers where one of the deployed {proxy} instances is running. You can do so from within the Ansible container, or directly from the jumphost machine:
+After running the playbook, you can `ssh` into one of the servers where one of the deployed {zdm-proxy} instances is running. You can do so from within the Ansible container, or directly from the jumphost machine:
 
 ```bash
 ssh ubuntu@<zdm proxy ip address>
@@ -240,10 +240,10 @@ ubuntu@ip-172-18-10-111:~$ sudo docker logs zdm-proxy-container
    .
    .
    .
-time="2022-10-01T22:21:42Z" level=info msg="Initialized origin control connection. Cluster Name: OriginCluster, Hosts: map[3025c4ad-7d6a-4398-b56e-87d33509581d:Host{addr: 191.100.20.61, 
+time="2022-10-01T22:21:42Z" level=info msg="Initialized origin control connection. Cluster Name: OriginCluster, Hosts: map[3025c4ad-7d6a-4398-b56e-87d33509581d:Host{addr: 191.100.20.61,
 port: 9042, host_id: 3025c4ad7d6a4398b56e87d33509581d} 7a6293f7-5cc6-4b37-9952-88a4b15d59f8:Host{addr: 191.100.20.85, port: 9042, host_id: 7a6293f75cc64b37995288a4b15d59f8} 997856cd-0406-45d1-8127-4598508487ed:Host{addr: 191.100.20.93, port: 9042, host_id: 997856cd040645d181274598508487ed}], Assigned Hosts: [Host{addr: 191.100.20.61, port: 9042, host_id: 3025c4ad7d6a4398b56e87d33509581d}]."
 
-time="2022-10-01T22:21:42Z" level=info msg="Initialized target control connection. Cluster Name: cndb, Hosts: map[69732713-3945-4cfe-a5ee-0a84c7377eaa:Host{addr: 10.0.79.213, 
+time="2022-10-01T22:21:42Z" level=info msg="Initialized target control connection. Cluster Name: cndb, Hosts: map[69732713-3945-4cfe-a5ee-0a84c7377eaa:Host{addr: 10.0.79.213,
 port: 9042, host_id: 6973271339454cfea5ee0a84c7377eaa} 6ec35bc3-4ff4-4740-a16c-03496b74f822:Host{addr: 10.0.86.211, port: 9042, host_id: 6ec35bc34ff44740a16c03496b74f822} 93ded666-501a-4f2c-b77c-179c02a89b5e:Host{addr: 10.0.52.85, port: 9042, host_id: 93ded666501a4f2cb77c179c02a89b5e}], Assigned Hosts: [Host{addr: 10.0.52.85, port: 9042, host_id: 93ded666501a4f2cb77c179c02a89b5e}]."
 time="2022-07-27T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
 time="2022-07-27T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
@@ -305,6 +305,6 @@ Login with:
 
 (TODO: show Grafana screenshot and details about what to observe.)
 
-== What's next? 
+== What's next?
 
-Learn how to xref:migration-manage-proxy-instances.adoc[Manage your proxy instances]. 
+Learn how to xref:migration-manage-proxy-instances.adoc[Manage your proxy instances].

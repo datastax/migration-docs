@@ -16,7 +16,7 @@
 :contributor-docs-link: https://docs.google.com/presentation/d/10RjxURHpJ8gwac0dCZ02pKo31nGhem29Z8-xERApyWU/edit?usp=sharing
 :web-server-link: https://www.npmjs.com/package/serve
 
-This repo contains the documentation source files for the DataStax {product} documentation.
+This repo contains the documentation source files for the DataStax {zdm-product} documentation.
 
 The docs are written in {asciidoctor-link}[AsciiDoc] and use {antora-link}[Antora] to generate the HTML output.
 
@@ -26,7 +26,7 @@ toc::[]
 
 Although this repo is maintained by the DataStax Docs team, contributions from the community are gratefully accepted, and encouraged.
 
-_Why should you contribute to the {product} docs?_::
+_Why should you contribute to the {zdm-product} docs?_::
 * It makes the Docs team's job easier.
 * It makes your job easier.
 * It helps DataStax and Cassandra users more quickly.
@@ -38,7 +38,7 @@ You can contribute to the documentation by adding content to, or editing, the As
 For instructions, see <<writing-asciidoc>> below.
 
 [[writing-asciidoc]]
-== Working with {product} docs
+== Working with {zdm-product} docs
 
 Before following the steps below, first make sure that you have {install-git-link}[git] installed on your computer.
 

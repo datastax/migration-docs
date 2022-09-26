@@ -1,9 +1,9 @@
 = Migrate and validate your data
 
-Follow these steps to migrate and validate your data using Cassandra Data Migrator. This tool can 
+Follow these steps to migrate and validate your data using Cassandra Data Migrator. This tool can
 help you migrate data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB).
 
-{data-migrator} is designed to:
+{cstar-data-migrator} is designed to:
 
 * Connect to, and compare your target database with the origin
 * Report differences in a detailed log file
@@ -11,16 +11,16 @@ help you migrate data from any Cassandra origin (Cassandra/DSE/Astra DB) to any 
 
 [TIP]
 ====
-An important **prerequisite** is that you already have the matching schema on the target database. For every table migrated by Cassandra Data Migrator, the tool takes a mapping configuration that links every origin column to every target column. 
+An important **prerequisite** is that you already have the matching schema on the target database. For every table migrated by Cassandra Data Migrator, the tool takes a mapping configuration that links every origin column to every target column.
 ====
 
-The validation checks are a way to verify that all the data has been migrated successfully. For data written by idempotent writes these checks are optional, as any errors, timeouts or other failures during the migration are made visible by the Cassandra Data Migrator and by {proxy}. 
+The validation checks are a way to verify that all the data has been migrated successfully. For data written by idempotent writes these checks are optional, as any errors, timeouts or other failures during the migration are made visible by the Cassandra Data Migrator and by {zdm-proxy}.
 
 In the case of data written by non-idempotent writes, it is necessary to reconcile and realign any discrepancies before starting to use the target cluster as the primary source of truth.
 
 == Prerequisites
 
-. Clone the public GitHub repo, https://github.com/datastax/cassandra-data-migrator 
+. Clone the public GitHub repo, https://github.com/datastax/cassandra-data-migrator
 +
 ```bash
 git clone git@github.com:datastax/cassandra-data-migrator.git
@@ -28,7 +28,7 @@ git clone git@github.com:datastax/cassandra-data-migrator.git
 +
 Note: 20-Sept-2022, it's temporarily https://github.com/Ankitp1342/astra-spark-migration-ranges[here, window="_blank")].
 
-. Install Java8 or later as a prerequisite, because the spark binaries are compiled with Java. 
+. Install Java8 or later as a prerequisite, because the spark binaries are compiled with Java.
 
 . You can install a single instance of spark 2.4.8 or later on a node where you want to run this migration job. Example:
 +
@@ -43,9 +43,9 @@ tar -xvzf <spark downloaded file name>
 
 == Set up Cassandra Data Migrator
 
-. Configure the `sparkConf.properties` file for the environment. 
+. Configure the `sparkConf.properties` file for the environment.
 +
-In the GitHub repo, for an example, see this sample https://github.com/Ankitp1342/astra-spark-migration-ranges/blob/master/src/resources/sparkConf.properties[sparkConf.properties] file. 
+In the GitHub repo, for an example, see this sample https://github.com/Ankitp1342/astra-spark-migration-ranges/blob/master/src/resources/sparkConf.properties[sparkConf.properties] file.
 +
 In its settings, you'll identify values for your origin and target databases. A subset example:
 +
@@ -137,7 +137,7 @@ Consider the following example:
 * Origin table: `User` with fields `id uuid, first_name text, last_name text, age int`
 * Target table: `Customer` with fields `cust_id uuid, fn text, ln text, contact text`
 
-In this example, the schema is not identical. However, mapping the fields is possible to enable the data migration. That is, map `User` to `Customer`; map `id` to `cust_id`; map `first_name` to `fn`, and so on. The data for this scenario can be migrated. You would need to first define define this mapping in the config file used by {data-migrator}.  
+In this example, the schema is not identical. However, mapping the fields is possible to enable the data migration. That is, map `User` to `Customer`; map `id` to `cust_id`; map `first_name` to `fn`, and so on. The data for this scenario can be migrated. You would need to first define define this mapping in the config file used by {cstar-data-migrator}.
 
 Here's a sample config that include the mappings:
 
@@ -164,16 +164,16 @@ If the target of your migration is an Astra DB database, your task for schema mi
 
 Any secondary indexes, Storage-Attached Indexes (SAI), or Materialized Views that may have existed in the origin's schema are ignored, and must be dealt with manually by the user, in compliance with the Astra DB guidelines.
 
-This schema preparation is a preliminary step that must be done before connecting your clients to the {proxy}. The goal is to ensure that database writes will not fail due to schema differences between origin and target.
+This schema preparation is a preliminary step that must be done before connecting your clients to the {zdm-proxy}. The goal is to ensure that database writes will not fail due to schema differences between origin and target.
 
 For migrations to a target that is not an Astra DB, you can simply extract the schema definition from your Origin cluster via a CQL `DESCRIBE` statement, and then run that schema DDL on your target cluster. You may need to adapt the schema due to any differences in the features of the database software (such as compact storage).
 
 ////
 Commenting out DSBulk info 16-Sept-2022:
 
-== Counting the table data 
+== Counting the table data
 
-[ TODO: Update for Cassandra Data Migrator - currently discusses use of dsbulk ] 
+[ TODO: Update for Cassandra Data Migrator - currently discusses use of dsbulk ]
 
 Use the DataStax Bulk Loader (`dsbulk`) to count the data in the tables on each cluster, compare the results, and verify that they match.
 
@@ -213,7 +213,7 @@ select * from sample_app_keyspace.app_data where app_key = 1000
 select * from sample_app_keyspace.app_data where app_key = 1080
 ```
 
-Read these same rows through the ZDM Demo Client, which is still pointing to the proxy. The read requests will be routed to Origin. 
+Read these same rows through the ZDM Demo Client, which is still pointing to the proxy. The read requests will be routed to Origin.
 
 ```bash
 curl -G -d 'rowkey=250' http://localhost:8080/zdm-demo-client/rest/row
@@ -222,6 +222,6 @@ curl -G -d 'rowkey=1080' http://localhost:8080/zdm-demo-client/rest/row
 ```
 ////
 
-== What's next? 
+== What's next?
 
-Learn how to xref:migration-connect-apps.adoc[Connect your clients directly to Astra DB]. 
+Learn how to xref:migration-connect-apps.adoc[Connect your clients directly to Astra DB].

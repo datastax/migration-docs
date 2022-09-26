@@ -4,35 +4,35 @@ This advanced troubleshooting topic presents solutions to error conditions that 
 
 [NOTE]
 ====
-**Reviewers:** We have a TODO task to narrow down the sections in this topic to just **advanced troubleshooting** sections. 
+**Reviewers:** We have a TODO task to narrow down the sections in this topic to just **advanced troubleshooting** sections.
 
 Many thanks for your advice on which sections below to keep or delete.  I made some guesses below about which sections are more Advanced, thus keeping DR, Scaling, and performance issues in this advanced topic.
 ====
 
 == Disaster Recovery
 
-The following sections present a series of Disaster Recovery (DR) troubleshooting recommendations. 
+The following sections present a series of Disaster Recovery (DR) troubleshooting recommendations.
 
 === Cluster node failure occurs
 
-First, some background information. {proxy} pairs one client connection with one unique origin connection and one unique target connection. If read mirroring (async reads) is enabled, there is one additional origin or target connection per "pairing," depending on where the reads are being routed; check the proxy configuration settings.
+First, some background information. {zdm-proxy} pairs one client connection with one unique origin connection and one unique target connection. If read mirroring (async reads) is enabled, there is one additional origin or target connection per "pairing," depending on where the reads are being routed; check the proxy configuration settings.
 
-Each proxy instance is assigned a unique set of cluster nodes for the origin, and a unique set of cluster nodes for the target. Two proxy instances will never be assigned the same cluster node at the same time, unless there are more proxy instances than cluster nodes. These assignments change whenever a topology protocol event is received by the {proxy}'s control connections. The {proxy} always has one open control connection for origin and one for target.
+Each proxy instance is assigned a unique set of cluster nodes for the origin, and a unique set of cluster nodes for the target. Two proxy instances will never be assigned the same cluster node at the same time, unless there are more proxy instances than cluster nodes. These assignments change whenever a topology protocol event is received by the {zdm-proxy}'s control connections. The {zdm-proxy} always has one open control connection for origin and one for target.
 
 If a cluster node fails, regardless of whether it is an origin or target node, and the connections to that node get closed or time out, then all the connections associated with that "pairing" will also be closed (both client and cluster connections). The client will normally open a new connection to the proxy, resulting in a new "pairing" being established.
 
-If the {proxy} does not receive a protocol event removing the failing node from the topology, the proxy will keep assigning that node to new client connection attempts. The client application's driver will keep trying to open new connections to the proxy instance and eventually it will consider the proxy unhealthy until a new connection is opened successfully. If the proxy instance is assigned more than one cluster node, the subsequent connection attempts by the client will result in the proxy choosing one node other than the failing one --  because the proxy goes through the cluster nodes in a round-robin fashion -- and the connection will succeed.
+If the {zdm-proxy} does not receive a protocol event removing the failing node from the topology, the proxy will keep assigning that node to new client connection attempts. The client application's driver will keep trying to open new connections to the proxy instance and eventually it will consider the proxy unhealthy until a new connection is opened successfully. If the proxy instance is assigned more than one cluster node, the subsequent connection attempts by the client will result in the proxy choosing one node other than the failing one --  because the proxy goes through the cluster nodes in a round-robin fashion -- and the connection will succeed.
 
-Therefore, if there is a cluster node failure, the client application and {proxy} should be able to function normally, although some connection errors may show up in the logs. 
+Therefore, if there is a cluster node failure, the client application and {zdm-proxy} should be able to function normally, although some connection errors may show up in the logs.
 
 [NOTE]
 ====
-Because the {proxy}'s round-robin process goes through the set of cluster nodes per connection attempt, some connection attempts will fail, and some will succeed, until the failing node is either removed from the cluster or it recovers. Removing the node from the cluster is not always recommended, but this scenario falls into standard DataStax Enterprise (DSE) or Apache Cassandra&reg; operational issues.
+Because the {zdm-proxy}'s round-robin process goes through the set of cluster nodes per connection attempt, some connection attempts will fail, and some will succeed, until the failing node is either removed from the cluster or it recovers. Removing the node from the cluster is not always recommended, but this scenario falls into standard DataStax Enterprise (DSE) or Apache Cassandra&reg; operational issues.
 ====
 
-The cluster node failure symptoms that show up on the client application would be different if the {proxy} wasn't in this environment, because normally the driver would be able to mark the node as DOWN and only attempt to use it whenever a reconnection succeeds. However, with ZDM being part of this environment, connection issue will appear as *intermittent* unless the proxy is only assigned that single failing node and no other nodes.
+The cluster node failure symptoms that show up on the client application would be different if the {zdm-proxy} wasn't in this environment, because normally the driver would be able to mark the node as DOWN and only attempt to use it whenever a reconnection succeeds. However, with ZDM being part of this environment, connection issue will appear as *intermittent* unless the proxy is only assigned that single failing node and no other nodes.
 
-If multiple cluster nodes fail, the way to handle it is the same as if only one node failed, but the symptoms on the client application might be different. If all the failing nodes are assigned to one {proxy}, the client application will only see one failing node. However, if the nodes are assigned to different {proxy} instances, the client application will see the condition as multiple failing nodes.  
+If multiple cluster nodes fail, the way to handle it is the same as if only one node failed, but the symptoms on the client application might be different. If all the failing nodes are assigned to one {zdm-proxy}, the client application will only see one failing node. However, if the nodes are assigned to different {zdm-proxy} instances, the client application will see the condition as multiple failing nodes.
 
 In the proxy logs, you may notice the following **disconnected** message. It means that the remote peer terminated the connection. Here's an example with the IP address obfuscated:
 
@@ -40,40 +40,40 @@ In the proxy logs, you may notice the following **disconnected** message. It mea
 [INFO] [TARGET-CONNECTOR] x.xx.x.xxx:xxxxx disconnected
 ```
 
-The prefix of the log message lets us know which **peer** terminated the connection. In this example, we can see by the `TARGET-CONNECTOR` prefix that the IP address refers to a target cluster node, and that node terminated a connection. As mentioned, if one connection of the **pairing** is closed, the other **ends** are also closed. So in this case, a client connection and an origin connection were terminated by the {proxy} because the target connection was closed.
+The prefix of the log message lets us know which **peer** terminated the connection. In this example, we can see by the `TARGET-CONNECTOR` prefix that the IP address refers to a target cluster node, and that node terminated a connection. As mentioned, if one connection of the **pairing** is closed, the other **ends** are also closed. So in this case, a client connection and an origin connection were terminated by the {zdm-proxy} because the target connection was closed.
 
-Reasons for cluster nodes to close connections are usually node restarts or decommission operations. Astra DB will sometimes terminate a connection if it is idle for more than 10 minutes. This scenario may happen if a client connection is sending only reads, because those reads will be routed to one cluster only. 
+Reasons for cluster nodes to close connections are usually node restarts or decommission operations. Astra DB will sometimes terminate a connection if it is idle for more than 10 minutes. This scenario may happen if a client connection is sending only reads, because those reads will be routed to one cluster only.
 
 You may also notice the following `connection timed out` message in the logs. It's much different from the previous example:
 
 ```log
-[ERROR] [CLIENT-CONNECTOR] error reading: cannot decode frame header: 
-cannot decode header version and direction: cannot read [byte]: 
+[ERROR] [CLIENT-CONNECTOR] error reading: cannot decode frame header:
+cannot decode header version and direction: cannot read [byte]:
 read tcp 172.18.100.106:9042->xxx.xxx.xx.xxx:xxxxx: read: connection timed out
 ```
 
 This message above indicates that the remote peer became unresponsive, or a network issue caused packets to time out. Because of the `CLIENT-CONNECTOR” prefix, we can see here that the issue occurred between the proxy and the client application, or the client application became unresponsive.
 
-=== {proxy} instance failure
+=== {zdm-proxy} instance failure
 
-In rare cases, your client application may encounter a {proxy} instance that failed if its host cluster node failed, or if multiple proxies crashed. If either scenario happens, you may see a `panic` message at the end of the log file, with a stack trace. Here's a truncated example:
+In rare cases, your client application may encounter a {zdm-proxy} instance that failed if its host cluster node failed, or if multiple proxies crashed. If either scenario happens, you may see a `panic` message at the end of the log file, with a stack trace. Here's a truncated example:
 
 ```log
 {"log":"panic: send on closed channel\n","stream":"stderr","time":"2021-10-21T12:15:04.120202983Z"}
 {"log":"\n","stream":"stderr","time":"2021-10-21T12:15:04.120218988Z"}
 {"log":"goroutine 38 [running]:\n","stream":"stderr","time":"2021-10-21T12:15:04.120224194Z"}
 {"log":"github.com/riptano/cloud-gate/proxy/pkg/zdmproxy.(*writeCoalescer).Enqueue(0xc0000b2850, 0xc000f95ee0)\n","stream":"stderr","time":"2021-10-21T12:15:04.120248153Z"}
-{"log":"\u0009/build/proxy/pkg/zdmproxy/coalescer.go:168 
+{"log":"\u0009/build/proxy/pkg/zdmproxy/coalescer.go:168
 (truncated for simplicity)
 ```
 
-The way in which you'll recover the {proxy} instance depends on how it was deployed. If the {proxy} was deployed through our {zdm-automation} Ansible-based automation, the docker container should be set up with a restart policy, which automatically attempts to restart the proxy whenever it crashes. If this policy was not set up, the container should be started manually.
+The way in which you'll recover the {zdm-proxy} instance depends on how it was deployed. If the {zdm-proxy} was deployed through our {zdm-automation} Ansible-based automation, the docker container should be set up with a restart policy, which automatically attempts to restart the proxy whenever it crashes. If this policy was not set up, the container should be started manually.
 
-If the {proxy} container keeps crashing on every restart attempt, please contact us. In the {proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. 
+If the {zdm-proxy} container keeps crashing on every restart attempt, please contact us. In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^].
 
-Usually, having a {proxy} instance in the topology that is not receiving connections shouldn't be a problem. The driver will treat this scenario as if a cluster node was down, and avoid using the node until a reconnection is successful. 
+Usually, having a {zdm-proxy} instance in the topology that is not receiving connections shouldn't be a problem. The driver will treat this scenario as if a cluster node was down, and avoid using the node until a reconnection is successful.
 
-However, if you need to remove this {proxy} instance from the proxy deployment, to prevent client applications from connecting to it:
+However, if you need to remove this {zdm-proxy} instance from the proxy deployment, to prevent client applications from connecting to it:
 
 * The failing proxy's IP address should be removed from the `PROXY_ADDRESSES` setting
 * And the `PROXY_INDEX` variable should be updated accordingly
@@ -112,9 +112,9 @@ If you're using the {zdm-automation}, there may be other steps required deployme
 
 == Checklist of what to include when submitting problem reports
 
-=== {proxy} issues
+=== {zdm-proxy} issues
 
-If you encounter a problem during your migration, please contact us. In the {proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
+If you encounter a problem during your migration, please contact us. In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
 
 * ZDM version
 * ZDM logs - ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change
@@ -131,14 +131,14 @@ If the issue is related to performance, troubleshooting can be more complicated 
 * Which statement types are being used, simple, prepared, batch?
 * If batch statements are being used, which driver API is being used to create these batches? Are you passing a `BEGIN BATCH` cql query string to a simple/prepared statement? Or are you using the actual batch statement objects that drivers allow you to create?
 * If the CQL function replacement feature is enabled, how many parameters does each statement have? You can see if this feature is enabled by looking at the configuration settings; it's disabled by default. [ TODO add detail of configuration variable with new name ]
-* If permissible within your security rules, please provide the proxy metrics. Those metrics would allow the ZDM team to know what latencies the {proxy} is encountering, compared to the latencies that the client application is encountering. If you are using the {proxy}, you should have two Grafana dashboards that the automation sets up. These dashboards contain the metrics that the ZDM team will want to check. Alternatively, please submit screenshots of the dashboards.
+* If permissible within your security rules, please provide the proxy metrics. Those metrics would allow the ZDM team to know what latencies the {zdm-proxy} is encountering, compared to the latencies that the client application is encountering. If you are using the {zdm-proxy}, you should have two Grafana dashboards that the automation sets up. These dashboards contain the metrics that the ZDM team will want to check. Alternatively, please submit screenshots of the dashboards.
 
 == Regarding lightweight transactions and non-idempotent operations
 
-{proxy} can bifurcate lightweight transactions to the Origin and Target clusters. However, it only returns the applied flag from one cluster. Meaning, from the "primary" cluster, i.e. the source of truth -- the cluster from where it returns synchronous read results to the client. By default, that is the Origin cluster. However, if you set `FORWARD_READS_TO_TARGET`, the Target cluster will be considered the primary and read results from the Target cluster will be returned to the client, as well as the applied flag from any lightweight transactions.
+{zdm-proxy} can bifurcate lightweight transactions to the Origin and Target clusters. However, it only returns the applied flag from one cluster. Meaning, from the "primary" cluster, i.e. the source of truth -- the cluster from where it returns synchronous read results to the client. By default, that is the Origin cluster. However, if you set `FORWARD_READS_TO_TARGET`, the Target cluster will be considered the primary and read results from the Target cluster will be returned to the client, as well as the applied flag from any lightweight transactions.
 
 Given that there are two separate clusters involved, the state of each cluster may be different. For conditional writes, this may create a divergent state for a time. It may not make a difference in many cases, but if lightweight transactions (or other non-idempotent operations) are used, we recommend a reconciliation phase in the migration before and after switching reads to rely on the Target cluster. For details about using the Cassandra Data Migrator to validate your migration, see xref:migration-validate-data.adoc[Migrate and validate your data].
 
-== What's next? 
+== What's next?
 
-Refer to the xref:migration-release-notes.adoc[{product} Release Notes].
+Refer to the xref:migration-release-notes.adoc[{zdm-product} Release Notes].
