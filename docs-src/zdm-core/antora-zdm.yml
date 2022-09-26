@@ -4,4 +4,4 @@ title: Zero Downtime Migration
 start_page: index.adoc
 
 nav:
-- modules/ROOT/nav.adoc
+- modules/migrate/nav.adoc
