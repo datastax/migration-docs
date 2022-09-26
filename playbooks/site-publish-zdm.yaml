@@ -40,12 +40,15 @@ asciidoc:
     sectlinks: ''
     id-prefix: ''
     id-separator: '-'
+
     company: 'DataStax'
-    product: 'Zero Downtime Migration'
-    product_name: 'ZDM'
-    proxy: 'ZDM Proxy'
-    zdm-automation: 'ZDM Utility'    
-    data-migrator: 'Cassandra Data Migrator'
+    zdm-product: 'Zero Downtime Migration'
+    zdm-shortproduct: 'ZDM'
+    zdm-proxy: 'ZDM Proxy'
+    zdm-automation: 'ZDM Utility'
+    cstar-data-migrator: 'Cassandra Data Migrator'
+    dsbulk-migrator: 'DSBulk Migrator'
+
     evalproduct: 'DB Classic'
     shortproduct: 'classic'
     database: 'Astra DB'
@@ -123,8 +126,8 @@ asciidoc:
     # term in the glossary. Referencing this attribute in an adoc file will
     # automatically insert the root URL where the glossary pages are located.
     # For example, the following syntax will generate a link to the glossary
-    # page for "agent": {glossary-url}gloss_agent.html[agent,window="_blank"]
-    glossary-url: 'https://docs.datastax.com/en/glossary/docs/'
+    # page for "agent": {glossary-url}agent[agent,window="_blank"]
+    glossary-url: 'https://docs.datastax.com/en/glossary/docs/index.html#'
 
     # Bsys requires the URLs of the content source repos of the current docset
     # to be listed as attributes in the site-publish playbook in the form

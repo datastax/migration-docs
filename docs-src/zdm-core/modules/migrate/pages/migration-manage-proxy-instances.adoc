@@ -1,6 +1,6 @@
 = Manage your proxy instances
 
-In this topic, we'll learn how to perform simple operations on your {proxy} deployment with no interruption to its availability:
+In this topic, we'll learn how to perform simple operations on your {zdm-proxy} deployment with no interruption to its availability:
 
 * Do a simple rolling restart of the proxies
 * View or collect the logs of all proxies
@@ -67,11 +67,11 @@ The following configuration values are considered mutable and can be changed in 
 
 Commonly changed values:
 
-* `forward_reads_to_target` boolean flag: 
+* `forward_reads_to_target` boolean flag:
 ** This flag determines the routing of the read requests. The default is `false`, which routes reads to Origin. In later stages of the migration, once all the existing data has been transferred, you can set this flag as `true` to make the Target the primary source of truth.
 ** You can find this parameter in `vars/zdm_proxy_core_config.yml`
 * `zdm_log_level`:
-** Defaults to `INFO`. 
+** Defaults to `INFO`.
 ** Only set to `DEBUG` if necessary and revert to `INFO` as soon as possible, as the extra logging can have a slight performance impact.
 ** This `zdm_log_level` parameter can be found in `vars/zdm_proxy_advanced_config.yml`.
 
@@ -80,7 +80,7 @@ Other, rarely changed values:
 * Origin username / password, in `vars/zdm_proxy_core_config.yml`)
 * Target username / password, in `vars/zdm_proxy_core_config.yml`)
 * Advanced configuration values, in `vars/zdm_proxy_advanced_config.yml`
-//  - see [here] for more details) ... 
+//  - see [here] for more details) ...
 // https://docs.google.com/document/d/1jttOwFT2gifpp6ASYNPubyFvH7Hnon8aGgiBdKcdTgI/edit#heading=h.m788tga7trxz.
 ** `forward_client_credentials_to_origin`
 *** Whether the credentials provided by the client application are for the Origin cluster.
@@ -135,6 +135,6 @@ Run the playbook with the following command (same as noted in the previous secti
 ansible-playbook update_zdm_proxy.yml -i zdm_ansible_inventory
 ```
 
-== What's next? 
+== What's next?
 
-Learn how to xref:migration-change-read-routing.adoc[Change the read routing] to Astra DB. 
+Learn how to xref:migration-change-read-routing.adoc[Change the read routing] to Astra DB.

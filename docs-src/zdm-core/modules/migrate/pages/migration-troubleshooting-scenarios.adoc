@@ -50,13 +50,13 @@ Consider a case where a user runs separate benchmarks against:
 
 The results of these tests show latency/throughput values are worse with ZDM than when connecting to Astra DB or Origin directly.
 
-=== Cause 
+=== Cause
 
-ZDM will always add additional latency which, depending on the nature of the test, will also result in a lower throughput. Whether this performance hit is expected or not depends on the difference between the ZDM test results and the test results with the cluster that performed the worst. 
+ZDM will always add additional latency which, depending on the nature of the test, will also result in a lower throughput. Whether this performance hit is expected or not depends on the difference between the ZDM test results and the test results with the cluster that performed the worst.
 
 Writes in ZDM require an `ACK` from both clusters while reads only require the result from the Origin cluster (or target if the proxy is set up to route reads to the target cluster). This means that if Origin has better performance than Target then ZDM will inevitably have a worse performance for writes.
 
-From our testing benchmarks, a performance degradation of up to 2x latency is not unheard of even without external factors adding more latency, but it is still worth checking some things that might add additional latency like whether the proxy is deployed on the same Availability Zone (AZ) as the Origin cluster or application instances. 
+From our testing benchmarks, a performance degradation of up to 2x latency is not unheard of even without external factors adding more latency, but it is still worth checking some things that might add additional latency like whether the proxy is deployed on the same Availability Zone (AZ) as the Origin cluster or application instances.
 
 Simple statements and batch statements are things that will make the proxy add additional latency compared to normal prepared statements. Simple statements should be discouraged especially with the zdm-proxy because currently the proxy takes a considerable amount of time just parsing the queries and with prepared statements the proxy only has to parse them once.
 
@@ -64,7 +64,7 @@ Simple statements and batch statements are things that will make the proxy add a
 
 If you are using simple statements, consider using prepared statements as the best first step.
 
-Increasing the number of proxies might help, but only if the VMs resources (CPU, RAM or network IO) are near capacity. The {proxy} doesn't use a lot of RAM, but it uses a lot of CPU and network IO. 
+Increasing the number of proxies might help, but only if the VMs resources (CPU, RAM or network IO) are near capacity. The {zdm-proxy} doesn't use a lot of RAM, but it uses a lot of CPU and network IO.
 
 Deploying the proxy instances on VMs with faster CPUs and faster network IO might help, but only your own tests will reveal  whether it helps, because it depends on the workload type and details about your environment. Such as, network/VPC configurations, hardware, and so on.
 
@@ -74,14 +74,14 @@ Deploying the proxy instances on VMs with faster CPUs and faster network IO migh
 
 === Symptoms
 
-{proxy} logs contain:
+{zdm-proxy} logs contain:
 
 ```log
-{"log":"time=\"2022-10-01T13:10:47Z\" level=debug msg=\"Recording TARGET-CONNECTOR other error: 
-ERROR SYNTAX ERROR (code=ErrorCode SyntaxError [0x00002000], msg=line 1:0 no viable alternative 
+{"log":"time=\"2022-10-01T13:10:47Z\" level=debug msg=\"Recording TARGET-CONNECTOR other error:
+ERROR SYNTAX ERROR (code=ErrorCode SyntaxError [0x00002000], msg=line 1:0 no viable alternative
 at input 'CALL' ([CALL]...))\"\n","stream":"stderr","time":"2022-07-20T13:10:47.322882877Z"}
 ```
-=== Cause 
+=== Cause
 
 The log message indicates that the server doesn't recognize the word “CALL” in the query string which most likely means that it is a RPC (remote procedure call). From the proxy logs alone, it is not possible to see what method is being called by the query but it's very likely the RPC that the drivers use to send DSE Insights data to the server.
 
@@ -91,7 +91,7 @@ Most DataStax drivers have DSE Insights reporting enabled by default when they d
 
 These log messages are harmless but if your need to get rid of them, you can disable the DSE Insights driver feature through the driver configuration. Refer to https://github.com/datastax/java-driver/blob/65d2c19c401175dcc6c370560dd5f783d05b05b9/core/src/main/resources/reference.conf#L1328[this property, window="_blank"] for Java driver 4.x).
 
-Alternatively, if only one of the two clusters supports Insights, you can modify the proxy configuration setting `FORWARD_SYSTEM_QUERIES_TO_TARGET` to change which server version the zdm proxy returns. If this setting is true then the proxy will return the server version from the target cluster, and if it's false then it returns the version from the origin cluster. This way the {proxy} will return the server version from the cluster that doesn't support Insights which will make the driver not send those requests. Note that this will also affect other system tables that the client can query like keyspaces, tables, etc.
+Alternatively, if only one of the two clusters supports Insights, you can modify the proxy configuration setting `FORWARD_SYSTEM_QUERIES_TO_TARGET` to change which server version the zdm proxy returns. If this setting is true then the proxy will return the server version from the target cluster, and if it's false then it returns the version from the origin cluster. This way the {zdm-proxy} will return the server version from the cluster that doesn't support Insights which will make the driver not send those requests. Note that this will also affect other system tables that the client can query like keyspaces, tables, etc.
 
 
 
@@ -99,19 +99,19 @@ Alternatively, if only one of the two clusters supports Insights, you can modify
 
 === Symptoms
 
-{proxy} logs contain:
+{zdm-proxy} logs contain:
 
 ```log
-{"log":"time=\"2022-10-01T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR] Protocol v5 detected while decoding a frame. 
-Returning a protocol error to the client to force a downgrade: ERROR PROTOCOL ERROR (code=ErrorCode ProtocolError [0x0000000A], 
+{"log":"time=\"2022-10-01T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR] Protocol v5 detected while decoding a frame.
+Returning a protocol error to the client to force a downgrade: ERROR PROTOCOL ERROR (code=ErrorCode ProtocolError [0x0000000A],
 msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":"2022-07-20T12:02:12.379287735Z"}
 ```
 
-=== Cause 
+=== Cause
 
-Protocol errors like these are a normal part of the handshake process where the protocol version is being negotiated. These protocol version downgrades happen when either the {proxy} or at least one of the clusters doesn't support the version requested by the client. 
+Protocol errors like these are a normal part of the handshake process where the protocol version is being negotiated. These protocol version downgrades happen when either the {zdm-proxy} or at least one of the clusters doesn't support the version requested by the client.
 
-V5 downgrades are enforced by the {proxy} but any other downgrade is requested by one of the clusters when they don't support the version that the client requested. The proxy supports v3, v4, DSE_V1 and DSE_V2.  
+V5 downgrades are enforced by the {zdm-proxy} but any other downgrade is requested by one of the clusters when they don't support the version that the client requested. The proxy supports v3, v4, DSE_V1 and DSE_V2.
 
 ////
 ZDM-71 tracks a request to support v2.
@@ -119,7 +119,7 @@ ZDM-71 tracks a request to support v2.
 
 === Workaround
 
-These log messages are informative only (log level `DEBUG`). 
+These log messages are informative only (log level `DEBUG`).
 
 If you find one of these messages with a higher log level (especially `level=error`) then there might be a bug. At that point the issue will need to be investigated by the ZDM team. This log message with a log level of `ERROR` means that the protocol error occurred after the handshake, and this is a fatal unexpected error that results in a disconnect for that particular connection.
 
@@ -128,19 +128,19 @@ If you find one of these messages with a higher log level (especially `level=err
 
 === Symptoms
 
-After a {proxy} has been unavailable for some time and it gets back up, the client application takes too long to reconnect.
+After a {zdm-proxy} has been unavailable for some time and it gets back up, the client application takes too long to reconnect.
 
-There should never be a reason to stop a {proxy} instance other than a configuration change but maybe the proxy crashed or the user tried to do a configuration change and took a long time to get the {proxy} back up.
+There should never be a reason to stop a {zdm-proxy} instance other than a configuration change but maybe the proxy crashed or the user tried to do a configuration change and took a long time to get the {zdm-proxy} back up.
 
-=== Cause 
+=== Cause
 
-The {proxy} does not send topology events to the client applications so the time it takes for the driver to reconnect to a {proxy} instance is determined by the reconnection policy.
+The {zdm-proxy} does not send topology events to the client applications so the time it takes for the driver to reconnect to a {zdm-proxy} instance is determined by the reconnection policy.
 
 === Workaround
 
 Restart the client application to force am immediate reconnect.
 
-If you expect {proxy} instances to go down frequently, change the reconnection policy on the driver so that the interval between reconnection attempts has a shorter limit.
+If you expect {zdm-proxy} instances to go down frequently, change the reconnection policy on the driver so that the interval between reconnection attempts has a shorter limit.
 
 
 == Error with Astra DevOps API when using the {zdm-automation} automation
@@ -150,34 +150,34 @@ If you expect {proxy} instances to go down frequently, change the reconnection p
 {zdm-automation}'s automation logs:
 
 ```log
-fatal: [10.255.13.6]: FAILED! => {"changed": false, "elapsed": 0, "msg": "Status code was -1 and not [200]: 
-Connection failure: Remote end closed connection without response", "redirected": false, "status": -1, "url": 
+fatal: [10.255.13.6]: FAILED! => {"changed": false, "elapsed": 0, "msg": "Status code was -1 and not [200]:
+Connection failure: Remote end closed connection without response", "redirected": false, "status": -1, "url":
 "https://api.astra.datastax.com/v2/databases/REDACTED/secureBundleURL"}
 ```
 
-=== Cause 
+=== Cause
 
 The Astra DevOps API doesn't have the same SLA requirements as the actual database operations, so there may be times when it is unavailable.
 
 === Workaround
 
-Download the Astra DB Secure Connect Bundle (SCB) manually and provide its path to the {zdm-automation}. For information about the SCB, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[working with secure connect bundle, window="_blank"].  
+Download the Astra DB Secure Connect Bundle (SCB) manually and provide its path to the {zdm-automation}. For information about the SCB, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[working with secure connect bundle, window="_blank"].
 
 
 == Metadata service (Astra) returned not successful status code 403
 
 === Symptoms
 
-The {proxy} doesn't start and the following appears on the proxy logs:
+The {zdm-proxy} doesn't start and the following appears on the proxy logs:
 
 ```log
-Couldn't start proxy: error initializing the connection configuration or control connection for Target: 
+Couldn't start proxy: error initializing the connection configuration or control connection for Target:
 metadata service (Astra) returned not successful status code 403
 ```
 
-=== Cause 
+=== Cause
 
-The credentials that the {proxy} is using for Astra DB don't have sufficient permissions. 
+The credentials that the {zdm-proxy} is using for Astra DB don't have sufficient permissions.
 
 === Workaround
 
@@ -188,7 +188,7 @@ Start with the Database Administrator role in Astra DB. Refer to https://docs.da
 
 === Symptoms
 
-{proxy} log contains:
+{zdm-proxy} log contains:
 
 ```
 INFO[0000] [openTCPConnection] Opening connection to 10.0.63.163:9042
@@ -216,18 +216,18 @@ ERRO[0056] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, r
 ERRO[0066] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, retrying in 10s...
 ERRO[0076] Client Handler could not be created: ORIGIN-CONNECTOR context timed out or cancelled while opening connection to ORIGIN: context deadline exceeded
 ```
-=== Cause 
+=== Cause
 
-{proxy} has connectivity only to a subset of the nodes. 
+{zdm-proxy} has connectivity only to a subset of the nodes.
 
-The control connection (during {proxy} startup) cycles through the nodes until it finds one that can be connected to. 
-For client connections, the proxy cycles through the "assigned nodes" only (which could have been discovered, they might not be in the contact point). 
+The control connection (during {zdm-proxy} startup) cycles through the nodes until it finds one that can be connected to.
+For client connections, the proxy cycles through the "assigned nodes" only (which could have been discovered, they might not be in the contact point).
 
-In the example above, the {proxy} doesn't have connectivity to 10.0.63.20, which was chosen as the origin node for the incoming client connection, but it was able to connect to 10.0.63.163 during startup.
+In the example above, the {zdm-proxy} doesn't have connectivity to 10.0.63.20, which was chosen as the origin node for the incoming client connection, but it was able to connect to 10.0.63.163 during startup.
 
 === Workaround
 
-Ensure that network connectivity exists and is stable between the {proxy} instances and all Cassandra / DSE nodes of the local datacenter.
+Ensure that network connectivity exists and is stable between the {zdm-proxy} instances and all Cassandra / DSE nodes of the local datacenter.
 
 
 
@@ -235,7 +235,7 @@ Ensure that network connectivity exists and is stable between the {proxy} instan
 
 === Symptoms
 
-{proxy} logs contain:
+{zdm-proxy} logs contain:
 
 ```log
 time="2022-10-01T19:58:15+01:00" level=info msg="Starting proxy..."
@@ -264,9 +264,9 @@ time="2022-10-01T19:58:15+01:00" level=info msg="Proxy shutdown complete."
 time="2022-10-01T19:58:15+01:00" level=error msg="Couldn't start proxy, retrying in 2.229151525s: failed to initialize origin control connection: could not open control connection to ORIGIN, tried endpoints: [127.0.0.1:9042]."
 ```
 
-=== Cause 
+=== Cause
 
-The control connections of the {proxy} don't perform protocol version negotiation, they only attempt to use protocol version 3. If one of the origin clusters doesn't support at least v3 (e.g. Cassandra 2.0, DSE 4.6), then ZDM cannot be used for that migration.
+The control connections of the {zdm-proxy} don't perform protocol version negotiation, they only attempt to use protocol version 3. If one of the origin clusters doesn't support at least v3 (e.g. Cassandra 2.0, DSE 4.6), then ZDM cannot be used for that migration.
 
 === Workaround
 
@@ -281,11 +281,11 @@ None.
 {"log":"\u001b[33mWARN\u001b[0m[0110] Secondary (TARGET) handshake failed with an auth error, returning ERROR AUTHENTICATION ERROR (code=ErrorCode AuthenticationError [0x00000100], msg=We recently improved your database security. To find out more and reconnect, see https://docs.datastax.com/en/astra/docs/manage-application-tokens.html) to client. \r\n","stream":"stdout","time":"2022-09-06T18:31:31.348472345Z"}
 ```
 
-=== Cause 
+=== Cause
 
-Credentials are incorrect or have insufficient permissions. 
+Credentials are incorrect or have insufficient permissions.
 
-There are three sets of credentials in play with ZDM: 
+There are three sets of credentials in play with ZDM:
 
 * Target - credentials that you set in the proxy configuration through the `TARGET_CASSANDRA_USERNAME` and `TARGET_CASSANDRA_PASSWORD` settings.
 
@@ -299,31 +299,31 @@ This error means that at least one of these three sets of credentials are incorr
 
 If the authentication error is preventing the proxy from starting then it's either the Origin or Target credentials that are incorrect or have insufficient permissions. The log message shows whether it is the Target or Origin handshake that is failing.
 
-If the proxy is able to start up -- that is, this message can be seen in the logs: 
+If the proxy is able to start up -- that is, this message can be seen in the logs:
 
 `Proxy started. Waiting for SIGINT/SIGTERM to shutdown.`
 
-Then the authentication error is happening when a client application tries to open a connection to the proxy. In this case, the issue is with the Client credentials so the application itself is using invalid credentials (incorrect username/password or insufficient permissions). 
+Then the authentication error is happening when a client application tries to open a connection to the proxy. In this case, the issue is with the Client credentials so the application itself is using invalid credentials (incorrect username/password or insufficient permissions).
 
-Note that the proxy startup message has log level `INFO` so if the configured log level on the proxy is `warning` or `error`,  you will have to rely on other ways to know whether the {proxy} started correctly. You can check if the docker container is running (or process if docker isn't being used) or if there is a log message similar to `Error launching proxy`.
+Note that the proxy startup message has log level `INFO` so if the configured log level on the proxy is `warning` or `error`,  you will have to rely on other ways to know whether the {zdm-proxy} started correctly. You can check if the docker container is running (or process if docker isn't being used) or if there is a log message similar to `Error launching proxy`.
 
 
 
-== The {proxy} listens on a custom port, and all applications are able to connect to one proxy instance only
+== The {zdm-proxy} listens on a custom port, and all applications are able to connect to one proxy instance only
 
 === Symptoms
 
-The {proxy} is listening on a custom port (not 9042) and:
+The {zdm-proxy} is listening on a custom port (not 9042) and:
 
 * The Grafana dashboard shows only one proxy instance receiving all the connections from the application.
 * Only one proxy instance has log messages such as `level=info msg="Accepted connection from 10.4.77.210:39458"`
 
-=== Cause 
+=== Cause
 
-The application is specifying the custom port as part of the contact points using the format 
-`<proxy_ip_address>:<proxy_custom_port>`. 
+The application is specifying the custom port as part of the contact points using the format
+`<proxy_ip_address>:<proxy_custom_port>`.
 
-For example, using the Java driver, if the {proxy} instances were listening on port 14035, this would look like:
+For example, using the Java driver, if the {zdm-proxy} instances were listening on port 14035, this would look like:
 
 `.addContactPoints("172.18.10.36:14035", "172.18.11.48:14035", "172.18.12.61:14035")`
 
@@ -348,7 +348,7 @@ In the application, ensure that the custom port is explicitly indicated using th
 
 Consider a case where you deploy the metrics component of our {zdm-automation} automation, a Grafana instance is deployed but you cannot  login using the usual default `admin/admin` credentials.
 
-=== Cause 
+=== Cause
 
 The {zdm-automation} specifies a custom set of credentials instead of relying on the `admin/admin` ones that are typically the default for Grafana deployments.
 
@@ -366,9 +366,9 @@ Check the credentials that are being used by looking up the `vars/monitoring_con
 
 A user cannot use docker in the environment where they want to deploy ZDM. This case is not about using docker without internet access. It concerns not being able to use docker at all.
 
-=== Cause 
+=== Cause
 
-At this time, {company} {product} does not publish releases in binary format. The only release artifact that we publish is the docker image.
+At this time, {company} {zdm-product} does not publish releases in binary format. The only release artifact that we publish is the docker image.
 
 === Workaround
 
@@ -379,7 +379,7 @@ None.
 
 === Symptoms
 
-Dual reads are enabled and following messages are in the {proxy} logs:
+Dual reads are enabled and following messages are in the {zdm-proxy} logs:
 
 ```log
 {"log":"\u001b[33mWARN\u001b[0m[430352] Async Request (OpCode EXECUTE [0x0A]) timed out after 10000 ms. \r\n","stream":"stdout","time":"2022-10-03T17:29:42.548941854Z"}
@@ -389,36 +389,36 @@ Dual reads are enabled and following messages are in the {proxy} logs:
 {"log":"\u001b[33mWARN\u001b[0m[431533] Could not send async request due to an error while storing the request state: stream id map ran out of stream ids: channel was empty. \r\n","stream":"stdout","time":"2022-10-03T17:49:23.786335428Z"}
 ```
 
-=== Cause 
+=== Cause
 
 The last log message is logged when the async connection runs out of stream ids. The async connection is a connection dedicated to the async reads (dual reads / read mirroring feature). This can be caused by timeouts (first log message) or the connection not being able to keep up with the load.
 
-If the log files are being spammed with these messages then it is likely that an outage occurred which caused all responses to arrive after requests timed out (second log message). In this case the async connection might not be able to recover.  
+If the log files are being spammed with these messages then it is likely that an outage occurred which caused all responses to arrive after requests timed out (second log message). In this case the async connection might not be able to recover.
 
 === Workaround
 
 Keep in mind that any errors in the async request path (dual reads / read mirroring) will not affect the client application so these log messages might be useful to predict what may happen when the reads are switched over to the TARGET cluster but async read errors/warnings by themselves do not cause any impact to the client.
 
-If these errors are being constantly written to the log files (for minutes or even hours) then it is likely that only an application OR {proxy} restart will fix it. If you find an issue like this please submit an https://github.com/datastax/zdm-proxy/issues[Issue, window="_blank"] in our GitHub repo.
+If these errors are being constantly written to the log files (for minutes or even hours) then it is likely that only an application OR {zdm-proxy} restart will fix it. If you find an issue like this please submit an https://github.com/datastax/zdm-proxy/issues[Issue, window="_blank"] in our GitHub repo.
 
 
 
 ////
 
-Maybe no longer relevant?  Astra DB Free plan timeout is now every 48 hours. 
+Maybe no longer relevant?  Astra DB Free plan timeout is now every 48 hours.
 https://docs.datastax.com/en/astra-serverless/docs/manage/db/managing-db.html#_hibernated
 
 == Client application closed connection errors every 10 minutes when migrating to Astra DB
 
 === Symptoms
 
-Every 10 minutes a message is logged in the {proxy} logs showing a disconnect that was caused by Astra DB.
+Every 10 minutes a message is logged in the {zdm-proxy} logs showing a disconnect that was caused by Astra DB.
 
 ```log
 {"log":"\u001b[36mINFO\u001b[0m[426871] [TARGET-CONNECTOR] REDACTED disconnected \r\n","stream":"stdout","time":"2022-10-01T16:31:41.48598498Z"}
 ```
 
-=== Cause 
+=== Cause
 
 Astra DB terminates idle connections after 10 minutes of inactivity. If a client application is only sending reads through a connection then the Target (i.e. Astra in this case) connection will not get any traffic because ZDM forwards all reads to the Origin connection.
 
@@ -429,6 +429,6 @@ We have no work around at this time other than asking users to send a non-read r
 ////
 
 
-== What's next? 
+== What's next?
 
 Refer to the xref:migration-troubleshooting-advanced.adoc[advanced troubleshooting] topic.
