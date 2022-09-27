@@ -77,7 +77,7 @@ All the {company} {zdm-product} GitHub repos are public. You are welcome to read
 
 * https://github.com/datastax/migration-docs[Migration documentation^] repo.
 
-== Does ZDM Proxy support SSL Transport Layer Security (TLS)? 
+== Does ZDM Proxy support Transport Layer Security (TLS)? 
 
 Yes, and here's a summary:
 

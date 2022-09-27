@@ -1,7 +1,7 @@
 * xref:migration-introduction.adoc[Migrating]
 ** xref:migration-faqs.adoc[FAQs]
 ** xref:migration-infrastructure.adoc[Deployment considerations]
-** xref:migration-tls.adoc[SSL Transport Layer Security]
+** xref:migration-tls.adoc[Configure Transport Layer Security]
 ** xref:migration-prepare-environment.adoc[Prepare your existing environment for migration]
 ** xref:migration-create-target.adoc[Create target environment for migration]
 ** xref:migration-run-ansible-playbooks.adoc[Setup and run Ansible playbooks]
