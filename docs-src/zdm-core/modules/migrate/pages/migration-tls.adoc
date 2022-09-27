@@ -1,6 +1,6 @@
-= Configure SSL Transport Layer Security (TLS)
+= Configure Transport Layer Security (TLS)
 
-{zdm-proxy} supports connections with SSL/TLS. 
+{zdm-proxy} supports connections with TLS. 
 
 == Introduction
 
