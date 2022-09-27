@@ -24,10 +24,11 @@ image:zdm-workflow1.png[Migration workflow from client to {zdm-proxy} with dual 
 
 * **{zdm-proxy}** is a service that operates between your existing ("origin") clusters and the new ("target") Astra clusters.
 * **{zdm-automation}** is an Ansible-based tool that allows you to deploy and manage the {zdm-proxy} instances and its associated monitoring stack. {zdm-automation} is an interactive utility that creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
-* **Cassandra Data Migrator** is designed to:
-** Connect to, and compare, your origin and target databases
+* **{cstar-data-migrator}** is designed to:
+** Connect to, and compare, your origin data with the target database's data
 ** Report differences in a detailed log file
-** Reconcile any missing records and fix inconsistencies between the origin and target, if you enable `autocorrect` in a config file
+** Reconcile any missing records and fix any data  inconsistencies between the origin and target, if you enable `autocorrect` in a config file
+* **{dsbulk-migrator}** is provided to migrate smaller amounts of data (up to 20 GBs) **[ TODO: verify max guidelines ]** between the origin and target database tables.
 * Well-defined steps in this migration documentation, organized as a sequence of phases.
 
 == What challenges does ZDM solve?
@@ -68,17 +69,29 @@ All the {company} {zdm-product} GitHub repos are public. You are welcome to read
 
 * https://github.com/datastax/zdm-proxy[{zdm-proxy}^] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion.
 
-* https://github.com/datastax/zdm-proxy-automation[{zdm-automation}^] repo for Ansible-based automation.
+* https://github.com/datastax/zdm-proxy-automation[{zdm-automation}^] repo for Ansible-based {zdm-proxy} automation.
 
-// commented out * https://github.com/riptano/cloud-gate-schema-migrator[DSBulk Migrator^] repo.
+* https://github.com/datastax/dsbulk-migrator[DSBulk Migrator^] repo for migration of smaller data quantities.
 
-* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo. (Temporarily https://github.com/Ankitp1342/astra-spark-migration-ranges[here].)
+* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo for migration of larger data quantities and where detailed verifications and reconciliation options are needed.
 
 * https://github.com/datastax/migration-docs[Migration documentation^] repo.
 
-== Internal FAQ: where's are the built docs located before 2.0 GA?
+== Does ZDM Proxy support SSL Transport Layer Security (TLS)? 
 
-From the Asciidoc markdown sources, the deployment script writes the topics to https://coppi.sjc.dsinternal.org/en/zdm/docs/[this internal review server^]. Requires VPN access. For the external release, the DataStax {zdm-product} 2.0 docs will reside on docs.datastax.com in the Astra DB docs, and will be referenced from the DSE docs.
+Yes, and here's a summary:
+
+* For app-to-proxy TLS, the application is the TLS client and the {zdm-proxy} is the TLS server. One-way TLS and Mutual TLS are both supported.
+
+* For proxy-to-cluster TLS, the {zdm-proxy} acts as the TLS client and the cluster as the TLS server. One-way TLS and Mutual TLS are both supported.
+
+* When the {zdm-proxy} connects to Astra DB clusters, it always implicitly uses Mutual TLS. This is done through the Secure Connect Bundle (SCB) and does not require any extra configuration.
+
+For TLS details, see xref:migration-tls.adoc[].
+
+== Internal FAQ: where's are the built docs located before 2.0.0 GA?
+
+From the Asciidoc markdown sources, the deployment script writes the topics to http://coppi-ssh.aws.dsinternal.org/en/astra-classic-zdm/docs/migrate/migration-introduction.html[this internal review server^]. Requires AWS Lab VPN access. For the external release, the DataStax {zdm-product} 2.0 docs will reside on docs.datastax.com in the Astra DB docs, and will be referenced from the DSE docs.
 
 == What's next?
 

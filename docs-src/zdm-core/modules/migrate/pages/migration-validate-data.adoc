@@ -25,9 +25,6 @@ In the case of data written by non-idempotent writes, it is necessary to reconci
 ```bash
 git clone git@github.com:datastax/cassandra-data-migrator.git
 ```
-+
-Note: 20-Sept-2022, it's temporarily https://github.com/Ankitp1342/astra-spark-migration-ranges[here, window="_blank")].
-
 . Install Java8 or later as a prerequisite, because the spark binaries are compiled with Java.
 
 . You can install a single instance of spark 2.4.8 or later on a node where you want to run this migration job. Example:
@@ -172,8 +169,6 @@ For migrations to a target that is not an Astra DB, you can simply extract the s
 Commenting out DSBulk info 16-Sept-2022:
 
 == Counting the table data
-
-[ TODO: Update for Cassandra Data Migrator - currently discusses use of dsbulk ]
 
 Use the DataStax Bulk Loader (`dsbulk`) to count the data in the tables on each cluster, compare the results, and verify that they match.
 
