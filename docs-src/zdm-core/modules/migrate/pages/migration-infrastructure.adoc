@@ -1,4 +1,4 @@
-= Deployment considerations
+= Deployment &amp; infrastructure considerations
 
 == Choosing where to deploy the proxy
 A typical {zdm-proxy} deployment is made up of multiple proxy instances. A minimum of three proxy instances is recommended for any deployment apart from those for demo or local testing purposes.
