@@ -1,6 +1,11 @@
 = Configure Transport Layer Security (TLS)
 
-{zdm-proxy} supports connections with TLS. 
+{zdm-proxy} supports proxy-to-cluster TLS connections, and application-to-proxy TLS connections.  
+
+The TLS configuration is an optional part of the initial {zdm-proxy} configuration. See the information here in this topic, and then refer to the {zdm-automation} topics that cover:
+
+* xref:migration-setup-ansible-playbooks.adoc[]
+* xref:migration-run-ansible-playbooks.adoc[]
 
 == Introduction
 

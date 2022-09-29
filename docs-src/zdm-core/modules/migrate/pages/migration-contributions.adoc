@@ -35,7 +35,7 @@ In addition to potential {zdm-proxy} OSS code contribution, we encourage you to 
 
 == Submitting GitHub Issues in related public repos
 
-All the {company} {zdm-product} GitHub repos are public. You are welcome to read the source and submit feedback and ideas via GitHub Issues per repo. In addition to the https://github.com/datastax/zdm-proxy[{zdm-proxy}^] open-source repo, refer to:
+The following {company} {zdm-product} GitHub repos are public. You are welcome to read the source and submit feedback and ideas via GitHub Issues per repo. In addition to the https://github.com/datastax/zdm-proxy[{zdm-proxy}^] open-source repo, refer to:
 
 * https://github.com/datastax/zdm-proxy-automation/issues[{zdm-automation}^] repo for Ansible-based automation.
 
@@ -43,12 +43,14 @@ All the {company} {zdm-product} GitHub repos are public. You are welcome to read
 
 * https://github.com/datastax/dsbulk-migrator/issues[DSBulk Migrator^] repo.
 
-* https://github.com/datastax/migration-docs/issues[Migration documentation^] repo.
+// * https://github.com/datastax/migration-docs/issues[Migration documentation^] repo.
 
 Again, add a label to help categorize each issue, such as the complexity level, component name, and other labels you'll find in the repo's Issues display.
 
+////
 == Contributing to the docs
 
 The docs are written in https://docs.asciidoctor.org/asciidoc/latest/[AsciiDoc, window="_blank"] and use https://docs.antora.org/antora/latest/[Antora, window="_blank"] to generate the HTML output.
 
 For information about contributing content, please refer to the https://github.com/datastax/migration-docs/blob/main/README.adoc[README^] in the datastax/migration-docs GitHub repo. Documentation PRs will be evaluated for potential inclusion by the {zdm-product} team.
+////
