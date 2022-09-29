@@ -25,7 +25,7 @@ image:zdm-workflow1.png[Migration workflow from client to {zdm-proxy} with dual 
 * **{zdm-proxy}** is a service that operates between your existing ("origin") clusters and the new ("target") Astra clusters.
 * **{zdm-automation}** is an Ansible-based tool that allows you to deploy and manage the {zdm-proxy} instances and its associated monitoring stack. {zdm-automation} is an interactive utility that creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
 * **{cstar-data-migrator}** is designed to:
-** Connect to, and compare, your origin data with the target database's data
+** Connect to and compare your origin data with the target database's data
 ** Report differences in a detailed log file
 ** Reconcile any missing records and fix any data  inconsistencies between the origin and target, if you enable `autocorrect` in a config file
 * **{dsbulk-migrator}** is provided to migrate smaller amounts of data (up to 20 GBs) **[ TODO: verify max guidelines ]** between the origin and target database tables.
@@ -71,9 +71,9 @@ All the {company} {zdm-product} GitHub repos are public. You are welcome to read
 
 * https://github.com/datastax/zdm-proxy-automation[{zdm-automation}^] repo for Ansible-based {zdm-proxy} automation.
 
-* https://github.com/datastax/dsbulk-migrator[DSBulk Migrator^] repo for migration of smaller data quantities.
-
 * https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo for migration of larger data quantities and where detailed verifications and reconciliation options are needed.
+
+* https://github.com/datastax/dsbulk-migrator[DSBulk Migrator^] repo for migration of smaller data quantities.
 
 * https://github.com/datastax/migration-docs[Migration documentation^] repo.
 

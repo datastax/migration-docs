@@ -1,4 +1,4 @@
-= Connecting your client applications to the proxy
+= Connecting client apps to {zdm-proxy}
 
 Text coming soon. 
 
