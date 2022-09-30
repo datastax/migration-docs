@@ -219,4 +219,5 @@ curl -G -d 'rowkey=1080' http://localhost:8080/zdm-demo-client/rest/row
 
 == What's next?
 
-Learn how to xref:migration-connect-apps.adoc[Connect your clients directly to Astra DB].
+Learn how to xref:migration-setup-read-mirroring.adoc[].
+

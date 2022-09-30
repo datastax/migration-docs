@@ -141,4 +141,5 @@ Given that there are two separate clusters involved, the state of each cluster m
 
 == What's next?
 
-Refer to the xref:migration-release-notes.adoc[{zdm-product} Release Notes].
+Refer to the xref:migration-contributions.adoc[].
+

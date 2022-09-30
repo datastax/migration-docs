@@ -41,7 +41,7 @@ In this example, the schema is not identical. However, mapping the fields is pos
 
 === Infrastructure required on existing (origin) cluster
 
-Refer to xref:migration-infrastructure.adoc[].
+Refer to xref:migration-deployment-infrastructure.adoc[].
 
 ////
 
@@ -81,4 +81,4 @@ java -jar schema-migrator-1.0.0-SNAPSHOT-embedded-dsbulk.jar --version
 
 == What's next?
 
-Learn how to xref:migration-create-target.adoc[Create the target environment for your migration] for your migration; in this example, we'll set up a DataStax Astra DB cloud-native database instance.
+Learn how to xref:migration-create-target.adoc[Create the target environment for your migration] for your migration. In this example, we'll set up a DataStax Astra DB cloud-native database instance.

@@ -23,7 +23,7 @@ Acceptance of the {company} https://cla.datastax.com/[Contributor License Agreem
 
 The overall procedure:
 
-. Start on https://github.com/datastax/zdm-proxy/. It's a public repo.
+. Start on the open-source public repo, https://github.com/datastax/zdm-proxy/.
 . Fork the repo by clicking the Fork button in the GitHub UI.
 . Make your changes locally on your fork. Git commit and push only to your fork.
 . Wait for CI to run successfully in GitHub Actions before submitting a PR.
@@ -47,10 +47,6 @@ The following {company} {zdm-product} GitHub repos are public. You are welcome t
 
 Again, add a label to help categorize each issue, such as the complexity level, component name, and other labels you'll find in the repo's Issues display.
 
-////
-== Contributing to the docs
+== What's next?
 
-The docs are written in https://docs.asciidoctor.org/asciidoc/latest/[AsciiDoc, window="_blank"] and use https://docs.antora.org/antora/latest/[Antora, window="_blank"] to generate the HTML output.
-
-For information about contributing content, please refer to the https://github.com/datastax/migration-docs/blob/main/README.adoc[README^] in the datastax/migration-docs GitHub repo. Documentation PRs will be evaluated for potential inclusion by the {zdm-product} team.
-////
+Refer to the xref:migration-release-notes.adoc[].

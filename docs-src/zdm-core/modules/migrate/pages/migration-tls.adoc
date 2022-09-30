@@ -97,4 +97,5 @@ Remember that in this case, the {zdm-proxy} is the TLS server; thus the word `se
 
 == What's next?
 
-Learn how to xref:migration-create-target.adoc[Create the target environment for migration].
+Learn how to xref:migration-prepare-environment.adoc[].
+

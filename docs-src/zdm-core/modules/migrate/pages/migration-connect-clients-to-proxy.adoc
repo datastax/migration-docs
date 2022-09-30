@@ -1,4 +1,8 @@
-= Connecting client apps to {zdm-proxy}
+= Connect your client apps to {zdm-proxy}
 
-Text coming soon. 
+[ TODO : Content coming soon. ] 
 
+
+== What's next?
+
+Learn how to xref:migration-manage-proxy-instances.adoc[].
