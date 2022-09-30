@@ -19,7 +19,7 @@ To deploy the {zdm-proxy} and its companion monitoring stack, you will have to p
 
 === Machines
 
-We will use the term "machine" to indicate a cloud instance (on any cloud provider), a VM or a physical server.
+We will use the term "machine" to indicate a cloud instance (on any cloud provider), a VM, or a physical server.
 
 * N machines to run the desired number of {zdm-proxy} instances
 ** You will need one instance / VM / server for each {zdm-proxy} instance
@@ -109,4 +109,4 @@ ssh -F zdm_ssh_config zdm-proxy-0
 
 == What's next?
 
-Learn how to xref:migration-create-target.adoc[Create the target environment for migration].
+Learn how to xref:migration-tls.adoc[].

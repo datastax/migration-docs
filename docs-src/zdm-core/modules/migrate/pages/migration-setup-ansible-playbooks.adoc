@@ -1,14 +1,14 @@
-= Setup Ansible playbooks with ZDM Utility
+= Setup Ansible automation playbooks with {zdm-automation}
 
-This topic explains how to use the {zdm-automation} to setup an Ansible playbook that will automate launching a dedicated deployment of the {zdm-proxy} and its companion monitoring stack.
+This topic explains how to use the {zdm-automation} to setup Ansible playbooks that will automate launching a dedicated deployment of the {zdm-proxy} and its companion monitoring stack.
 
-See the next topic, xref:migration-run-ansible-playbooks.adoc[] to run the playbook and optionally monitor metrics.
+Then continue the steps in the next topic, xref:migration-run-ansible-playbooks.adoc[], to run the playbooks and optionally monitor metrics.
 
-At the end, you will have a working and fully monitored {zdm-proxy} deployment.
+Once completed, you will have a working and fully monitored {zdm-proxy} deployment.
 
 == Introduction
 
-The {zdm-automation} deployment automation uses **Ansible**, which deploys and configures the proxies and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:migration-infrastructure.adoc[Deployment considerations], which include the infrastructure requirements.
+The {zdm-automation} deployment automation uses **Ansible**, which deploys and configures the proxies and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:migration-deployment-infrastructure.adoc[Deployment considerations], which include the infrastructure requirements.
 
 (Alice's note: TODO add link to a separate page with the infrastructure requirements for ZDM (JS note: that's Done ^^^).
 ... I have a document that lists them: https://docs.google.com/document/d/1945XEIrQ34gqanXuIsvdnVXP4NeWaN6U_iwNHHgzg_Y/edit#bookmark=id.fyvzoz9af849 - please ignore the following section, which is not relevant here)
@@ -141,4 +141,4 @@ image:zdm-go-utility-success.png[Ansible Docker container success messages]
 
 == What's next?
 
-Now that you've completed the Ansible setup, learn how to xref:migration-run-ansible-playbooks.adoc[run the Ansible playbook] with the ZDM Utility.
+Now that you've completed the Ansible setup with {zdm-automation}, learn how to xref:migration-run-ansible-playbooks.adoc[].

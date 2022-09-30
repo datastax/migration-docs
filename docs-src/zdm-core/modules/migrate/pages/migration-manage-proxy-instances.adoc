@@ -137,4 +137,5 @@ ansible-playbook update_zdm_proxy.yml -i zdm_ansible_inventory
 
 == What's next?
 
-Learn how to xref:migration-change-read-routing.adoc[Change the read routing] to Astra DB.
+Learn how to xref:migration-validate-data.adoc[].
+

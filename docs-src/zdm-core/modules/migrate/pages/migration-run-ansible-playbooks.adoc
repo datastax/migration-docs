@@ -1,6 +1,8 @@
-= Run the Ansible playbook to deploy {zdm-proxy} and Monitoring
+= Run Ansible playbooks with {zdm-automation} to deploy the proxy and monitoring
 
-This topic explains how to run the Ansible automation that you setup in the xref:migration-setup-ansible-playbooks.adoc[prior topic]. At the end, you will have a working and fully monitored {zdm-proxy} deployment.
+This topic explains how to use the {zdm-automation} to run the Ansible automation playbooks that you setup in the xref:migration-setup-ansible-playbooks.adoc[prior topic]. 
+
+Once completed, you will have a working and fully monitored {zdm-proxy} deployment.
 
 == Prerequisites
 
@@ -180,4 +182,5 @@ Login with:
 
 == What's next?
 
-Learn how to xref:migration-manage-proxy-instances.adoc[Manage your proxy instances].
+Learn how to xref:migration-connect-clients-to-proxy.adoc[].
+

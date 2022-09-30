@@ -33,7 +33,7 @@ First, a few important terms:
 * The **Origin** cluster is your existing Cassandra-based environment, whether it's open-source Apache Cassandra or DSE.
 * The **Target** cluster is the new environment to which you want to migrate apps and data with zero downtime.
 
-image:zdm-migration-phases3.png[Migration phases from start to finish]
+image:zdm-migration-phases4.png[Migration phases from start to finish]
 
 . Connecting your clients to the {zdm-proxy}. This activates the dual-write logic: writes will be "bifurcated." Meaning, sent both to your Origin and Target clusters (cloud-native Astra DB, in this case), while reads will be executed on the Origin only.
 . Migrating your existing data using the Database Migrator.
@@ -151,4 +151,4 @@ A CNDB like Astra DB is a different environment. Running on proven cloud provide
 
 If you're new here, check out our xref:migration-faqs.adoc[FAQs].
 
-Or jump right in and learn about the recommended xref:migration-infrastructure.adoc[deployment considerations], which include  infrastructure requirements to support your migration.
+Or jump right in and learn about the recommended xref:migration-deployment-infrastructure.adoc[deployment considerations], which include  infrastructure requirements to support your migration.
