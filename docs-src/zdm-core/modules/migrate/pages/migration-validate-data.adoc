@@ -1,51 +1,46 @@
 = Migrate and validate your data
 
-Follow these steps to migrate and validate your data using Cassandra Data Migrator. This tool can
-help you migrate data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB).
+This topic introduces you to the benefits of using two data migration tools during your migration project:
 
-{cstar-data-migrator} is designed to:
+* {cstar-data-migrator}
+* {dsbulk-migrator}
 
-* Connect to, and compare your target database with the origin
+These tools provide helpful features and may be used according to match the requirements of your Apache Cassandra&reg; or DataStax Enterprise (DSE) databases.  The tools can help you migrate data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB).
+
+== What's the difference between these data migration tools?
+
+In general:
+
+* {cstar-data-migrator} is the best choice to migrate large data quantities, and where detailed verifications and reconciliation options are needed.
+
+* {dsbulk-migrator} leverages DataStax Bulk Loader (DSBulk) to perform the actual data migration, and provides new commands specific to migrations. {dsbulk-migrator} is ideal for migration of small data quantities, such as databases that have less than 20 GBs of data in the table rows.  
+
+== How do I install and use these data migration tools?
+
+They're available in the following GitHub repos:
+
+* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo
+
+* https://github.com/datastax/dsbulk-migrator[DSBulk Migrator^] repo
+
+Refer to the README in each repo for the latest, detailed instructions to install and use these data migrators. The READMEs include prerequisites, download resources, configuration, and command-line usage information. 
+
+== Summary of features 
+
+Here's a quick summary of the features per data migration tool. See each repo's README for details. 
+
+== {cstar-data-migrator} 
+
+For large data migrations, including cases where advanced logging is needed, {cstar-data-migrator} is designed to:
+
+* Connect to and compare your target database with the origin
 * Report differences in a detailed log file
 * Reconcile any missing records and fix any data inconsistencies in the target, if you enable `autocorrect` in a config file
 
-[TIP]
-====
-An important **prerequisite** is that you already have the matching schema on the target database. For every table migrated by Cassandra Data Migrator, the tool takes a mapping configuration that links every origin column to every target column.
-====
+{cstar-data-migrator} runs in a lightweight, easily set up Apache Spark wrapper. For example, you can configure a `sparkConf.properties` file for the environment. There's a sample https://github.com/Ankitp1342/astra-spark-migration-ranges/blob/master/src/resources/sparkConf.properties[sparkConf.properties] configuration example in the GitHub repo.
 
-The validation checks are a way to verify that all the data has been migrated successfully. For data written by idempotent writes these checks are optional, as any errors, timeouts or other failures during the migration are made visible by the Cassandra Data Migrator and by {zdm-proxy}.
-
-In the case of data written by non-idempotent writes, it is necessary to reconcile and realign any discrepancies before starting to use the target cluster as the primary source of truth.
-
-== Prerequisites
-
-. Clone the public GitHub repo, https://github.com/datastax/cassandra-data-migrator
-+
-```bash
-git clone git@github.com:datastax/cassandra-data-migrator.git
-```
-. Install Java8 or later as a prerequisite, because the spark binaries are compiled with Java.
-
-. You can install a single instance of spark 2.4.8 or later on a node where you want to run this migration job. Example:
-+
-```bash
-wget https://downloads.apache.org/spark/spark-2.4.8/
-
-tar -xvzf <spark downloaded file name>
-```
-
-. You must already have the matching schema on the target database.
-
-
-== Set up Cassandra Data Migrator
-
-. Configure the `sparkConf.properties` file for the environment.
-+
-In the GitHub repo, for an example, see this sample https://github.com/Ankitp1342/astra-spark-migration-ranges/blob/master/src/resources/sparkConf.properties[sparkConf.properties] file.
-+
 In its settings, you'll identify values for your origin and target databases. A subset example:
-+
+
 ```conf
 spark.migrate.origin.isAstra                               false
 spark.migrate.origin.host                                  localhost
@@ -64,158 +59,30 @@ spark.migrate.target.autocorrect.missing                   false
 spark.migrate.target.autocorrect.mismatch                  false
 ```
 
-. Place the edited configuration file where it can be accessed while running the job via `spark-submit`.
-
-. Generate a fat jar (`migrate-0.x.jar`) using the command:
-+
-```
-mvn clean package
-```
-
-. Run the 'Data Migration' job using a `spark-submit` command. Example:
-+
-```bash
-./spark-submit --properties-file sparkConf.properties /
---master "local[*]" /
---conf spark.migrate.origin.minPartition=-9223372036854775808 /
---conf spark.migrate.origin.maxPartition=9223372036854775807 /
---class datastax.astra.migrate.Migrate migrate-0.x.jar &> logfile_name.txt
-```
-
 [TIP]
 ====
-The `spark-submit` command above also generates a log file, `logfile_name.txt`, to avoid log output on the console.
+An important **prerequisite** is that you already have the matching schema on the target database. For every table migrated by Cassandra Data Migrator, the tool can use a mapping configuration that links every origin column to every target column.
 ====
 
-== Run the Data Validation job
+The validation checks are a way to verify that all the data has been migrated successfully. For data written by idempotent writes these checks are optional, as any errors, timeouts or other failures during the migration are made visible by the {cstar-data-migrator} and by {zdm-proxy}.
 
-. To run the job in Data validation mode, use class option `--class datastax.astra.migrate.DiffData` as shown below.
-+
-```bash
-./spark-submit --properties-file sparkConf.properties /
---master "local[*]" /
---conf spark.migrate.origin.minPartition=-9223372036854775808 /
---conf spark.migrate.origin.maxPartition=9223372036854775807 /
---class datastax.astra.migrate.DiffData migrate-0.x.jar &> logfile_name.txt
-```
+In the case of data written by non-idempotent writes, it is necessary to reconcile and realign any discrepancies before starting to use the target cluster as the primary source of truth.
 
-. The Data Validation job will report differences as “ERRORS” in the log file. Example:
-+
-```log
-22/02/16 12:41:15 ERROR DiffJobSession: Data is missing in Astra: e7cd5752-bc0d-4157-a80f-7523add8dbcd
-22/02/16 12:41:15 ERROR DiffJobSession: Data difference found -  Key: 1 Data:  (Index: 3 Origin: [val-A, val-B] Astra: [val-A, val-B, val-C] )
-```
-+
-[ TODO :  cover all possible ERROR (info) conditions in a table or list here, as examples that users can learn from as they migrate from ]
+For installation and usage details, see the {cstar-data-migrator} repo's https://github.com/datastax/cassandra-data-migrator/blob/main/README.md[README, window="_blank"]. 
 
-. To get the list of missing and mismatched records, grep for all ERROR entries from the output log files. Note that the log will list differences by **partition key** values.
+== {dsbulk-migrator}
 
-. The Data Validation job can also be run in an **AutoCorrect** mode. This mode can:
-+
-** Add any missing records to the target that are present in the origin.
-** Fix any data inconsistencies in the target
+{dsbulk-migrator}, which is based on DataStax Bulk Loader (DSBulk), is best for migrating smaller amounts of data, and/or when you can shard data from table rows into more manageable quantities.  
 
-. Enable/disable this feature using one or both of the below setting in the config file:
-+
-```conf
-spark.migrate.target.autocorrect.missing                   true|false
-spark.migrate.origin.autocorrect.mismatch                  true|false
-```
-+
-[NOTE]
-====
-Regarding the `mismatch` setting: if Cassandra Data Migrator finds that the origin row exists in the target, but some or all column data doesn't match, the tool (if enabled) will overwrite the values in the target. The result is Cassandra Data Migrator makes the target the same as the origin.
-====
+{dsbulk-migrator} provides the following main commands:
 
-== Example mapping for config file
+* `migrate-live` starts a live data migration using a pre-existing DSBulk installation, or alternatively, the embedded DSBulk version. A "live" migration means that the data migration will start immediately and will be performed by this migrator tool through the desired DSBulk installation.
 
-Consider the following example:
+* `generate-script` generates a migration script that, once executed, will perform the desired data migration, using a pre-existing DSBulk installation. Please note: this command does not actually migrate the data; it only generates the migration script.
 
-* Origin table: `User` with fields `id uuid, first_name text, last_name text, age int`
-* Target table: `Customer` with fields `cust_id uuid, fn text, ln text, contact text`
+* `generate-ddl` reads the schema from the origin and generates CQL files to recreate it in the target.
 
-In this example, the schema is not identical. However, mapping the fields is possible to enable the data migration. That is, map `User` to `Customer`; map `id` to `cust_id`; map `first_name` to `fn`, and so on. The data for this scenario can be migrated. You would need to first define define this mapping in the config file used by {cstar-data-migrator}.
-
-Here's a sample config that include the mappings:
-
-**TODO: Add the example here.**
-
-== Additional features
-
-[ TODO: need specific examples / more info about using the Cassandra Data Migrator for the following, with "how to" steps per feature ]
-
-* Count tables
-* Preserve writetimes and TTL
-* Use advanced data types (Sets, Lists, Maps, UDTs)
-* Filter records from origin using writetime
-* Use SSL, including custom cipher algorithms
-* Validate migration accuracy and performance using a smaller randomized data-set
-
-== Manual steps
-
-If the target of your migration is an Astra DB database, your task for schema migration will be to:
-
-* Manually create the keyspaces from the Astra Portal, because keyspace creation through CQL is not supported on Astra DB.
-
-* Take the generated CQL DDL file and run it either from the Astra Portal's CQL console, or from a standalone `cqlsh` client pointing to Astra DB.
-
-Any secondary indexes, Storage-Attached Indexes (SAI), or Materialized Views that may have existed in the origin's schema are ignored, and must be dealt with manually by the user, in compliance with the Astra DB guidelines.
-
-This schema preparation is a preliminary step that must be done before connecting your clients to the {zdm-proxy}. The goal is to ensure that database writes will not fail due to schema differences between origin and target.
-
-For migrations to a target that is not an Astra DB, you can simply extract the schema definition from your Origin cluster via a CQL `DESCRIBE` statement, and then run that schema DDL on your target cluster. You may need to adapt the schema due to any differences in the features of the database software (such as compact storage).
-
-////
-Commenting out DSBulk info 16-Sept-2022:
-
-== Counting the table data
-
-Use the DataStax Bulk Loader (`dsbulk`) to count the data in the tables on each cluster, compare the results, and verify that they match.
-
-If you haven't already, install `dsbulk` on a machine that can connect to your Origin cluster and to Astra. This could be the same machine that you used to migrate your existing data. See link:https://docs.datastax.com/en/dsbulk/docs/install/dsbulkInstall.html[Installing DataStax Bulk Loader for Apache Cassandra] on the DataStax documentation site.
-
-Once installed, use the `dsbulk count` command, providing your keyspace name. The `-k baselines` value used in examples is from the database used by NoSQLBench app. Your values will be different.
-
-```bash
-cd ~/dsbulk-1.10.0/bin/
-
-./dsbulk count -k baselines -t keyvalue -f ~/dsbulk-1.10.0/conf/origin-app.conf
-./dsbulk count -k baselines -t keyvalue -f ~/dsbulk-1.10.0/conf/astra-app.conf
-
-./dsbulk count -k sample_app_keyspace -t app_data -f ~/dsbulk-1.10.0/conf/origin-app.conf
-./dsbulk count -k sample_app_keyspace -t app_data -f ~/dsbulk-1.10.0/conf/astra-app.conf
-```
-
-In CQLSH, read some sample rows on each cluster and verify that they match.
-
-On Origin, use a `SELECT *` statement to retrieve all the rows. Example:
-
-```cqlsh
-select * from baselines.keyvalue limit 3;
-```
-
-On your target Astra DB database, read the rows with the same tables returned by the query on Origin. On the Astra console Dashboard for your database, on the **CQL Console** tab, enter a `SELECT *` for the same tables. Example:
-
-```cqlsh
-select * from baselines.keyvalue where key in ('key1', 'key2', 'key3');
-```
-
-On Origin and Astra DB, examples:
-
-```cqlsh
-select * from sample_app_keyspace.app_data where app_key = 250
-select * from sample_app_keyspace.app_data where app_key = 1000
-select * from sample_app_keyspace.app_data where app_key = 1080
-```
-
-Read these same rows through the ZDM Demo Client, which is still pointing to the proxy. The read requests will be routed to Origin.
-
-```bash
-curl -G -d 'rowkey=250' http://localhost:8080/zdm-demo-client/rest/row
-curl -G -d 'rowkey=1000' http://localhost:8080/zdm-demo-client/rest/row
-curl -G -d 'rowkey=1080' http://localhost:8080/zdm-demo-client/rest/row
-```
-////
+For installation and usage details, see the {dsbulk-migrator} repo's https://github.com/datastax/dsbulk-migrator/blob/main/README.md[README, window="_blank"]. 
 
 == What's next?
 
