@@ -47,7 +47,7 @@ The proxy also passes through reads to a single cluster (initially Origin, and t
 
 == What are the benefits and use cases?
 
-You may want to migrate your existing Cassandra or DSE database to a managed service such as DataStax Astra DB. Other scenarios are supported. For example, you may want to migrate from an older version of Cassandra or DSE to a much newer version, without intermediate upgrades and with simple rollback options. And/or you may may want to split out an application from a shared cluster to be backed by its own cluster.
+You may want to migrate your existing Cassandra or DSE database to a managed service, such as DataStax Astra DB. Other scenarios are supported. For example, you may want to migrate from an older version of Cassandra or DSE to a much newer version, without intermediate upgrades and with simple rollback options. And/or you may may want to split out an application from a shared cluster to be backed by its own cluster.
 
 Bottom line: you want to migrate your critical database infrastructure without risk or concern that your users' experiences will be affected.
 
@@ -75,7 +75,7 @@ All the {company} {zdm-product} GitHub repos are public. You are welcome to read
 
 * https://github.com/datastax/dsbulk-migrator[DSBulk Migrator^] repo for migration of smaller data quantities.
 
-* https://github.com/datastax/migration-docs[Migration documentation^] repo.
+// * https://github.com/datastax/migration-docs[Migration documentation^] repo.
 
 == Does ZDM Proxy support Transport Layer Security (TLS)? 
 
@@ -88,6 +88,14 @@ Yes, and here's a summary:
 * When the {zdm-proxy} connects to Astra DB clusters, it always implicitly uses Mutual TLS. This is done through the Secure Connect Bundle (SCB) and does not require any extra configuration.
 
 For TLS details, see xref:migration-tls.adoc[].
+
+== What are the benefits of using a cloud-native database?
+
+When moving your apps &amp; data from on-premise Cassandra Query Language (CQL) based data stores (Apache Cassandra or DSE) to a cloud-native database (CNDB) like Astra DB, it's important to acknowledge the fundamental differences ahead. With "on-prem," of course, you have total control of the data center's physical infrastructure, software configurations, and your custom procedures. At the same time, with on-prem clusters you take on the cost of infrastructure resources, maintenance, operations, personnel.
+
+Ranging from large enterprises to small teams, IT managers, operators, and developers are realizing that the Total Cost of Ownership (TCO) with cloud solutions is much lower than continuing to run on-prem physical data centers.
+
+A CNDB like Astra DB is a different environment. Running on proven cloud providers like AWS, Google Cloud, and Azure, Astra DB greatly reduces complexity and increases convenience by surfacing a subset of configurable settings, providing a well-designed UI known as Astra Portal, and a set of APIs to interact programmatically with your Astra DB organizations and databases.
 
 == Internal FAQ: where's are the built docs located before 2.0.0 GA?
 
