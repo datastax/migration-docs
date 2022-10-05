@@ -39,7 +39,7 @@ First, a couple key terms used throughout the {zdm-product} documentation and so
 
 * The **Target** cluster is the new environment to which you want to migrate apps and data with zero downtime.
 
-image:zdm-migration-phases4.png[Migration phases from start to finish]
+image:zdm-migration-phases5.png[Migration phases from start to finish]
 
 * **Phase 1:** Connect your client applications to the {zdm-proxy}. This activates the dual-write logic: writes will be "bifurcated" (meaning, sent both to Origin and Target), while reads will be executed on Origin only.
 
@@ -56,7 +56,7 @@ image:zdm-migration-phases4.png[Migration phases from start to finish]
 
 Here's a diagram to illustrate the overall migration strategy when moving apps and data from your Origin to your Target. In this example, we're looking at a migration from a generic Origin cluster to an Astra DB Target cluster.
 
-image:zdm-workflow1.png[Migration workflow from client application to {zdm-proxy} with dual operations to Origin and Target]
+image:zdm-workflow2.png[Migration workflow from client application to {zdm-proxy} with dual operations to Origin and Target]
 
 * With no changes required to your client application code itself, {zdm-proxy} does the work to route writes to Origin and Target.
 * Cassandra Data Migrator and/or DSBulk Migrator can migrate data between clusters of any supported types. See the next section for an introduction to these tools.
