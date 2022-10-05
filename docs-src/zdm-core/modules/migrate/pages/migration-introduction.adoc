@@ -8,7 +8,7 @@ We call this feature {company} {zdm-product} ({zdm-shortproduct}).
 
 ZDM provides a simple and reliable way for you to migrate an existing Apache Cassandra&reg; or DataStax Enterprise (DSE) cluster to Astra DB, or to any Cassandra/DSE cluster, without any interruption of service to the apps and data. For example:
 
-* You can move your application to Astra DB with no downtime and with minimal configuration changes
+* You can move your application to Astra DB, DataStax Enterprise or Apache Cassandra with no downtime and with minimal configuration changes
 * Your clusters will be kept in sync at all times by a **dual-write logic** configuration
 * You can easily rollback at any point, for complete peace of mind
 
@@ -17,14 +17,14 @@ ZDM provides a simple and reliable way for you to migrate an existing Apache Cas
 You can migrate:
 
 * From an existing self-managed Cassandra or DSE cluster to cloud-native Astra DB. For example:
-** Cassandra 3.11.x or 4.0.x to Astra DB
-** DSE 5.1.x or 6.8.x to Astra DB
+** Cassandra 2.1.x, 3.11.x or 4.0.x to Astra DB
+** DSE 4.8.x, 5.1.x or 6.8.x to Astra DB
 ** And more
 * From an existing Cassandra or DSE cluster to another Cassandra or DSE cluster. For example:
-** Cassandra 3.11.x to 4.0.x
-** DSE 5.1.x to DSE 6.8.x
-** Cassandra 2.1.x to DSE 6.8.x
-** DSE 4.8.x 2.1.x to Cassandra 4.0.x
+** Cassandra 2.1.x or 3.11.x to 4.0.x
+** DSE 4.8.x or 5.1.x to DSE 6.8.x
+** Cassandra 2.1.x, 3.11.x or 4.0.x to DSE 6.8.x
+** DSE 4.8.x to Cassandra 4.0.x
 ** And more
 * From Astra DB Classic to Astra DB Serverless
 
@@ -39,11 +39,11 @@ First, a few important terms:
 
 image:zdm-migration-phases4.png[Migration phases from start to finish]
 
-. Connecting your client applications to the {zdm-proxy}. This activates the dual-write logic: writes will be "bifurcated." Meaning, sent both to your Origin and Target clusters (cloud-native Astra DB, in this case), while reads will be executed on Origin only.
+. Connecting your client applications to the {zdm-proxy}. This activates the dual-write logic: writes will be "bifurcated" (meaning, sent both to Origin and Target), while reads will be executed on Origin only.
 . Migrating your existing data using the Database Migrator.
 . Validating that the migrated data is correct, while continuing to perform dual writes.
-. Switching the client application reads to Target.
-. Moving your client applications off the {zdm-proxy} and connecting them directly to Target (in this case, Astra DB).
+. Changing the proxy configuration to route reads to Target, effectively using Target as the source of truth while still keeping Origin in sync.
+. Moving your client applications off the {zdm-proxy} and connecting them directly to Target.
 
 == Migration workflow
 
@@ -56,6 +56,10 @@ image:zdm-workflow1.png[Migration workflow from client application to {zdm-proxy
 * Initially during the migration, {zdm-proxy} always reads from Origin.
 * Later during the migration, the read routing is switched to Target so that all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary source of truth.
 * Finally, the client application can be moved off the proxy and connected directly to Target, at which point the migration is complete.
+
+Note that, at any point during this process until the very last phase, if you hit any unexpected issue and need to "rollback" the migration you can always easily revert your client applications to connect directly to Origin. The migration can be started from scratch once the issue has been addressed.
+
+After moving your client applications off the proxy, writes are no longer sent to both clusters and you lose this seamless rollback option. Should you decide to move back to Origin at a later point, you can perform the migration in reverse.
 
 == Migration components
 
@@ -72,23 +76,23 @@ Two data migration tools are available to migrate and validate your data. See th
 
 We created {zdm-proxy} to function between the application and the Origin and Target clusters so that every write operation (Insert, Update, Delete) is passed through synchronously to both clusters at the desired Consistency Level:
 
+We created ZDM Proxy to function between the application and both databases (Origin and Target). The databases can be any CQL-compatible data store (e.g. Apache Cassandra, Datastax Enterprise and Astra DB). The proxy always sends every write operation (Insert, Update, Delete) synchronously to both clusters at the desired Consistency Level:
+
 * If the write is successful in both clusters, it returns a successful acknowledgement to the client application
 * If the write fails on either cluster, the failure is passed back to the client application so that it can retry it as appropriate, based on its own retry policy.
 
-This design allows for write consistency of new data to both clusters. {zdm-proxy} also passes through reads to the configured cluster (initially Origin, and later on Target) and returns the result to the client application.
+This design ensures that new data is always written to both clusters, and that any failure on either cluster is always made visible to the client application. {zdm-proxy} also sends all reads to the primary cluster (initially Origin, and later Target) and returns the result to the client application.
 
 {zdm-proxy} is designed to be highly available. It can be scaled horizontally so typical deployments are made up of a minimum of 3 servers. {zdm-proxy} can be restarted in a rolling fashion, for example, to change configuration for different phases of the migration.
 
 [TIP]
 ====
-{zdm-proxy} has been designed to run in a **clustered** fashion so that it is never a single point of failure. Unless it is for a demo or local testing environment, a {zdm-proxy} deployment always comprises multiple {zdm-proxy} instances.
+{zdm-proxy} has been designed to run in a **clustered** fashion so that it is never a single point of failure. Unless it is for a demo or local testing environment, a {zdm-proxy} deployment should always comprise multiple {zdm-proxy} instances.
 
 We will often use the term **{zdm-proxy}** to indicate the whole deployment, and **{zdm-proxy} instance** to refer to the individual proxy processes in the deployment.
 ====
 
 === Key features of {zdm-proxy}
-
-{zdm-proxy}:
 
 * Allows you to lift-and-shift existing application code from **Origin** to **Target** with a simple change of a connection string.
 
@@ -96,12 +100,12 @@ We will often use the term **{zdm-proxy}** to indicate the whole deployment, and
 
 * Bifurcates writes to both clusters during the migration process synchronously.
 
-* Returns (for read operations) the response from a designated source of truth. During a migration, Origin typically constitutes the source of truth. Near the end of the migration, you'll shift the source of truth for reads to be Target.
+* Returns (for read operations) the response from the primary cluster, which is its designated source of truth. During a migration, Origin is typically the primary cluster. Near the end of the migration, you'll shift the primary to be Target.
 
 * Can be configured to also read asynchronously from Target. This capability is called **Asynchronous Dual Reads** (also known as **Read Mirroring**) and allows you to observe what read latencies and throughput Target can achieve under the actual production load.
 ** Results from the asynchronous reads executed on Target are not sent back to the client application.
 ** This design implies that failure on asynchronous reads from Target does not cause an error on the client application.
-** Asynchronous reads can be enabled and disabled dynamically with a rolling restart of the {zdm-proxy} instances.
+** Asynchronous dual reads can be enabled and disabled dynamically with a rolling restart of the {zdm-proxy} instances.
 
 [NOTE]
 ====
@@ -125,7 +129,7 @@ For details, see:
 
 As part of the overall migration process, you can use {cstar-data-migrator} to:
 
-* Migrate your data from any Cassandra Origin (Cassandra/DSE/Astra DB) to any Cassandra Target (Cassandra/DSE/Astra DB)
+* Migrate your data from any CQL supported Origin to any CQL supported Target. Examples of databases that support CQL are Apache Cassandra, DataStax Enterprise and Astra DB.
 * Validate migration accuracy and performance using examples that provide a smaller, randomized data set
 * Preserve internal `writetime` timestamps and Time To Live (TTL) values
 * Take advantage of advanced data types (Sets, Lists, Maps, UDTs)
