@@ -3,7 +3,7 @@
 ** xref:migration-deployment-infrastructure.adoc[Deployment and infrastructure considerations]
 ** xref:migration-prepare-environment.adoc[Prepare existing environment for migration]
 ** xref:migration-create-target.adoc[Create target environment for migration]
-** xref:migration-setup-ansible-playbooks.adoc[Set up the Ansible automation with {zdm-automation}]
+** xref:migration-setup-ansible-playbooks.adoc[Set up the Ansible automation with {zdm-utility}]
 ** xref:migration-run-ansible-playbooks.adoc[Deploy the {zdm-proxy} and monitoring]
 ** xref:migration-tls.adoc[Configure Transport Layer Security]
 ** xref:migration-connect-clients-to-proxy.adoc[Connect client apps to ZDM Proxy]

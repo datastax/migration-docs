@@ -4,7 +4,7 @@
 
 The {zdm-proxy} is open source software (OSS). We welcome contributions from the developer community via Pull Requests on a fork, for evaluation by the ZDM team.
 
-The code sources for additional {zdm-product} components -- including {zdm-automation}, {cstar-data-migrator}, and {dsbulk-migrator} -- are available in public GitHub repos, where you may submit feedback and ideas via GitHub Issues. Code contributions for those additional components are not open for PRs at this time.
+The code sources for additional {zdm-product} components -- including {zdm-utility}, {zdm-automation}, {cstar-data-migrator}, and {dsbulk-migrator} -- are available in public GitHub repos, where you may submit feedback and ideas via GitHub Issues. Code contributions for those additional components are not open for PRs at this time.
 
 == {zdm-proxy} License
 
@@ -37,7 +37,7 @@ In addition to potential {zdm-proxy} OSS code contribution, we encourage you to 
 
 The following {company} {zdm-product} GitHub repos are public. You are welcome to read the source and submit feedback and ideas via GitHub Issues per repo. In addition to the https://github.com/datastax/zdm-proxy[{zdm-proxy}^] open-source repo, refer to:
 
-* https://github.com/datastax/zdm-proxy-automation/issues[{zdm-automation}^] repo for Ansible-based automation.
+* https://github.com/datastax/zdm-proxy-automation/issues[{zdm-automation}^] repo for Ansible-based automation and {zdm-utility}.
 
 * https://github.com/datastax/cassandra-data-migrator/issues[Cassandra Data Migrator^] repo. 
 

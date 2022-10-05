@@ -45,7 +45,8 @@ asciidoc:
     zdm-product: 'Zero Downtime Migration'
     zdm-shortproduct: 'ZDM'
     zdm-proxy: 'ZDM Proxy'
-    zdm-automation: 'ZDM Utility'
+    zdm-utility: 'ZDM Utility'
+    zdm-automation: 'ZDM Automation'
     cstar-data-migrator: 'Cassandra Data Migrator'
     dsbulk-migrator: 'DSBulk Migrator'
 
