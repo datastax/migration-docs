@@ -1,21 +1,18 @@
-= Setup Ansible automation playbooks with {zdm-automation}
+= Set up the Ansible automation with {zdm-automation}
 
-This topic explains how to use the {zdm-automation} to setup Ansible playbooks that will automate launching a dedicated deployment of the {zdm-proxy} and its companion monitoring stack.
+This topic explains how to use the {zdm-automation} to set up the Ansible playbooks that will automate launching a dedicated deployment of the {zdm-proxy} and its companion monitoring stack.
 
-Then continue the steps in the next topic, xref:migration-run-ansible-playbooks.adoc[], to run the playbooks and optionally monitor metrics.
+After you have done this, the xref:migration-run-ansible-playbooks.adoc[next topic] will show you to use the automation to deploy the {zdm-proxy} and the monitoring stack.
 
 Once completed, you will have a working and fully monitored {zdm-proxy} deployment.
 
 == Introduction
 
-The {zdm-automation} deployment automation uses **Ansible**, which deploys and configures the proxies and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:migration-deployment-infrastructure.adoc[Deployment considerations], which include the infrastructure requirements.
-
-(Alice's note: TODO add link to a separate page with the infrastructure requirements for ZDM (JS note: that's Done ^^^).
-... I have a document that lists them: https://docs.google.com/document/d/1945XEIrQ34gqanXuIsvdnVXP4NeWaN6U_iwNHHgzg_Y/edit#bookmark=id.fyvzoz9af849 - please ignore the following section, which is not relevant here)
+The ZDM automation uses **Ansible**, which deploys and configures the {zdm-proxy}instances and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:migration-deployment-infrastructure.adoc[Deployment considerations], which include the infrastructure requirements.
 
 https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code. It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
 
-The Ansible automation in {zdm-automation} is organized into playbooks, each implementing a specific operation. The machine from which the playbooks are run is known as the Ansible Control Host. In ZDM, the Ansible Control Host will run as a Docker container.
+The Ansible automation is organized into playbooks, each implementing a specific operation. The machine from which the playbooks are run is known as the Ansible Control Host. In ZDM, the Ansible Control Host will run as a Docker container.
 
 Configuring a machine to serve as the Ansible Control Host is very easy using the {zdm-automation}. This is a Golang (Go) executable program that runs anywhere. This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use. From this container, you will be able to easily configure and run the {zdm-automation} Ansible playbooks. It's migration made easy.
 
@@ -30,7 +27,7 @@ That's it!
 
 In this topic, we'll use a jumphost as our Ansible Control Host.
 
-A jumphost is a server on a network used to access and manage devices in a separate security zone, providing a controlled means of access between them. The jumphost can be, for example, a Ubuntu server machine that is able to access the server machines that you wish to use for your {zdm-proxy} deployment. [TODO is the last bit of this sentence redundant?]
+A jumphost is a server on a network used to access and manage devices in a separate security zone, providing a controlled means of access between them. The jumphost can be, for example, a Ubuntu server machine that is able to access the server machines that you wish to use for your {zdm-proxy} deployment.
 
 The jumphost will serve three purposes:
 
@@ -40,6 +37,13 @@ The jumphost will serve three purposes:
 
 [TODO this is about the monitoring -- move to later]
 Having these tools set up is especially useful during migrations when you're running large workloads.
+
+[TIP]
+====
+To simplify accessing the jumphost and {zdm-proxy} instances from your machine, create a custom SSH configuration file as explained xref:migration-deployment-infrastructure.adoc#create_zdm_ssh_config_file[here].
+
+The following steps will assume that this file exists.
+====
 
 Let's get started.
 
@@ -52,15 +56,13 @@ To run the automation, the Ansible Control Host needs to be able to connect to a
 From your local machine, transfer (`scp`) the SSH private key for the ZDM deployment to the jumphost. Example:
 
 ```bash
-scp -F zdm_ssh_config <zdm key> jumphost:
+scp -F <path to zdm_ssh_config> <zdm key> jumphost:
 ```
 
 Now connect to the jumphost.
 ```bash
-ssh -F zdm_ssh_config <zdm key> jumphost
+ssh -F <path to zdm_ssh_config> <zdm key> jumphost
 ```
-
-(Alice's note: add a separate section in the infrastructure preparation to document creating the custom SSH config file. In that section, show how to connect to the jumphost and proxies using the custom SSH file.)
 
 == Running the {zdm-automation} automation
 

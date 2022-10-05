@@ -1,24 +1,22 @@
-= Run Ansible playbooks with {zdm-automation} to deploy the proxy and monitoring
+= Deploy the {zdm-proxy} and monitoring
 
-This topic explains how to use the {zdm-automation} to run the Ansible automation playbooks that you setup in the xref:migration-setup-ansible-playbooks.adoc[prior topic]. 
+This topic explains how to use the Ansible automation playbooks that you set up in the xref:migration-setup-ansible-playbooks.adoc[prior topic] to deploy the proxy and its monitoring stack.
 
 Once completed, you will have a working and fully monitored {zdm-proxy} deployment.
 
 == Prerequisites
 
-. You must have already provisioned the ZDM infrastructure; which means you must have the server machines ready, and know their IP addresses. These can be in the cloud provider of your choice or on-premise.
-. Docker needs to be installed on the machine that will be used as the Ansible Control Host, and the `docker` command must not require superuser privileges. The instructions to do this are available for each platform in the official Docker documentation. (Alice's note: add links)
-. You must have completed the Ansible setup as described in the xref:migration-setup-ansible-playbooks.adoc[prior topic].
+You must have completed the Ansible setup as described in the xref:migration-setup-ansible-playbooks.adoc[prior topic].
 
-== Connect to the Docker container
+== Access the Docker container
 
-Now you can connect to the Docker container. Example:
+You can connect to the Docker container by opening a shell on it:
 
 ```bash
 docker exec -it zdm-ansible-container bash
 ```
 
-You're connected to the container, at a prompt such as this example:
+You're now connected to the container, at a prompt such as this example:
 
 ```bash
 ubuntu@52772568517c:~$
@@ -30,72 +28,107 @@ Now, `cd` into `zdm-proxy-automation` and `ls` to see its content. From there, c
 
 image:zdm-ansible-container-ls.png[]
 
-== Edit zdm_proxy_core_config.yml
+== Configure the {zdm-proxy}
 
+The {zdm-proxy} configuration is broken down into three files:
+
+ * `zdm_proxy_core_config.yml`, containing configuration that is always required
+ * `zdm_proxy_advanced_config.yml`, containing advanced configuration that may be required in some scenarios but can be usually left to its default values
+ * `zdm_proxy_custom_tls_config.yml`, to configure TLS encryption if desired.
+
+=== Core configuration
 The next step is to edit the `zdm_proxy_core_config.yml` file in the Docker container. You'll want to enter your Cassandra/DSE username, password, and other values.
 
-. cd to ~/zdm-proxy-automation/ansible/vars
-. Edit `zdm_proxy_core_config.yml`
-. Uncomment and enter values for the following Origin settings of your Cassandra or DSE database:
-.. `origin_cassandra_username`
-.. `origin_cassandra_password`
-.. `origin_cassandra_contact_points`
-.. `origin_cassandra_port`
-.. (TODO: brief explanation of `origin_cassandra_contact_points` here - where to get the IPs.)
-.. Remove all other Origin-related parameters, or ignore them (leaving them commented out)
-. Uncomment and enter values for the following Target settings of your new Astra database:
-.. `target_cassandra_username`: Client ID of your Astra Read / Write User role
-.. `target_cassandra_password`: Client Secret of your Astra Read / Write User role
-.. `target_astra_db_id`: database ID of your Astra cluster (can be found in the Dashboard of the Astra UI)
-.. `target_astra_token`: Token of your Astra Read / Write User role
-.. Remove all other Target-related parameters, or ignore them (leaving them commented out)
-. Leave `forward_reads_to_target` set to its default value of `false`
-. Save the file and exit the editor
+In the container shell, `cd` to `~/zdm-proxy-automation/ansible/vars` and edit `zdm_proxy_core_config.yml`
 
-+
-Example of a completed zdm_proxy_core_config.yml file [ TODO update variable names and populate target db id and token ] :
-+
+There are two identical sets of parameters to configure the proxy to connect to the cluster. One set is for Origin and its parameters are prefixed with `origin`, while the one for Target uses the `target` prefix.
+
+These two sections are very important and are always required. Populate the appropriate parameters in each section for the respective cluster, by uncommenting them and specifying their values as follows:
+
+. Cluster credentials:
+.. If it is a self-managed cluster, `*_username` and `*_password` must be valid credentials for it. Leave blank if authentication is not enabled on the cluster.
+.. If it is an Astra DB cluster, `*_username` must be the Client ID and `*_password` the Client Secret of a valid `R/W User`  Astra role
+. Contact points and port (only relevant for self-managed clusters, leave unset for Astra clusters)
+.. `*_contact points` comma-separated list of IP addresses of the cluster's seed nodes
+.. `*_port`: port on which the cluster listens for client connections. Defaults to 9042.
+. For Astra DB clusters, choose one of the following options and leave unset the other (leave both unset for self-managed clusters):
+.. If you wish to manually provide the cluster's Secure Connect Bundle, copy it to the container and specify its path in `*_astra_secure_connect_bundle_path`.
+.. Otherwise, if you wish the automation to download the cluster's Secure Connect Bundle for you, just specify its database id in `*_astra_db_id` and the token for a valid `R/W User` Astra role in `*_astra_token`
+
+Settings that do not need changing at this time:
+. `primary_cluster`: which cluster is going to be the primary source of truth. This should be left set to its default value of `ORIGIN` at the start of the migration, and will be changed to `TARGET` after migrating all existing data.
+. `read_mode`: leave to its default value of `PRIMARY_ONLY`. See xref:migration-setup-read-mirroring.adoc[] for more information on this parameter.
+. `log_level`: leave to its default of `INFO`.
+
+Save the file and exit the editor.
+
+Example of a completed zdm_proxy_core_config.yml file for a migration from a self-managed Origin to an Astra DB Target:
+
 ```yml
 ---
-### Origin configuration
+##############################
+#### ORIGIN CONFIGURATION ####
+##############################
 
-# Origin credentials (always required)
-origin_cassandra_username: my_user
-origin_cassandra_password: my_password
+## Origin credentials
+origin_username: "my_user"
+origin_password: "my_password"
 
-# Set the following two parameters only if Origin is a self-managed, non-Astra cluster
-origin_cassandra_contact_points: 191.100.20.85,191.100.20.61,191.100.20.93
-origin_cassandra_port: 9042
+## Set the following two parameters only if Origin is a self-managed, non-Astra cluster
+origin_contact_points: "191.100.20.135,191.100.21.43,191.100.22.18"
+origin_port: 9042
 
-### Target configuration
+##############################
+#### TARGET CONFIGURATION ####
+##############################
 
-# Target credentials (always required)
-target_cassandra_username: dqhgDYKvtEGNDDFyrgzrNndY
-target_cassandra_password: Yc+U_2.gu,9woy0wSdBge6l1txjYtLwyD_mdQ.ASf8y+NNgRAy004Z_1DRNFEjgchDayKwXZSxeKu_n-ZcAiBGOXt99o8HD8uTPe5rER4bvYP1EAtpkk9JpAZGt+CCn5
+## Target credentials (partially redacted)
+target_username: "dqhg...NndY"
+target_password: "Yc+U_2.gu,9woy0w...9JpAZGt+CCn5"
 
-# Set the following two parameters only if Target is an Astra cluster and you would like the automation to download the secure connect bundle automatically
-target_astra_db_id: <cluster id of the Target Astra cluster>
-target_astra_token: <token of the same role as above >
+## Set the following two parameters only if Target is an Astra cluster and you would like the automation to download the secure connect bundle automatically
+target_astra_db_id: "d425vx9e-f2...c871k"
+target_astra_token: "AstraCS:dUTGnRs...jeiKoIqyw:01...29dfb7"
 
-# Set the following two parameters only if Target is a self-managed, non-Astra cluster
-#target_cassandra_contact_points: <comma-separated list of private IP addresses, no spaces>
-#target_cassandra_port: <typically 9042>
+####################################
+#### READ ROUTING CONFIGURATION ####
+####################################
 
-# Destination for all read requests. Set to false to send all reads to Origin, or true to send all reads to Target
-forward_reads_to_target: false
+## Cluster currently considered as "primary" by the ZDM proxy. Valid values are ORIGIN (default) or TARGET.
+## This is the current "source of truth" cluster.
+## Reads are always sent synchronously to the primary cluster, and their results (or any errors) are returned to the client application.
+primary_cluster: ORIGIN
+
+## Read handling behaviour.
+## Valid values: PRIMARY_ONLY (read synchronously from primary only) and DUAL_ASYNC_ON_SECONDARY (read synchronously from primary, and asynchronously from secondary)
+## Defaults to PRIMARY_ONLY. Set to DUAL_ASYNC_ON_SECONDARY for read mirroring.
+read_mode: PRIMARY_ONLY
+
+#################
+#### LOGGING ####
+#################
+
+## Proxy log level. Defaults to INFO. Setting it to DEBUG may have a small performance impact.
+log_level: INFO
 ```
+
+== Enable TLS encryption (optional)
+
+If you wish to enable TLS encryption between the client application and the {zdm-proxy}, or between the {zdm-proxy} and one (or both) self-managed clusters, you will need to specify some additional configuration. To do so, please follow the steps on xref:migration-tls.adoc[this page].
 
 == Use Ansible to run the playbook
 
-Now you can run the playbook that you've configured above.
+Now you can run the playbook that you've configured above. From the shell connected to the container:
 
 ```bash
 ansible-playbook deploy_zdm_proxy.yml -i zdm_ansible_inventory
 ```
 
+That's it!
+
 == Indications of success on Origin and Target clusters
 
-The playbook will create one ZDM proxy instance for each proxy host listed in the inventory file. It will indicate the operations that it is performing and print out any errors, or a success confirmation message at the end.
+The playbook will create one {zdm-proxy} instance for each proxy host listed in the inventory file. It will indicate the operations that it is performing and print out any errors, or a success confirmation message at the end.
 
 How can you confirm that the ZDM proxies are up and running?
 
@@ -124,7 +157,7 @@ time="2022-07-27T22:21:42Z" level=info msg="Proxy connected and ready to accept 
 time="2022-07-27T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
 ```
 
-[ TODO change screenshots with updated names ]
+[ TODO change output above with updated names ]
 
 In the logs, the important information to notice is:
 
@@ -132,7 +165,6 @@ In the logs, the important information to notice is:
 time="2022-07-27T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
 time="2022-07-27T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
 ```
-[ TODO change screenshots with updated names]
 
 Also, you can check the status of the running Docker image. Example:
 
