@@ -1,4 +1,4 @@
-= Introduction to Zero Downtime Migrations
+= Introduction to {zdm-product}
 
 Enterprises today depend on the ability to reliably migrate mission-critical apps and data to cloud environments with zero downtime during the migration.
 
