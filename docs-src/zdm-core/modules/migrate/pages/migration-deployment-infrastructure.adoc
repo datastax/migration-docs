@@ -1,4 +1,4 @@
-= Deployment &amp; infrastructure considerations
+= Deployment and infrastructure considerations
 
 == Choosing where to deploy the proxy
 A typical {zdm-proxy} deployment is made up of multiple proxy instances. A minimum of three proxy instances is recommended for any deployment apart from those for demo or local testing purposes.
@@ -9,20 +9,20 @@ The {zdm-proxy} should be deployed close to your client application instances. T
 
 If you have a multi-DC cluster with multiple set of client application instances deployed to geographically distributed data centers, you should plan for a {zdm-proxy} deployment for each data center.
 
-Here's a typical deployment showing connectivity between client applications, proxy instances, and clusters:
+Here's a typical deployment showing connectivity between client applications, {zdm-proxy} instances, and clusters:
 
 image:zdm-during-migration.png[Connectivity between client applications, proxy instances, and clusters.]
 
 == Infrastructure requirements
 
-To deploy the {zdm-proxy} and its companion monitoring stack, you will have to provision infrastructure provisioned that meets the following requirements:
+To deploy the {zdm-proxy} and its companion monitoring stack, you will have to provision infrastructure that meets the following requirements:
 
 === Machines
 
 We will use the term "machine" to indicate a cloud instance (on any cloud provider), a VM, or a physical server.
 
 * N machines to run the desired number of {zdm-proxy} instances
-** You will need one instance / VM / server for each {zdm-proxy} instance
+** You will need one machine for each {zdm-proxy} instance
 ** Requirements for each {zdm-proxy} instance:
 *** Ubuntu Linux 18.04 or newer
 *** 4 vCPUs
@@ -44,14 +44,12 @@ The {zdm-proxy} machines must be reachable by:
 * The client application instances, on port 9042
 * The monitoring machine on port 14001
 * The jumphost on port 22
-* Important: the {zdm-proxy} machines should not be directly accessible by external machines. The only direct access to these machines should be [ **TODO**: complete this sentence ... ]
+* Important: the {zdm-proxy} machines should not be directly accessible by external machines. The only direct access to these machines should be from the jumphost
 
-The {zdm-proxy} machines must be able to connect to:
+The {zdm-proxy} machines must be able to connect to the Origin and Target cluster nodes:
 
-* The Origin cluster nodes on the Cassandra native protocol port (typically 9042)
-* The Target cluster nodes:
-** If Target is an Astra cluster, you will need to ensure outbound connectivity to the Astra endpoint indicated in the Secure Connect Bundle. Connectivity over Private Link is also supported.
-** If Target is a self-managed cluster, connectivity is needed to the Target cluster nodes on the Cassandra native protocol port (typically 9042)
+* For self-managed (non-Astra DB) clusters, connectivity is needed to the Cassandra native protocol port (typically 9042)
+* For Astra DB clusters, you will need to ensure outbound connectivity to the Astra endpoint indicated in the Secure Connect Bundle. Connectivity over Private Link is also supported.
 
 The connectivity requirements for the jumphost / monitoring machine are:
 
