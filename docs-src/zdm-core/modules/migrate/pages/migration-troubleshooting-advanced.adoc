@@ -67,7 +67,7 @@ In rare cases, your client application may encounter a {zdm-proxy} instance that
 (truncated for simplicity)
 ```
 
-The way in which you'll recover the {zdm-proxy} instance depends on how it was deployed. If the {zdm-proxy} was deployed through our {zdm-automation} Ansible-based automation, the docker container should be set up with a restart policy, which automatically attempts to restart the proxy whenever it crashes. If this policy was not set up, the container should be started manually.
+The way in which you'll recover the {zdm-proxy} instance depends on how it was deployed. If the {zdm-proxy} was deployed through our Ansible-based {zdm-automation}, the Docker container should be set up with a restart policy, which automatically attempts to restart the proxy whenever it crashes. If this policy was not set up, the container should be started manually.
 
 If the {zdm-proxy} container keeps crashing on every restart attempt, please contact us. In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^].
 
@@ -78,11 +78,11 @@ However, if you need to remove this {zdm-proxy} instance from the proxy deployme
 * The failing proxy's IP address should be removed from the `PROXY_ADDRESSES` setting
 * And the `PROXY_INDEX` variable should be updated accordingly
 
-If you're using the {zdm-automation}, it's easier and faster to create a new ZDM deployment, and move the client applications to use those new instances. To do so, you need to edit the inventory file, deleting the line corresponding to the machine being removed, and run the `deploy_zdm_proxy.yml` playbook again.
+If you're using {zdm-automation}, it's easier and faster to create a new {zdm-proxy} deployment, and move the client applications to use those new instances. To do so, you need to edit the inventory file, deleting the line corresponding to the machine being removed, and run the `deploy_zdm_proxy.yml` playbook again.
 
 == Scaling recommendation
 
-The {zdm-automation} doesn't provide a way to perform scaling up/down operations in a rolling fashion. Instead, we recommend that you deploy a new proxy cluster on the side, and move the client applications to the new proxy cluster (if absolutely necessary). To do so, edit the inventory file so that it contains one line for each machine where you want a proxy instance to be deployed and run the `deploy_zdm_proxy.yml` playbook again. This will result in a brief interruption of availability of the whole ZDM proxy deployment.
+{zdm-automation} doesn't provide a way to perform scaling up/down operations in a rolling fashion. Instead, we recommend that you deploy a new proxy cluster on the side, and move the client applications to the new proxy cluster (if absolutely necessary). To do so, edit the inventory file so that it contains one line for each machine where you want a proxy instance to be deployed and run the `deploy_zdm_proxy.yml` playbook again. This will result in a brief interruption of availability of the whole ZDM proxy deployment.
 
 If you want to remove or add a proxy **manually**, follow these steps:
 
@@ -91,7 +91,7 @@ If you want to remove or add a proxy **manually**, follow these steps:
 
 Keep in mind that if the client applications are not configured to retry requests in case of `connection closed` errors, there may be a short downtime while the rolling restart is being done.
 
-== Offline deployment of ZDM with docker for local testing
+== Offline deployment of ZDM with Docker for local testing
 
 While not specifically a ZDM issue, you can use `docker save` and `docker load` to troubleshoot the container. Examples:
 
@@ -108,7 +108,7 @@ docker load --input zdm-proxy2.tar
 ```
 . At this point, `docker run` should work as the image is already on the local repo.
 
-If you're using the {zdm-automation}, there may be other steps required deployment to be successful without Internet access. **TODO: provide those steps here.**
+If you're using {zdm-automation}, there may be other steps required deployment to be successful without Internet access. **TODO: provide those steps here.**
 
 == Checklist of what to include when submitting problem reports
 
