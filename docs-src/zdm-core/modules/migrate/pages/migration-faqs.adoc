@@ -21,11 +21,11 @@ However, it is important to emphasize that the {zdm-proxy} can be freely used to
 
 Here's a high-level view:
 
-image:zdm-workflow2.png[Migration workflow from client to {zdm-proxy} with dual writes to Origin and Target.]
+image:zdm-workflow3.png[Migration workflow from client to {zdm-proxy} with dual writes to Origin and Target.]
 
 Here are the phases of a migration from start to finish:
 
-image:zdm-migration-phases5.png[Migration phases from start to finish]
+image:zdm-migration-phases6a.png[Migration phases from start to finish]
 
 For more, see xref:migration-introduction.adoc[].
 
