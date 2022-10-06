@@ -52,13 +52,18 @@ sudo docker container logs zdm-proxy-container
 
 The logs of all proxy instances can be easily retrieved using a dedicated playbook (`collect_zdm_proxy_logs.yml`). You can view the playbook's configuration values in `vars/zdm_proxy_log_collection_config.yml`, but no changes to it are required.
 
-Run the playbook:
+Connect to the Ansible Control Host container as explained above and run:
 
 ```bash
 ansible-playbook collect_zdm_proxy_logs.yml -i zdm_ansible_inventory
 ```
 
-This playbook creates a single zip file, called `zdm_proxy_logs_<current_timestamp>.zip`, containing the logs from all proxy instances, and stores it on the Ansible control host docker container in the directory `/home/ubuntu/zdm_proxy_archived_logs` (this can be overridden in the `archived_log_dir_path_name` variable in `vars/zdm_proxy_log_collection_config.yml`). [ TODO is it necessary to explain how to override this, now that the control host is a container? ]
+This playbook creates a single zip file, called `zdm_proxy_logs_<current_timestamp>.zip`, containing the logs from all proxy instances, and stores it on the Ansible control host docker container in the directory `/home/ubuntu/zdm_proxy_archived_logs`.
+
+To copy the zip file from the container to the jumphost, open a shell on the jumphost and run the following command:
+```bash
+docker cp zdm-ansible-container:/home/ubuntu/zdm_proxy_archived_logs/<zdm_proxy_logs zip archive name> .
+```
 
 [#change-mutable-config-property]
 == Change a mutable configuration property

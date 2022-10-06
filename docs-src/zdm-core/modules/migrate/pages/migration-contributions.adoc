@@ -37,7 +37,7 @@ In addition to potential {zdm-proxy} OSS code contribution, we encourage you to 
 
 The following {company} {zdm-product} GitHub repos are public. You are welcome to read the source and submit feedback and ideas via GitHub Issues per repo. In addition to the https://github.com/datastax/zdm-proxy[{zdm-proxy}^] open-source repo, refer to:
 
-* https://github.com/datastax/zdm-proxy-automation/issues[{zdm-automation}^] repo for Ansible-based automation and {zdm-utility}.
+* https://github.com/datastax/zdm-proxy-automation/issues[{zdm-automation}^] repo for Ansible-based {zdm-automation} and {zdm-utility}.
 
 * https://github.com/datastax/cassandra-data-migrator/issues[Cassandra Data Migrator^] repo. 
 

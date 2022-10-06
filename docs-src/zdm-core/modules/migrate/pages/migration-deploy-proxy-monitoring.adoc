@@ -52,7 +52,10 @@ These two sections are very important and are always required. Populate the appr
 .. `*_contact points` comma-separated list of IP addresses of the cluster's seed nodes
 .. `*_port`: port on which the cluster listens for client connections. Defaults to 9042.
 . For Astra DB clusters, choose one of the following options and leave unset the other (leave both unset for self-managed clusters):
-.. If you wish to manually provide the cluster's Secure Connect Bundle, copy it to the container and specify its path in `*_astra_secure_connect_bundle_path`.
+.. If you wish to manually provide the cluster's Secure Connect Bundle:
+... Download it from the Astra Portal and place it on the jumphost
+... Copy it to the container. Open a new shell on the jumphost, run `docker cp <your_scb.zip> zdm-ansible-container:/home/ubuntu`
+... Specify its path in `*_astra_secure_connect_bundle_path`.
 .. Otherwise, if you wish the automation to download the cluster's Secure Connect Bundle for you, just specify its database id in `*_astra_db_id` and the token for a valid `R/W User` Astra role in `*_astra_token`
 
 Settings that do not need changing at this time:
@@ -116,7 +119,7 @@ log_level: INFO
 
 If you wish to enable TLS encryption between the client application and the {zdm-proxy}, or between the {zdm-proxy} and one (or both) self-managed clusters, you will need to specify some additional configuration. To do so, please follow the steps on xref:migration-tls.adoc[this page].
 
-== Use Ansible to run the playbook
+== Use Ansible to deploy the proxy
 
 Now you can run the playbook that you've configured above. From the shell connected to the container:
 
