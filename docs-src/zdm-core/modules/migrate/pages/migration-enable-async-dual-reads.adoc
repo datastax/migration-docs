@@ -1,0 +1,31 @@
+= Enable asynchronous dual reads
+
+Before cutting read operations over from Origin to Target, **optionally**, you could validate that the Target can handle read/write traffic by sending reads asynchronously to Target.
+
+You would typically perform this optional step once you have migrated all the existing data from your Origin and completed all validation checks and reconciliation, if necessary.
+
+== Start here
+
+If you're not there already, `ssh` back into the jumphost:
+
+```bash
+ssh -F ~/.ssh/zdm_ssh_config jumphost
+```
+
+On the jumphost, connect to the Ansible Control Host container:
+```bash
+docker exec -it zdm-ansible-container bash
+```
+You will see a prompt like:
+```bash
+ubuntu@52772568517c:~$
+```
+
+== Steps to perform async dual reads 
+
+Now ... [ TODO text coming from Joao - THANKS ]
+
+
+== What's next? 
+
+Now learn how to xref:migration-change-read-routing.adoc[].
