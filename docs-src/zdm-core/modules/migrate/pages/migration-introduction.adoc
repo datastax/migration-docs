@@ -33,7 +33,7 @@ You can migrate:
 
 Your migration project can occur through a sequence of phases, with zero downtime, as illustrated in this high-level view.
 
-First, a couple key terms used throughout the {zdm-product} documentation and software components:
+First, a couple of key terms used throughout the {zdm-product} documentation and software components:
 
 * The **Origin** cluster is your existing Cassandra-based environment, whether it's open-source Apache Cassandra, or DSE, or Astra DB Classic.
 
@@ -56,7 +56,7 @@ image:zdm-migration-phases5.png[Migration phases from start to finish]
 
 Here's a diagram to illustrate the overall migration strategy when moving apps and data from your Origin to your Target. In this example, we're looking at a migration from a generic Origin cluster to an Astra DB Target cluster.
 
-image:zdm-workflow2.png[Migration workflow from client application to {zdm-proxy} with dual operations to Origin and Target]
+image:zdm-workflow2.png[Migration workflow from client application to {zdm-proxy} with dual writes to Origin and Target]
 
 * With no changes required to your client application code itself, {zdm-proxy} does the work to route writes to Origin and Target.
 * Cassandra Data Migrator and/or DSBulk Migrator can migrate data between clusters of any supported types. See the next section for an introduction to these tools.
@@ -76,7 +76,7 @@ After moving your client applications off the {zdm-proxy} instances, writes are 
 
 The {zdm-proxy} itself doesn't have any capability to migrate data or knowledge that a migration may be ongoing, and it is not coupled to the migration process in any way.
 
-* {company} {zdm-product} also provides the **{zdm-utility}** to set up Ansible-based playbooks, and **{zdm-automation}** to run the Docker container created by {zdm-utility}. {zdm-automation} allows you to deploy and manage the {zdm-proxy} instances and its associated monitoring stack. The {zdm-utility} creates the Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
+* {company} {zdm-product} also provides the **{zdm-utility}** and **{zdm-automation}** to set up and run the Ansible playbooks that deploy and manage the {zdm-proxy} and its monitoring stack.
 
 * Two data migration tools are available -- **{cstar-data-migrator}** and **{dsbulk-migrator}** -- to migrate your data. See the xref:migration-introduction.adoc#_data_migration_tools[summary of features] below.
 
@@ -122,15 +122,15 @@ When using Asynchronous Dual Reads, any additional read load on Target may impac
 
 === {zdm-utility} and {zdm-automation}
 
-As noted above, you'll use {zdm-utility} to set up Ansible-based playbooks, and {zdm-automation} to run the Docker container created by {zdm-utility}. {zdm-automation} allows you to deploy and manage the {zdm-proxy} instances and its associated monitoring stack. The {zdm-utility} creates the Docker container while acting as the Ansible Control Host. Then use {zdm-automation} to run the Docker container, which deploys and configures the {zdm-proxy} instances and the monitoring stack - Prometheus metrics and Grafana visualization of the metric data.
-
-{zdm-utility} and {zdm-automation} expect that you have already provisioned the recommended infrastructure, as outlined in xref:migration-deployment-infrastructure.adoc[].
-
-The source for both of these tools are in a Public repo,  
-
 https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code. It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
 
 The Ansible automation is organized into playbooks, each implementing a specific operation. The machine from which the playbooks are run is known as the Ansible Control Host. In ZDM, the Ansible Control Host will run as a Docker container.
+
+You will use the **{zdm-utility}** to set up Ansible in a Docker container, and **{zdm-automation}** to run the Ansible playbooks from the Docker container created by {zdm-utility}. In other words,the {zdm-utility} creates the Docker container acting as the **Ansible Control Host**, from which the {zdm-automation} allows you to deploy and manage the {zdm-proxy} instances and the associated monitoring stack - Prometheus metrics and Grafana visualization of the metric data.
+
+{zdm-utility} and {zdm-automation} expect that you have already provisioned the recommended infrastructure, as outlined in xref:migration-deployment-infrastructure.adoc[].
+
+The source for both of these tools are in a Public repo.
 
 For details, see:
 

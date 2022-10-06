@@ -34,7 +34,7 @@ For more, see xref:migration-introduction.adoc[].
 {company} {zdm-product} includes the following:
 
 * **{zdm-proxy}** is a service that operates between your existing (**Origin**) cluster and the new (**Target**) cluster.
-* The **{zdm-proxy} Automation** is an Ansible-based tool that allows you to deploy and manage the {zdm-proxy} instances and the associated monitoring stack. To simplify its setup, the suite includes the {zdm-utility}. This is an interactive utility that creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be easily run with {zdm-automation}.
+* The **{zdm-automation}** is an Ansible-based tool that allows you to deploy and manage the {zdm-proxy} instances and the associated monitoring stack. To simplify its setup, the suite includes the {zdm-utility}. This is an interactive utility that creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be easily run with {zdm-automation}.
 * **{cstar-data-migrator}** is designed to:
 ** Connect to your clusters and compare the data between Origin and Target
 ** Report differences in a detailed log file
