@@ -1,21 +1,37 @@
-* xref:migration-introduction.adoc[Migrating]
-** xref:migration-faqs.adoc[FAQs]
-** xref:migration-deployment-infrastructure.adoc[Deployment and infrastructure considerations]
-** xref:migration-prepare-environment.adoc[Prepare existing environment for migration]
-** xref:migration-create-target.adoc[Create target environment for migration]
-** xref:migration-setup-ansible-playbooks.adoc[Set up the {zdm-automation} with {zdm-utility}]
-** xref:migration-deploy-proxy-monitoring.adoc[Deploy the {zdm-proxy} and monitoring]
-** xref:migration-tls.adoc[Configure Transport Layer Security]
-** xref:migration-connect-clients-to-proxy.adoc[Connect client apps to ZDM Proxy]
-** xref:migration-manage-proxy-instances.adoc[Manage your proxy instances]
-** xref:migration-validate-data.adoc[Migrate and validate data]
-** xref:migration-enable-async-dual-reads.adoc[Enable asynchronous dual reads]
-** xref:migration-change-read-routing.adoc[Change read routing to Astra DB]
-** xref:migration-connect-apps.adoc[Connect clients directly to Astra DB]
-** xref:migration-verifications.adoc[Verify migration and move off ZDM Proxy]
-** xref:migration-troubleshooting.adoc[Troubleshooting]
-*** xref:migration-troubleshooting-tips.adoc[Troubleshooting tips]
-*** xref:migration-troubleshooting-scenarios.adoc[Troubleshooting scenarios]
-*** xref:migration-troubleshooting-advanced.adoc[Advanced troubleshooting]
-** xref:migration-contributions.adoc[Contribution guidelines]
-** xref:migration-release-notes.adoc[Release Notes]
+* Migrating
+
+** Get started
+*** xref:migration-introduction.adoc[Introduction]
+*** xref:migration-faqs.adoc[FAQs]
+*** xref:migration-deployment-infrastructure.adoc[Deployment and infrastructure considerations]
+*** xref:migration-prepare-environment.adoc[Prepare existing environment for migration]
+*** xref:migration-create-target.adoc[Create target environment for migration]
+*** xref:migration-rollback.adoc[Understand rollback options]
+
+** Phase 1: Connect clients to proxy
+*** xref:migration-setup-ansible-playbooks.adoc[Set up the {zdm-automation} with {zdm-utility}]
+*** xref:migration-deploy-proxy-monitoring.adoc[Deploy the {zdm-proxy} and monitoring]
+*** xref:migration-tls.adoc[Configure Transport Layer Security]
+*** xref:migration-connect-clients-to-proxy.adoc[Connect client apps to ZDM Proxy]
+*** xref:migration-manage-proxy-instances.adoc[Manage your proxy instances]
+
+** Phase 2: Migrate data
+*** xref:migration-validate-data.adoc[Tools to migrate and validate data]
+
+** Phase 3: Test Target's capacity (optional)
+*** xref:migration-enable-async-dual-reads.adoc[Enable asynchronous dual reads]
+
+** Phase 4: Change read routing to Target DB
+*** xref:migration-change-read-routing.adoc[Change read routing to Astra DB]
+
+** Phase 5: Connect clients to Target DB
+*** xref:migration-connect-apps.adoc[Connect clients directly to Astra DB]
+*** xref:migration-verifications.adoc[Verify migration and move off ZDM Proxy]
+
+** Additional resources
+*** xref:migration-troubleshooting.adoc[Troubleshooting]
+**** xref:migration-troubleshooting-tips.adoc[Troubleshooting tips]
+**** xref:migration-troubleshooting-scenarios.adoc[Troubleshooting scenarios]
+**** xref:migration-troubleshooting-advanced.adoc[Advanced troubleshooting]
+*** xref:migration-contributions.adoc[Contribution guidelines]
+*** xref:migration-release-notes.adoc[Release Notes]

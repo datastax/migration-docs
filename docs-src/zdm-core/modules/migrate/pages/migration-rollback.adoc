@@ -1,0 +1,19 @@
+== Understand rollback options
+
+== Knowing that you can always rollback the migration
+
+Let's revisit a diagram presented earlier:
+
+image:zdm-migration-phases6a.png[Migration phases from start to finish]
+
+At any point during the migration process until the very last phase, if you hit any unexpected issue and need to (in effect) "rollback" the migration, you can always easily revert your client applications to connect directly to Origin. The migration can be started from scratch once the issue has been addressed.
+
+After moving your client applications off the {zdm-proxy} instances (Phase 5), writes are no longer sent to both Origin and Target clusters, and you lose this seamless rollback option. Should you decide to move back to Origin at a later point, you can perform the migration via the following reverse migration process:
+
+TODO list:
+
+. Start over at Phase 1. ( do this ...)
+. next step with info from Alice
+. next steo if needed ...
+. final step as explained by Alice
+

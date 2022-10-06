@@ -31,15 +31,17 @@ You can migrate:
 
 == Migration phases
 
-Your migration project can occur through a sequence of phases, with zero downtime, as illustrated in this high-level view.
-
 First, a couple of key terms used throughout the {zdm-product} documentation and software components:
 
 * The **Origin** cluster is your existing Cassandra-based environment, whether it's open-source Apache Cassandra, or DSE, or Astra DB Classic.
 
 * The **Target** cluster is the new environment to which you want to migrate apps and data with zero downtime.
 
-image:zdm-migration-phases5.png[Migration phases from start to finish]
+Your migration project can occur through a sequence of phases, with zero downtime, as illustrated in this high-level view.
+
+Before your migration begins, you'll need to satisfy prerequisites, prepare your environment, and set up the recommended infrastructure. Then, start in Phase 1 and progress through each phase in sequence:  
+
+image:zdm-migration-phases6a.png[Migration phases from start to finish]
 
 * **Phase 1:** Connect your client applications to the {zdm-proxy}. This activates the dual-write logic: writes will be "bifurcated" (meaning, sent both to Origin and Target), while reads will be executed on Origin only.
 
@@ -51,24 +53,17 @@ image:zdm-migration-phases5.png[Migration phases from start to finish]
 
 * **Phase 5:** Move your client applications off the {zdm-proxy} and connect them directly to Target.
 
-
 == Migration workflow
 
 Here's a diagram to illustrate the overall migration strategy when moving apps and data from your Origin to your Target. In this example, we're looking at a migration from a generic Origin cluster to an Astra DB Target cluster.
 
-image:zdm-workflow2.png[Migration workflow from client application to {zdm-proxy} with dual writes to Origin and Target]
+image:zdm-workflow3.png[Migration workflow from client application to {zdm-proxy} with dual writes to Origin and Target]
 
 * With no changes required to your client application code itself, {zdm-proxy} does the work to route writes to Origin and Target.
 * Cassandra Data Migrator and/or DSBulk Migrator can migrate data between clusters of any supported types. See the next section for an introduction to these tools.
 * Initially during the migration, {zdm-proxy} always reads from Origin.
 * Later during the migration, the read routing is switched to Target so that all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary source of truth.
 * Finally, the client application can be moved off the proxy and connected directly to Target, at which point the migration is complete.
-
-== Knowing that you can always rollback the migration
-
-At any point during this migration process until the very last phase, if you hit any unexpected issue and need to (in effect) "rollback" the migration, you can always easily revert your client applications to connect directly to Origin. The migration can be started from scratch once the issue has been addressed.
-
-After moving your client applications off the {zdm-proxy} instances, writes are no longer sent to both Origin and Target clusters, and you lose this seamless rollback option. Should you decide to move back to Origin at a later point, you can perform the migration in reverse.
 
 == {company} {zdm-product} components
 
