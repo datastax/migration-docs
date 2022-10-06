@@ -135,7 +135,7 @@ The Ansible automation is organized into playbooks, each implementing a specific
 For details, see:
 
 * xref:migration-setup-ansible-playbooks.adoc[]
-* xref:migration-run-ansible-playbooks.adoc[]
+* xref:migration-deploy-proxy-monitoring.adoc[]
 
 === Data migration tools
 

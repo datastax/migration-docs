@@ -2,7 +2,7 @@
 
 This topic explains how to use the {zdm-utility} to set up the Ansible playbooks container. 
 
-After completing the setup tasks in {zdm-utility}, see the xref:migration-run-ansible-playbooks.adoc[next topic] for subsequent steps to use {zdm-automation}, which runs the container to deploy {zdm-proxy} instances and the monitoring stack.
+After completing the setup tasks in {zdm-utility}, see the xref:migration-deploy-proxy-monitoring.adoc[next topic] for subsequent steps to use {zdm-automation}, which runs the container to deploy {zdm-proxy} instances and the monitoring stack.
 
 Once completed, you will have a working and fully monitored {zdm-proxy} deployment.
 
@@ -147,4 +147,4 @@ image:zdm-go-utility-success.png[Ansible Docker container success messages]
 
 == What's next?
 
-Now that you've completed the Ansible setup with {zdm-utility}, learn how to xref:migration-run-ansible-playbooks.adoc[].
+Now that you've completed the Ansible setup with {zdm-utility}, learn how to xref:migration-deploy-proxy-monitoring.adoc[].
