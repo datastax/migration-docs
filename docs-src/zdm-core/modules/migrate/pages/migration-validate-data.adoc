@@ -86,5 +86,5 @@ For installation and usage details, see the {dsbulk-migrator} repo's https://git
 
 == What's next?
 
-Learn how to xref:migration-setup-read-mirroring.adoc[].
+Learn how to xref:migration-enable-async-dual-reads.adoc[].
 
