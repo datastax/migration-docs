@@ -60,7 +60,7 @@ These two sections are very important and are always required. Populate the appr
 
 Settings that do not need changing at this time:
 . `primary_cluster`: which cluster is going to be the primary source of truth. This should be left set to its default value of `ORIGIN` at the start of the migration, and will be changed to `TARGET` after migrating all existing data.
-. `read_mode`: leave to its default value of `PRIMARY_ONLY`. See xref:migration-setup-read-mirroring.adoc[] for more information on this parameter.
+. `read_mode`: leave to its default value of `PRIMARY_ONLY`. See xref:migration-enable-async-dual-reads.adoc[] for more information on this parameter.
 . `log_level`: leave to its default of `INFO`.
 
 Save the file and exit the editor.

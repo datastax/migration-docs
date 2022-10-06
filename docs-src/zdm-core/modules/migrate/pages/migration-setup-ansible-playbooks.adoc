@@ -1,14 +1,14 @@
-= Set up the Ansible automation with {zdm-automation}
+= Set up the Ansible automation with {zdm-utility}
 
-This topic explains how to use the {zdm-automation} to set up the Ansible playbooks that will automate launching a dedicated deployment of the {zdm-proxy} and its companion monitoring stack.
+This topic explains how to use the {zdm-utility} to set up the Ansible playbooks container. 
 
-After you have done this, the xref:migration-run-ansible-playbooks.adoc[next topic] will show you to use the automation to deploy the {zdm-proxy} and the monitoring stack.
+After completing the setup tasks in {zdm-utility}, see the xref:migration-run-ansible-playbooks.adoc[next topic] for subsequent steps to use {zdm-automation}, which runs the container to deploy {zdm-proxy} instances and the monitoring stack.
 
 Once completed, you will have a working and fully monitored {zdm-proxy} deployment.
 
 == Introduction
 
-The ZDM automation uses **Ansible**, which deploys and configures the {zdm-proxy}instances and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:migration-deployment-infrastructure.adoc[Deployment considerations], which include the infrastructure requirements.
+The ZDM automation uses **Ansible**, which deploys and configures the {zdm-proxy} instances and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:migration-deployment-infrastructure.adoc[Deployment considerations], which include the infrastructure requirements.
 
 https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code. It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
 
@@ -40,7 +40,11 @@ Having these tools set up is especially useful during migrations when you're run
 
 [TIP]
 ====
-To simplify accessing the jumphost and {zdm-proxy} instances from your machine, create a custom SSH configuration file as explained xref:migration-deployment-infrastructure.adoc#create_zdm_ssh_config_file[here].
+To simplify accessing the jumphost and {zdm-proxy} instances from your machine, create a custom SSH configuration file. 
+
+TODO: Link to where we have SSH config example. 
+
+// as explained xref:migration-deployment-infrastructure.adoc#create_zdm_ssh_config_file[here].
 
 The following steps will assume that this file exists.
 ====
@@ -64,14 +68,14 @@ Now connect to the jumphost.
 ssh -F <path to zdm_ssh_config> <zdm key> jumphost
 ```
 
-== Running the {zdm-automation} automation
+== Running the {zdm-utility}
 
-From the jumphost, download the {zdm-automation}'s executable:
+From the jumphost, download the {zdm-utility}'s executable:
 ```bash
 curl .... [TODO add exact command with download URL]
 ```
 
-Run the {zdm-automation}:
+Run the {zdm-utility}:
 ```bash
 go run main.go  [TODO add correct command once the executable has been created]
 ```
@@ -79,14 +83,14 @@ go run main.go  [TODO add correct command once the executable has been created]
 The utility prompts you for a few configuration values, then creates and initializes the Ansible Control Host container.
 [TIP]
 ====
-The {zdm-automation} will store the configuration that you provide into a file named `ansible_container_init_config`. If you run the utility again, it will detect the file  and ask you if you wish to use that configuration or discard it. If the configuration is not fully valid, you will be prompted for the missing or invalid parameters only.
+The {zdm-utility} will store the configuration that you provide into a file named `ansible_container_init_config`. If you run the utility again, it will detect the file  and ask you if you wish to use that configuration or discard it. If the configuration is not fully valid, you will be prompted for the missing or invalid parameters only.
 
 You can also pass a custom configuration file to the utility with the optional command-line parameter `-utilConfigFile` [TODO add example command]
 ====
 
 [NOTE]
 ====
-The {zdm-automation} will validate each parameter that you enter. In case of invalid parameters, it will display specific messages to help you fix the problem.
+The {zdm-utility} will validate each parameter that you enter. In case of invalid parameters, it will display specific messages to help you fix the problem.
 
 You have five attempts to enter valid parameters. You can always run the {zdm-automation} again, if necessary.
 ====
@@ -122,7 +126,7 @@ In this example, we'll enter the same IP of the Ansible control host (the jumpho
 172.18.100.128
 ```
 +
-At this point, the {zdm-automation}:
+At this point, the {zdm-utility}:
 +
 * Has created the Ansible Inventory to the default file, `zdm_ansible_inventory`.
 * Has written the {zdm-proxy} configuration to the default file, `ansible_container_init_config`.
@@ -143,4 +147,4 @@ image:zdm-go-utility-success.png[Ansible Docker container success messages]
 
 == What's next?
 
-Now that you've completed the Ansible setup with {zdm-automation}, learn how to xref:migration-run-ansible-playbooks.adoc[].
+Now that you've completed the Ansible setup with {zdm-utility}, learn how to xref:migration-run-ansible-playbooks.adoc[].

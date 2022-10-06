@@ -17,18 +17,24 @@ In the context of migrating between clusters (client applications and data), the
 However, it is important to emphasize that the {zdm-proxy} can be freely used to migrate without downtime between any combination of CQL clusters of any type. In addition to Astra DB, examples are Apache Cassandra&reg; or DataStax Enterprise (DSE).
 ====
 
-== Can you illustrate the migration process?
+== Can you illustrate the overall workflow and phases of a migration?
 
 Here's a high-level view:
 
-image:zdm-workflow1.png[Migration workflow from client to {zdm-proxy} with dual writes to origin and target clusters.]
+image:zdm-workflow2.png[Migration workflow from client to {zdm-proxy} with dual writes to Origin and Target.]
+
+Here are the phases of a migration from start to finish:
+
+image:zdm-migration-phases5.png[Migration phases from start to finish]
+
+For more, see xref:migration-introduction.adoc[].
 
 == What components are provided with ZDM?
 
 {company} {zdm-product} includes the following:
 
 * **{zdm-proxy}** is a service that operates between your existing (**Origin**) cluster and the new (**Target**) cluster.
-* The **{zdm-proxy} Automation** is an Ansible-based tool that allows you to deploy and manage the {zdm-proxy} instances and the associated monitoring stack. To simplify its setup, the suite includes the {zdm-automation}. This is an interactive utility that creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be easily run.
+* The **{zdm-proxy} Automation** is an Ansible-based tool that allows you to deploy and manage the {zdm-proxy} instances and the associated monitoring stack. To simplify its setup, the suite includes the {zdm-utility}. This is an interactive utility that creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be easily run with {zdm-automation}.
 * **{cstar-data-migrator}** is designed to:
 ** Connect to your clusters and compare the data between Origin and Target
 ** Report differences in a detailed log file

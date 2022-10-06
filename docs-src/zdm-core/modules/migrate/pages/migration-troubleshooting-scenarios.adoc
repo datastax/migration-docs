@@ -143,11 +143,11 @@ Restart the client application to force am immediate reconnect.
 If you expect {zdm-proxy} instances to go down frequently, change the reconnection policy on the driver so that the interval between reconnection attempts has a shorter limit.
 
 
-== Error with Astra DevOps API when using the {zdm-automation} automation
+== Error with Astra DevOps API when using the {zdm-automation}
 
 === Symptoms
 
-{zdm-automation}'s automation logs:
+{zdm-automation}'s logs:
 
 ```log
 fatal: [10.255.13.6]: FAILED! => {"changed": false, "elapsed": 0, "msg": "Status code was -1 and not [200]:
@@ -346,7 +346,7 @@ In the application, ensure that the custom port is explicitly indicated using th
 
 === Symptoms
 
-Consider a case where you deploy the metrics component of our {zdm-automation} automation, a Grafana instance is deployed but you cannot  login using the usual default `admin/admin` credentials.
+Consider a case where you deploy the metrics component of our {zdm-automation}, a Grafana instance is deployed but you cannot login using the usual default `admin/admin` credentials.
 
 === Cause
 
@@ -354,7 +354,7 @@ The {zdm-automation} specifies a custom set of credentials instead of relying on
 
 === Workaround
 
-Check the credentials that are being used by looking up the `vars/monitoring_config.yml` file on the {zdm-automation} automation directory. These credentials can also be modified before deploying the metrics stack.
+Check the credentials that are being used by looking up the `vars/monitoring_config.yml` file on the {zdm-automation} directory. These credentials can also be modified before deploying the metrics stack.
 
 
 
@@ -364,7 +364,7 @@ Check the credentials that are being used by looking up the `vars/monitoring_con
 
 === Symptoms
 
-A user cannot use docker in the environment where they want to deploy ZDM. This case is not about using docker without internet access. It concerns not being able to use docker at all.
+A user cannot use docker in the environment where they want to deploy ZDM. This case is not about using docker without Internet access. It concerns not being able to use docker at all.
 
 === Cause
 

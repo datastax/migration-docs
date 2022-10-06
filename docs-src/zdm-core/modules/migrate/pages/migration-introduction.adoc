@@ -1,4 +1,4 @@
-= Introduction to Zero Downtime Migrations
+= Introduction to {zdm-product}
 
 Enterprises today depend on the ability to reliably migrate mission-critical apps and data to cloud environments with zero downtime during the migration.
 
@@ -28,28 +28,35 @@ You can migrate:
 ** And more
 * From Astra DB Classic to Astra DB Serverless
 
+
 == Migration phases
 
 Your migration project can occur through a sequence of phases, with zero downtime, as illustrated in this high-level view.
 
-First, a few important terms:
+First, a couple key terms used throughout the {zdm-product} documentation and software components:
 
-* The **Origin** cluster is your existing Cassandra-based environment, whether it's open-source Apache Cassandra or DSE.
+* The **Origin** cluster is your existing Cassandra-based environment, whether it's open-source Apache Cassandra, or DSE, or Astra DB Classic.
+
 * The **Target** cluster is the new environment to which you want to migrate apps and data with zero downtime.
 
-image:zdm-migration-phases4.png[Migration phases from start to finish]
+image:zdm-migration-phases5.png[Migration phases from start to finish]
 
-. Connecting your client applications to the {zdm-proxy}. This activates the dual-write logic: writes will be "bifurcated" (meaning, sent both to Origin and Target), while reads will be executed on Origin only.
-. Migrating your existing data using the Database Migrator.
-. Validating that the migrated data is correct, while continuing to perform dual writes.
-. Changing the proxy configuration to route reads to Target, effectively using Target as the source of truth while still keeping Origin in sync.
-. Moving your client applications off the {zdm-proxy} and connecting them directly to Target.
+* **Phase 1:** Connect your client applications to the {zdm-proxy}. This activates the dual-write logic: writes will be "bifurcated" (meaning, sent both to Origin and Target), while reads will be executed on Origin only.
+
+* **Phase 2:** Migrate existing data using {cstar-data-migrator} and/or {dsbulk-migrator}. Validate that the migrated data is correct, while continuing to perform dual writes.
+
+* **Phase 3:** Enable asynchronous dual reads (optional).
+
+* **Phase 4:** Change the proxy configuration to route reads to Target, effectively using Target as the source-of-truth while still keeping Origin in sync.
+
+* **Phase 5:** Move your client applications off the {zdm-proxy} and connect them directly to Target.
+
 
 == Migration workflow
 
 Here's a diagram to illustrate the overall migration strategy when moving apps and data from your Origin to your Target. In this example, we're looking at a migration from a generic Origin cluster to an Astra DB Target cluster.
 
-image:zdm-workflow1.png[Migration workflow from client application to {zdm-proxy} with dual writes to Origin and Target clusters]
+image:zdm-workflow2.png[Migration workflow from client application to {zdm-proxy} with dual operations to Origin and Target]
 
 * With no changes required to your client application code itself, {zdm-proxy} does the work to route writes to Origin and Target.
 * Cassandra Data Migrator and/or DSBulk Migrator can migrate data between clusters of any supported types. See the next section for an introduction to these tools.
@@ -57,20 +64,21 @@ image:zdm-workflow1.png[Migration workflow from client application to {zdm-proxy
 * Later during the migration, the read routing is switched to Target so that all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary source of truth.
 * Finally, the client application can be moved off the proxy and connected directly to Target, at which point the migration is complete.
 
-Note that, at any point during this process until the very last phase, if you hit any unexpected issue and need to "rollback" the migration you can always easily revert your client applications to connect directly to Origin. The migration can be started from scratch once the issue has been addressed.
+== Knowing that you can always rollback the migration
 
-After moving your client applications off the proxy, writes are no longer sent to both clusters and you lose this seamless rollback option. Should you decide to move back to Origin at a later point, you can perform the migration in reverse.
+At any point during this migration process until the very last phase, if you hit any unexpected issue and need to (in effect) "rollback" the migration, you can always easily revert your client applications to connect directly to Origin. The migration can be started from scratch once the issue has been addressed.
 
-== Migration components
+After moving your client applications off the {zdm-proxy} instances, writes are no longer sent to both Origin and Target clusters, and you lose this seamless rollback option. Should you decide to move back to Origin at a later point, you can perform the migration in reverse.
 
-The primary component of the migration tool set is **{zdm-proxy}**, which by design is a simple and lightweight proxy that handles all the real-time requests generated by your client applications.
+== {company} {zdm-product} components
 
-{company} {zdm-product} also provides an Ansible-based {zdm-automation}. It allows you to deploy and manage the {zdm-proxy} instances and its associated monitoring stack. The {zdm-automation} creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
-
+* The primary component of the {company} {zdm-product} product suite is **{zdm-proxy}**, which by design is a simple and lightweight proxy that handles all the real-time requests generated by your client applications. {zdm-proxy} is open-source software (OSS) and available in its Public GitHub repo, https://github.com/datastax/zdm-proxy. You can view the source files and contribute code for potential inclusion via Pull Requests (PRs) initiated on a fork of the repo.
 
 The {zdm-proxy} itself doesn't have any capability to migrate data or knowledge that a migration may be ongoing, and it is not coupled to the migration process in any way.
 
-Two data migration tools are available to migrate and validate your data. See the xref:migration-introduction.adoc#_cassandra_data_migrator[summary of features] below.
+* {company} {zdm-product} also provides the **{zdm-utility}** to set up Ansible-based playbooks, and **{zdm-automation}** to run the Docker container created by {zdm-utility}. {zdm-automation} allows you to deploy and manage the {zdm-proxy} instances and its associated monitoring stack. The {zdm-utility} creates the Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be run easily.
+
+* Two data migration tools are available -- **{cstar-data-migrator}** and **{dsbulk-migrator}** -- to migrate your data. See the xref:migration-introduction.adoc#_data_migration_tools[summary of features] below.
 
 === Role of {zdm-proxy}
 
@@ -112,9 +120,13 @@ We will often use the term **{zdm-proxy}** to indicate the whole deployment, and
 When using Asynchronous Dual Reads, any additional read load on Target may impact its ability to keep up with writes. This behavior is expected and desired. The idea is to mimic the full read and write load on Target so there are no surprises during the last migration phase; that is, after cutting over completely to Target.
 ====
 
-=== {zdm-automation}
+=== {zdm-utility} and {zdm-automation}
 
-The {zdm-automation} uses **Ansible** to deploy and configure the {zdm-proxy} and monitoring stack via playbooks. The utility expects that you have already provisioned the infrastructure.
+As noted above, you'll use {zdm-utility} to set up Ansible-based playbooks, and {zdm-automation} to run the Docker container created by {zdm-utility}. {zdm-automation} allows you to deploy and manage the {zdm-proxy} instances and its associated monitoring stack. The {zdm-utility} creates the Docker container while acting as the Ansible Control Host. Then use {zdm-automation} to run the Docker container, which deploys and configures the {zdm-proxy} instances and the monitoring stack - Prometheus metrics and Grafana visualization of the metric data.
+
+{zdm-utility} and {zdm-automation} expect that you have already provisioned the recommended infrastructure, as outlined in xref:migration-deployment-infrastructure.adoc[].
+
+The source for both of these tools are in a Public repo,  
 
 https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code. It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
 
@@ -127,7 +139,11 @@ For details, see:
 
 === Data migration tools
 
-As part of the overall migration process, you can use {cstar-data-migrator} to:
+As part of the overall migration process, you can use {cstar-data-migrator} and/or {dsbulk-migrator} to migrate your data.
+
+==== {cstar-data-migrator}
+
+Use {cstar-data-migrator} to:
 
 * Migrate your data from any CQL supported Origin to any CQL supported Target. Examples of databases that support CQL are Apache Cassandra, DataStax Enterprise and Astra DB.
 * Validate migration accuracy and performance using examples that provide a smaller, randomized data set
@@ -147,12 +163,15 @@ Cassandra Data Migrator is designed to:
 An important **prerequisite** is that you already have the matching schema on Target.
 ====
 
-You can also take advantage of another data migration tool, {dsbulk-migrator}, to migrate smaller sets of data. 
+==== {dsbulk-migrator}
 
-For more, see xref:migration-validate-data.adoc[Migrate and validate data, window="_blank"].
+You can also take advantage of {dsbulk-migrator} to migrate smaller sets of data. 
+
+For more about both tools, see xref:migration-validate-data.adoc[].
+
 
 == What's next?
 
 If you're new here, check out our xref:migration-faqs.adoc[FAQs].
 
-Or jump right in and learn about the recommended xref:migration-deployment-infrastructure.adoc[deployment considerations], which include  infrastructure requirements to support your migration.
+Or jump right in and learn about the recommended xref:migration-deployment-infrastructure.adoc[].
