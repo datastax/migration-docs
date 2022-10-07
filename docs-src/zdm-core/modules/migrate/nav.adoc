@@ -1,31 +1,20 @@
 * Migrating
-
 ** xref:migration-preliminary.adoc[Introduction and preliminary steps]
 *** xref:migration-introduction.adoc[Introduction]
 *** xref:migration-deployment-infrastructure.adoc[Deployment and infrastructure considerations]
 *** xref:migration-prepare-environment.adoc[Prepare existing environment for migration]
 *** xref:migration-create-target.adoc[Create target environment for migration]
 *** xref:migration-rollback.adoc[Understand rollback options]
-
 ** xref:migration-phase1.adoc[Phase 1: Connect clients to {zdm-proxy}]
 *** xref:migration-setup-ansible-playbooks.adoc[Set up the {zdm-automation} with {zdm-utility}]
 *** xref:migration-deploy-proxy-monitoring.adoc[Deploy the {zdm-proxy} and monitoring]
 *** xref:migration-tls.adoc[Configure Transport Layer Security]
 *** xref:migration-connect-clients-to-proxy.adoc[Connect client applications to ZDM Proxy]
 *** xref:migration-manage-proxy-instances.adoc[Manage your {zdm-proxy} instances]
-
-** xref:migration-phase2.adoc[Phase 2: Migrate and validate data]
-*** xref:migration-validate-data.adoc[Tools to migrate and validate data]
-
-** xref:migration-phase3.adoc[Phase 3: Enable async dual reads (optional)]
-*** xref:migration-enable-async-dual-reads.adoc[Enable asynchronous dual reads]
-
-** xref:migration-phase4.adoc[Phase 4: Change read routing to Target]
-*** xref:migration-change-read-routing.adoc[Change read routing to Target]
-
-** xref:migration-phase5.adoc[Phase 5: Connect clients to Target directly]
-*** xref:migration-connect-clients-to-target.adoc[Connect client applications directly to Target]
-
+** xref:migration-validate-data.adoc[Phase 2: Migrate and validate data]
+** xref:migration-enable-async-dual-reads.adoc[Phase 3: Enable asynchronous dual reads]
+** xref:migration-change-read-routing.adoc[Phase 4: Change read routing to Target]
+** xref:migration-connect-clients-to-target.adoc[Phase 5: Connect client applications directly to Target]
 ** xref:migration-additional-resources.adoc[Additional resources]
 *** xref:migration-faqs.adoc[FAQs]
 *** xref:migration-glossary.adoc[Glossary]
