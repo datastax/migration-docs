@@ -43,7 +43,7 @@ In the container shell, `cd` to `~/zdm-proxy-automation/ansible/vars` and edit `
 
 There are two identical sets of parameters to configure the proxy to connect to the cluster. One set is for Origin and its parameters are prefixed with `origin`, while the one for Target uses the `target` prefix.
 
-These two sections are very important and are always required. Populate the appropriate parameters in each section for the respective cluster, by uncommenting them and specifying their values as follows:
+These two sections are very important and are always required. Populate the appropriate parameters in each section for the respective cluster, by uncommenting the parameters and specifying their values as follows:
 
 . Cluster credentials:
 .. If it is a self-managed cluster, `*_username` and `*_password` must be valid credentials for it. Leave blank if authentication is not enabled on the cluster.
