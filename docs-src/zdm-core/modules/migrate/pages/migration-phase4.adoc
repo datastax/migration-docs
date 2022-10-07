@@ -1,4 +1,0 @@
-= Phase 4: Change read routing to Target
-
-This section explains how to xref:migration-change-read-routing.adoc[change the read routing to the Target].
-

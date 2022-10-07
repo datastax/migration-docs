@@ -1,3 +1,0 @@
-= Phase 5: Connect clients to Target directly
-
-This section explains how to xref:migration-connect-clients-to-target.adoc[connect client applications to the Target], such as Astra DB, including a checklist to verify the migration as you move off the {zdm-proxy} instances.

@@ -1,3 +1,0 @@
-= Phase 2: Migrate and validate data
-
-This section explains how to use the {cstar-data-migrator.adoc}, the {dsbulk-migrator}, or both to xref:migration-validate-data.adoc[migrate data and validate the results].
