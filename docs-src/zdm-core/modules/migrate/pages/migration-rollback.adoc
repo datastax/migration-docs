@@ -8,12 +8,6 @@ image:zdm-migration-phases6a.png[Migration phases from start to finish]
 
 At any point during the migration process until the very last phase, if you hit any unexpected issue and need to (in effect) "rollback" the migration, you can always easily revert your client applications to connect directly to Origin. The migration can be started from scratch once the issue has been addressed.
 
-After moving your client applications off the {zdm-proxy} instances (Phase 5), writes are no longer sent to both Origin and Target clusters, and you lose this seamless rollback option. Should you decide to move back to Origin at a later point, you can perform the migration via the following reverse migration process:
+After moving your client applications off the {zdm-proxy} instances (Phase 5), writes are no longer sent to both Origin and Target clusters: the data on Origin is no longer kept up-to-date, and you lose this seamless rollback option. This is the point at which you commit to using Target permanently. The {zdm-proxy} deployment can be destroyed, and Origin is no longer needed by the client applications that have been migrated.
 
-TODO list:
-
-. Start over at Phase 1. ( do this ...)
-. next step with info from Alice
-. next steo if needed ...
-. final step as explained by Alice
-
+Should you decide to move back to Origin at a later point, or move to a new cluster entirely, you can simply execute the same migration process: in this case, the new Origin will now be the former Target, and the new Target will be whatever cluster you wish to migrate to (which could even be the former Origin).
