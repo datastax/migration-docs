@@ -1,8 +1,7 @@
 * Migrating
 ** Preparations
 *** xref:migration-introduction.adoc[Introduction]
-*** xref:migration-faqs.adoc[FAQs]
-*** xref:migration-deployment-infrastructure.adoc[Deployment and infrastructure considerations]
+x*** xref:migration-deployment-infrastructure.adoc[Deployment and infrastructure considerations]
 *** xref:migration-prepare-environment.adoc[Prepare existing environment for migration]
 *** xref:migration-create-target.adoc[Create target environment for migration]
 *** xref:migration-rollback.adoc[Understand rollback options]
@@ -22,6 +21,7 @@
 *** xref:migration-connect-clients-to-target.adoc[Connect client applications directly to Target]
 *** xref:migration-verifications.adoc[Verify migration and move off {zdm-proxy} ]
 ** Additional resources
+*** xref:migration-faqs.adoc[FAQs]
 *** xref:migration-glossary.adoc[Glossary]
 *** xref:migration-troubleshooting.adoc[Troubleshooting]
 **** xref:migration-troubleshooting-tips.adoc[Troubleshooting tips]
