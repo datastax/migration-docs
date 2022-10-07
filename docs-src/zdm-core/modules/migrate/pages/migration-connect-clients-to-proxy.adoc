@@ -1,4 +1,4 @@
-= Connect your client apps to {zdm-proxy}
+= Connect your client applications to {zdm-proxy}
 
 [ TODO : Content coming soon. ] 
 

@@ -1,4 +1,4 @@
-= Connect your clients directly to Astra DB
+= Connect your client applications directly to Target
 
 The data migration has completed and all our checks have passed, so we are now ready to connect our clients directly to Astra DB.
 
