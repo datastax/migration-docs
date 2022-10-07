@@ -8,9 +8,9 @@ Once completed, you will have a working and fully monitored {zdm-proxy} deployme
 
 == Introduction
 
-The ZDM automation uses **Ansible**, which deploys and configures the {zdm-proxy} instances and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:migration-deployment-infrastructure.adoc[Deployment considerations], which include the infrastructure requirements.
+The {zdm-automation} uses **Ansible**, which deploys and configures the {zdm-proxy} instances and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:migration-deployment-infrastructure.adoc[Deployment considerations], which include the infrastructure requirements.
 
-Configuring a machine to serve as the Ansible Control Host is very easy using the {zdm-automation}. This is a Golang (Go) executable program that runs anywhere. This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use. From this container, you will be able to easily configure and run the {zdm-automation} Ansible playbooks. It's migration made easy.
+Configuring a machine to serve as the Ansible Control Host is very easy using the {zdm-utility}. This is a Golang (Go) executable program that runs anywhere. This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use. From this container, you will be able to easily configure and run the {zdm-automation} Ansible playbooks.
 
 == Prerequisites
 
@@ -29,20 +29,11 @@ The jumphost will serve three purposes:
 
 * Accessing the {zdm-proxy} machines
 * Serving as the Ansible Control Host to run the automation
-* Running the ZDM monitoring stack, which uses Prometheus and Grafana to expose the metrics of all the ZDM proxies in a preconfigured dashboard.
-
-[TODO this is about the monitoring -- move to later]
-Having these tools set up is especially useful during migrations when you're running large workloads.
+* Running the ZDM monitoring stack, which uses Prometheus and Grafana to expose the metrics of all the {zdm-proxy} instances in a preconfigured dashboard.
 
 [TIP]
 ====
-To simplify accessing the jumphost and {zdm-proxy} instances from your machine, create a custom SSH configuration file. 
-
-TODO: Link to where we have SSH config example. 
-
-// as explained xref:migration-deployment-infrastructure.adoc#create_zdm_ssh_config_file[here].
-
-The following steps will assume that this file exists.
+To simplify accessing the jumphost and {zdm-proxy} instances from your machine, create a xref:migration-deployment-infrastructure.adoc#_connecting_to_the_zdm_infrastructure_from_an_external_machine[custom SSH configuration file]. The following steps will assume that this file exists.
 ====
 
 Let's get started.
@@ -128,7 +119,7 @@ At this point, the {zdm-utility}:
 * Has written the {zdm-proxy} configuration to the default file, `ansible_container_init_config`.
 * Presents a summary of the results thus far, and prompts you to Continue. Example:
 +
-image:zdm-go-utility-results2.png[{zdm-automation} Inventory Results are displayed in the terminal]
+image:zdm-go-utility-results2.png[{zdm-utility} Inventory Results are displayed in the terminal]
 [ TODO replace prompt image with one with updated names]
 . If you agree, enter `Y` to proceed.
 

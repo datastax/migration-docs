@@ -8,12 +8,12 @@
 *** xref:migration-create-target.adoc[Create target environment for migration]
 *** xref:migration-rollback.adoc[Understand rollback options]
 
-** Phase 1: Connect clients to proxy
+** Phase 1: Connect client applications to {zdm-proxy}
 *** xref:migration-setup-ansible-playbooks.adoc[Set up the {zdm-automation} with {zdm-utility}]
 *** xref:migration-deploy-proxy-monitoring.adoc[Deploy the {zdm-proxy} and monitoring]
 *** xref:migration-tls.adoc[Configure Transport Layer Security]
-*** xref:migration-connect-clients-to-proxy.adoc[Connect client apps to ZDM Proxy]
-*** xref:migration-manage-proxy-instances.adoc[Manage your proxy instances]
+*** xref:migration-connect-clients-to-proxy.adoc[Connect client applications to ZDM Proxy]
+*** xref:migration-manage-proxy-instances.adoc[Manage your {zdm-proxy} instances]
 
 ** Phase 2: Migrate data
 *** xref:migration-validate-data.adoc[Tools to migrate and validate data]
@@ -21,12 +21,12 @@
 ** Phase 3: Test Target's capacity (optional)
 *** xref:migration-enable-async-dual-reads.adoc[Enable asynchronous dual reads]
 
-** Phase 4: Change read routing to Target DB
-*** xref:migration-change-read-routing.adoc[Change read routing to Astra DB]
+** Phase 4: Change read routing to Target
+*** xref:migration-change-read-routing.adoc[Change read routing to Target]
 
-** Phase 5: Connect clients to Target DB
-*** xref:migration-connect-apps.adoc[Connect clients directly to Astra DB]
-*** xref:migration-verifications.adoc[Verify migration and move off ZDM Proxy]
+** Phase 5: Connect client applications to Target
+*** xref:migration-connect-clients-to-target.adoc[Connect client applications directly to Target]
+*** xref:migration-verifications.adoc[Verify migration and move off {zdm-proxy} ]
 
 ** Additional resources
 *** xref:migration-troubleshooting.adoc[Troubleshooting]

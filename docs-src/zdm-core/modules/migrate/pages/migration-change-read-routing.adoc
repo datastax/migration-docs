@@ -51,4 +51,4 @@ The resulting data is identical because the two databases are in sync.
 
 == What's next? 
 
-Learn how to xref:migration-connect-apps.adoc[].
+Learn how to xref:migration-connect-clients-to-target.adoc[].
