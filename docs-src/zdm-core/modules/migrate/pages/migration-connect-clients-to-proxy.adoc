@@ -56,7 +56,7 @@ This topic does not describe details or APIs for any of the DataStax drivers men
 
 * The https://docs.datastax.com/en/developer/java-driver/latest/manual/core/[core driver section^] of the Java driver manual
 * The https://docs.datastax.com/en/developer/python-driver/latest/getting_started/[getting started guide^] for the Python driver
-* The https://docs.datastax.com/en/developer/csharp-driver/latest/#basic-usage/[basic usage section^] of the C# driver documentation
+* The https://docs.datastax.com/en/developer/csharp-driver/latest/index.html#basic-usage[basic usage section^] of the C# driver documentation
 * The https://docs.datastax.com/en/developer/cpp-driver/latest/topics/[getting started section^] of the C/C++ driver documentation
 * The https://docs.datastax.com/en/developer/nodejs-driver/latest/#basic-usage[basic usage section^] of the Node.js driver documentation
 
