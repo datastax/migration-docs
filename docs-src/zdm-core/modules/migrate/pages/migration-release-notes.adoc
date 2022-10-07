@@ -1,6 +1,13 @@
 = DataStax Zero Downtime Migration Release Notes
 
-The {company} {zdm-product} (ZDM) project provides a production-ready set of tools to help you migrate to another version of Apache Cassandra&reg; or DataStax Enterprise, or to cloud-native Astra DB.
+The {company} {zdm-product} (ZDM) product suite provides a production-ready set of tools to help you easily and reliably migrate from any Cassandra&reg;-based cluster to another Cassandra&reg;-based cluster. 
+
+A few example migration scenarios:
+
+* From on-premise Cassandra 3.11.x to cloud-native Astra DB
+* From on-premise DSE 5.1.x to on-premise DSE 6.8.x
+* From on-premise DSE 4.8.x to cloud-native Astra DB
+* From Astra DB Classic to Astra DB Serverless
 
 == Release Notes for ZDM 2.0.0
 

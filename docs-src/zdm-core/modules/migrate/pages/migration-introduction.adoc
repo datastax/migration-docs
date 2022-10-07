@@ -4,7 +4,7 @@ Enterprises today depend on the ability to reliably migrate mission-critical app
 
 At DataStax, we've developed a set of thoroughly-tested self-service tools, automation scripts, examples, and documented procedures that walk you through well-defined migration phases.
 
-We call this feature {company} {zdm-product} ({zdm-shortproduct}). 
+We call this product suite **{company} {zdm-product} ({zdm-shortproduct})**. 
 
 ZDM provides a simple and reliable way for you to migrate an existing Apache Cassandra&reg; or DataStax Enterprise (DSE) cluster to Astra DB, or to any Cassandra/DSE cluster, without any interruption of service to the apps and data. For example:
 
