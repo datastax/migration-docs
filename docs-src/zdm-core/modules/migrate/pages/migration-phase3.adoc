@@ -1,0 +1,3 @@
+= Phase 3: Enable async dual reads (optional)
+
+This section explains an optional step to xref:migration-enable-async-dual-reads.adoc[enable asynchronous dual reads], which allows you to check that the Target cluster can handle the read/write load without timeouts or unacceptable latencies.
