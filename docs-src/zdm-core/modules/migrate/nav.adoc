@@ -8,7 +8,7 @@
 *** xref:migration-create-target.adoc[Create target environment for migration]
 *** xref:migration-rollback.adoc[Understand rollback options]
 
-** Phase 1: Connect client applications to proxy
+** Phase 1: Connect client applications to {zdm-proxy}
 *** xref:migration-setup-ansible-playbooks.adoc[Set up the {zdm-automation} with {zdm-utility}]
 *** xref:migration-deploy-proxy-monitoring.adoc[Deploy the {zdm-proxy} and monitoring]
 *** xref:migration-tls.adoc[Configure Transport Layer Security]
@@ -21,12 +21,12 @@
 ** Phase 3: Test Target's capacity (optional)
 *** xref:migration-enable-async-dual-reads.adoc[Enable asynchronous dual reads]
 
-** Phase 4: Change read routing to Target DB
-*** xref:migration-change-read-routing.adoc[Change read routing to Astra DB]
+** Phase 4: Change read routing to Target
+*** xref:migration-change-read-routing.adoc[Change read routing to Target]
 
-** Phase 5: Connect client applications to Target DB
+** Phase 5: Connect client applications to Target
 *** xref:migration-connect-clients-to-target.adoc[Connect client applications directly to Target]
-*** xref:migration-verifications.adoc[Verify migration and move off ZDM Proxy]
+*** xref:migration-verifications.adoc[Verify migration and move off {zdm-proxy} ]
 
 ** Additional resources
 *** xref:migration-troubleshooting.adoc[Troubleshooting]
