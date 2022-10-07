@@ -4,10 +4,11 @@ This advanced troubleshooting topic presents solutions to error conditions that 
 
 == Scaling recommendation
 
-{zdm-automation} doesn't provide a way to perform scaling up/down operations in a rolling fashion. Instead, we recommend that you deploy a new proxy cluster on the side, and move the client applications to the new proxy cluster (if absolutely necessary). To do so, edit the inventory file so that it contains one line for each machine where you want a proxy instance to be deployed and run the `deploy_zdm_proxy.yml` playbook again. This will result in a brief interruption of availability of the whole ZDM proxy deployment.
+{zdm-automation} doesn't provide a way to perform scaling up/down operations in a rolling fashion. Instead, we recommend that you deploy a new proxy cluster on the side, and move the client applications to the new proxy cluster (if absolutely necessary). To do so, cerate a new inventory file so that it contains one line for each machine where you want a proxy instance to be deployed and run the `deploy_zdm_proxy.yml` playbook again. This will result in a brief interruption of availability of the whole ZDM proxy deployment.
 
-If you want to remove or add a proxy **manually**, follow these steps:
+If you are not using the {zdm-automation} and want to remove or add a proxy **manually**, follow these steps:
 
+. If adding a proxy instance, prepare and configure it appropriately based on the other instances
 . Update the `ADDRESSES` configuration setting on all proxy instances - removing or adding the proxy instance's address to the list
 . Perform a rolling restart on all proxy instances
 
@@ -39,27 +40,27 @@ If you're using {zdm-automation}, there may be other steps required deployment t
 If you encounter a problem during your migration, please contact us. In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
 
 * ZDM version
-* ZDM logs - ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change
-* Version of database software on Origin and Target clusters, whether DSE, Apache Cassandra, Astra DB
+* ZDM logs - ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change. Please collect the logs before changing the level and restarting, and then again afterwards.
+* Version of database software on Origin and Target clusters, whether DSE or Apache Cassandra
 * If Astra DB is being used, your Astra DB organization id, database id; or links to your Astra DB dashboard; if you agree, we'll view your Astra DB health metrics
 * Screenshots of both Proxy metrics dashboards from Grafana or whatever visualization tool you use
-* Application/Driver logs
-* Driver and version that the application is using
+* Client application/Driver logs
+* Driver language and version that the client application is using.
 
 === Performance issues
 
 If the issue is related to performance, troubleshooting can be more complicated and dynamic. Still, here are some common questions that will help diagnose issues in addition to the ones from the prior section:
 
-* Which statement types are being used, simple, prepared, batch?
+* Which statement types are being used: simple, prepared, batch?
 * If batch statements are being used, which driver API is being used to create these batches? Are you passing a `BEGIN BATCH` cql query string to a simple/prepared statement? Or are you using the actual batch statement objects that drivers allow you to create?
-* If the CQL function replacement feature is enabled, how many parameters does each statement have? You can see if this feature is enabled by looking at the configuration settings; it's disabled by default. [ TODO add detail of configuration variable with new name ]
-* If permissible within your security rules, please provide the proxy metrics. Those metrics would allow the ZDM team to know what latencies the {zdm-proxy} is encountering, compared to the latencies that the client application is encountering. If you are using the {zdm-proxy}, you should have two Grafana dashboards that the automation sets up. These dashboards contain the metrics that the ZDM team will want to check. Alternatively, please submit screenshots of the dashboards.
+* If the CQL function replacement feature is enabled, how many parameters does each statement have? You can see if this feature is enabled by looking at the value of the Ansible advanced configuration variable `replace_cql_functions` if using the automation, or the environment variable `ZDM_REPLACE_CQL_FUNCTIONS` otherwise. CQL Function replacement is disabled by default.
+* If permissible within your security rules, please provide the proxy metrics. Those metrics would allow the ZDM team to know what latencies the {zdm-proxy} is encountering, compared to the latencies that the client application is encountering. If you are using the monitorign stack deployed through the {zdm-automation}, you should have three Grafana dashboards that the automation sets up. These dashboards contain the metrics that the ZDM team will want to check. Alternatively, please submit screenshots of the dashboards.
 
 == Regarding lightweight transactions and non-idempotent operations
 
-{zdm-proxy} can bifurcate lightweight transactions to the Origin and Target clusters. However, it only returns the applied flag from one cluster. Meaning, from the "primary" cluster, i.e. the source of truth -- the cluster from where it returns synchronous read results to the client. By default, that is the Origin cluster. However, if you set `FORWARD_READS_TO_TARGET`, the Target cluster will be considered the primary and read results from the Target cluster will be returned to the client, as well as the applied flag from any lightweight transactions.
+{zdm-proxy} can bifurcate lightweight transactions to Origin and Target. However, it only returns the applied flag from one the primary cluster, i.e. cluster from where it returns synchronous read results to the client. By default, that is Origin. However, if you set the Ansible core configuration variable `primary_cluster` to `TARGET` (or the environment variable `ZDM_PRIMARY_CLUSTER` if not using the automation), Target will be considered the primary and read results from Target will be returned to the client application, as well as the applied flag from any lightweight transactions.
 
-Given that there are two separate clusters involved, the state of each cluster may be different. For conditional writes, this may create a divergent state for a time. It may not make a difference in many cases, but if lightweight transactions (or other non-idempotent operations) are used, we recommend a reconciliation phase in the migration before and after switching reads to rely on the Target cluster. For details about using the Cassandra Data Migrator to validate your migration, see xref:migration-validate-data.adoc[Migrate and validate your data].
+Given that there are two separate clusters involved, the state of each cluster may be different. For conditional writes, this may create a divergent state for a time. It may not make a difference in many cases, but if lightweight transactions (or other non-idempotent operations) are used, we recommend a reconciliation phase in the migration before and after switching reads to rely on Target. For details about using the Cassandra Data Migrator to validate your migration, see xref:migration-validate-data.adoc[Migrate and validate your data].
 
 == What's next?
 
