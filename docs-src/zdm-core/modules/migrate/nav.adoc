@@ -10,7 +10,7 @@
 ** xref:migration-phase1.adoc[Phase 1: Connect clients to {zdm-proxy}]
 *** xref:migration-setup-ansible-playbooks.adoc[Set up the {zdm-automation} with {zdm-utility}]
 *** xref:migration-deploy-proxy-monitoring.adoc[Deploy the {zdm-proxy} and monitoring]
-*** xref:migration-tls.adoc[Configure Transport Layer Security]
+**** xref:migration-tls.adoc[Configure Transport Layer Security]
 *** xref:migration-connect-clients-to-proxy.adoc[Connect client applications to ZDM Proxy]
 *** xref:migration-manage-proxy-instances.adoc[Manage your {zdm-proxy} instances]
 ** xref:migration-validate-data.adoc[Phase 2: Migrate and validate data]
