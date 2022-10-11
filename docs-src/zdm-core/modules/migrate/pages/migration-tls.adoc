@@ -122,10 +122,3 @@ To configure application-to-proxy TLS you need to:
 ====
 Remember that in this case, the {zdm-proxy} is the TLS server; thus the word `server` word in these variable names.
 ====
-
-== What's next?
-
-This is all you need to do at this stage. This configuration will be applied when you run the deployment playbook. The playbook will distribute the files to each {zdm-proxy} instance and apply the TLS configuration to it.
-
-Finish configuring and deploy the {zdm-proxy}  as explained in xref:migration-deploy-proxy-monitoring.adoc#_use_ansible_to_deploy_the_proxy[].
-

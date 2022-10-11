@@ -31,7 +31,3 @@ List here...
 == Refer to deployment and infrastructure details
 
 For any migration, we've described important xref:migration-deployment-infrastructure.adoc[deployment and infrastructure considerations] in the next topic.
-
-== What's next?
-
-* xref:migration-deployment-infrastructure.adoc[Deployment and infrastructure considerations]

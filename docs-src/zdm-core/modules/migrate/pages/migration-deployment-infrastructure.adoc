@@ -104,7 +104,3 @@ Likewise, connecting to any {zdm-proxy} instance is as easy as this (replacing t
 ```bash
 ssh -F zdm_ssh_config zdm-proxy-0
 ```
-
-== What's next?
-
-Learn how to xref:migration-tls.adoc[].

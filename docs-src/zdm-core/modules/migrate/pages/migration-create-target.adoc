@@ -80,7 +80,3 @@ create table zdm_demo.app_data (
     app_value text
 );
 ```
-
-== What's next?
-
-Learn how to xref:migration-setup-ansible-playbooks.adoc[] using the {zdm-automation] to set up just a few variables for your environment. 

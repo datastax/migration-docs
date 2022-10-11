@@ -105,7 +105,3 @@ In addition to any utility as a validation tool, Themis also serves as an exampl
 
 [ **TODO: in which repo should this client app reside?** Ok to stay in Bret's GH?]
 
-
-== What's next?
-
-Learn how to xref:migration-manage-proxy-instances.adoc[].

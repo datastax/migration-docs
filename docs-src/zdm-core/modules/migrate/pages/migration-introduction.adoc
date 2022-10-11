@@ -160,11 +160,4 @@ An important **prerequisite** is that you already have the matching schema on Ta
 
 You can also take advantage of {dsbulk-migrator} to migrate smaller sets of data. 
 
-For more about both tools, see xref:migration-validate-data.adoc[].
-
-
-== What's next?
-
-If you're new here, check out our xref:migration-faqs.adoc[FAQs].
-
-Or jump right in and learn about the recommended xref:migration-deployment-infrastructure.adoc[].
+For more about both tools, see xref:migration-migrate-and-validate-data.adoc[].

@@ -156,8 +156,3 @@ Then simply run the same playbook as above, with the following command:
 ```bash
 ansible-playbook update_zdm_proxy.yml -i zdm_ansible_inventory
 ```
-
-== What's next?
-
-Learn how to xref:migration-validate-data.adoc[].
-
