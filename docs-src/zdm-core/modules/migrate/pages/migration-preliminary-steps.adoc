@@ -1,9 +1,8 @@
-= Introduction and preliminary steps
+= Preliminary steps
 
-This section presents the following:
+Before starting your migration, verify that you met the prerequisites and performed the preliminary tasks as documented in:
 
-* xref:migration-introduction.adoc[Introduction]
+* xref:migration-feasibility-checklists.adoc[Feasibility checklist]
 * xref:migration-deployment-infrastructure.adoc[Deployment and infrastructure considerations]
-* xref:migration-prepare-environment.adoc[Prepare existing environment for migration]
 * xref:migration-create-target.adoc[Create target environment for migration]
 * xref:migration-rollback.adoc[Understand rollback options]
