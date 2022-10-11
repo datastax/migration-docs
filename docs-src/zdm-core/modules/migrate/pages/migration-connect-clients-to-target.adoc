@@ -28,7 +28,3 @@ All applications are now connecting directly to Astra DB, and Origin is no longe
 == Migration completed
 
 Until this point, in case of any issues, you could have abandoned the migration and rolled back to connect directly to Origin at any time. From this point onward, the clusters will diverge, and the target Astra DB database is the source of truth for your apps and data. 
-
-== What's next? 
-
-Learn how to xref:migration-verifications.adoc[].

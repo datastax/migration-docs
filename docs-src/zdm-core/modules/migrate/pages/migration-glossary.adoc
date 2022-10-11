@@ -2,16 +2,30 @@
 
 Here are a few terms used throughout the {company} {zdm-product} documentation and code.
 
+== async dual reads
+
+An optional testing phase in which reads are sent to both the Origin and Target clusters, enabling you to check that the intended Target of your migration can handle the full workload of reads and writes before finalizing the migration and moving off the {zdm-proxy} instances. For details, see xref:migration-enable-async-dual-reads.adoc[].
+
+== CQL
+
+Cassandra Query Language (CQL) is a query language for the Cassandra database. It includes DDL and DML statements. For details, see the https://docs.datastax.com/en/dse/6.8/cql/cql/cqlQuickReference.html[CQL quick reference^].
+
 == Origin
 Your existing Cassandra-based environment, whether it's open-source Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB.
 
+== primary cluster
+
+TODO: define it here.
+
 == proxy
 Generally speaking, a proxy is a software class functioning as an interface to something else. The proxy could interface to anything: a network connection, a large object in memory, a file, or some other resource. A proxy is a wrapper or agent object that is being called by the client to access the real serving object behind the scenes. In our context here, see xref:migration-glossary.adoc#_zdm_proxy[ZDM Proxy].
+
+== read mirroring
+
+See xref:migration-glossary.adoc#_async_dual_reads[async dual reads].
 
 == Target
 The new environment to which you want to migrate apps and data with zero downtime.
 
 == ZDM Proxy
 An open-source component designed to seamlessly handle the real-time client application activity while a migration is in progress.
-
-[ TODO: add more terms ]

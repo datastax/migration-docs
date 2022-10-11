@@ -5,7 +5,3 @@ Text coming soon.
 (Let's include a checklist...)
 
 (Some checks may be redundant with {cstar-data-migrator} reconciliation and/or {dsbulk-migrator} table row count comparisons between origin and target databases.)
-
-== What's next?
-
-Refer to the xref:migration-troubleshooting.adoc[troubleshooting topics].

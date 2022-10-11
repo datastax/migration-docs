@@ -13,7 +13,7 @@
 **** xref:migration-tls.adoc[Configure Transport Layer Security]
 *** xref:migration-connect-clients-to-proxy.adoc[Connect client applications to ZDM Proxy]
 *** xref:migration-manage-proxy-instances.adoc[Manage your {zdm-proxy} instances]
-** xref:migration-validate-data.adoc[Phase 2: Migrate and validate data]
+** xref:migration-migrate-and-validate-data.adoc[Phase 2: Migrate and validate data]
 ** xref:migration-enable-async-dual-reads.adoc[Phase 3: Enable asynchronous dual reads]
 ** xref:migration-change-read-routing.adoc[Phase 4: Change read routing to Target]
 ** xref:migration-connect-clients-to-target.adoc[Phase 5: Connect client applications directly to Target]

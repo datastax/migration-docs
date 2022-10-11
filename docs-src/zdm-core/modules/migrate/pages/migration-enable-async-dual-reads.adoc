@@ -37,9 +37,3 @@ Because the client application is not impacted by these asynchronous reads, the 
 * Check the asynchronous reads section of the {zdm-proxy} metrics
 
 In the {zdm-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads so you can see latency percentiles, error rates, and some other metrics specific to these requests. For more, see xref:migration-troubleshooting-tips.adoc#_use_metrics_to_identify_any_issues[Use metrics to identify any issues] in the troubleshooting tips.
-
-// xref:migration-deploy-proxy-monitoring.adoc[].
-
-== What's next? 
-
-xref:migration-change-read-routing.adoc[].

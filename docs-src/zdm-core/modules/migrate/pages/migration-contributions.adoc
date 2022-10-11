@@ -46,7 +46,3 @@ The following {company} {zdm-product} GitHub repos are public. You are welcome t
 // * https://github.com/datastax/migration-docs/issues[Migration documentation^] repo.
 
 Again, add a label to help categorize each issue, such as the complexity level, component name, and other labels you'll find in the repo's Issues display.
-
-== What's next?
-
-Refer to the xref:migration-release-notes.adoc[].

@@ -400,35 +400,3 @@ If the log files are being spammed with these messages then it is likely that an
 Keep in mind that any errors in the async request path (dual reads / read mirroring) will not affect the client application so these log messages might be useful to predict what may happen when the reads are switched over to the TARGET cluster but async read errors/warnings by themselves do not cause any impact to the client.
 
 If these errors are being constantly written to the log files (for minutes or even hours) then it is likely that only an application OR {zdm-proxy} restart will fix it. If you find an issue like this please submit an https://github.com/datastax/zdm-proxy/issues[Issue, window="_blank"] in our GitHub repo.
-
-
-
-////
-
-Maybe no longer relevant?  Astra DB Free plan timeout is now every 48 hours.
-https://docs.datastax.com/en/astra-serverless/docs/manage/db/managing-db.html#_hibernated
-
-== Client application closed connection errors every 10 minutes when migrating to Astra DB
-
-=== Symptoms
-
-Every 10 minutes a message is logged in the {zdm-proxy} logs showing a disconnect that was caused by Astra DB.
-
-```log
-{"log":"\u001b[36mINFO\u001b[0m[426871] [TARGET-CONNECTOR] REDACTED disconnected \r\n","stream":"stdout","time":"2022-10-01T16:31:41.48598498Z"}
-```
-
-=== Cause
-
-Astra DB terminates idle connections after 10 minutes of inactivity. If a client application is only sending reads through a connection then the Target (i.e. Astra in this case) connection will not get any traffic because ZDM forwards all reads to the Origin connection.
-
-=== Workaround
-
-We have no work around at this time other than asking users to send a non-read request periodically to make sure the Astra connection doesn't idle.
-
-////
-
-
-== What's next?
-
-Refer to the xref:migration-troubleshooting-advanced.adoc[advanced troubleshooting] topic.

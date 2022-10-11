@@ -222,7 +222,3 @@ If you encounter a problem during your migration, please contact us. In the {zdm
 * Screenshots of both Proxy metrics dashboards from Grafana or whatever visualization tool you use
 * Application/Driver logs
 * Driver and version that the application is using
-
-== What's next?
-
-Refer to the xref:migration-troubleshooting-scenarios.adoc[].

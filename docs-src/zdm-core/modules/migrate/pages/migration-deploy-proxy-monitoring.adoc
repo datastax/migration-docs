@@ -215,7 +215,7 @@ Login with:
 
 (TODO: show Grafana screenshot and details about what to observe.)
 
-== What's next?
+== Regarding Transport Layer Security (TLS)
 
-Learn how to xref:migration-connect-clients-to-proxy.adoc[].
+Be sure to see the next topic for information about xref:migration-tls.adoc[], which is an optional part of the initial {zdm-proxy} configuration.
 

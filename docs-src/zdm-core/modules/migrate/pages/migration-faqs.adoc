@@ -112,7 +112,3 @@ A CNDB like Astra DB is a different environment. Running on proven cloud provide
 == Internal FAQ: where's are the built docs located before 2.0.0 GA?
 
 From the Asciidoc markdown sources, the deployment script writes the topics to http://coppi-ssh.aws.dsinternal.org/en/astra-classic-zdm/docs/migrate/migration-introduction.html[this internal review server^]. Requires AWS Lab VPN access. For the external release, the DataStax {zdm-product} 2.0 docs will reside on docs.datastax.com in the Astra DB docs, and will be referenced from the DSE docs.
-
-== What's next?
-
-Learn about the xref:migration-deployment-infrastructure.adoc[Deployment considerations], including infrastructure requirements.
