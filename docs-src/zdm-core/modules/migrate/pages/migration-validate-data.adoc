@@ -1,11 +1,11 @@
-= Migrate and validate your data
+= Tools to migrate and validate data
 
 This topic introduces you to the benefits of using two data migration tools during your migration project:
 
 * {cstar-data-migrator}
 * {dsbulk-migrator}
 
-These tools provide helpful features and may be used according to match the requirements of your Apache Cassandra&reg; or DataStax Enterprise (DSE) databases.  The tools can help you migrate data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB).
+These tools provide helpful features and may be used to match the requirements of your Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB databases.  The tools can help you migrate data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB).
 
 == What's the difference between these data migration tools?
 

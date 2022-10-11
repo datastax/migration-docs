@@ -77,9 +77,7 @@ The {zdm-proxy} itself doesn't have any capability to migrate data or knowledge 
 
 === Role of {zdm-proxy}
 
-We created {zdm-proxy} to function between the application and the Origin and Target clusters so that every write operation (Insert, Update, Delete) is passed through synchronously to both clusters at the desired Consistency Level:
-
-We created ZDM Proxy to function between the application and both databases (Origin and Target). The databases can be any CQL-compatible data store (e.g. Apache Cassandra, Datastax Enterprise and Astra DB). The proxy always sends every write operation (Insert, Update, Delete) synchronously to both clusters at the desired Consistency Level:
+We created zdm-proxy} to function between the application and both databases (Origin and Target). The databases can be any CQL-compatible data store (e.g. Apache Cassandra, Datastax Enterprise and Astra DB). The proxy always sends every write operation (Insert, Update, Delete) synchronously to both clusters at the desired Consistency Level:
 
 * If the write is successful in both clusters, it returns a successful acknowledgement to the client application
 * If the write fails on either cluster, the failure is passed back to the client application so that it can retry it as appropriate, based on its own retry policy.

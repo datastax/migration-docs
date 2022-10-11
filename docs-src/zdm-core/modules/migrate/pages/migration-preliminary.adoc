@@ -1,0 +1,9 @@
+= Introduction and preliminary steps
+
+This section presents the following:
+
+* xref:migration-introduction.adoc[Introduction]
+* xref:migration-deployment-infrastructure.adoc[Deployment and infrastructure considerations]
+* xref:migration-prepare-environment.adoc[Prepare existing environment for migration]
+* xref:migration-create-target.adoc[Create target environment for migration]
+* xref:migration-rollback.adoc[Understand rollback options]
