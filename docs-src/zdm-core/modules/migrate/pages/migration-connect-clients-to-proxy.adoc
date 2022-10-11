@@ -1,8 +1,8 @@
 = Connect your client applications to {zdm-proxy}
 
-The {zdm-proxy} is designed to look and feel very much like a conventional Cassandra&reg; cluster.  You communicate with it using the CQL query language used in your existing applications.  It understands the same messaging protocols used by Cassandra, DataStax Enterprise (DSE)server or DataStax Astra DB.  As a result, most of your client applications won't be able to distinguish between connecting to {zdm-proxy} and connecting directly to your Cassandra cluster. The implementation is very much by design.
+The {zdm-proxy} is designed to look and feel very much like a conventional Cassandra&reg; cluster.  You communicate with it using the CQL query language used in your existing applications.  It understands the same messaging protocols used by Cassandra, DataStax Enterprise (DSE) server or DataStax Astra DB.  As a result, most of your client applications won't be able to distinguish between connecting to {zdm-proxy} and connecting directly to your Cassandra cluster.
 
-In this topic, we explain how to connect your applications to a Cassandra cluster.  We then move on to discuss how this process changes when connecting to a {zdm-proxy}. We conclude by describing two sample applications that serve as a larger-scale model for how these tools might be used.
+In this topic, we explain how to connect your applications to a Cassandra cluster.  We then move on to discuss how this process changes when connecting to a {zdm-proxy}.  We conclude by describing two sample applications that serve as a real-world examples of how to build an application that works effectively with zdm-proxy.
 
 You can use the provided sample applications, in addition to your own, as a quick way to validate that the deployed {zdm-proxy} is reading and writing data from the expected Origin and Target clusters.
 
@@ -20,7 +20,7 @@ These drivers provide a native implementation of the messaging protocols used to
 
 == Connecting DataStax drivers to Cassandra
 
-Perhaps the simplest way to demonstrate how to use the DataStax drivers to connect your application to a Cassandra cluster is an example in the form of some sample code. But there's a bit of a problem: the DataStax drivers are independent projects.  This approach offers the benefit of allowing each project to provide an API that makes the most sense for the language or platform on which it's implemented.  Unfortunately it also means there is some variation between languages. With that in mind, the following pseudocode provides reasonable guidance for understanding how a client application might use one of the drivers.
+Perhaps the simplest way to demonstrate how to use the DataStax drivers to connect your application to a Cassandra cluster is an example in the form of some sample code.  But there's a bit of a problem: the DataStax drivers are independent projects implemented natively in the relevant programming language.  This approach offers the benefit of allowing each project to provide an API that makes the most sense for the language or platform on which it's implemented.  Unfortunately it also means there is some variation between languages.  With that in mind, the following pseudocode provides reasonable guidance for understanding how a client application might use one of the drivers.
 
 ```pseudocode
 // Create an object to represent a Cassandra cluster listening for connections at
@@ -47,7 +47,7 @@ print(release_version)
 As noted, you'll see some differences in individual drivers:
 
 * New versions of the Java driver no longer define a Cluster object
-* Client programs create a Session directly instead
+** Client programs create a Session directly instead
 * And the Node.js driver has no notion of a Cluster or Session at all, instead using a Client object to represent this functionality.  
 
 The details may vary but you'll still see the same general pattern described in the pseudocode in each of the drivers.
@@ -73,15 +73,11 @@ We mentioned above that connecting to a {zdm-proxy} should be almost indistingui
 ** You should use the credentials for the Target cluster in most cases.  
 ** You only need to supply credentials for the Origin cluster if the Target cluster does not have authentication enabled but the Origin cluster does.
 * If your {zdm-proxy} is configured to use Astra DB as an Origin or Target, you do not need to provide an Astra secure connect bundle (SCB) when connecting to the proxy. You will, however, have to supply your Astra client ID and secret as a username and password (respectively).
-
-[NOTE]
-====
-Clients should not enable compression when connecting through the {zdm-proxy}.
-====
+* Clients should not enable compression when connecting through the {zdm-proxy}.
 
 == Sample applications
 
-The DataStax drivers documentation provides information about how to connect these drivers to your Cassandra cluster or {zdm-proxy} and how to use them to issue queries, update data and perform other actions.  In addition to the smaller code samples provided in the documentation, we also provide a few sample applications which demonstrate the use of the DataStax Java driver to interact with {zdm-proxy} as well as the Origin and Target clusters for that proxy.  
+The documentation for the DataStax drivers provides information about how to connect these drivers to your Cassandra cluster or {zdm-proxy} and how to use them to issue queries, update data and perform other actions.  In addition to the smaller code samples provided in the documentation, we also provide a few sample applications which demonstrate the use of the DataStax Java driver to interact with {zdm-proxy} as well as the Origin and Target clusters for that proxy.  
 
 === ZDM Demo Client
 
@@ -99,7 +95,7 @@ https://github.com/absurdfarce/themis[Themis^] is a Java command-line applicatio
 * Directly into the Target cluster
 * Into the {zdm-proxy}, and subsequently on to the Origin and Target
 
-The application can then be used to query the inserted data.  This allows you to validate that the {zdm-proxy} is reading and writing data from the expected sources. Configuration details for the clusters and/or {zdm-proxy} are defined in a YAML file.  Details are in the https://github.com/absurdfarce/themis/blob/main/README.md[README^].
+The application can then be used to query the inserted data.  This allows you to validate that the {zdm-proxy} is reading and writing data from the expected sources.  Configuration details for the clusters and/or {zdm-proxy} are defined in a YAML file.  Details are in the https://github.com/absurdfarce/themis/blob/main/README.md[README^].
 
 In addition to any utility as a validation tool, Themis also serves as an example of a larger application which uses the Java driver to connect to a {zdm-proxy} -- as well as directly to Cassandra or Astra DB clusters -- and perform operations.  The configuration logic as well as the cluster and session management code have been cleanly separated into distinct packages to make them easy to understand.
 
