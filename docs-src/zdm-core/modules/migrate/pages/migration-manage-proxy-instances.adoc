@@ -63,8 +63,9 @@ This playbook creates a single zip file, called `zdm_proxy_logs_<current_timesta
 
 To copy the zip file from the container to the jumphost, open a shell on the jumphost and run the following command:
 ```bash
-docker cp zdm-ansible-container:/home/ubuntu/zdm_proxy_archived_logs/<zdm_proxy_logs zip archive name> .
+docker cp zdm-ansible-container:/home/ubuntu/zdm_proxy_archived_logs/<zdm_proxy_logs zip archive name> <destination_directory_on_jumphost>
 ```
+The archive will be copied to the specified destination directory on the jumphost.
 
 == Change a mutable configuration property
 
