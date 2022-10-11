@@ -214,8 +214,3 @@ Login with:
 **password**: the password you configured
 
 (TODO: show Grafana screenshot and details about what to observe.)
-
-== Regarding Transport Layer Security (TLS)
-
-Be sure to see the next topic for information about xref:migration-tls.adoc[], which is an optional part of the initial {zdm-proxy} configuration.
-

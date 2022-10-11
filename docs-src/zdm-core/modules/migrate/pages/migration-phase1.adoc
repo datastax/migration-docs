@@ -4,6 +4,6 @@ This section presents the following:
 
 * xref:migration-setup-ansible-playbooks.adoc[]
 * xref:migration-deploy-proxy-monitoring.adoc[]
-* xref:migration-tls.adoc[]
+** xref:migration-tls.adoc[]
 * xref:migration-connect-clients-to-proxy.adoc[]
 * xref:migration-manage-proxy-instances.adoc[]
