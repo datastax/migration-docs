@@ -2,14 +2,14 @@
 
 In this topic, we'll learn how to perform simple operations on your {zdm-proxy} deployment with no interruption to its availability:
 
-* Do a simple rolling restart of the proxies
-* View or collect the logs of all proxies
+* Do a simple rolling restart of the {zdm-proxy} instances
+* View or collect the logs of all {zdm-proxy} instances
 * Change a mutable configuration property
-* Upgrade the proxy version
+* Upgrade the {zdm-proxy} version
 
 All these operations can be easily done by running Ansible playbooks.
 
-Make sure you are connected to the Ansible Control Host docker container. As explained before, you can do so from the jumphost machine by running:
+Make sure you are connected to the Ansible Control Host Docker container. As explained before, you can do so from the jumphost machine by running:
 ```bash
 docker exec -it zdm-ansible-container bash
 ```
@@ -18,9 +18,9 @@ You will see a prompt like:
 ubuntu@52772568517c:~$
 ```
 
-== Rolling restart of the proxies
+== Perform a rolling restart of the proxies
 
-Connect to the Ansible Control Host container as explained above and run:
+Connect to the Ansible Control Host Docker container as explained above and run:
 
 ```bash
 ansible-playbook rolling_restart_zdm_proxy.yml -i zdm_ansible_inventory
@@ -28,7 +28,7 @@ ansible-playbook rolling_restart_zdm_proxy.yml -i zdm_ansible_inventory
 
 This is all that is needed.
 
-This playbook restarts each proxy container one by one, automating the following steps:
+This playbook restarts each proxy container one by one, without impacting the availability of the {zdm-proxy} deployment. It automates the following steps:
 
 . It stops one container gracefully, waiting for it to shut down
 . It starts the container again
@@ -36,21 +36,22 @@ This playbook restarts each proxy container one by one, automating the following
 .. If unsuccessful, it repeats the check for six times at 5-second intervals and eventually interrupts the whole process if the check still fails
 .. If successful, it waits for 10 seconds and then moves on to the next container
 
-== Use the proxy logs
+== Access the proxy logs
 
-You can view or collect the logs.
+To confirm that the {zdm-proxy} instances are operating normally, or investigate any issue, you can view or collect their logs.
 
 === View the logs
 
-The proxy runs as a Docker container. Its logs can be viewed by connecting to the proxy instance and running the following command:
+The {zdm-proxy} runs as a Docker container on each proxy host. Its logs can be viewed by connecting to a {zdm-proxy} host and running the following command:
 
 ```bash
 sudo docker container logs zdm-proxy-container
 ```
+To leave the logs open and continuously output the latest log messages, append the `--follow` option to the command above.
 
 === Collect the logs
 
-The logs of all proxy instances can be easily retrieved using a dedicated playbook (`collect_zdm_proxy_logs.yml`). You can view the playbook's configuration values in `vars/zdm_proxy_log_collection_config.yml`, but no changes to it are required.
+You can easily retrieve the logs of all {zdm-proxy} instances using a dedicated playbook (`collect_zdm_proxy_logs.yml`). You can view the playbook's configuration values in `vars/zdm_proxy_log_collection_config.yml`, but no changes to it are required.
 
 Connect to the Ansible Control Host container as explained above and run:
 
@@ -65,54 +66,66 @@ To copy the zip file from the container to the jumphost, open a shell on the jum
 docker cp zdm-ansible-container:/home/ubuntu/zdm_proxy_archived_logs/<zdm_proxy_logs zip archive name> .
 ```
 
-[#change-mutable-config-property]
 == Change a mutable configuration property
 
 The following configuration values are considered mutable and can be changed in a rolling fashion on an existing ZDM proxy deployment.
 
-Commonly changed values:
+Commonly changed values, located in `vars/zdm_proxy_core_config.yml`:
 
-* `forward_reads_to_target` boolean flag:
-** This flag determines the routing of the read requests. The default is `false`, which routes reads to Origin. In later stages of the migration, once all the existing data has been transferred, you can set this flag as `true` to make the Target the primary source of truth.
-** You can find this parameter in `vars/zdm_proxy_core_config.yml`
-* `zdm_log_level`:
+* `primary_cluster` boolean flag:
+** This flag determines which cluster is currently considered the "primary" source of truth. While writes are always sent to both clusters, the primary cluster is the one to which all synchronous reads are always sent, and their results are returned to the client application. At the start of the migration, the primary cluster is Origin, as it contains all the data.  In Phase 4 of the migration, once all the existing data has been transferred and any validation / reconciliation step has been successfully executed, you can switch the primary cluster to be Target. [TODO should this move to the glossary, and then we just link to it from here?]
+** Valid values: `ORIGIN`, `TARGET`
+* `read_mode`:
+** Valid values:
+*** `PRIMARY_ONLY`: reads are only sent synchronously to the primary cluster. This is the default behavior.
+*** `DUAL_ASYNC_ON_SECONDARY`: reads are sent synchronously to the primary cluster and also asynchronously to teh secondary cluster. See xref:migration-enable-async-dual-reads.adoc[].
+** Typically, when choosing `DUAL_ASYNC_ON_SECONDARY` you will want to ensure that `primary_cluster` is still set to `ORIGIN`. When you are ready to use Target as the primary cluster, you should revert `read_mode` to `PRIMARY_ONLY`.
+* `log_level`:
 ** Defaults to `INFO`.
 ** Only set to `DEBUG` if necessary and revert to `INFO` as soon as possible, as the extra logging can have a slight performance impact.
-** This `zdm_log_level` parameter can be found in `vars/zdm_proxy_advanced_config.yml`.
 
 Other, rarely changed values:
 
 * Origin username / password, in `vars/zdm_proxy_core_config.yml`)
 * Target username / password, in `vars/zdm_proxy_core_config.yml`)
-* Advanced configuration values, in `vars/zdm_proxy_advanced_config.yml`
-//  - see [here] for more details) ...
-// https://docs.google.com/document/d/1jttOwFT2gifpp6ASYNPubyFvH7Hnon8aGgiBdKcdTgI/edit#heading=h.m788tga7trxz.
-** `forward_client_credentials_to_origin`
-*** Whether the credentials provided by the client application are for the Origin cluster.
-*** Defaults to `false`, can be set to `true` if the client passes credentials for Origin cluster instead.
-** `cluster_connection_timeout_ms`
-*** Timeout (in ms) when attempting to establish a connection from the proxy to one of the clusters.
+* Advanced configuration values, located in `vars/zdm_proxy_advanced_config.yml`:
+** `zdm_proxy_max_clients_connections`:
+*** Maximum number of client connections that the {zdm-proxy} should accept. Each client connection results in additional cluster connections and causes the allocation of several in-memory structures, so this parameter can be tweaked to cap the total number on each instance. A high number of client connections per proxy instance may cause some performance degradation, especially at high throughput.
+*** Defaults to `1000`
+** `replace_cql_functions`:
+*** Whether the {zdm-proxy} should replace standard CQL function calls in write requests with a value computed at proxy level.
+*** Currently, only the replacement of `now()` is supported.
+*** Disabled by default. Enabling this will have a noticeable performance impact.
+** `zdm_proxy_request_timeout_ms`:
+*** Global timeout (in ms) of a request at proxy level.
+*** This parameter determines how long the {zdm-proxy} will wait for one cluster (in case of reads) or both clusters (in case of writes) to reply to a request. If this timeout is reached, the {zdm-proxy} will abandon that request and no longer consider it as pending, thus freeing up the corresponding internal resources. Note that, in this case, the {zdm-proxy} will not return any result or error: when the client application's own timeout is reached, the driver will time out the request on its side.
+*** Defaults to `10000` ms. If your client application has a higher client-side timeout because it is expected to generate requests that take longer to complete, you need to increase this timeout accordingly.
+** `origin_connection_timeout_ms` and `target_connection_timeout_ms`:
+*** Timeout (in ms) when attempting to establish a connection from the proxy to Origin or Target.
 *** Defaults to `30000` ms
-** `request_timeout_ms`
-*** Timeout (in ms) of a request on either cluster from the vantage point of the ZDM proxy
-*** Defaults to `10000` ms
-** `enable_metrics`
+** `async_handshake_timeout_ms`:
+*** Timeout (in ms) when performing the initialization (handshake) of a proxy-to-secondary cluster connection that will be used solely for asynchronous dual reads.
+*** If this timeout occurs, the asynchronous reads will not be sent. This has no impact on the handling of synchronous requests: the {zdm-proxy} will continue to handle all synchronous reads and writes normally.
+*** Defaults to `4000` ms
+** `metrics_enable`:
 *** Whether metrics collection should be enabled
 *** Defaults to `true`, but can be set to `false` to completely disable metrics collection. This is not recommended.
-** `max_clients_threshold`
-*** Maximum number of client connections that the proxy should accept. Each client connection causes the allocation of several in-memory structures, so this parameter can be tweaked to limit the total number on each instance. A high number of connections per proxy instance will cause performance degradation at high throughput.
-*** Defaults to `500`
+
+Deprecated settings, which will be removed in a future {zdm-proxy} release:
+
+* `forward_client_credentials_to_origin`:
+** Whether the credentials provided by the client application are for Origin.
+** Defaults to `false` (the client application is expected to pass Target credentials), can be set to `true` if the client passes credentials for Origin instead.
 
 To change any of these settings, edit the desired values in `vars/zdm_proxy_core_config.yml` and/or `vars/zdm_proxy_advanced_config.yml`.
-[ TODO is this necessary, given that we indicate the file for each variable? ]
 
-To apply the configuration changes to the ZDM proxies in a rolling fashion, run the playbook with the following command:
+To apply the configuration changes to the {zdm-proxy} instances in a rolling fashion, run the following command:
 
 ```bash
 ansible-playbook update_zdm_proxy.yml -i zdm_ansible_inventory
 ```
 
-This playbook recreates each proxy container one by one, automating the following steps:
+This playbook operates in a rolling fashion by recreating each proxy container one by one. The {zdm-proxy} deployment remains available at all times and can be safely used throughout this operation. It automates the following steps:
 
 . It stops one container gracefully, waiting for it to shut down
 . It recreates the container and starts it up:
@@ -124,17 +137,20 @@ This playbook recreates each proxy container one by one, automating the followin
 
 == Upgrade the proxy version
 
-The version of the image that is used by the currently running proxy container can be viewed by using the docker container inspect command on any proxy machine:
-
+The {zdm-proxy} version is displayed at startup, in a message such as `Starting ZDM proxy version ...`. It can also be retrieved at any time by using the `version` option as in the following command.
 ```bash
-sudo docker container inspect zdm-proxy-container
+TODO add command to view version
 ```
 
-The playbook for configuration changes can also be used to upgrade the proxy version in a rolling fashion. All containers will be recreated with the image of the specified version. The same behavior and observations as above apply here.
+The playbook for configuration changes can also be used to upgrade the {zdm-proxy} version in a rolling fashion. All containers will be recreated with the image of the specified version. The same behavior and observations as above apply here.
 
-Change the version tag number to the desired version in `vars/zdm_proxy_container.yml`.
+To perform an upgrade, change the version tag number to the desired version in `vars/zdm_proxy_container.yml`:
+```bash
+zdm_proxy_image: datastax/zdm-proxy:x.y.z
+````
+Replacing x.y.z with the version you would like to upgrade to.
 
-Run the playbook with the following command (same as noted in the previous section):
+Then simply run the same playbook as above, with the following command:
 
 ```bash
 ansible-playbook update_zdm_proxy.yml -i zdm_ansible_inventory
