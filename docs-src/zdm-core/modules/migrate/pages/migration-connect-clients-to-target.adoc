@@ -14,6 +14,11 @@ Now we're ready to perform Phase 5, configure our clients to connect directly to
 
 In the https://astra.datastax.com[Astra Portal^] user interface, you can easily create a cloud-native database. Once logged in, you'll have a default Organization. If you haven't already, follow the dialogs on the Dashboard to create a database and assign an appropriate region. Later, you can designate multiple regions for your database, if needed.
 
+[TIP]
+====
+While this topic focuses on Astra DB as the Target, you can provision and create your cluster of choice with any CQL-based  configuration to which you want to migrate. Then if you haven't already, create the application schema by submitting a `DESCRIBE` statement on Origin and applying that schema on Target.
+====
+
 == Connection options
 
 You have several options when it comes to connecting your clients to the Target. Astra DB, for example, supports the following DataStax drivers. The links in this list go to Astra DB topics that describe the drivers in detail:
