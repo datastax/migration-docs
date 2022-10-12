@@ -12,6 +12,11 @@ ZDM provides a simple and reliable way for you to migrate applications from any 
 * Your clusters will be kept in sync at all times by a **dual-write logic** configuration
 * You can easily rollback at any point, for complete peace of mind
 
+[NOTE]
+====
+This suite of tools allows for zero-downtime migration only if your database meets the minimum xref:migration-feasibility-checklists.adoc[requirements]. If your database does not meet these requirements, you can complete the migration from the Origin to the Target, but downtime might be necessary to finish the migration.
+====
+
 [TIP]
 ====
 The {zdm-product} process requires you to be able to perform rolling restarts of your client applications during the migration.
