@@ -6,7 +6,7 @@ At DataStax, we've developed a set of thoroughly-tested self-service tools, auto
 
 We call this product suite **{company} {zdm-product} ({zdm-shortproduct})**. 
 
-ZDM provides a simple and reliable way for you to migrate an existing Apache Cassandra&reg; or DataStax Enterprise (DSE) cluster to Astra DB, or to any Cassandra/DSE cluster, or any type of CQL-based database, without any interruption of service to the apps and data. For example:
+ZDM provides a simple and reliable way for you to migrate applications from any CQL-based cluster (Apache Cassandra&reg;, DSE, Astra DB, or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
 
 * You can move your application to Astra DB, DSE, or Apache Cassandra with no downtime and with minimal configuration changes
 * Your clusters will be kept in sync at all times by a **dual-write logic** configuration
@@ -14,7 +14,7 @@ ZDM provides a simple and reliable way for you to migrate an existing Apache Cas
 
 == Migration scenarios
 
-Here are just a few migration scenarios that are supported when moving from one type of CQL-based database to another:
+Here are just a few examples of migration scenarios that are supported when moving from one type of CQL-based database to another:
 
 * From an existing self-managed Cassandra or DSE cluster to cloud-native Astra DB. For example:
 ** Cassandra 2.1.x, 3.11.x or 4.0.x to Astra DB
@@ -43,7 +43,7 @@ Before your migration begins, you'll need to satisfy prerequisites, prepare your
 
 image:zdm-migration-phases6a.png[Migration phases from start to finish]
 
-* **Phase 1:** Connect your client applications to the {zdm-proxy}. This activates the dual-write logic: writes will be "bifurcated" (meaning, sent both to Origin and Target), while reads will be executed on Origin only.
+* **Phase 1:** Connect your client applications to the {zdm-proxy}. This activates the dual-write logic: writes will be "bifurcated" (sent both to Origin and Target), while reads will be executed on Origin only.
 
 * **Phase 2:** Migrate existing data using {cstar-data-migrator} and/or {dsbulk-migrator}. Validate that the migrated data is correct, while continuing to perform dual writes.
 
@@ -55,14 +55,15 @@ image:zdm-migration-phases6a.png[Migration phases from start to finish]
 
 == Migration workflow
 
-Here's a diagram to illustrate the overall migration strategy when moving apps and data from your Origin to your Target. In this example, we're looking at a migration from a generic Origin cluster to an Astra DB Target cluster.
+Here's a diagram to illustrate the overall migration strategy when moving client applications and data from Origin to Target.
 
 image:zdm-workflow3.png[Migration workflow from client application to {zdm-proxy} with dual writes to Origin and Target]
 
 * With no changes required to your client application code itself, {zdm-proxy} does the work to route writes to Origin and Target.
 * Cassandra Data Migrator and/or DSBulk Migrator can migrate data between clusters of any supported types. See the next section for an introduction to these tools.
 * Initially during the migration, {zdm-proxy} always reads from Origin.
-* Later during the migration, the read routing is switched to Target so that all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary cluster.
+* Once all the data has been imported into Target, you can run any validation and / or reconciliation on it. You can also optionally enable asynchronous reads to be sent to Target to try out the performance and validate that it can handle your application live request load before cutting over.
+* At this point, the read routing on the {zdm-proxy} is switched to Target so that all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary cluster.
 * Finally, the client application can be moved off the proxy and connected directly to Target, at which point the migration is complete.
 
 == {company} {zdm-product} components
@@ -77,20 +78,20 @@ The {zdm-proxy} itself doesn't have any capability to migrate data or knowledge 
 
 === Role of {zdm-proxy}
 
-We created zdm-proxy} to function between the application and both databases (Origin and Target). The databases can be any CQL-compatible data store (e.g. Apache Cassandra, Datastax Enterprise and Astra DB). The proxy always sends every write operation (Insert, Update, Delete) synchronously to both clusters at the desired Consistency Level:
+We created {zdm-proxy} to function between the application and both databases (Origin and Target). The databases can be any CQL-compatible data store (e.g. Apache Cassandra, Datastax Enterprise and Astra DB). The proxy always sends every write operation (Insert, Update, Delete) synchronously to both clusters at the desired Consistency Level:
 
 * If the write is successful in both clusters, it returns a successful acknowledgement to the client application
 * If the write fails on either cluster, the failure is passed back to the client application so that it can retry it as appropriate, based on its own retry policy.
 
 This design ensures that new data is always written to both clusters, and that any failure on either cluster is always made visible to the client application. {zdm-proxy} also sends all reads to the primary cluster (initially Origin, and later Target) and returns the result to the client application.
 
-{zdm-proxy} is designed to be highly available. It can be scaled horizontally so typical deployments are made up of a minimum of 3 servers. {zdm-proxy} can be restarted in a rolling fashion, for example, to change configuration for different phases of the migration.
+{zdm-proxy} is designed to be highly available. It can be scaled horizontally, so typical deployments are made up of a minimum of 3 servers. {zdm-proxy} can be restarted in a rolling fashion, for example, to change configuration for different phases of the migration.
 
 [TIP]
 ====
 {zdm-proxy} has been designed to run in a **clustered** fashion so that it is never a single point of failure. Unless it is for a demo or local testing environment, a {zdm-proxy} deployment should always comprise multiple {zdm-proxy} instances.
 
-We will often use the term **{zdm-proxy}** to indicate the whole deployment, and **{zdm-proxy} instance** to refer to the individual proxy processes in the deployment.
+We will often use the term **{zdm-proxy}** to indicate the whole deployment, and **{zdm-proxy} instance** to refer to an individual proxy process in the deployment.
 ====
 
 === Key features of {zdm-proxy}
@@ -99,7 +100,7 @@ We will often use the term **{zdm-proxy}** to indicate the whole deployment, and
 
 * Reduces risks to upgrades and migrations by decoupling Origin from Target, and allowing there to be an explicit cut-over point once you're satisfied with Target.
 
-* Bifurcates writes to both clusters during the migration process synchronously.
+* Bifurcates writes synchronously to both clusters during the migration process.
 
 * Returns (for read operations) the response from the primary cluster, which is its designated source of truth. During a migration, Origin is typically the primary cluster. Near the end of the migration, you'll shift the primary cluster to be Target.
 
@@ -117,13 +118,13 @@ When using Asynchronous Dual Reads, any additional read load on Target may impac
 
 https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code. It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
 
-The Ansible automation is organized into playbooks, each implementing a specific operation. The machine from which the playbooks are run is known as the Ansible Control Host. In ZDM, the Ansible Control Host will run as a Docker container.
+The Ansible automation for {zdm-shortproduct} is organized into playbooks, each implementing a specific operation. The machine from which the playbooks are run is known as the Ansible Control Host. In {zdm-shortproduct}, the Ansible Control Host will run as a Docker container.
 
 You will use the **{zdm-utility}** to set up Ansible in a Docker container, and **{zdm-automation}** to run the Ansible playbooks from the Docker container created by {zdm-utility}. In other words,the {zdm-utility} creates the Docker container acting as the **Ansible Control Host**, from which the {zdm-automation} allows you to deploy and manage the {zdm-proxy} instances and the associated monitoring stack - Prometheus metrics and Grafana visualization of the metric data.
 
 {zdm-utility} and {zdm-automation} expect that you have already provisioned the recommended infrastructure, as outlined in xref:migration-deployment-infrastructure.adoc[].
 
-The source for both of these tools are in a Public repo.
+The source for both of these tools are in a public repo.
 
 For details, see:
 
@@ -138,7 +139,7 @@ As part of the overall migration process, you can use {cstar-data-migrator} and/
 
 Use {cstar-data-migrator} to:
 
-* Migrate your data from any CQL supported Origin to any CQL supported Target. Examples of databases that support CQL are Apache Cassandra, DataStax Enterprise and Astra DB.
+* Migrate your data from any CQL-supported Origin to any CQL-supported Target. Examples of databases that support CQL are Apache Cassandra, DataStax Enterprise and Astra DB.
 * Validate migration accuracy and performance using examples that provide a smaller, randomized data set
 * Preserve internal `writetime` timestamps and Time To Live (TTL) values
 * Take advantage of advanced data types (Sets, Lists, Maps, UDTs)
