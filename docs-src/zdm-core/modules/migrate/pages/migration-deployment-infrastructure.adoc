@@ -17,7 +17,7 @@ TODO add "or DSBulk Migrator" to diagram
 
 == Infrastructure requirements
 
-To deploy the {zdm-proxy} and its companion monitoring stack, you will have to provision infrastructure that meets the following requirements:
+To deploy the {zdm-proxy} and its companion monitoring stack, you will have to provision infrastructure that meets the following requirements.
 
 === Machines
 
