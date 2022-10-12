@@ -19,7 +19,7 @@ You may need to use `sudo` to run the `docker` command.
 
 [TIP]
 ====
-Keep in mind that docker logs are deleted if the container is recreated or restarted.
+Keep in mind that docker logs are deleted if the container is recreated.
 ====
 
 [#how-to-view-retrieve-logs]
