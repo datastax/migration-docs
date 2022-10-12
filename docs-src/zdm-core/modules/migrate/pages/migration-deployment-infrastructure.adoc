@@ -5,13 +5,15 @@ A typical {zdm-proxy} deployment is made up of multiple proxy instances. A minim
 
 All {zdm-proxy} instances must be reachable by the client application and must be able to connect to your Origin and Target clusters. The {zdm-proxy} process is lightweight, requiring only a small amount of resources and no storage to persist state (apart from logs).
 
-The {zdm-proxy} should be deployed close to your client application instances. This can be on any cloud provider as well as on premises, depending on your existing infrastructure.
+The {zdm-proxy} should be deployed close to your client application instances. This can be on any cloud provider as well as on-premise, depending on your existing infrastructure.
 
-If you have a multi-DC cluster with multiple set of client application instances deployed to geographically distributed data centers, you should plan for a {zdm-proxy} deployment for each data center.
+If you have a multi-DC cluster with multiple set of client application instances deployed to geographically distributed data centers, you should plan for a separate {zdm-proxy} deployment for each data center.
 
 Here's a typical deployment showing connectivity between client applications, {zdm-proxy} instances, and clusters:
 
 image:zdm-during-migration.png[Connectivity between client applications, proxy instances, and clusters.]
+
+TODO add "or DSBulk Migrator" to diagram
 
 == Infrastructure requirements
 
