@@ -1,21 +1,152 @@
 = Connect your client applications directly to Target
 
-The data migration has completed and all our checks have passed, so we are now ready to connect our clients directly to Astra DB.
+At this point in our migration phases, we've completed:
 
-[ TODO change to point to the relevant Astra docs section on connecting clients to Astra]
+* Phase 1: Connected client applications to {zdm-proxy}, which included setting up Ansible playbooks with the {zdm-utility}, and deploying the {zdm-proxy} instances via the Docker container with {zdm-automation}.
 
-In this topic, we'll use NoSQLBench as the sample client. It's a simple process. Modify the examples to apply the general steps to your clients.
+* Phase 2: Migrated and validated our data with {cstar-data-migrator} and/or {dsbulk-migrator}.
 
-Stop NoSQLBench and launch it again with the following command. Note that the connection configuration is now pointing directly to Astra DB:
+* Phase 3: Enabled async data reads (an optional step) to check that the Target can handle the read/write traffic.
 
-```bash
-./nb cql-keyvalue-astra \
-userfile=my-astra-client-id.txt password=my-astra-client-secret.txt \
-secureconnectbundle=/home/ubuntu/secure-connect-zdm-demo-target.zip \
-rampup-cycles=1000 main-cycles=300000000 stride=300
+* Phase 4: Changed read routing to the Target.
+
+Now we're ready to perform Phase 5, configure our clients to connect directly to the Target's database.  In this example, we'll use Astra DB as the Target. You may have already created an Astra DB database, but here we'll refer you to a few documentation topics just in case.
+
+In the https://astra.datastax.com[Astra Portal^] user interface, you can easily create a cloud-native database. Once logged in, you'll have a default Organization. If you haven't already, follow the dialogs on the Dashboard to create a database and assign an appropriate region. Later, you can designate multiple regions for your database, if needed.
+
+== Connection options
+
+You have several options when it comes to connecting your clients to the Target. Astra DB, for example, supports the following DataStax drivers. The links in this list go to Astra DB topics that describe the drivers in detail:
+
+* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-cplusplus.html[C++ driver^]
+
+* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-csharp.html[C# driver^]
+
+* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-java.html[Java driver^]
+
+* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-nodejs.html[Node.js driver^]
+
+* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-python.html[Python driver^]
+
+Be sure to also consult https://docs.datastax.com/en/dev-app-drivers/docs/bestPractices.html[Best practices for DataStax drivers] for rules and recommendations to improve performance and minimize resource utilization in client applications. 
+
+== Connecting with Java cloud-native driver
+
+Taking the Java cloud-native driver as an example, the **prerequisites** to connect from a Java client to an Astra DB as the Target are as follows:
+
+. Generate a Bearer Token and select **API Administrator User** for the role.
+
+. Create a keyspace.
+
+. Create one of more database table(s) for your keyspace that match the Origin database's schema; for an example, see https://docs.datastax.com/en/astra-serverless/docs/develop/dev-with-rest.html#_create_a_table_in_your_keyspace[Create a table in your keyspace].
+
+. Ensure that a https://adoptopenjdk.net/[Java Development Kit (SDK)^] and https://maven.apache.org/install.html[Apache Maven^] are installed.
+
+You would then:
+
+. Add the DataStax Java driver dependency to your pom.xml file; for an example, see https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-java.html#_example_pom_xml_file[this page^].
+
+. Create your connection as outlined in this https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-java.html#_connecting_with_java_cloud_native_driver[Java example^]. In this case, the example uses the open-source Stargate API to fetch an auth token in the demonstrated call. 
+
+
+== Connecting with legacy drivers
+
+With the legacy drivers, the **prerequisites** for connecting to the Target database (Astra DB in this example) are slightly different. 
+
+. Create your database and set your environment variables to save time developing on your database. There are four environment variables needed; three of which are found on your Dashboard in https://astra.datastax.com[Astra Portal^]:
++
+* `database id`
+* `region`
+* `keyspace`
++
+In addition, there's an ID (a token) that you must create. For background steps, refer to https://docs.datastax.com/en/astra-serverless/docs/manage/db/manage-create.html[Create your database^].
+
+. If you haven't already, https://maven.apache.org/download.cgi[download^] and https://maven.apache.org/install.html[install^] Maven.
+
+. Get a `Client ID` and `Client Secret` from a resource called the Secure Connect Bundle (SCB) -- which you'll generate in the Astra Portal -- by creating your application token for your username and password.
+
+=== Working with the Secure Connect Bundle ZIP file
+
+To connect to your Astra DB database using the drivers, download the SCB from Astra Portal, which will generate the connection credentials. Here are the steps:
+
+. From your Dashboard page in Astra Portal, select your database.
+. On the Overview page, select Connect.
+. In the **Select a Method** section, select Drivers and then Legacy from the dropdown menu to select your driver type from the list to load language-specific instructions.
+. Click **Download Bundle**.
+
+The `secure-connect-database_name.zip` file downloads, which contains the security certificates and credentials for your database. 
+
+After you create an Astra DB database, you can grant access to other members of your team by providing them with the database credentials and connection details for your database.
+
+=== Connecting the Java driver to Target
+
+The full version of the following steps are shown in https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-java.html#_connecting_the_driver_2[this topic].
+
+. Navigate to the pom.xml file at the root of your Java project and open it for editing.
+
+. Add the DataStax Java driver dependency to your pom.xml file, ensuring that the name of the dependency corresponds to the installed version: This dependency causes Maven to automatically download the appropriate .jar files found at the url specified in the repository for the DSE Java driver and make them available to your code.  Example:
+
+```xml
+<!--Use the latest version from https://search.maven.org/artifact/com.datastax.oss/java-driver-core -->
+<dependency>
+  <groupId>com.datastax.oss</groupId>
+  <artifactId>java-driver-core</artifactId>
+  <version>4.14.1</version>
+</dependency>
 ```
 
-A second example:
+. Save and close your pom.xml file.
+
+. Initialize the DataStax Java driver.
+
+. Create source such as `ConnectDatabase.java` file in the `/src/main/java` directory for your Java project.
+
+. Copy the following code for your DataStax driver into the Java source. The following example implements a `ConnectDatabase` class to connect to your Astra DB database, runs a CQL query, and prints the output to the console.
+
+```java
+import com.datastax.oss.driver.api.core.CqlSession;
+import com.datastax.oss.driver.api.core.cql.ResultSet;
+import com.datastax.oss.driver.api.core.cql.Row;
+import java.nio.file.Paths;
+
+public class ConnectDatabase {
+
+   public static void main(String[] args) {
+       // Create the CqlSession object:
+       try (CqlSession session = CqlSession.builder()
+           .withCloudSecureConnectBundle(Paths.get("/path/to/secure-connect-database_name.zip"))
+           .withAuthCredentials("clientId","clientSecret")
+           .withKeyspace("keyspace_name")
+           .build()) {
+           // Select the release_version from the system.local table:
+           ResultSet rs = session.execute("select release_version from system.local");
+           Row row = rs.one();
+           //Print the results of the CQL query to the console:
+           if (row != null) {
+               System.out.println(row.getString("release_version"));
+           } else {
+               System.out.println("An error occurred.");
+           }
+       }
+       System.exit(0);
+   }
+}
+```
+
+. Make the following changes:
+ * Use the `withCloudSecureConnectBundle()` method to specify the path to the secure connect bundle for your Astra DB database.
+ * Use the `withAuthCredentials()` method to specify the username and password for your database.
+ * Use the `withKeyspace()` method to specify the keyspace name for your database.
+
+. Save and close the example `ConnectDatabase.java` file.
+
+Additional details are available in the https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-java.html[DataStax Java Driver^] topic. 
+
+== Example switching to Target with ZDM Demo Client
+
+For demonstration purposes, we'll use the same ZDM Demo Client that we described in xref:migration-connect-clients-to-proxy.adoc[].
+
+It's a simple process. Modify the examples to apply the general steps to your clients.
 
 Stop the ZDM Demo Client application and start it again with `connectionMode` set to `TARGET`:
 
@@ -25,6 +156,6 @@ mvn jetty:run -DconnectionMode=TARGET
 
 All applications are now connecting directly to Astra DB, and Origin is no longer being updated.
 
-== Migration completed
+== Phase 5 of migration completed
 
 Until this point, in case of any issues, you could have abandoned the migration and rolled back to connect directly to Origin at any time. From this point onward, the clusters will diverge, and the target Astra DB database is the source of truth for your apps and data. 
