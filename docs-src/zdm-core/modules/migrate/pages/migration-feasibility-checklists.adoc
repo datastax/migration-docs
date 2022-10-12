@@ -1,0 +1,33 @@
+= Feasibility checklists
+
+Before starting your migration, refer to the following checklists to ensure that your Cassandra&reg;-based Origin cluster -- whether it's based on Apache Cassandra, DataStax Enterprise (DSE), or Astra DB Classic -- is ready for the migration to another type of Target.
+
+== Prerequisite software checklist
+
+For any migration using {zdm-product}, you will need:
+
+* GitHub account for access to the {zdm-proxy} and related GitHub repos
+* Java version ... 
+* Golang version ...
+* Docker version
+* more ...
+
+== Checklist when migrating from self-managed to Astra DB cloud
+
+* While not needed immediately, it's best if you have in advance of your migration an Astra DB database (Serverless or Classic) as your Target. 
+* If you haven't already, create an Astra DB database (Serverless or Classic) in the https://astra.datastax.com[Astra Portal^], specifying one or more supported regions that match your geographical proximity and cloud requirements.
+* Classic refers to an earlier Astra DB implementation that preceded many features added in Astra DB Serverless. 
+* Astra DB databases implement guardrails that ... 
+* Astra DB does not support direct configuration of ...
+* next ...
+
+== Checklist when migrating from a self-managed on-premise cluster to another type/version
+
+List here...
+
+* When migrating from open-source Cassandra (any 2.x, 3.x, 4.x) to a supported DSE 5.1.x or 6.8.x cluster, ...
+* ...
+
+== Refer to deployment and infrastructure details
+
+For any migration, we've described important xref:migration-deployment-infrastructure.adoc[deployment and infrastructure considerations] in the next topic.

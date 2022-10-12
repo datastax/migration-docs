@@ -1,0 +1,12 @@
+= Migration overview
+
+Welcome to the **{company} {zdm-product}** documentation. 
+
+This product suite provides production-ready tools to help you easily and reliably migrate from any Cassandra&reg;-based cluster to another Cassandra&reg;-based cluster. 
+
+You can get started with the following:
+
+* xref:migration-introduction.adoc[Introduction]
+* xref:migration-faqs.adoc[FAQs]
+
+Then before starting your migration, be sure to read the important xref:migration-preliminary-steps.adoc[preliminary steps], including prerequisites, feasibility checklist, and infrastructure requirements. 

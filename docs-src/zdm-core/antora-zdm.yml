@@ -1,7 +1,7 @@
 name: docs
 version: ~
 title: Zero Downtime Migration
-start_page: migrate:migration-introduction.adoc
+start_page: migrate:migration-overview.adoc
 
 nav:
 - modules/migrate/nav.adoc

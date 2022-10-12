@@ -419,9 +419,3 @@ If you are using simple statements, consider using prepared statements as the be
 Increasing the number of proxies might help, but only if the VMs resources (CPU, RAM or network IO) are near capacity. The {zdm-proxy} doesn't use a lot of RAM, but it uses a lot of CPU and network IO.
 
 Deploying the proxy instances on VMs with faster CPUs and faster network IO might help, but only your own tests will reveal  whether it helps, because it depends on the workload type and details about your environment. Such as, network/VPC configurations, hardware, and so on.
-
-
-
-== What's next?
-
-Refer to the xref:migration-troubleshooting-advanced.adoc[advanced troubleshooting] topic.

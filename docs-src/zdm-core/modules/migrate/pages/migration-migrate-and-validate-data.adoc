@@ -1,11 +1,11 @@
-= Migrate and validate your data
+= Tools to migrate and validate data
 
 This topic introduces you to the benefits of using two data migration tools during your migration project:
 
 * {cstar-data-migrator}
 * {dsbulk-migrator}
 
-These tools provide helpful features and may be used according to match the requirements of your Apache Cassandra&reg; or DataStax Enterprise (DSE) databases.  The tools can help you migrate data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB).
+These tools provide helpful features and may be used to match the requirements of your Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB databases.  The tools can help you migrate data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB).
 
 == What's the difference between these data migration tools?
 
@@ -83,8 +83,3 @@ For installation and usage details, see the {cstar-data-migrator} repo's https:/
 * `generate-ddl` reads the schema from the origin and generates CQL files to recreate it in the target.
 
 For installation and usage details, see the {dsbulk-migrator} repo's https://github.com/datastax/dsbulk-migrator/blob/main/README.md[README, window="_blank"]. 
-
-== What's next?
-
-Learn how to xref:migration-enable-async-dual-reads.adoc[].
-

@@ -130,8 +130,5 @@ The {zdm-utility} now:
 * Displays a message. Example:
 
 image:zdm-go-utility-success.png[Ansible Docker container success messages]
+
 [ TODO replace with updated message]
-
-== What's next?
-
-Now that you've completed the Ansible setup with {zdm-utility}, learn how to xref:migration-deploy-proxy-monitoring.adoc[].

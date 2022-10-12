@@ -48,7 +48,3 @@ curl -G -d 'rowkey=1080' http://localhost:8080/zdm-demo-client/rest/row
 ```
 
 The resulting data is identical because the two databases are in sync.
-
-== What's next? 
-
-Learn how to xref:migration-connect-clients-to-target.adoc[].

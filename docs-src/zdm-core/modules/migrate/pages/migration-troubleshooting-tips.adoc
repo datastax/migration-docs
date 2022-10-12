@@ -123,9 +123,9 @@ Do not use `--rm` when actually launching the {zdm-proxy} otherwise you will not
 
 == How to leverage the metrics provided by {zdm-proxy}
 
-The {zdm-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format. At the moment this is the only way to obtain metrics from {zdm-proxy}, we plan to introduce other ways to expose metrics in the future. 
+The {zdm-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format. At the moment this is the only way to obtain metrics from {zdm-proxy}, we plan to introduce other ways to expose metrics in the future.
 
-The {zdm-automation} can deploy Prometheus and Grafana, configuring them automatically. The Grafana dashboards are ready to go with metrics that are being scraped from the {zdm-proxy} instances. 
+The {zdm-automation} can deploy Prometheus and Grafana, configuring them automatically. The Grafana dashboards are ready to go with metrics that are being scraped from the {zdm-proxy} instances.
 
 If you already have a Grafana deployment then you can import the dashboards from the two ZDM dashboard files https://github.com/datastax/zdm-proxy-automation/tree/main/grafana-dashboards[on this location^].
 
@@ -240,10 +240,6 @@ If the issue is related to performance, troubleshooting can be more complicated 
 
 * Which statement types are being used: simple, prepared, batch?
 * If batch statements are being used, which driver API is being used to create these batches? Are you passing a `BEGIN BATCH` cql query string to a simple/prepared statement? Or are you using the actual batch statement objects that drivers allow you to create?
-* How many parameters does each statement have? 
+* How many parameters does each statement have?
 * Is cql function replacement enabled? You can see if this feature is enabled by looking at the value of the Ansible advanced configuration variable `replace_cql_functions` if using the automation, or the environment variable `ZDM_REPLACE_CQL_FUNCTIONS` otherwise. CQL Function replacement is disabled by default.
 * If permissible within your security rules, please provide us access to the {zdm-proxy} metrics dashboard. Screenshots are fine but for performance issues it is more helpful to have access to the actual dashboard so the team can use all the data from these metrics in the troubleshooting process.
-
-== What's next?
-
-Refer to the xref:migration-troubleshooting-scenarios.adoc[].
