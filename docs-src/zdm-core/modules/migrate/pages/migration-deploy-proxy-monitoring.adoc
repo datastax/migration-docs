@@ -24,9 +24,9 @@ ubuntu@52772568517c:~$
 
 You can `ls` to see the resources in the Docker container. The most important resource is the `zdm-proxy-automation`.
 
-Now, `cd` into `zdm-proxy-automation` and `ls` to see its content. From there, cd to the ansible subdirectory and `ls`. Example:
+Now, `cd` into `zdm-proxy-automation` and `ls` to see its content. From there, cd to the `ansible` subdirectory and `ls`. Example:
 
-image:zdm-ansible-container-ls.png[]
+image:zdm-ansible-container-ls.png[] [TODO update image]
 
 == Configure the {zdm-proxy}
 
@@ -41,7 +41,7 @@ The next step is to edit the `zdm_proxy_core_config.yml` file in the Docker cont
 
 In the container shell, `cd` to `~/zdm-proxy-automation/ansible/vars` and edit `zdm_proxy_core_config.yml`
 
-There are two identical sets of parameters to configure the proxy to connect to the cluster. One set is for Origin and its parameters are prefixed with `origin`, while the one for Target uses the `target` prefix.
+There are two identical sets of parameters to configure the {zdm-proxy} to connect to the cluster. One set is for Origin and its parameters are prefixed with `origin`, while the one for Target uses the `target` prefix.
 
 These two sections are very important and are always required. Populate the appropriate parameters in each section for the respective cluster, by uncommenting the parameters and specifying their values as follows:
 
@@ -58,14 +58,14 @@ These two sections are very important and are always required. Populate the appr
 ... Specify its path in `*_astra_secure_connect_bundle_path`.
 .. Otherwise, if you wish the automation to download the cluster's Secure Connect Bundle for you, just specify its database id in `*_astra_db_id` and the token for a valid `R/W User` Astra role in `*_astra_token`
 
-Settings that do not need changing at this time:
+Global settings that do not need changing at this time:
 . `primary_cluster`: which cluster is going to be the primary source of truth. This should be left set to its default value of `ORIGIN` at the start of the migration, and will be changed to `TARGET` after migrating all existing data.
-. `read_mode`: leave to its default value of `PRIMARY_ONLY`. See xref:migration-enable-async-dual-reads.adoc[] for more information on this parameter.
+G. `read_mode`: leave to its default value of `PRIMARY_ONLY`. lobal see xref:migration-enable-async-dual-reads.adoc[] for more information on this parameter.
 . `log_level`: leave to its default of `INFO`.
 
 Save the file and exit the editor.
 
-Example of a completed zdm_proxy_core_config.yml file for a migration from a self-managed Origin to an Astra DB Target:
+Example of a completed `zdm_proxy_core_config.yml` file for a migration from a self-managed Origin to an Astra DB Target:
 
 ```yml
 ---
@@ -121,13 +121,13 @@ If you wish to enable TLS encryption between the client application and the {zdm
 
 === Advanced configuration (optional)
 
-Here are some additional configuration variables that you may wish to review and change at deployment time in specific cases. All these variables are located in `vars/zdm_proxy_advanced_config.yml`.
+Here are some additional configuration variables that you may wish to review and change *at deployment time* in specific cases. All these variables are located in `vars/zdm_proxy_advanced_config.yml`.
 
-All advanced configuration variables not listed here are considered mutable and can be changed later if needed (changes can be easily applied to existing deployments in a rolling fashion).
+All advanced configuration variables not listed here are considered mutable and can be changed later if needed (changes can be easily applied to existing deployments in a rolling fashion using the relevant Ansible playbook).
 
 ==== Multi-datacenter clusters
 
-If Origin is a multi-datacenter cluster, you will need to specify the name of the datacenter that the proxy should consider local. To do this, set the property `origin_local_datacenter` to the datacenter name. Likewise, for multi-datacenter Target clusters you will need to set `target_local_datacenter` appropriately.
+If Origin is a multi-datacenter cluster, you will need to specify the name of the datacenter that the {zdm-proxy} should consider local. To do this, set the property `origin_local_datacenter` to the datacenter name. Likewise, for multi-datacenter Target clusters you will need to set `target_local_datacenter` appropriately.
 
 These two properties are located in `vars/zdm_proxy_advanced_configuration.yml`. Note that this is not relevant for multi-region Astra DB clusters, where this is handled through region-specific Secure Connect Bundles.
 
