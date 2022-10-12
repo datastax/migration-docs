@@ -38,9 +38,3 @@ docker load --input zdm-proxy2.tar
 
 If you're using {zdm-automation}, there may be other steps required for the deployment to be successful without Internet access.
 
-
-== Regarding lightweight transactions and non-idempotent operations
-
-{zdm-proxy} can bifurcate lightweight transactions to Origin and Target. However, it only returns the applied flag from one the primary cluster, i.e. cluster from where it returns synchronous read results to the client. By default, that is Origin. However, if you set the Ansible core configuration variable `primary_cluster` to `TARGET` (or the environment variable `ZDM_PRIMARY_CLUSTER` if not using the automation), Target will be considered the primary and read results from Target will be returned to the client application, as well as the applied flag from any lightweight transactions.
-
-Given that there are two separate clusters involved, the state of each cluster may be different. For conditional writes, this may create a divergent state for a time. It may not make a difference in many cases, but if lightweight transactions (or other non-idempotent operations) are used, we recommend a reconciliation phase in the migration before and after switching reads to rely on Target. For details about using the Cassandra Data Migrator to validate your migration, see xref:migration-migrate-and-validate-data.adoc[Migrate and validate your data].
