@@ -68,7 +68,6 @@ Save the file and exit the editor.
 Example of a completed `zdm_proxy_core_config.yml` file for a migration from a self-managed Origin to an Astra DB Target:
 
 ```yml
----
 ##############################
 #### ORIGIN CONFIGURATION ####
 ##############################
