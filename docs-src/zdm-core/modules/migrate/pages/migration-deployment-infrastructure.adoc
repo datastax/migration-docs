@@ -11,9 +11,7 @@ If you have a multi-DC cluster with multiple set of client application instances
 
 Here's a typical deployment showing connectivity between client applications, {zdm-proxy} instances, and clusters:
 
-image:zdm-during-migration.png[Connectivity between client applications, proxy instances, and clusters.]
-
-TODO add "or DSBulk Migrator" to diagram
+image:zdm-during-migration2.png[Connectivity between client applications, proxy instances, and clusters.]
 
 == Infrastructure requirements
 
