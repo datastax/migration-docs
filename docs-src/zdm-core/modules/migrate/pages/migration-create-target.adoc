@@ -23,7 +23,7 @@ Assign your preferred values for the serverless database:
 
 * **Name**
 * **Keyspace** - this is a handle that establishes the database's context in subsequent DDL and DML statements
-* **Cloud provider**: `AWS` is used in this guide's example; however you can choose your preferred cloud provider
+* **Cloud provider**: AWS is used in this guide's example; however you can choose your preferred cloud provider
 * **Region**: choose your geographically preferred region - you can subsequently add more regions
 
 When the Astra DB reaches **Active** status, perform the following steps in an Astra DB user account. Create an IAM token with the "Read/Write User" role. This role will be used by the client application, the {zdm-proxy}, and the {zdm-automation}.
