@@ -7,7 +7,7 @@ In this topic, we'll use a DataStax Astra DB serverless database as the Target c
 * Create an Astra DB serverless cluster
 * Retrieve its Secure Connect Bundle (SCB) and upload it to the application instances
 * Create Astra DB access credentials for the cluster
-* Create the application schema
+* Create the client application schema
 
 == Prerequisites
 
@@ -26,7 +26,7 @@ Assign your preferred values for the serverless database:
 * **Cloud provider**: `AWS` is used in this guide's example; however you can choose your preferred cloud provider
 * **Region**: choose your geographically preferred region - you can subsequently add more regions
 
-When the Astra DB reaches **Active** status, perform the following steps in an Astra DB user account. Create an IAM token with the "Read/Write User" role. This role will be used by the application, the ZDM proxy, and the ZDM automation.
+When the Astra DB reaches **Active** status, perform the following steps in an Astra DB user account. Create an IAM token with the "Read/Write User" role. This role will be used by the client application, the {zdm-proxy}, and the {zdm-automation}.
 
 In Astra Portal, choose **Organization Settings** (upper left) from the drop-down menu, and then **Token Management**.  Select the **Read/Write User** role:
 
@@ -44,39 +44,32 @@ For more information about role permissions, see link:https://docs.datastax.com/
 
 Your cluster's Secure Connect Bundle (SCB) will be needed by:
 
-* Your application, to connect directly to Astra DB near the end of the migration
-* Cassandra Data Migrator to migrate and validate data into Astra DB
+* Your client application, to connect directly to Astra DB near the end of the migration
+* Cassandra Data Migrator or DSBulk Migrator, to migrate and validate data into Astra DB
 
 // * The DataStax Bulk Migrator to import the existing data into Astra
 
-With the Astra DB in an **Active** status, download its SCB from Astra Portal. It's a zip file that contains the security certificates and other metadata to connect to your database (note that the credentials are not contained in the SCB).
+With the Astra DB database in an **Active** status, download its SCB from Astra Portal. It's a zip file that contains the security certificates and other metadata to connect to your database (note that the credentials are not contained in the SCB).
 
 . In Astra Portal, go to the Dashboard and select the serverless database that you created in the prior step.
 . Click on **Connect**
 . Select the **Java driver** and click on **Download bundle**.
-. Copy the SCB to your application instance:
+. Copy the SCB to your client application instance:
 +
 ```bash
-scp -i <your_ssh_key> secure-connect-<target cluster name>.zip ubuntu@<public IP of application instance>:
+scp -i <your_ssh_key> secure-connect-<target cluster name>.zip ubuntu@<public IP of client application instance>:
 ```
 
-== Create the application schema
+== Create the client application schema
 
-Finally for the prep work on the migration target, create the application schema in your newly created Astra DB database. Make it identical to the schema on the origin cluster.
+To complete the preparation work on Target, create the client application schema in your newly created Astra DB database.
 
-In Astra Portal, create each corresponding keyspace and one or more database tables, and (if any) indexes.
+In Astra Portal, create each corresponding keyspace and tables. The keyspace names, table names and structure must be identical to the schema on Origin, bearing in mind that:
 
-(**TODO**: introduce the application used as example, how to set it up, etc.)
+* In Astra DB, keyspaces must be created through the UI [TODO add link?]. Keyspace creation through CQL is not supported.
+* Tables can be defined as usual in regular CQL, but the only table property that can be optionally set in Astra DB is `default_time_to_live`. Please remove all other table properties (such as compaction strategy, `gc_grace_seconds` and so on).
+* Materialized Views (MVs) and certain types of indexes are not supported in Astra DB, and should be replaced with supported indexes. See link:https://docs.datastax.com/en/astra-serverless/docs/plan/planning.html#_serverless_database_limits[Serverless database limits] for more details
 
-In the sample scenario for these topics, we'll create the schema for the application that we are using:
+To aid you in preparing the schema from the DDL used in a non-Astra cluster, you may wish to consider the `generate-ddl` functionality in the link:https://github.com/datastax/dsbulk-migrator[DSBulk Migrator]. Note that Materialized Views and indexes are not automatically converted by this tool.
 
-. From Astra Portal, go to the **Dashboard** and select the database.
-. Go to the **CQL console** tab.
-. Create the `zdm_demo` keyspace if it does not yet exists.
-. Create the following table:
-```bash
-create table zdm_demo.app_data (
-    app_key int PRIMARY KEY,
-    app_value text
-);
-```
+
