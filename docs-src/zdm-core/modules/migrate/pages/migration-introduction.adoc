@@ -12,6 +12,13 @@ ZDM provides a simple and reliable way for you to migrate applications from any 
 * Your clusters will be kept in sync at all times by a **dual-write logic** configuration
 * You can easily rollback at any point, for complete peace of mind
 
+[TIP]
+====
+The {zdm-product} process requires you to be able to perform rolling restarts of your client applications during the migration.
+
+This is standard practice for client applications that are deployed over multiple instances and is a widely used approach to roll out releases and configuration changes.
+====
+
 == Migration scenarios
 
 Here are just a few examples of migration scenarios that are supported when moving from one type of CQL-based database to another:
