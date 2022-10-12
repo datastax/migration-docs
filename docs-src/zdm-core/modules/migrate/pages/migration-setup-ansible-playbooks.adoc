@@ -8,13 +8,15 @@ Once completed, you will have a working and fully monitored {zdm-proxy} deployme
 
 == Introduction
 
-The {zdm-automation} uses **Ansible**, which deploys and configures the {zdm-proxy} instances and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:migration-deployment-infrastructure.adoc[Deployment considerations], which include the infrastructure requirements.
+The {zdm-automation} uses **Ansible**, which deploys and configures the {zdm-proxy} instances and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:migration-deployment-infrastructure.adoc[Deployment and infrastructure considerations], which include the infrastructure requirements.
 
 Configuring a machine to serve as the Ansible Control Host is very easy using the {zdm-utility}. This is a Golang (Go) executable program that runs anywhere. This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use. From this container, you will be able to easily configure and run the {zdm-automation} Ansible playbooks.
 
+[TODO add image to show Ansible control host, jumphost, ZDM utility]
+
 == Prerequisites
 
-. You must have already provisioned the ZDM infrastructure; which means you must have the server machines ready, and know their IP addresses. These can be in the cloud provider of your choice or on-premise.
+. You must have already provisioned the ZDM infrastructure, which means you must have the server machines ready, and know their IP addresses. These can be in the cloud provider of your choice or on-premise.
 . Docker needs to be installed on the machine that will be used as the Ansible Control Host, and the `docker` command must not require superuser privileges. The instructions to do this are available for each platform in the official Docker documentation. (Alice's note: add links)
 
 That's it!
@@ -93,7 +95,7 @@ You have five attempts to enter valid parameters. You can always run the {zdm-ut
 172.18.*
 ```
 +
-. You're asked if you have an existing Ansible inventory file. If you do, you can just specify it. If you do not, the {zdm-utility} will create one based on your answers to prompts and save it. Here we'll assume that you do not have one. Enter `n`.
+. You're asked if you have an existing Ansible inventory file. If you do, and you transferred it to the jumphost, you can just specify it. If you do not, the {zdm-utility} will create one based on your answers to prompts and save it. Here we'll assume that you do not have one. Enter `n`.
 +
 The created file will be named `zdm_ansible_inventory` in your working directory.
 . Next, indicate if this deployment is for local testing and evaluation (such as when you're creating a demo or just experimenting with the {zdm-proxy}). In this example, we'll enter `n` because this scenario is for a production deployment.
@@ -105,7 +107,7 @@ The created file will be named `zdm_ansible_inventory` in your working directory
 172.18.12.191
 ```
 + To finish entering private IP addresses, simply press ENTER at the prompt.
-. Optionally, when prompted, you can enter the private IP address of your Monitoring instance, which will use Prometheus to store data and Grafana to visualize it into a preconfigured dashboard. You can skip this step if you haven't decided which machine to use for monitoring, or if you wish to use your own monitoring stack.
+. Optionally, when prompted, you can enter the private IP address of your Monitoring instance, which will use Prometheus to store data and Grafana to visualize it into a preconfigured dashboard. It is strongly recommended exposing the {zdm-proxy} metrics in the preconfigured dashboard for easy monitoring. You can skip this step if you haven't decided which machine to use for monitoring, or if you wish to use your own monitoring stack.
 +
 In this example, we'll enter the same IP of the Ansible control host (the jumphost machine on which we're running the {zdm-utility}). Example:
 +
@@ -116,7 +118,7 @@ In this example, we'll enter the same IP of the Ansible control host (the jumpho
 At this point, the {zdm-utility}:
 +
 * Has created the Ansible Inventory to the default file, `zdm_ansible_inventory`.
-* Has written the {zdm-proxy} configuration to the default file, `ansible_container_init_config`.
+* Has written the {zdm-utility} configuration to the default file, `ansible_container_init_config`.
 * Presents a summary of the results thus far, and prompts you to Continue. Example:
 +
 image:zdm-go-utility-results2.png[{zdm-utility} Inventory Results are displayed in the terminal]
