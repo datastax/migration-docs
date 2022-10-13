@@ -6,7 +6,7 @@ Before starting your migration, refer to the following considerations to ensure 
 
 {zdm-proxy} supports protocol versions v3, v4, DseV1 and DseV2. We plan to support v2 very soon.
 
-It technically doesn't support v5 but handles protocol negotiation so that the client application properly downgrades the protocol version to v4 if v5 is requested. This means that any client applications using a recent driver that supports protocol version v5 can be migrated using the {zdm-proxy} as long as they do not use v5-specific functionality. Full support for v5 is in also the plans.
+It technically doesn't support v5, but handles protocol negotiation so that the client application properly downgrades the protocol version to v4 if v5 is requested. This means that any client applications using a recent driver that supports protocol version v5 can be migrated using the {zdm-proxy} (as long as they do not use v5-specific functionality). Full support for v5 is in also the plans.
 
 *Thrift is not supported by {zdm-proxy}.* If you are using a very old driver or cluster version that only supports Thrift then you need to change your client application to use CQL and potentially upgrade your cluster before starting the migration process.
 
@@ -27,17 +27,17 @@ DataStax Astra DB implements guardrails and sets limits to ensure good practices
 
 If you need to make changes to the application or data model to ensure that your workload can run successfully in Datastax Astra then you need to make these changes before you start the migration process.
 
-It is also highly recommended performing tests and benchmarks when connected directly to Astra DB prior to the migration so that you don't find unexpected issues during the migration process.
+It is also highly recommended performing tests and benchmarks when connected directly to Astra DB prior to the migration, so that you don't find unexpected issues during the migration process.
 
 === Read only applications
 
-If a client application only sends `SELECT` statements to a database connection then you may find that {zdm-proxy} terminates these read only connections periodically which may result in request errors if the driver is not configured to retry these requests in these conditions. 
+If a client application only sends `SELECT` statements to a database connection then you may find that {zdm-proxy} terminates these read only connections periodically, which may result in request errors if the driver is not configured to retry these requests in these conditions.
 
 This happens because Datastax Astra terminates idle connections after some inactivity period (usually around 10 minutes) so if Datastax Astra is your Target and a client connection is only sending read requests to the {zdm-proxy} then the Datastax Astra connection that is "paired" to that client connection will remain idle and will be eventually terminated.
 
-*We are planning a fix to this behavior* so that {zdm-proxy} sends heartbeats to the secondary cluster connections when a client connection only sends read requests but in the meantime you may want to implement some kind of work around for this issue. 
+*We are planning a fix to this behavior* so that {zdm-proxy} sends heartbeats to the secondary cluster connections when a client connection only sends read requests but in the meantime you may want to implement some kind of workaround for this issue.
 
-A potential workaround is to not connect these read only applications to {zdm-proxy} but you need to ensure that these applications switch reads to Target before the migration is done.
+A potential workaround is to not connect these read-only client applications to {zdm-proxy}, but you need to ensure that these client applications switch reads to Target before the migration is done.
 
 Another workaround is to implement a mechanism in your client application that creates a new `Session` periodically to avoid the Datastax Astra inactivity timeout. You can also implement some kind of meaningless write request that the application sends periodically to make sure the Datastax Astra connection doesn't idle.
 
@@ -84,6 +84,8 @@ You can also change the primary key in some cases. For example, if your compound
 {zdm-proxy} does *not* support `DseAuthenticator` with `kerberos` scheme.
 
 While the authenticator has to be supported, the *authorizer* does not affect client applications or {zdm-proxy} so you should be able to use any kind of authorizer configuration on both of your clusters.
+
+The authentication configuration on each cluster can be different between Origin and Target.
 
 [#cql-function-replacement]
 == Server-side non-deterministic functions in the primary key
