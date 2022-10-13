@@ -22,6 +22,5 @@
 *** xref:migration-troubleshooting.adoc[Troubleshooting]
 **** xref:migration-troubleshooting-tips.adoc[Troubleshooting tips]
 **** xref:migration-troubleshooting-scenarios.adoc[Troubleshooting scenarios]
-**** xref:migration-troubleshooting-advanced.adoc[Advanced troubleshooting]
 *** xref:migration-contributions.adoc[Contribution guidelines]
 *** xref:migration-release-notes.adoc[Release Notes]
