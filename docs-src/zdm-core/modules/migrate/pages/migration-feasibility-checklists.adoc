@@ -45,27 +45,45 @@ Another work around is to implement a mechanism in your client application that 
 
 {zdm-proxy} handles all DataStax Graph requests as write requests even if the traversals are read only. There is no special handling for these requests so you need to take a look at the traversals that your client application sends and determine whether the traversals are idempotent. If the traversals are non-idempotent then the reconciliation step is needed.
 
-Keep in mind that our recommended tools for data migration (and reconciliation) are CQL based so they can be used for migrations where Origin is a database that uses the new Datastax Graph engine (released with DSE 6.8) but they *can not be used for the old graph engine* that older DSE versions relied on. xref:non-idempotent-operations[Check this section] for more information about non-idempotent operations.
+Keep in mind that our recommended tools for data migration (and reconciliation) are CQL based so they can be used for migrations where Origin is a database that uses the new Datastax Graph engine (released with DSE 6.8) but they *can not be used for the old graph engine* that older DSE versions relied on. xref:#non-idempotent-operations[Check this section] for more information about non-idempotent operations.
 
-=== Search (Apache Solr)
+=== Search
 
 We recommend moving search workloads direcly from Origin to Target without {zdm-proxy} being involved but if you need the read routing capabilities from {zdm-proxy} then you can connect your search workloads to it as long as you are using the Datastax drivers to submit these queries (which means that the queries are regular CQL `SELECT` statements so {zdm-proxy} handles them as regular read requests).
 
-If you use the HTTP API then you will have to move those applications directly from Origin to Target when the migration is complete.
+If you use the HTTP API then you either modify your applications to use the CQL API instead or you will have to move those applications directly from Origin to Target when the migration is complete if that is acceptable.
 
 == Client compression
 
-TODO
+The binary protocol used by Apache Cassandra, DSE and Astra DB supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
 
-== Schema compability
+{zdm-proxy} doesn't support protocol compression at this time but we plan to introduce support for it soon. This kind of compression is disabled by default on all of our Datastax drivers so if you enabled it on your client application then you will need to disable it before starting the migration process.
 
-TODO
+This is *NOT* related to storage compression which you can configure on a table by table basis with the `compression` table property. Storage/table compression does not affect the client application or {zdm-proxy} in any way.
 
-== Authenticators
+== Schema / keyspace compability
 
-TODO 
-{zdm-proxy} only supports 
+{zdm-proxy} does not modify or transform cql statements besides the optional feature that replaces `now()` functions with timestamp literals (xref:#cql-function-replacement[refer to this section for more information about this feature]).
 
+A cql statement that your client application sends to {zdm-proxy} must be able to succeed on both clusters. This means that any keyspace that your client application uses must exist on both Origin and Target with the same name (although they can have different replication strategies and durable writes settings).
+
+The schema doesn't have to be an exact match as long as the cql statements can be executed successfully on both clusters. For example, if a table has 10 columns but your client application only uses 5 of those columns then you could create that table on Target with just those 5 columns. 
+
+You can also change the primary key in some cases too. For example, if your compound primary key is `PRIMARY KEY (A, B)` and you always provide parameters for the `A` and `B` columns in your CQL statements then you could change the key to `PRIMARY KEY (B, A)` when creating the schema on Target because your CQL statements will still run successfully.
+
+== Authenticator and Authorizer configuration
+
+{zdm-proxy} supports the following cluster authenticator configurations:
+
+* No authenticator
+* `PasswordAuthenticator`
+* `DseAuthenticator` with `internal` or `ldap` scheme
+
+{zdm-proxy} does *not* support `DseAuthenticator` with `kerberos` scheme.
+
+While the authenticator has to be supported, the *authorizer* does not affect client applications or {zdm-proxy} so you should be able to use any kind of authorizer configuration on both of your clusters.
+
+[#cql-function-replacement]
 == Server-side non-deterministic functions in the primary key
 
 Statements with functions like `now()` and `uuid()` will result in data inconsistency between Origin and Target because the values are computed at cluster level. 
@@ -100,6 +118,42 @@ Some application workloads can tolerate inconsistent data in some cases (especia
 === Lightweight Transactions applied flag
 
 {zdm-proxy} forwards lightweight transactions to both Origin and Target. However, it only returns the `applied` value from the primary cluster which is the cluster from where read results are returned to the client application (by default, that is Origin). This means that when you set Target as your primary cluster, the `applied` value returned to the client application will come from Target.
+
+== Driver retry policy and query idempotence
+
+As part of the normal migration process, the {zdm-proxy} instances will have to be restarted in between phases to apply configuration changes. In the point of view of the client application, this is a similar behavior to a DSE or Apache Cassandra cluster going through a rolling restart in a non-migration scenario.
+
+If your application already tolerates rolling restarts of your current cluster then you should see no issues when there is a rolling restart of {zdm-proxy} instances.
+
+To ensure that your client application retries requests when a database connection is closed you should check the section of your driver's documentation related to retry policies.
+
+Some Datastax drivers require a statement to be marked as `idempotent` in order to retry it in case of a connection error (such as the termination of a database connection). 
+
+In this section we outline the default behavior of some of these drivers.
+
+=== Datastax Java Driver 4.x
+
+The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically, xref:https://docs.datastax.com/en/developer/java-driver/3.11/manual/idempotence/[check this documentation section].
+
+=== Datastax Java Driver 3.x
+
+The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically, xref:https://docs.datastax.com/en/developer/java-driver/latest/manual/core/idempotence/[check this documentation section].
+
+This behavior was introduced in version 3.1.0 so prior to this version the default retry policy retried all requests regardless of idempotence.
+
+=== Datastax Nodejs Driver 4.x
+
+The default retry policy takes idempotence in consideration, xref:https://docs.datastax.com/en/developer/nodejs-driver/latest/features/speculative-executions/#query-idempotence[check this documentation section].
+
+=== Datastax C# Driver 3.x and Datastax Python Driver 3.x
+
+The default retry policy retries all requests in case of a connection error *regardless of idempotence*. There are retry policies that are idempotency aware but these are not the default policies. Keep in mind that the plan is to make the default retry policy idempotency aware in a future release.
+
+=== Datastax C++ Driver 2.x
+
+Prior to version 2.5.0, this driver did *NOT* retry any requests after they have been written to the socket, it was up to the client application to handle these and retry them if they are suitable for a retry.
+
+With the release of 2.5.0, the driver retries requests that are set as `idempotent`, xref:https://docs.datastax.com/en/developer/cpp-driver/2.16/topics/configuration/#query-idempotence[check this documentation section].
 
 == What's next?
 
