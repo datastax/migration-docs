@@ -133,11 +133,11 @@ In this section we outline the default behavior of some of these drivers.
 
 === Datastax Java Driver 4.x
 
-The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically, xref:https://docs.datastax.com/en/developer/java-driver/3.11/manual/idempotence/[check this documentation section].
+The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically, xref:https://docs.datastax.com/en/developer/java-driver/latest/manual/core/idempotence/[check this documentation section].
 
 === Datastax Java Driver 3.x
 
-The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically, xref:https://docs.datastax.com/en/developer/java-driver/latest/manual/core/idempotence/[check this documentation section].
+The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically, xref:https://docs.datastax.com/en/developer/java-driver/3.11/manual/idempotence/[check this documentation section].
 
 This behavior was introduced in version 3.1.0 so prior to this version the default retry policy retried all requests regardless of idempotence.
 
