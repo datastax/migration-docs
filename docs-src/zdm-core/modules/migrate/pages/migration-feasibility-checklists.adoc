@@ -21,7 +21,7 @@ Ensure that you test your client application with Target (connected directly wit
 
 == Considerations for Astra DB migrations
 
-DataStax Astra DB implements guardrails and sets limits to ensure good practices, foster availability, and promote optimal configurations for your databases. https://docs.datastax.com/en/astra-serverless/docs/plan/planning.html#_astra_db_database_guardrails_and_limits[Please check the list of guardrails and limits here^] and make sure your application workload can be successful in the presence of these limits. 
+DataStax Astra DB implements guardrails and sets limits to ensure good practices, foster availability, and promote optimal configurations for your databases. Please check the list of https://docs.datastax.com/en/astra-serverless/docs/plan/planning.html#_astra_db_database_guardrails_and_limits[guardrails and limits^] and make sure your application workload can be successful in the presence of these limits. 
 
 If you need to make changes to the application or data model to ensure that your workload can run successfully in Datastax Astra then you need to do these changes before you start the migration process.
 
@@ -31,7 +31,7 @@ It is also highly recommended to perform tests and benchmarks when connected dir
 
 If a client application only sends `SELECT` statements to a database connection then you may find that {zdm-proxy} terminates these read only connections periodically which may result in request errors if the driver is not configured to retry these requests in these conditions. 
 
-This happens because Datastax Astra terminates idle connections after some inactivity period (usually around 10 minutes) so if Datastax Astra is your Target and a client connection is only sending read requsts to the {zdm-proxy} then the Datastax Astra connection that is "paired" to that client connection will remain idle and will be eventually terminated.
+This happens because Datastax Astra terminates idle connections after some inactivity period (usually around 10 minutes) so if Datastax Astra is your Target and a client connection is only sending read requests to the {zdm-proxy} then the Datastax Astra connection that is "paired" to that client connection will remain idle and will be eventually terminated.
 
 *We are planning a fix to this behavior* so that {zdm-proxy} sends heartbeats to the secondary cluster connections when a client connection only sends read requests but in the meantime you may want to implement some kind of work around for this issue. 
 
@@ -45,11 +45,11 @@ Another work around is to implement a mechanism in your client application that 
 
 {zdm-proxy} handles all DataStax Graph requests as write requests even if the traversals are read only. There is no special handling for these requests so you need to take a look at the traversals that your client application sends and determine whether the traversals are idempotent. If the traversals are non-idempotent then the reconciliation step is needed.
 
-Keep in mind that our recommended tools for data migration (and reconciliation) are CQL based so they can be used for migrations where Origin is a database that uses the new Datastax Graph engine (released with DSE 6.8) but they *can not be used for the old graph engine* that older DSE versions relied on. xref:#non-idempotent-operations[Check this section] for more information about non-idempotent operations.
+Keep in mind that our recommended tools for data migration (and reconciliation) are CQL based so they can be used for migrations where Origin is a database that uses the new Datastax Graph engine (released with DSE 6.8) but they *cannot be used for the old graph engine* that older DSE versions relied on. See migration-feasibility-checklists.adoc#non-idempotent-operations[this section] for more information about non-idempotent operations.
 
 === Search
 
-We recommend moving search workloads direcly from Origin to Target without {zdm-proxy} being involved but if you need the read routing capabilities from {zdm-proxy} then you can connect your search workloads to it as long as you are using the Datastax drivers to submit these queries (which means that the queries are regular CQL `SELECT` statements so {zdm-proxy} handles them as regular read requests).
+We recommend moving search workloads directly from Origin to Target without {zdm-proxy} being involved but if you need the read routing capabilities from {zdm-proxy} then you can connect your search workloads to it as long as you are using the Datastax drivers to submit these queries (which means that the queries are regular CQL `SELECT` statements so {zdm-proxy} handles them as regular read requests).
 
 If you use the HTTP API then you either modify your applications to use the CQL API instead or you will have to move those applications directly from Origin to Target when the migration is complete if that is acceptable.
 
@@ -61,9 +61,9 @@ The binary protocol used by Apache Cassandra, DSE and Astra DB supports optional
 
 This is *NOT* related to storage compression which you can configure on a table by table basis with the `compression` table property. Storage/table compression does not affect the client application or {zdm-proxy} in any way.
 
-== Schema / keyspace compability
+== Schema / keyspace compatibility
 
-{zdm-proxy} does not modify or transform cql statements besides the optional feature that replaces `now()` functions with timestamp literals (xref:#cql-function-replacement[refer to this section for more information about this feature]).
+{zdm-proxy} does not modify or transform cql statements besides the optional feature that replaces `now()` functions with timestamp literals. See xref:migration-feasibility-checklists.adoc#cql-function-replacement[this section] for more information about this feature.
 
 A cql statement that your client application sends to {zdm-proxy} must be able to succeed on both clusters. This means that any keyspace that your client application uses must exist on both Origin and Target with the same name (although they can have different replication strategies and durable writes settings).
 
@@ -108,7 +108,7 @@ For more information on how to handle non-deterministic functions please refer t
 
 Given that there are two separate clusters involved, the state of each cluster may be different. For conditional writes, this may create a divergent state for a time. It may not make a difference in many cases, but if non-idempotent operations are used, we recommend a reconciliation phase in the migration before and after switching reads to rely on Target (setting Target as the primary cluster). 
 
-For details about using the Cassandra Data Migrator to validate your migration, see xref:migration-migrate-and-validate-data.adoc[Migrate and validate your data].
+For details about using the {cstar-data-migrator}, see xref:migration-migrate-and-validate-data.adoc[tools to migrate and validate data^].
 
 [TIP]
 ====
@@ -131,17 +131,17 @@ Most Datastax drivers require a statement to be marked as `idempotent` in order 
 
 === Datastax Java Driver 4.x
 
-The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically, xref:https://docs.datastax.com/en/developer/java-driver/latest/manual/core/idempotence/[check this documentation section].
+The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically. See this Java 4.x https://docs.datastax.com/en/developer/java-driver/latest/manual/core/idempotence/[query idempotence documentation section^].
 
 === Datastax Java Driver 3.x
 
-The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically, xref:https://docs.datastax.com/en/developer/java-driver/3.11/manual/idempotence/[check this documentation section].
+The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically. See this Java 3.x https://docs.datastax.com/en/developer/java-driver/3.11/manual/idempotence/[query idempotence documentation section^].
 
 This behavior was introduced in version 3.1.0 so prior to this version the default retry policy retried all requests regardless of idempotence.
 
 === Datastax Nodejs Driver 4.x
 
-The default retry policy takes idempotence in consideration, xref:https://docs.datastax.com/en/developer/nodejs-driver/latest/features/speculative-executions/#query-idempotence[check this documentation section].
+The default retry policy takes idempotence in consideration. See this Nodejs 4.x https://docs.datastax.com/en/developer/nodejs-driver/latest/features/speculative-executions/#query-idempotence[query idempotence documentation section^].
 
 === Datastax C# Driver 3.x and Datastax Python Driver 3.x
 
@@ -151,8 +151,4 @@ The default retry policy retries all requests in case of a connection error *reg
 
 Prior to version 2.5.0, this driver did *NOT* retry any requests after they have been written to the socket, it was up to the client application to handle these and retry them if they are suitable for a retry.
 
-With the release of 2.5.0, the driver retries requests that are set as `idempotent`, xref:https://docs.datastax.com/en/developer/cpp-driver/2.16/topics/configuration/#query-idempotence[check this documentation section].
-
-== What's next?
-
-For any migration, we've described important xref:migration-deployment-infrastructure.adoc[deployment and infrastructure considerations] in the next topic.
+With the release of 2.5.0, the driver retries requests that are set as `idempotent`. See this C++ 2.x https://docs.datastax.com/en/developer/cpp-driver/2.16/topics/configuration/#query-idempotence[query idempotence documentation section^].
