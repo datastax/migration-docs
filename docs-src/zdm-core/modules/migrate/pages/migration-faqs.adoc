@@ -110,9 +110,3 @@ When moving your client applications and data from on-premise Cassandra Query La
 Ranging from large enterprises to small teams, IT managers, operators, and developers are realizing that the Total Cost of Ownership (TCO) with cloud solutions is much lower than continuing to run on-prem physical data centers.
 
 A CNDB like Astra DB is a different environment. Running on proven cloud providers like AWS, Google Cloud, and Azure, Astra DB greatly reduces complexity and increases convenience by surfacing a subset of configurable settings, providing a well-designed UI known as Astra Portal, and a set of APIs to interact programmatically with your Astra DB organizations and databases.
-
-== Internal FAQ: where's are the built docs located before 2.0.0 GA?
-
-[TODO remove before release]
-
-From the Asciidoc markdown sources, the deployment script writes the topics to http://coppi-ssh.aws.dsinternal.org/en/astra-classic-zdm/docs/migrate/migration-introduction.html[this internal review server^]. Requires AWS Lab VPN access. For the external release, the DataStax {zdm-product} 2.0 docs will reside on docs.datastax.com in the Astra DB docs, and will be referenced from the DSE docs.
