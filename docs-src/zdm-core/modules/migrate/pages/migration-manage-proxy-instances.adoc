@@ -157,3 +157,15 @@ Then simply run the same playbook as above, with the following command:
 ```bash
 ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
 ```
+
+== Scaling operations
+
+{zdm-automation} doesn't provide a way to perform scaling up/down operations in a rolling fashion. Instead, we recommend that you deploy a new proxy cluster on the side, and move the client applications to the new proxy cluster (if absolutely necessary). To do so, create a new inventory file so that it contains one line for each machine where you want a proxy instance to be deployed and run the `deploy_zdm_proxy.yml` playbook again. This will result in a brief interruption of availability of the whole {zdm-proxy} deployment.
+
+If you are not using the {zdm-automation} and want to remove or add a proxy manually, follow these steps:
+
+. If adding a {zdm-proxy} instance, prepare and configure it appropriately based on the other instances.
+
+. Update the `ADDRESSES` configuration variable on all {zdm-proxy} instances - removing or adding the {zdm-proxy} instance's address to the list.
+
+. Perform a rolling restart on all {zdm-proxy} instances.
