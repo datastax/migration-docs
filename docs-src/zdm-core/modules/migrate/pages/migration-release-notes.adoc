@@ -1,6 +1,6 @@
-= DataStax Zero Downtime Migration Release Notes
+= {company} (zdm-product} Release Notes
 
-== ZDM 2.0.0 release
+== ZDM 2.0 release
 
 18 October 2022
 
@@ -8,7 +8,7 @@
 
 The following {company} {zdm-product} GitHub repos are public. You are welcome to read the source and submit feedback via GitHub Issues per repo.
 
-* https://github.com/datastax/zdm-proxy[{zdm-proxy}^] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion.
+* https://github.com/datastax/zdm-proxy[{zdm-proxy}^] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion, provided you accept the https://cla.datastax.com/[DataStax Contributor License Agreement (CLA)^]. For more information, see xref:migration-contributions.adoc[].
 
 * https://github.com/datastax/zdm-proxy-automation[{zdm-automation}^] repo for Ansible-based {zdm-proxy} automation.
 
@@ -16,21 +16,32 @@ The following {company} {zdm-product} GitHub repos are public. You are welcome t
 
 * https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo for migration of larger data quantities and where detailed verifications and reconciliation options are needed.
 
-// * https://github.com/datastax/migration-docs[Migration documentation^] repo.
+[NOTE]
+====
+This suite of tools allows for zero-downtime migration only if your database meets the minimum xref:migration-feasibility-checklists.adoc[requirements^]. If your database does not meet these requirements, you can complete the migration from Origin to Target, but downtime might be necessary to finish the migration.
+====
+
+====
+[TIP]
+The {zdm-product} process requires you to be able to perform rolling restarts of your client applications during the migration. This is standard practice for client applications that are deployed over multiple instances and is a widely used approach to roll out releases and configuration changes.
+====
 
 === Supported environments
 
-With the {company} {zdm-product} 2.0.0 release, you can migrate any Cassandra Query Language (CQL) compliant database cluster from its origin (current) environment to a new target. Migration examples:
+With the {company} {zdm-product} 2.0 release, you can migrate any Cassandra Query Language (CQL) compliant datastore from its Origin (current) environment to a new Target. Just a few of the supported migration examples:
 
 * From an existing self-managed Cassandra or DSE cluster to cloud-native Astra DB or vice versa. For example, migrate:
-** Cassandra 3.11.x or 4.0.x to Astra DB
-** DSE 5.1.x or 6.8.x to Astra DB
+** Cassandra 2.1.x, 3.11.x, or 4.0.x to Astra DB
+** DSE 4.8.x, 5.1.x, or 6.8.x to Astra DB
+** And more
 * From an existing Cassandra or DSE cluster to another Cassandra or DSE cluster. For example, migrate:
-** Cassandra 3.11.x to 4.0.x
-** DSE 5.1.x to DSE 6.8.x
+** Cassandra 2.1.x or 3.11.x to 4.0.x
+** DSE 4.8.x or 5.1.x to DSE 6.8.x
+** Cassandra 2.1.x, 3.11.x or 4.0.x to DSE 6.8.x
+** DSE 4.8.x to Cassandra 4.0.x
+** And more
 * From Astra DB Classic to Astra DB Serverless
 
-=== {zdm-proxy} 2.0.0 revisions
+=== {zdm-proxy} 2.0 revisions
 
-See the https://github.com/datastax/zdm-proxy/blob/main/CHANGELOG/CHANGELOG-2.0.md(CHANGELOG-2.0^) (to-be-generated) for details about the {zdm-proxy} open-source code.
-
+For code updates and additions, see the {zdm-proxy} 2.0 https://github.com/datastax/zdm-proxy/tree/main/CHANGELOG[CHANGELOG^] in the {zdm-proxy} open-source GitHub repo.
