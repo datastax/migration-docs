@@ -127,17 +127,15 @@ If your application already tolerates rolling restarts of your current cluster t
 
 To ensure that your client application retries requests when a database connection is closed you should check the section of your driver's documentation related to retry policies.
 
-Some Datastax drivers require a statement to be marked as `idempotent` in order to retry it in case of a connection error (such as the termination of a database connection). 
-
-In this section we outline the default behavior of some of these drivers.
+Most Datastax drivers require a statement to be marked as `idempotent` in order to retry it in case of a connection error (such as the termination of a database connection). This means that these drivers treat statements as *non idempotent* by default and will *not* retry them in the case of a connection error unless action is taken. Whether you need to take action or not depends on what driver you are using. In this section we outline the default behavior of some of these drivers and provide links to the relevant documentation sections.
 
 === Datastax Java Driver 4.x
 
-The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically, xref:https://docs.datastax.com/en/developer/java-driver/3.11/manual/idempotence/[check this documentation section].
+The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically, xref:https://docs.datastax.com/en/developer/java-driver/latest/manual/core/idempotence/[check this documentation section].
 
 === Datastax Java Driver 3.x
 
-The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically, xref:https://docs.datastax.com/en/developer/java-driver/latest/manual/core/idempotence/[check this documentation section].
+The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically, xref:https://docs.datastax.com/en/developer/java-driver/3.11/manual/idempotence/[check this documentation section].
 
 This behavior was introduced in version 3.1.0 so prior to this version the default retry policy retried all requests regardless of idempotence.
 
