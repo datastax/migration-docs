@@ -1,8 +1,8 @@
 = Change the read routing
 
-This topic explains how you can configure the ZDM proxy to route all reads to the target database (in our case Astra DB) instead of your Origin database.
+This topic explains how you can configure the {zdm-proxy} to route all reads to Target instead of Origin.
 
-You would typically do this once you have migrated all the existing data from your Origin cluster and completed all validation checks and reconciliation if necessary.
+You would typically do this once you have migrated all the existing data from Origin and completed all validation checks and reconciliation if necessary.
 
 This operation is a configuration change that can be carried out as explained xref:migration-manage-proxy-instances.adoc#change-mutable-config-property[here].
 
@@ -21,30 +21,14 @@ You will see a prompt like:
 ubuntu@52772568517c:~$
 ```
 
-Now open the proxy core configuration file for editing. Example:
+Now open the configuration file `vars/zdm_proxy_core_config.yml` for editing.
+
+Change the variable `primary_cluster` to `TARGET`.
+
+Run the playbook that changes the configuration of the existing {zdm-proxy} deployment:
 
 ```bash
-cd zdm-proxy-automation/ansible
-nano vars/zdm_proxy_core_config.yml
+ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
 ```
 
-Change the flag `forward_reads_to_target` to `true`.
-
-Run the playbook that changes the configuration of the existing proxy deployment:
-
-```bash
-ansible-playbook update_zdm_proxy.yml -i zdm_ansible_inventory
-```
-
-Wait for the proxies to be restarted by Ansible, one by one. All proxy instances will now send all reads to Target (Astra DB) instead of Origin. In other words, Target is now the primary source of truth, but the proxy is still keeping Origin up-to-date.
-
-[ TODO ensure this ties in with the examples so far ]
-Repeat the same reads through the ZDM Demo Client application:
-
-```bash
-curl -G -d 'rowkey=250' http://localhost:8080/zdm-demo-client/rest/row
-curl -G -d 'rowkey=1000' http://localhost:8080/zdm-demo-client/rest/row
-curl -G -d 'rowkey=1080' http://localhost:8080/zdm-demo-client/rest/row
-```
-
-The resulting data is identical because the two databases are in sync.
+Wait for the {zdm-proxy} instances to be restarted by Ansible, one by one. All instances will now send all reads to Target instead of Origin. In other words, Target is now the primary cluster, but the {zdm-proxy} is still keeping Origin up-to-date.
