@@ -12,7 +12,7 @@ The {zdm-automation} uses **Ansible**, which deploys and configures the {zdm-pro
 
 Configuring a machine to serve as the Ansible Control Host is very easy using the {zdm-utility}. This is a Golang (Go) executable program that runs anywhere. This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use. From this container, you will be able to easily configure and run the {zdm-automation} Ansible playbooks.
 
-[TODO add image to show Ansible control host, jumphost, ZDM utility]
+image:docker-container-and-zdm-utility.png[ZDM Proxy connections from Docker container created by ZDM Utility]
 
 == Prerequisites
 
