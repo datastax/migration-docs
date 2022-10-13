@@ -3,7 +3,7 @@
 *** xref:migration-introduction.adoc[Introduction]
 *** xref:migration-faqs.adoc[FAQs]
 ** xref:migration-preliminary-steps.adoc[Preliminary steps]
-*** xref:migration-feasibility-checklists.adoc[Feasibility checklists]
+*** xref:migration-feasibility-checklists.adoc[Feasibility checks]
 *** xref:migration-deployment-infrastructure.adoc[Deployment and infrastructure considerations]
 *** xref:migration-create-target.adoc[Create target environment for migration]
 *** xref:migration-rollback.adoc[Understand rollback options]
