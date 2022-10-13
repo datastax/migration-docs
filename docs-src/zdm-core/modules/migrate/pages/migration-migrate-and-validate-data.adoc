@@ -5,7 +5,7 @@ This topic introduces you to the benefits of using two data migration tools duri
 * {cstar-data-migrator}
 * {dsbulk-migrator}
 
-These tools provide helpful features and may be used to match the requirements of your Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB databases.  The tools can help you migrate data from any Cassandra origin (Cassandra/DSE/Astra DB) to any Cassandra target (Cassandra/DSE/Astra DB).
+These tools provide helpful features and may be used to match the requirements of your Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB databases.  The tools can help you migrate data from any Cassandra Origin (Cassandra/DSE/Astra DB) to any Cassandra Target (Cassandra/DSE/Astra DB).
 
 == What's the difference between these data migration tools?
 
@@ -33,13 +33,13 @@ Here's a quick summary of the features per data migration tool. See each repo's 
 
 For large data migrations, including cases where advanced logging is needed, {cstar-data-migrator} is designed to:
 
-* Connect to and compare your target database with the origin
+* Connect to and compare your Target database with Origin
 * Report differences in a detailed log file
 * Reconcile any missing records and fix any data inconsistencies in the target, if you enable `autocorrect` in a config file
 
 {cstar-data-migrator} runs in a lightweight, easily set up Apache Spark wrapper. For example, you can configure a `sparkConf.properties` file for the environment. There's a sample https://github.com/Ankitp1342/astra-spark-migration-ranges/blob/master/src/resources/sparkConf.properties[sparkConf.properties] configuration example in the GitHub repo.
 
-In its settings, you'll identify values for your origin and target databases. A subset example:
+In its settings, you'll identify values for your Origin and Target databases. A subset example:
 
 ```conf
 spark.migrate.origin.isAstra                               false
@@ -61,12 +61,12 @@ spark.migrate.target.autocorrect.mismatch                  false
 
 [TIP]
 ====
-An important **prerequisite** is that you already have the matching schema on the target database. For every table migrated by Cassandra Data Migrator, the tool can use a mapping configuration that links every origin column to every target column.
+An important **prerequisite** is that you already have the matching schema on Target. For every table migrated by Cassandra Data Migrator, the tool can use a mapping configuration that links every Origin column to every Target column.
 ====
 
 The validation checks are a way to verify that all the data has been migrated successfully. For data written by idempotent writes these checks are optional, as any errors, timeouts or other failures during the migration are made visible by the {cstar-data-migrator} and by {zdm-proxy}.
 
-In the case of data written by non-idempotent writes, it is necessary to reconcile and realign any discrepancies before starting to use the target cluster as the primary source of truth.
+In the case of data written by non-idempotent writes, it is necessary to reconcile and realign any discrepancies before starting to use Target as the primary cluster.
 
 For installation and usage details, see the {cstar-data-migrator} repo's https://github.com/datastax/cassandra-data-migrator/blob/main/README.md[README, window="_blank"]. 
 
@@ -80,6 +80,6 @@ For installation and usage details, see the {cstar-data-migrator} repo's https:/
 
 * `generate-script` generates a migration script that, once executed, will perform the desired data migration, using a pre-existing DSBulk installation. Please note: this command does not actually migrate the data; it only generates the migration script.
 
-* `generate-ddl` reads the schema from the origin and generates CQL files to recreate it in the target.
+* `generate-ddl` reads the schema from Origin and generates CQL files to recreate it in Target.
 
 For installation and usage details, see the {dsbulk-migrator} repo's https://github.com/datastax/dsbulk-migrator/blob/main/README.md[README, window="_blank"]. 
