@@ -1,10 +1,9 @@
 = Troubleshooting
 
-Welcome to the {zdm-product} (ZDM) troubleshooting topics. We've organized the descriptions into three areas:
+Welcome to the {zdm-product} (ZDM) troubleshooting topics. We've organized the descriptions this way:
 
 * xref:migration-troubleshooting-tips.adoc[] - general advice and some common issues you may encounter.
 * xref:migration-troubleshooting-scenarios.adoc[] - specific descriptions of error conditions, and advice on how to solve the issues.
-* xref:migration-troubleshooting-advanced.adoc[] - rarely occurring errors or complex issues, and next steps.
 
 [TIP]
 ====
