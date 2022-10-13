@@ -1,32 +1,34 @@
 = Enable asynchronous dual reads
 
-This phase consists of changing the `ZDM_READ_MODE` setting on the {zdm-proxy}’s configuration from `PRIMARY_ONLY` (the default) to `DUAL_ASYNC_ON_SECONDARY`. Example:
+This phase consists of changing the `read_mode` configuration variable in `vars/zdm_proxy_core_config.yml` from `PRIMARY_ONLY` (the default) to `DUAL_ASYNC_ON_SECONDARY`. Example:
 
 ```yml
-ZDM_READ_MODE=DUAL_ASYNC_ON_SECONDARY
+read_mode: DUAL_ASYNC_ON_SECONDARY
 ```
 
 Before making the change, you should still have your Origin cluster as the primary cluster, which is the default:
 
 ```yml
-ZDM_PRIMARY_CLUSTER=ORIGIN # or empty
+primary_cluster: ORIGIN # or empty
 ```
 
-This optional phase adds an additional check to make sure that the Target cluster can handle the load without timeouts or unacceptable latencies. You would typically perform this step once you have migrated all the existing data from your Origin and completed all validation checks and reconciliation, if necessary.
+To apply this change, run the `rolling_update_zdm_proxy.yml` playbook as explained xref:migration-manage-proxy-instances.adoc#_change_a_mutable_configuration_variable[here].
+
+This optional phase introduces an additional check to make sure that Target can handle the load without timeouts or unacceptable latencies. You would typically perform this step once you have migrated all the existing data from Origin and completed all validation checks and reconciliation, if necessary.
 
 == Asynchronous Dual Reads mode
 
-When using the {zdm-proxy}, all writes are synchronously sent to both Origin and Target clusters. Reads operate differently: with the default read mode, reads are only sent to the primary cluster (Origin by default). 
+When using the {zdm-proxy}, all writes are synchronously sent to both Origin and Target. Reads operate differently: with the default read mode, reads are only sent to the primary cluster (Origin by default).
 
-Before changing the read routing so that reads are routed to Target (phase 4), you may want to temporarily send the reads to both clusters so that they can make sure that the Target cluster can handle the full workload of reads and writes.
+Before changing the read routing so that reads are routed to Target (phase 4), you may want to temporarily send the reads to both clusters so that they can make sure that Target can handle the full workload of reads and writes.
 
-If you set the proxy's read mode setting (`ZDM_READ_MODE`) to `DUAL_ASYNC_ON_SECONDARY`, then asynchronous dual reads will be enabled. That change will result in reads being additionally sent to the secondary cluster. The proxy will return the read response to the client application as soon as the primary cluster's response arrives. 
+If you set the proxy's read mode configuration variable (`read_mode`) to `DUAL_ASYNC_ON_SECONDARY`, then asynchronous dual reads will be enabled. That change will result in reads being additionally sent to the secondary cluster. The proxy will return the read response to the client application as soon as the primary cluster's response arrives.
 
-The secondary cluster's response will only be used to track metrics. There will be no impact to the client application if the read fails on the secondary cluster, or if the read performance on the secondary cluster is degraded. Therefore, this feature can be used as a safer way to test the full workload on the Target cluster before making the switch to set Target as the primary cluster (phase 4).
+The secondary cluster's response will only be used to track metrics. There will be no impact to the client application if the read fails on the secondary cluster, or if the read performance on the secondary cluster is degraded. Therefore, this feature can be used as a safer way to test the full workload on Target before making the switch to set Target as the primary cluster (phase 4).
 
 [NOTE]
 ====
-In some cases the additional read requests can cause the write requests to fail or timeout on that cluster. This means that while this feature provides a way to route read requests to Target with a lower chance of having impact on the client application, it doesn't completely eliminate that chance.
+In some cases the additional read requests can cause the write requests to fail or timeout on that cluster. This means that, while this feature provides a way to route read requests to Target with a lower chance of having impact on the client application, it doesn't completely eliminate that chance.
 ====
 
 == Validating performance and error rate
@@ -36,4 +38,4 @@ Because the client application is not impacted by these asynchronous reads, the 
 * Check the metrics of the cluster itself
 * Check the asynchronous reads section of the {zdm-proxy} metrics
 
-In the {zdm-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads so you can see latency percentiles, error rates, and some other metrics specific to these requests. For more, see xref:migration-troubleshooting-tips.adoc#_use_metrics_to_identify_any_issues[Use metrics to identify any issues] in the troubleshooting tips.
+In the {zdm-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads where you can see latency percentiles, error rates, and some other metrics specific to these requests. For more, see xref:migration-troubleshooting-tips.adoc#_use_metrics_to_identify_any_issues[Use metrics to identify any issues] in the troubleshooting tips.

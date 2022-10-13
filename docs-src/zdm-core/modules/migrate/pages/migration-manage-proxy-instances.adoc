@@ -74,7 +74,7 @@ The following configuration variables are considered mutable and can be changed 
 Commonly changed variables, located in `vars/zdm_proxy_core_config.yml`:
 
 * `primary_cluster`:
-** This variable determines which cluster is currently considered the "primary" source of truth. While writes are always sent to both clusters, the primary cluster is the one to which all synchronous reads are always sent, and their results are returned to the client application. At the start of the migration, the primary cluster is Origin, as it contains all the data.  In Phase 4 of the migration, once all the existing data has been transferred and any validation / reconciliation step has been successfully executed, you can switch the primary cluster to be Target. [TODO should this move to the glossary, and then we just link to it from here?]
+** This variable determines which cluster is currently considered the xref:migration-glossary.adoc#_primary_cluster[primary cluster]. At the start of the migration, the primary cluster is Origin, as it contains all the data.  In Phase 4 of the migration, once all the existing data has been transferred and any validation / reconciliation step has been successfully executed, you can switch the primary cluster to be Target.
 ** Valid values: `ORIGIN`, `TARGET`
 * `read_mode`:
 ** This variable determines how reads are handled by the {zdm-proxy}
