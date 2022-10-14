@@ -35,6 +35,10 @@ Generally speaking, a proxy is a software class functioning as an interface to s
 
 See xref:migration-glossary.adoc#_asynchronous_dual_reads[async dual reads].
 
+== Secure Connect Bundle (SCB)
+
+A ZIP file generated in https://astra.datastax.com[Astra Portal^] that contains connection metadata and TLS encryption certificates for your Astra DB database. For details, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[Working with the secure connect bundle^].
+
 == Target
 The new cluster to which you want to migrate client applications and data with zero downtime.
 
