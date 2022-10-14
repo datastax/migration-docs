@@ -4,9 +4,9 @@ Before starting your migration, refer to the following considerations to ensure 
 
 == Cassandra Native Protocol version and cluster version support
 
-{zdm-proxy} supports protocol versions v3, v4, DseV1 and DseV2. We plan to support v2 very soon.
+{zdm-proxy} supports protocol versions v3, v4, DseV1 and DseV2.
 
-It technically doesn't support v5, but handles protocol negotiation so that the client application properly downgrades the protocol version to v4 if v5 is requested. This means that any client application using a recent driver that supports protocol version v5 can be migrated using the {zdm-proxy} (as long as it des not use v5-specific functionality). Full support for v5 is in also the plans.
+It technically doesn't support v5, but handles protocol negotiation so that the client application properly downgrades the protocol version to v4 if v5 is requested. This means that any client application using a recent driver that supports protocol version v5 can be migrated using the {zdm-proxy} (as long as it des not use v5-specific functionality).
 
 *Thrift is not supported by {zdm-proxy}.* If you are using a very old driver or cluster version that only supports Thrift then you need to change your client application to use CQL and potentially upgrade your cluster before starting the migration process.
 
@@ -27,7 +27,7 @@ DataStax Astra DB implements guardrails and sets limits to ensure good practices
 
 If you need to make changes to the application or data model to ensure that your workload can run successfully in Datastax Astra DB then you need to do these changes before you start the migration process.
 
-It is also highly recommended performing tests and benchmarks when connected directly to Astra DB prior to the migration, so that you don't find unexpected issues during the migration process.
+It is also highly recommended to perform tests and benchmarks when connected directly to Astra DB prior to the migration, so that you don't find unexpected issues during the migration process.
 
 === Read-only applications
 
@@ -59,7 +59,7 @@ If you use the HTTP API then you can either modify your applications to use the 
 
 The binary protocol used by Apache Cassandra, DSE and Astra DB supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
 
-{zdm-proxy} doesn't support protocol compression at this time, but we plan to introduce support for it soon. This kind of compression is disabled by default on all of our Datastax drivers so if you enabled it on your client application then you will need to disable it before starting the migration process.
+{zdm-proxy} doesn't yet support protocol compression at this time. This kind of compression is disabled by default on all of our Datastax drivers so if you enabled it on your client application then you will need to disable it before starting the migration process.
 
 This is *NOT* related to storage compression which you can configure on a table by table basis with the `compression` table property. Storage/table compression does not affect the client application or {zdm-proxy} in any way.
 
@@ -94,7 +94,7 @@ Statements with functions like `now()` and `uuid()` will result in data inconsis
 
 If these functions are used for columns that are not part of the primary key then you may find it acceptable to have different values in the two clusters depending on your application business logic. However, if these columns are part of the primary key then the data migration phase will not be successful as there will be data inconsistencies between the two clusters and they will never be in sync.
 
-{zdm-proxy} is able to compute timestamps and replace `now()` function references with such timestamps in CQL statements at proxy level to ensure that these parameters will have the same value when these statements are sent to both clusters. However, this feature is disabled by default because it might result in performance degradation, so we highly recommend users to test this properly before using it in production. Also keep in mind that this feature is only supported for `now()` functions at the moment, although we plan to add support for other functions such as  `uuid()` soon. To enable this feature, set the configuration variable `replace_cql_function` to `true` (see xref:migration-manage-proxy-instances.adoc#_change_a_mutable_configuration_variable) .
+{zdm-proxy} is able to compute timestamps and replace `now()` function references with such timestamps in CQL statements at proxy level to ensure that these parameters will have the same value when these statements are sent to both clusters. However, this feature is disabled by default because it might result in performance degradation, so we highly recommend users to test this properly before using it in production. Also keep in mind that this feature is only supported for `now()` functions at the moment. To enable this feature, set the configuration variable `replace_cql_function` to `true` (see xref:migration-manage-proxy-instances.adoc#_change_a_mutable_configuration_variable) .
 
 If you find that the performance is not acceptable when this feature is enabled, or the feature doesn't cover a particular function that your client application is using, then you will have to make a change to your client application so that the value is computed locally (at client application level) before the statement is sent to the database. Most drivers have utility methods that help you compute these values locally, please refer to the documentation of the driver you are using.
 
