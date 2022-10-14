@@ -26,7 +26,7 @@ Perhaps the simplest way to demonstrate how to use the DataStax drivers to conne
 // Create an object to represent a Cassandra cluster listening for connections at
 // 10.20.30.40 on the default port (9042).  The username and password are necessary
 // only if your Cassandra cluster has authentication enabled.
-Cluster my_cluster = Cluster.build_new_cluster(contact_points = “10.20.30.40”, username="myuser", password="mypassword")
+Cluster my_cluster = Cluster.build_new_cluster(contact_points = “10.20.30.40”, username="myusername", password="mypassword")
 
 // Connect our Cluster object to our Cassandra cluster, returning a Session
 Session my_session = my_cluster.connect()
