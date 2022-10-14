@@ -44,4 +44,4 @@ With the {company} {zdm-product} 2.0 release, you can migrate any Cassandra Quer
 
 === {zdm-proxy} 2.0 revisions
 
-Please refer to the GitHub-hosted https://github.com/datastax/zdm-proxy/blob/main/RELEASE_NOTES.md[RELEASE_NOTES^] in the open-source {zdm-proxy} repo, which includes CHANGELOG links for each `N.n` release.
+For the latest information about {zdm-proxy} new features and other changes, please refer to the GitHub-hosted https://github.com/datastax/zdm-proxy/blob/main/RELEASE_NOTES.md[RELEASE_NOTES^] in the open-source {zdm-proxy} repo. The document includes CHANGELOG links for each `N.n` release.
