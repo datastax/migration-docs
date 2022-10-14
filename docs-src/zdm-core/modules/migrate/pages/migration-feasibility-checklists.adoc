@@ -37,7 +37,7 @@ This happens because Datastax Astra terminates idle connections after some inact
 
 *We are planning a fix to this behavior* so that {zdm-proxy} sends heartbeats to the secondary cluster connections when a client connection only sends read requests but in the meantime you may want to implement some kind of workaround for this issue.
 
-A potential workaround is to not connect these read-only client applications to {zdm-proxy}, but you need to ensure that these client applications switch reads to Target once all the data has been migrated and all validation and reconciliation has completed.
+A potential workaround is to not connect these read-only client applications to {zdm-proxy}, but you need to ensure that these client applications switch reads to Target at any point after all the data has been migrated and all validation and reconciliation has completed.
 
 Another workaround is to implement a mechanism in your client application that creates a new `Session` periodically to avoid the Datastax Astra inactivity timeout. You can also implement some kind of meaningless write request that the client application sends periodically to make sure the Datastax Astra connection doesn't idle.
 
