@@ -28,7 +28,7 @@ We will use the term "machine" to indicate a cloud instance (on any cloud provid
 *** 4 vCPUs
 *** 8GB RAM
 *** 20GB - 100GB root volume
-*** Equivalent to AWS `c5.xlarge` / GCP `e2-standard-4` / [ TODO add Azure ]
+*** Equivalent to AWS `c5.xlarge` / GCP `e2-standard-4` / Azure `A4 v2`
 * One machine for the jumphost, which is typically also used as Ansible Control Host and to run the monitoring stack (Prometheus + Grafana)
 ** The most common option is using a single machine for all these functions, but you could split these functions across different machines if you prefer.
 ** Requirements:
@@ -36,7 +36,7 @@ We will use the term "machine" to indicate a cloud instance (on any cloud provid
 *** 8 vCPUs
 *** 16GB RAM
 *** 200GB - 500GB storage (depending on the amount of metrics history that you wish to retain)
-*** Equivalent to AWS `c5.2xlarge` / GCP `e2-standard-8` / [ TODO add Azure ]
+*** Equivalent to AWS `c5.2xlarge` / GCP `e2-standard-8` / Azure `A8 v2`
 * 1-N machines to run either {dsbulk-migrator} or {cstar-data-migrator}
 ** It's recommended that you start with at least one VM with 16 vCPUs and 64GB RAM and a minimum of 200GB storage. Depending on the total amount of data that is planned for migration, more than one VM may be needed.
 ** Requirements:
