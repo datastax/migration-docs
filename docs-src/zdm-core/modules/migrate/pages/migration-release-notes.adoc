@@ -1,4 +1,4 @@
-= {company} (zdm-product} Release Notes
+= {company} {zdm-product} Release Notes
 
 == ZDM 2.0 release
 
