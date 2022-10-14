@@ -109,7 +109,7 @@ Other, rarely changed variables:
 *** Timeout (in ms) when performing the initialization (handshake) of a proxy-to-secondary cluster connection that will be used solely for asynchronous dual reads.
 *** If this timeout occurs, the asynchronous reads will not be sent. This has no impact on the handling of synchronous requests: the {zdm-proxy} will continue to handle all synchronous reads and writes normally.
 *** Defaults to `4000` ms
-** `metrics_enable`:
+** `metrics_enabled`:
 *** Whether metrics collection should be enabled
 *** Boolean value. Defaults to `true`, but can be set to `false` to completely disable metrics collection. This is not recommended.
 
