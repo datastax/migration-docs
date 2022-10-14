@@ -25,7 +25,7 @@ Ensure that you test your client application with Target (connected directly wit
 
 DataStax Astra DB implements guardrails and sets limits to ensure good practices, foster availability, and promote optimal configurations for your databases. Please check the list of https://docs.datastax.com/en/astra-serverless/docs/plan/planning.html#_astra_db_database_guardrails_and_limits[guardrails and limits^] and make sure your application workload can be successful in the presence of these limits.
 
-If you need to make changes to the application or data model to ensure that your workload can run successfully in Datastax Astra then you need to make these changes before you start the migration process.
+If you need to make changes to the application or data model to ensure that your workload can run successfully in Datastax Astra DB then you need to do these changes before you start the migration process.
 
 It is also highly recommended performing tests and benchmarks when connected directly to Astra DB prior to the migration, so that you don't find unexpected issues during the migration process.
 
@@ -33,13 +33,13 @@ It is also highly recommended performing tests and benchmarks when connected dir
 
 If a client application only sends `SELECT` statements to a database connection then you may find that {zdm-proxy} terminates these read-only connections periodically, which may result in request errors if the driver is not configured to retry these requests in these conditions.
 
-This happens because Datastax Astra terminates idle connections after some inactivity period (usually around 10 minutes) so if Datastax Astra is your Target and a client connection is only sending read requests to the {zdm-proxy} then the Datastax Astra connection that is "paired" to that client connection will remain idle and will be eventually terminated.
+This happens because Datastax Astra DB terminates idle connections after some inactivity period (usually around 10 minutes) so if Datastax Astra DB is your Target and a client connection is only sending read requests to the {zdm-proxy} then the Datastax Astra DB connection that is "paired" to that client connection will remain idle and will be eventually terminated.
 
 *We are planning a fix to this behavior* so that {zdm-proxy} sends heartbeats to the secondary cluster connections when a client connection only sends read requests but in the meantime you may want to implement some kind of workaround for this issue.
 
 A potential workaround is to not connect these read-only client applications to {zdm-proxy}, but you need to ensure that these client applications switch reads to Target at any point after all the data has been migrated and all validation and reconciliation has completed.
 
-Another workaround is to implement a mechanism in your client application that creates a new `Session` periodically to avoid the Datastax Astra inactivity timeout. You can also implement some kind of meaningless write request that the client application sends periodically to make sure the Datastax Astra connection doesn't idle.
+Another work around is to implement a mechanism in your client application that creates a new `Session` periodically to avoid the Datastax Astra DB inactivity timeout. You can also implement some kind of meaningless write request that the application sends periodically to make sure the Datastax Astra DB connection doesn't idle.
 
 == Advanced workloads (Datastax Enterprise)
 
