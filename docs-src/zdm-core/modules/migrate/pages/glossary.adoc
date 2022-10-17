@@ -1,5 +1,7 @@
 = Glossary
 
+:page-tag: migration,zdm,glossary
+
 Here are a few terms used throughout the {company} {zdm-product} documentation and code.
 
 
@@ -21,7 +23,7 @@ Cassandra Query Language (CQL) is a query language for the Cassandra database. I
 [[origin]]
 == Origin
 
-Your existing Cassandra-based cluster, whether it's open-source Apache Cassandra&reg;, {company} Enterprise (DSE), or Astra DB.
+Your existing Cassandra-based cluster, whether it's open-source Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB.
 
 == Primary cluster
 

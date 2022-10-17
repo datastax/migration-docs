@@ -10,11 +10,11 @@ At this point in our migration phases, we've completed:
 
 * Phase 4: Changed read routing to Target.
 
-Now we're ready to perform Phase 5, in which we will configure our client applications to connect directly to Target. The way you do this varies based on whether your Target is Astra DB or a regular Apache Cassandra&reg; or {company} Enterprise cluster.
+Now we're ready to perform Phase 5, in which we will configure our client applications to connect directly to Target. The way you do this varies based on whether your Target is Astra DB or a regular Apache Cassandra&reg; or DataStax Enterprise cluster.
 
 == Configuring your driver to connect to a generic CQL cluster
 
-If your Target is a generic CQL cluster (such as Apache Cassandra or {company} Enterprise), you can connect your client application to it in a similar way as you previously connected it to Origin, but with the appropriate contact points and any additional configuration that your Target may require. For further information, please refer to the documentation of the driver language and version that you are using.
+If your Target is a generic CQL cluster (such as Apache Cassandra or DataStax Enterprise), you can connect your client application to it in a similar way as you previously connected it to Origin, but with the appropriate contact points and any additional configuration that your Target may require. For further information, please refer to the documentation of the driver language and version that you are using.
 
 == Configuring your driver to connect to Astra DB
 

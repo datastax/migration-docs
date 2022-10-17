@@ -1,6 +1,6 @@
 = Connect your client applications to {zdm-proxy}
 
-The {zdm-proxy} is designed to look and feel very much like a conventional Cassandra&reg; cluster.  You communicate with it using the CQL query language used in your existing client applications.  It understands the same messaging protocols used by Cassandra, {company} Enterprise (DSE) server or {company} Astra DB.  As a result, most of your client applications won't be able to distinguish between connecting to {zdm-proxy} and connecting directly to your Cassandra cluster.
+The {zdm-proxy} is designed to look and feel very much like a conventional Cassandra&reg; cluster.  You communicate with it using the CQL query language used in your existing client applications.  It understands the same messaging protocols used by Cassandra, DataStax Enterprise (DSE) server or {company} Astra DB.  As a result, most of your client applications won't be able to distinguish between connecting to {zdm-proxy} and connecting directly to your Cassandra cluster.
 
 In this topic, we explain how to connect your client applications to a Cassandra cluster.  We then move on to discuss how this process changes when connecting to a {zdm-proxy}.  We conclude by describing two sample client applications that serve as a real-world examples of how to build a client application that works effectively with {zdm-proxy}.
 
@@ -84,8 +84,6 @@ The documentation for the {company} drivers provides information about how to co
 
 https://github.com/alicel/zdm-demo-client/[ZDM Demo Client^] is a minimal Java web application which provides a simple, stripped-down example of an application built to work with {zdm-proxy}.  After updating connection information you can compile and run the application locally and interact with it using HTTP clients such as `curl` or `wget`.
 
-[ **TODO: in which repo should this client reside?** ]
-
 You can find the details of building and running ZDM Demo Client in the https://github.com/alicel/zdm-demo-client/blob/master/README.md[README^].
 
 === Themis client
@@ -99,6 +97,3 @@ https://github.com/absurdfarce/themis[Themis^] is a Java command-line client app
 The client application can then be used to query the inserted data.  This allows you to validate that the {zdm-proxy} is reading and writing data from the expected sources.  Configuration details for the clusters and/or {zdm-proxy} are defined in a YAML file.  Details are in the https://github.com/absurdfarce/themis/blob/main/README.md[README^].
 
 In addition to any utility as a validation tool, Themis also serves as an example of a larger client application which uses the Java driver to connect to a {zdm-proxy} -- as well as directly to Cassandra or Astra DB clusters -- and perform operations.  The configuration logic as well as the cluster and session management code have been cleanly separated into distinct packages to make them easy to understand.
-
-[ **TODO: in which repo should this client app reside?** Ok to stay in Bret's GH?]
-

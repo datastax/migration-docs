@@ -4,21 +4,21 @@ Before starting your migration, refer to the following considerations to ensure 
 
 == Cassandra Native Protocol version and cluster version support
 
-{zdm-proxy} supports protocol versions v3, v4, DseV1, and DseV2.
+{zdm-proxy} supports protocol versions `v3`, `v4`, `DSE_V1`, and `DSE_V2`.
 
-{zdm-proxy} technically doesn't support v5. If v5 is requested, the proxy handles protocol negotiation so that the client application properly downgrades the protocol version to v4. This means that any client application using a recent driver that supports protocol version v5 can be migrated using the {zdm-proxy} (as long as it des not use v5-specific functionality).
+{zdm-proxy} technically doesn't support `v5``. If `v5`` is requested, the proxy handles protocol negotiation so that the client application properly downgrades the protocol version to `v4`. This means that any client application using a recent driver that supports protocol version `v5` can be migrated using the {zdm-proxy} (as long as it does not use v5-specific functionality).
 
 [IMPORTANT]
 ====
 *Thrift is not supported by {zdm-proxy}.*
 
-If you are using a very old driver or cluster version that only supports Thrift, then you need to change your client application to use CQL and potentially upgrade your cluster before starting the migration process.
+If you are using a very old driver or cluster version that only supports Thrift then you need to change your client application to use CQL and potentially upgrade your cluster before starting the migration process.
 ====
 
-Tthis means that {zdm-proxy} supports the following cluster versions (Origin/Target):
+This means that {zdm-proxy} supports the following cluster versions (Origin/Target):
 
 * Apache Cassandra&reg; from 2.1+ up to (and including) Apache Cassandra 4.x. Apache Cassandra 2.0 support will be introduced when protocol version v2 is supported.
-* {company} Enterprise 4.8+. {company} Enterprise 4.6 and 4.7 support will be introduced when protocol version v2 is supported.
+* DataStax Enterprise 4.8+. DataStax Enterprise 4.6 and 4.7 support will be introduced when protocol version v2 is supported.
 * {company} Astra DB (both Serverless and Classic)
 
 [TIP]
@@ -44,7 +44,7 @@ A potential workaround is to not connect these read-only client applications to 
 
 Another work around is to implement a mechanism in your client application that creates a new `Session` periodically to avoid the {company} Astra DB inactivity timeout. You can also implement some kind of meaningless write request that the application sends periodically to make sure the {company} Astra DB connection doesn't idle.
 
-== Advanced workloads ({company} Enterprise)
+== Advanced workloads (DataStax Enterprise)
 
 === Graph
 

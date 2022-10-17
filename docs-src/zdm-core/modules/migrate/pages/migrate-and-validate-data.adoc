@@ -5,7 +5,7 @@ This topic introduces you to the benefits of using two data migration tools duri
 * {cstar-data-migrator}
 * {dsbulk-migrator}
 
-These tools provide helpful features and may be used to match the requirements of your Apache Cassandra&reg;, {company} Enterprise (DSE), or Astra DB databases.  The tools can help you migrate data from any Cassandra Origin (Cassandra/DSE/Astra DB) to any Cassandra Target (Cassandra/DSE/Astra DB).
+These tools provide helpful features and may be used to match the requirements of your Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB databases.  The tools can help you migrate data from any Cassandra Origin (Cassandra/DSE/Astra DB) to any Cassandra Target (Cassandra/DSE/Astra DB).
 
 == What's the difference between these data migration tools?
 

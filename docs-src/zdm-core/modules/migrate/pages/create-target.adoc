@@ -94,7 +94,7 @@ To aid you in preparing the schema from the DDL used in a non-Astra cluster, you
 Here are the steps that you'll need to follow:
 
 * Determine the correct topology and specifications for your new cluster, then provision infrastructure that meets these requirements. This can be in your cloud provider of choice, in your own private cloud or on bare metal machines.
-* Create your cluster using your chosen version of Apache Cassandra&reg; or {company} Enterprise. Refer to the documentation specific to the version that you are installing for detailed information, and pay particular attention at configuration that must be done at installation time.
+* Create your cluster using your chosen version of Apache Cassandra&reg; or DataStax Enterprise. Refer to the documentation specific to the version that you are installing for detailed information, and pay particular attention at configuration that must be done at installation time.
 * Configure your new cluster as desired: for example, you may decide to enable internal authentication or configure TLS encryption. You should also consider testing your new cluster to ensure it meets your performance requirements and tune it as necessary.
 ** Note: your new cluster can be configured as you wish, independently of how Origin is configured. {zdm-proxy} allows you to specify a separate set of configuration to connect to each cluster.
 * If you enabled authentication, create a user with the required permissions to be used for your client application.

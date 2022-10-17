@@ -1,6 +1,6 @@
 = Contribution guidelines
 
-{company} {zdm-product} (ZDM) provides a simple and reliable way for users to migrate an existing Apache Cassandra&reg; or {company} Enterprise cluster to Astra DB, or to any Cassandra/DSE cluster, without any interruption of service to the apps and data.
+{company} {zdm-product} (ZDM) provides a simple and reliable way for users to migrate an existing Apache Cassandra&reg; or DataStax Enterprise cluster to Astra DB, or to any Cassandra/DSE cluster, without any interruption of service to the apps and data.
 
 The {zdm-proxy} is open source software (OSS). We welcome contributions from the developer community via Pull Requests on a fork, for evaluation by the ZDM team.
 

@@ -142,7 +142,7 @@ This playbook operates by recreating each proxy container one by one. The {zdm-p
 
 The {zdm-proxy} version is displayed at startup, in a message such as `Starting ZDM proxy version ...`. It can also be retrieved at any time by using the `version` option as in the following command.
 ```bash
-TODO add command to view version
+docker run --rm datastax/zdm-proxy:2.x -version
 ```
 
 The playbook for configuration changes can also be used to upgrade the {zdm-proxy} version in a rolling fashion. All containers will be recreated with the image of the specified version. The same behavior and observations as above apply here.

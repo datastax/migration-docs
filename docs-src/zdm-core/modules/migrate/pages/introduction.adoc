@@ -2,11 +2,11 @@
 
 Enterprises today depend on the ability to reliably migrate mission-critical apps and data to cloud environments with zero downtime during the migration.
 
-At DataStax, we've developed a set of thoroughly-tested self-service tools, automation scripts, examples, and documented procedures that walk you through well-defined migration phases.
+At {company}, we've developed a set of thoroughly-tested self-service tools, automation scripts, examples, and documented procedures that walk you through well-defined migration phases.
 
 We call this product suite {company} {zdm-product} ({zdm-shortproduct}). 
 
-{zdm-shortproduct} provides a simple and reliable way for you to migrate applications from any CQL-based cluster (Apache Cassandra&reg;, {company} Enterprise (DSE), Astra DB, or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
+{zdm-shortproduct} provides a simple and reliable way for you to migrate applications from any CQL-based cluster (https://cassandra.apache.org/_/index.html[Apache Cassandra&reg;^], https://www.datastax.com/products/datastax-enterprise[DSE^], https://www.datastax.com/products/datastax-astra[Astra DB^], or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
 
 * You can move your application to Astra DB, DSE, or Cassandra with no downtime and with minimal configuration changes. For more, see <<migration-workflow, migration workflow>>.
 * Your clusters will be kept in sync at all times by a dual-write logic configuration.
@@ -87,7 +87,7 @@ The {zdm-proxy} itself doesn't have any capability to migrate data or knowledge 
 
 === Role of {zdm-proxy}
 
-We created {zdm-proxy} to function between the application and both databases (Origin and Target). The databases can be any CQL-compatible data store (e.g. Apache Cassandra, {company} Enterprise and Astra DB). The proxy always sends every write operation (Insert, Update, Delete) synchronously to both clusters at the desired Consistency Level:
+We created {zdm-proxy} to function between the application and both databases (Origin and Target). The databases can be any CQL-compatible data store (e.g. Apache Cassandra, DataStax Enterprise and Astra DB). The proxy always sends every write operation (Insert, Update, Delete) synchronously to both clusters at the desired Consistency Level:
 
 * If the write is successful in both clusters, it returns a successful acknowledgement to the client application
 * If the write fails on either cluster, the failure is passed back to the client application so that it can retry it as appropriate, based on its own retry policy.
@@ -148,7 +148,7 @@ As part of the overall migration process, you can use {cstar-data-migrator} and/
 
 Use {cstar-data-migrator} to:
 
-* Migrate your data from any CQL-supported Origin to any CQL-supported Target. Examples of databases that support CQL are Apache Cassandra, {company} Enterprise and Astra DB.
+* Migrate your data from any CQL-supported Origin to any CQL-supported Target. Examples of databases that support CQL are Apache Cassandra, DataStax Enterprise and Astra DB.
 * Validate migration accuracy and performance using examples that provide a smaller, randomized data set
 * Preserve internal `writetime` timestamps and Time To Live (TTL) values
 * Take advantage of advanced data types (Sets, Lists, Maps, UDTs)

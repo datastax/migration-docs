@@ -109,10 +109,10 @@ time="2022-10-11T13:37:28+01:00" level=info msg="Starting ZDM proxy version 2.0.
 time="2022-10-11T13:37:28+01:00" level=info msg="Parsed configuration: {removed for simplicity}"
 ```
 
-You can also provide a `-version` command line parameter to the {zdm-proxy} and it will only print the version.
+You can also provide a `-version` command line parameter to the {zdm-proxy} and it will only print the version. Example:
 
 ```bash
-> docker run --rm datastax/zdm-proxy:2.0.0 -version
+docker run --rm datastax/zdm-proxy:2.x -version
 ZDM proxy version 2.0.0
 ```
 
@@ -121,6 +121,7 @@ ZDM proxy version 2.0.0
 Do not use `--rm` when actually launching the {zdm-proxy} otherwise you will not be able to access the logs when it stops (or crashes).
 ====
 
+[#how-to-leverage-metrics]
 == How to leverage the metrics provided by {zdm-proxy}
 
 The {zdm-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format. At the moment this is the only way to obtain metrics from {zdm-proxy}, we plan to introduce other ways to expose metrics in the future.
