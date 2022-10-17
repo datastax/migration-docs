@@ -38,7 +38,7 @@ The SCB can be downloaded from the Astra Portal as follows:
 
 You will also need to check whether the driver used by your client application has native support for the Astra DB Secure Connect Bundle (SCB). To do so, please refer to the documentation for your driver language and version.
 
-[TODO add list of driver versions where SCB support was introduced]
+// [TODO add list of driver versions where SCB support was introduced]
 
 Based on this, follow the instructions in the relevant section below.
 

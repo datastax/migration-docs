@@ -41,7 +41,8 @@ For more, see xref:migration-introduction.adoc[].
 ** Connect to your clusters and compare the data between Origin and Target
 ** Report differences in a detailed log file
 ** Reconcile any missing records and fix any data inconsistencies between Origin and Target, if you enable `autocorrect` in a configuration file
-* **{dsbulk-migrator}** is provided to migrate smaller amounts of data (up to 20 GBs) **[ TODO: verify max guidelines ]** between Origin and Target.
+* **{dsbulk-migrator}** is provided to migrate smaller amounts of data from Origin to Target
+// (up to 20 GBs) **[ TODO: verify max guidelines ]
 * Well-defined steps in this migration documentation, organized as a sequence of phases.
 
 == What exactly is {zdm-proxy}?
