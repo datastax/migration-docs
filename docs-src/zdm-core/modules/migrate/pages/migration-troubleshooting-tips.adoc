@@ -109,10 +109,10 @@ time="2022-10-11T13:37:28+01:00" level=info msg="Starting ZDM proxy version 2.0.
 time="2022-10-11T13:37:28+01:00" level=info msg="Parsed configuration: {removed for simplicity}"
 ```
 
-You can also provide a `-version` command line parameter to the {zdm-proxy} and it will only print the version.
+You can also provide a `-version` command line parameter to the {zdm-proxy} and it will only print the version. Example:
 
 ```bash
-> docker run --rm datastax/zdm-proxy:2.0.0 -version
+docker run --rm datastax/zdm-proxy:2.x -version
 ZDM proxy version 2.0.0
 ```
 
