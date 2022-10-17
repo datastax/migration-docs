@@ -121,6 +121,7 @@ ZDM proxy version 2.0.0
 Do not use `--rm` when actually launching the {zdm-proxy} otherwise you will not be able to access the logs when it stops (or crashes).
 ====
 
+[#how-to-leverage-metrics]
 == How to leverage the metrics provided by {zdm-proxy}
 
 The {zdm-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format. At the moment this is the only way to obtain metrics from {zdm-proxy}, we plan to introduce other ways to expose metrics in the future.
