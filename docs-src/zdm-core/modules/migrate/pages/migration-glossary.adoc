@@ -19,6 +19,10 @@ An optional testing phase in which reads are sent to both Origin and Target, ena
 
 Cassandra Query Language (CQL) is a query language for the Cassandra database. It includes DDL and DML statements. For details, see the https://docs.datastax.com/en/dse/6.8/cql/cql/cqlQuickReference.html[CQL quick reference^].
 
+== Dual-write logic
+
+{zdm-proxy} handles your client application's real-time write requests and forwards them to two Cassandra-based clusters (Origin and Target) simultaneously.  The dual-write logic in {zdm-proxy} means that you do not need to modify your client application to perform dual writes manually during a migration: {zdm-proxy} takes care of it for you. See the diagram in the xref:migration-introduction.adoc#_migration_workflow[workflow introduction].
+
 == Origin
 Your existing Cassandra-based cluster, whether it's open-source Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB.
 
