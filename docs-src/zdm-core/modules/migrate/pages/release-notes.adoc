@@ -8,7 +8,7 @@
 
 The following {company} {zdm-product} GitHub repos are public. You are welcome to read the source and submit feedback via GitHub Issues per repo.
 
-* https://github.com/datastax/zdm-proxy[{zdm-proxy}^] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion, provided you accept the https://cla.datastax.com/[DataStax Contributor License Agreement (CLA)^]. For more information, see xref:migration-contributions.adoc[].
+* https://github.com/datastax/zdm-proxy[{zdm-proxy}^] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion, provided you accept the https://cla.datastax.com/[{company} Contributor License Agreement (CLA)^]. For more information, see xref:contributions.adoc[].
 
 * https://github.com/datastax/zdm-proxy-automation[{zdm-automation}^] repo for Ansible-based {zdm-proxy} automation.
 
@@ -16,10 +16,7 @@ The following {company} {zdm-product} GitHub repos are public. You are welcome t
 
 * https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo for migration of larger data quantities and where detailed verifications and reconciliation options are needed.
 
-[NOTE]
-====
-This suite of tools allows for zero-downtime migration only if your database meets the minimum xref:migration-feasibility-checklists.adoc[requirements^]. If your database does not meet these requirements, you can complete the migration from Origin to Target, but downtime might be necessary to finish the migration.
-====
+include::partial$note-downtime.adoc[]
 
 ====
 [TIP]

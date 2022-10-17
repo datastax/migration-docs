@@ -5,7 +5,7 @@ This topic introduces you to the benefits of using two data migration tools duri
 * {cstar-data-migrator}
 * {dsbulk-migrator}
 
-These tools provide helpful features and may be used to match the requirements of your Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB databases.  The tools can help you migrate data from any Cassandra Origin (Cassandra/DSE/Astra DB) to any Cassandra Target (Cassandra/DSE/Astra DB).
+These tools provide helpful features and may be used to match the requirements of your Apache Cassandra&reg;, {company} Enterprise (DSE), or Astra DB databases.  The tools can help you migrate data from any Cassandra Origin (Cassandra/DSE/Astra DB) to any Cassandra Target (Cassandra/DSE/Astra DB).
 
 == What's the difference between these data migration tools?
 
@@ -13,7 +13,7 @@ In general:
 
 * {cstar-data-migrator} is the best choice to migrate large data quantities, and where detailed verifications and reconciliation options are needed.
 
-* {dsbulk-migrator} leverages DataStax Bulk Loader (DSBulk) to perform the actual data migration, and provides new commands specific to migrations. {dsbulk-migrator} is ideal for migration of small data quantities, such as databases that have less than 20 GBs of data in the table rows.  
+* {dsbulk-migrator} leverages {company} Bulk Loader (DSBulk) to perform the actual data migration, and provides new commands specific to migrations. {dsbulk-migrator} is ideal for migration of small data quantities, such as databases that have less than 20 GBs of data in the table rows.  
 
 == How do I install and use these data migration tools?
 
@@ -72,7 +72,7 @@ For installation and usage details, see the {cstar-data-migrator} repo's https:/
 
 == {dsbulk-migrator}
 
-{dsbulk-migrator}, which is based on DataStax Bulk Loader (DSBulk), is best for migrating smaller amounts of data, and/or when you can shard data from table rows into more manageable quantities.  
+{dsbulk-migrator}, which is based on {company} Bulk Loader (DSBulk), is best for migrating smaller amounts of data, and/or when you can shard data from table rows into more manageable quantities.  
 
 {dsbulk-migrator} provides the following main commands:
 

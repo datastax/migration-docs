@@ -2,7 +2,7 @@
 
 In this topic, we'll see how to create and prepare a new cluster to be used as Target.
 
-This section covers in detail the steps to prepare a DataStax Astra DB serverless database, and also outlines how to create and prepare a different cluster, which could be for example Cassandra 4.0.x or DSE 6.8.x.
+This section covers in detail the steps to prepare a {company} Astra DB serverless database, and also outlines how to create and prepare a different cluster, which could be for example Cassandra 4.0.x or DSE 6.8.x.
 
 == Overview
 
@@ -60,7 +60,7 @@ Your cluster's Secure Connect Bundle (SCB) will be needed by:
 * Your client application, to connect directly to Astra DB near the end of the migration
 * Cassandra Data Migrator or DSBulk Migrator, to migrate and validate data into Astra DB
 
-// * The DataStax Bulk Migrator to import the existing data into Astra
+// * The {company} Bulk Migrator to import the existing data into Astra
 
 With the Astra DB database in an **Active** status, download its SCB from Astra Portal. It's a zip file that contains the security certificates and other metadata to connect to your database (note that the credentials are not contained in the SCB).
 
@@ -94,7 +94,7 @@ To aid you in preparing the schema from the DDL used in a non-Astra cluster, you
 Here are the steps that you'll need to follow:
 
 * Determine the correct topology and specifications for your new cluster, then provision infrastructure that meets these requirements. This can be in your cloud provider of choice, in your own private cloud or on bare metal machines.
-* Create your cluster using your chosen version of Apache Cassandra&reg; or DataStax Enterprise. Refer to the documentation specific to the version that you are installing for detailed information, and pay particular attention at configuration that must be done at installation time.
+* Create your cluster using your chosen version of Apache Cassandra&reg; or {company} Enterprise. Refer to the documentation specific to the version that you are installing for detailed information, and pay particular attention at configuration that must be done at installation time.
 * Configure your new cluster as desired: for example, you may decide to enable internal authentication or configure TLS encryption. You should also consider testing your new cluster to ensure it meets your performance requirements and tune it as necessary.
 ** Note: your new cluster can be configured as you wish, independently of how Origin is configured. {zdm-proxy} allows you to specify a separate set of configuration to connect to each cluster.
 * If you enabled authentication, create a user with the required permissions to be used for your client application.

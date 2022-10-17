@@ -2,23 +2,26 @@
 
 Here are a few terms used throughout the {company} {zdm-product} documentation and code.
 
+
 == Ansible playbooks
 
 A repeatable, re-usable, simple configuration management and multi-machine deployment system, one that is well suited to deploying complex applications. For details about the playbooks built with {zdm-utility} and deployed by {zdm-automation}, see:
 
-* xref:migration-setup-ansible-playbooks.adoc[]
-* xref:migration-deploy-proxy-monitoring.adoc[]
+* xref:setup-ansible-playbooks.adoc[]
+* xref:deploy-proxy-monitoring.adoc[]
 
 == Asynchronous dual reads
 
-An optional testing phase in which reads are sent to both Origin and Target, enabling you to check that the intended Target of your migration can handle the full workload of reads and writes before finalizing the migration and moving off the {zdm-proxy} instances. For details, see xref:migration-enable-async-dual-reads.adoc[].
+An optional testing phase in which reads are sent to both Origin and Target, enabling you to check that the intended Target of your migration can handle the full workload of reads and writes before finalizing the migration and moving off the {zdm-proxy} instances. For details, see xref:enable-async-dual-reads.adoc[].
 
 == CQL
 
 Cassandra Query Language (CQL) is a query language for the Cassandra database. It includes DDL and DML statements. For details, see the https://docs.datastax.com/en/dse/6.8/cql/cql/cqlQuickReference.html[CQL quick reference^].
 
+[[origin]]
 == Origin
-Your existing Cassandra-based cluster, whether it's open-source Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB.
+
+Your existing Cassandra-based cluster, whether it's open-source Apache Cassandra&reg;, {company} Enterprise (DSE), or Astra DB.
 
 == Primary cluster
 
@@ -26,21 +29,24 @@ The cluster that is currently considered the "primary" source of truth. While wr
 
 == Playbooks
 
-See xref:migration-glossary.adoc#_ansible_playbooks[Ansible playbooks].
+See xref:glossary.adoc#_ansible_playbooks[Ansible playbooks].
 
 == Proxy
-Generally speaking, a proxy is a software class functioning as an interface to something else. The proxy could interface to anything: a network connection, a large object in memory, a file, or some other resource. A proxy is a wrapper or agent object that is being called by the client to access the real serving object behind the scenes. In our context here, see xref:migration-glossary.adoc#_zdm_proxy[ZDM Proxy].
+
+Generally speaking, a proxy is a software class functioning as an interface to something else. The proxy could interface to anything: a network connection, a large object in memory, a file, or some other resource. A proxy is a wrapper or agent object that is being called by the client to access the real serving object behind the scenes. In our context here, see <<zdm-proxy,ZDM Proxy>>.
 
 == Read mirroring
 
-See xref:migration-glossary.adoc#_asynchronous_dual_reads[async dual reads].
+See xref:glossary.adoc#_asynchronous_dual_reads[async dual reads].
 
 == Secure Connect Bundle (SCB)
 
 A ZIP file generated in https://astra.datastax.com[Astra Portal^] that contains connection metadata and TLS encryption certificates for your Astra DB database. For details, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[Working with the secure connect bundle^].
 
+[[target]]
 == Target
 The new cluster to which you want to migrate client applications and data with zero downtime.
 
+[[zdm-proxy]]
 == ZDM Proxy
 An open-source component designed to seamlessly handle the real-time client application activity while a migration is in progress.

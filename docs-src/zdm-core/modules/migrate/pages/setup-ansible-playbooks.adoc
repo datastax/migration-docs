@@ -2,13 +2,13 @@
 
 This topic explains how to use the {zdm-utility} to set up the Ansible Control Host container for the {zdm-automation}.
 
-After completing the setup tasks in {zdm-utility}, see the xref:migration-deploy-proxy-monitoring.adoc[next topic] for subsequent steps to use {zdm-automation}, which you will use to deploy {zdm-proxy} instances and the monitoring stack.
+After completing the setup tasks in {zdm-utility}, see the xref:deploy-proxy-monitoring.adoc[next topic] for subsequent steps to use {zdm-automation}, which you will use to deploy {zdm-proxy} instances and the monitoring stack.
 
 Once completed, you will have a working and fully monitored {zdm-proxy} deployment.
 
 == Introduction
 
-The {zdm-automation} uses **Ansible**, which deploys and configures the {zdm-proxy} instances and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:migration-deployment-infrastructure.adoc[Deployment and infrastructure considerations], which include the infrastructure requirements.
+The {zdm-automation} uses **Ansible**, which deploys and configures the {zdm-proxy} instances and monitoring stack via playbooks. This step expects that the infrastructure has been already provisioned.  See xref:deployment-infrastructure.adoc[Deployment and infrastructure considerations], which include the infrastructure requirements.
 
 Configuring a machine to serve as the Ansible Control Host is very easy using the {zdm-utility}. This is a Golang (Go) executable program that runs anywhere. This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use. From this container, you will be able to easily configure and run the {zdm-automation} Ansible playbooks.
 
@@ -35,7 +35,7 @@ The jumphost will serve three purposes:
 
 [TIP]
 ====
-To simplify accessing the jumphost and {zdm-proxy} instances from your machine, create a xref:migration-deployment-infrastructure.adoc#_connecting_to_the_zdm_infrastructure_from_an_external_machine[custom SSH configuration file]. The following steps will assume that this file exists.
+To simplify accessing the jumphost and {zdm-proxy} instances from your machine, create a xref:deployment-infrastructure.adoc#_connecting_to_the_zdm_infrastructure_from_an_external_machine[custom SSH configuration file]. The following steps will assume that this file exists.
 ====
 
 Let's get started.

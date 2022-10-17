@@ -1,8 +1,8 @@
-= FAQs
+= Frequently Asked Questions
 
 If you're new to the {company} {zdm-product} features, these FAQs are for you.
 
-== What is meant by "{zdm-product}" (ZDM)?
+== What is meant by {zdm-product}?
 
 {zdm-product} ({zdm-shortproduct}) means the ability for you to reliably migrate client applications and data between CQL clusters with no interruption of service.
 
@@ -14,9 +14,9 @@ It is important to note that the {zdm-product} process requires you to be able t
 
 [TIP]
 ====
-In the context of migrating between clusters (client applications and data), the examples in this guide sometimes refer to the migration to our cloud-native database environment, DataStax Astra DB.
+In the context of migrating between clusters (client applications and data), the examples in this guide sometimes refer to the migration to our cloud-native database environment, {company} Astra DB.
 
-However, it is important to emphasize that the {zdm-proxy} can be freely used to migrate without downtime between any combination of CQL clusters of any type. In addition to Astra DB, examples are Apache Cassandra&reg; or DataStax Enterprise (DSE).
+However, it is important to emphasize that the {zdm-proxy} can be freely used to migrate without downtime between any combination of CQL clusters of any type. In addition to Astra DB, examples include Apache Cassandra&reg; or {company} Enterprise (DSE).
 ====
 
 == Can you illustrate the overall workflow and phases of a migration?
@@ -29,14 +29,14 @@ Here are the phases of a migration from start to finish:
 
 image:zdm-migration-phases6a.png[Migration phases from start to finish]
 
-For more, see xref:migration-introduction.adoc[].
+For more, see xref:introduction.adoc[].
 
 == What components are provided with ZDM?
 
 {company} {zdm-product} includes the following:
 
-* **{zdm-proxy}** is a service that operates between your existing (**Origin**) cluster and the new (**Target**) cluster.
-* The **{zdm-automation}** is an Ansible-based tool that allows you to deploy and manage the {zdm-proxy} instances and the associated monitoring stack. To simplify its setup, the suite includes the {zdm-utility}. This is an interactive utility that creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be easily run with the {zdm-automation}.
+* xref:glossary.adoc#zdm-proxy[**{zdm-proxy}**] is a service that operates between xref:glossary.adoc#origin[**Origin**], which is your existing cluster, and xref:glossary.adoc#target[**Target**], which is the cluster to which you are migrating.
+* The **{zdm-automation}** is an Ansible-based tool that allows you to deploy and manage the {zdm-proxy} instances and the associated monitoring stack. To simplify its setup, the suite includes the {zdm-utility}. This interactive utility creates a Docker container acting as the Ansible Control Host, from which the Ansible playbooks can be easily run with the {zdm-automation}.
 * **{cstar-data-migrator}** is designed to:
 ** Connect to your clusters and compare the data between Origin and Target
 ** Report differences in a detailed log file
@@ -46,7 +46,7 @@ For more, see xref:migration-introduction.adoc[].
 
 == What exactly is {zdm-proxy}?
 
-{zdm-proxy} is a component designed to seamlessly handle the real-time client application activity while a migration is in progress. See xref:migration-introduction.adoc#_role_of_zdm_proxy[here] for an overview.
+{zdm-proxy} is a component designed to seamlessly handle the real-time client application activity while a migration is in progress. See xref:introduction.adoc#_role_of_zdm_proxy[here] for an overview.
 
 == What are the benefits of {zdm-product} and its use cases?
 
@@ -57,25 +57,25 @@ Migrating client applications between clusters is a need that arises in many sce
 * Separate out a client application from a shared cluster to a dedicated one.
 * Consolidate client applications, currently running on separate clusters, into fewer clusters or even a single one.
 
-Bottom line: you want to migrate your critical database infrastructure without risk or concern that your users' experiences will be affected.
+Bottom line: You want to migrate your critical database infrastructure without risk or concern that your users' experiences will be affected.
 
-== What challenges does ZDM solve?
+== What challenges does {zdm-shortproduct} solve?
 
-Before {zdm-product} was available, migrating client applications between clusters involved granular and intrusive client application code changes, extensive migration preparation, and potentially a window of downtime to the client application's end users.
+Before {company} {zdm-product} was available, migrating client applications between clusters involved granular and intrusive client application code changes, extensive migration preparation, and a window of downtime to the client application's end users.
 
-{company} {zdm-product} allows you to leverage mature migration tools that have been used with large scale enterprises and applications to make migrations easy and transparent to end users.
+{zdm-shortproduct} allows you to leverage mature migration tools that have been used with large scale enterprises and applications to make migrations easy and transparent to end users.
 
 == What is the pricing model?
 
-The suite of {zdm-product} tools from DataStax is free and open sourced.
+The suite of {zdm-product} tools from {company} is free and open-sourced.
 
 == Is there support available if I have questions or issues during our migration?
 
-If needed, {zdm-proxy} and related software tools in the migration suite include technical assistance by https://support.datastax.com/s/[DataStax Support^].
+If needed, {zdm-proxy} and related software tools in the migration suite include technical assistance by https://support.datastax.com/s/[{company} Support^].
 
-For any observed problems with the {zdm-proxy}, please contact us. In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^].
+For any observed problems with the {zdm-proxy}, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^] in the {zdm-proxy} GitHub repo.
 
-Additional examples serve as templates, from which you can learn about migrations. DataStax does not assume responsibility for making the templates work for specific use cases.
+Additional examples serve as templates, from which you can learn about migrations. {company} does not assume responsibility for making the templates work for specific use cases.
 
 == Where are the public GitHub repos?
 
@@ -96,16 +96,14 @@ All the {company} {zdm-product} GitHub repos are public. You are welcome to read
 Yes, and here's a summary:
 
 * For application-to-proxy TLS, the application is the TLS client and the {zdm-proxy} is the TLS server. One-way TLS and Mutual TLS are both supported.
-
 * For proxy-to-cluster TLS, the {zdm-proxy} acts as the TLS client and the cluster as the TLS server. One-way TLS and Mutual TLS are both supported.
-
 * When the {zdm-proxy} connects to Astra DB clusters, it always implicitly uses Mutual TLS. This is done through the Secure Connect Bundle (SCB) and does not require any extra configuration.
 
-For TLS details, see xref:migration-tls.adoc[].
+For TLS details, see xref:tls.adoc[].
 
 == What are the benefits of using a cloud-native database?
 
-When moving your client applications and data from on-premise Cassandra Query Language (CQL) based data stores (Apache Cassandra or DSE) to a cloud-native database (CNDB) like Astra DB, it's important to acknowledge the fundamental differences ahead. With on-premise infrastructure, of course, you have total control of the data center's physical infrastructure, software configurations, and your custom procedures. At the same time, with on-premise clusters you take on the cost of infrastructure resources, maintenance, operations, personnel.
+When moving your client applications and data from on-premise Cassandra Query Language (CQL) based data stores (Cassandra or DSE) to a cloud-native database (CNDB) like Astra DB, it's important to acknowledge the fundamental differences ahead. With on-premise infrastructure, of course, you have total control of the datacenter's physical infrastructure, software configurations, and your custom procedures. At the same time, with on-premise clusters you take on the cost of infrastructure resources, maintenance, operations, and personnel.
 
 Ranging from large enterprises to small teams, IT managers, operators, and developers are realizing that the Total Cost of Ownership (TCO) with cloud solutions is much lower than continuing to run on-prem physical data centers.
 

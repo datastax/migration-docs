@@ -4,7 +4,7 @@ See the troubleshooting tips in this topic for information that can help you tro
 
 == How to retrieve {zdm-proxy} log files
 
-If {zdm-proxy} was deployed using the {zdm-automation}, the utility contains an Ansible playbook that retrieves the logs. For details, see the next xref:migration-troubleshooting-tips.adoc#how-to-view-retrieve-logs[troubleshooting tip].
+If {zdm-proxy} was deployed using the {zdm-automation}, the utility contains an Ansible playbook that retrieves the logs. For details, see the next xref:troubleshooting-tips.adoc#how-to-view-retrieve-logs[troubleshooting tip].
 
 If you did not use the {zdm-automation}, the steps to retrieve the logs depends on how you deployed the {zdm-proxy}. If
 Docker is used, enter the following command to export the logs of a container to a file:
@@ -45,7 +45,7 @@ This playbook creates a single zip file, called `zdm_proxy_logs_<current_timesta
 
 First of all, make sure that the log level of the {zdm-proxy} is set to the appropriate value:
 
-. If you deployed the proxy through the {zdm-proxy}, the log level is determined by the property `zdm_log_level` in `vars/zdm_proxy_advanced_config.yml`. This value can be changed in a rolling fashion by editing this property and running the playbook `update_zdm_proxy.yml` (see xref:migration-manage-proxy-instances.adoc#change-mutable-config-property[here] for more information)
+. If you deployed the proxy through the {zdm-proxy}, the log level is determined by the property `zdm_log_level` in `vars/zdm_proxy_advanced_config.yml`. This value can be changed in a rolling fashion by editing this property and running the playbook `update_zdm_proxy.yml` (see xref:manage-proxy-instances.adoc#change-mutable-config-property[here] for more information)
 
 . If you did not use the {zdm-proxy} to deploy the proxy, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
 

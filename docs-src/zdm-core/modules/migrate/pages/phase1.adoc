@@ -1,0 +1,9 @@
+= Phase 1: Connect clients to {zdm-proxy}
+
+This section presents the following:
+
+* xref:setup-ansible-playbooks.adoc[]
+* xref:deploy-proxy-monitoring.adoc[]
+** xref:tls.adoc[]
+* xref:connect-clients-to-proxy.adoc[]
+* xref:manage-proxy-instances.adoc[]
