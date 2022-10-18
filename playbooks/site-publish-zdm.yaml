@@ -1,5 +1,5 @@
 site:
-  title: {company} Zero Downtime Migration
+  title: DataStax Zero Downtime Migration
   url: https://docs.datastax.com/en/zdm/docs
   # The keys.segmentIo site key must be in the site-publish playbook of each
   # docset. This loads Segment into the docset build, and is a requirement for
