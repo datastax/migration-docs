@@ -26,7 +26,7 @@ You can `ls` to see the resources in the Docker container. The most important re
 
 Now, `cd` into `zdm-proxy-automation/ansible` and `ls`. Example:
 
-image:zdm-ansible-container-ls.png[] [TODO update image replacing it with zdm-ansible-container-ls3]
+image:zdm-ansible-container-ls3.png[Contents of the Ansible Control Host container]
 
 == Configure the {zdm-proxy}
 
