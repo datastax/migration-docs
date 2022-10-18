@@ -101,7 +101,7 @@ Here are the steps that you'll need to follow:
 ** Note: your new cluster can be configured as you wish, independently of how Origin is configured. {zdm-proxy} allows you to specify a separate set of configuration to connect to each cluster.
 * If you enabled authentication, create a user with the required permissions to be used for your client application.
 
-== Create the schema for the client application that is being migrated
+=== Create the client application schema on the cluster
 
 At this point, the only thing that is left to do is creating the schema for your client application on the new cluster:
 
