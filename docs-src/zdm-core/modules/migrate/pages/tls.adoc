@@ -73,20 +73,20 @@ For each self-managed cluster requiring TLS (Origin and/or Target), execute the 
 ** For Origin: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/origin_tls_files`
 ** For Target: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/target_tls_files`
 
-There is a set of TLS configuration properties for Origin and a separate one for Target, so that they can be configured independently as desired.
+There is a set of TLS configuration variables for Origin and a separate set for Target, so that they can be configured independently as desired.
 
 === Configure TLS
 
 Here is how to do it:
 
 * Ensure that you have a shell open to the container. If you do not, you can open it with `docker exec -it zdm-ansible-container bash`
-* From this shell, uncomment and edit the relevant values in the configuration file `zdm-proxy-automation/ansible/vars/zdm_proxy_custom_tls_config.yml` as follows.
+* From this shell, uncomment the relevant variables and edit their values in the configuration file `zdm-proxy-automation/ansible/vars/zdm_proxy_custom_tls_config.yml` as follows.
 ** For proxy-to-Origin TLS configuration:
  *** `origin_tls_user_dir_path`: uncomment and leave to its preset value of `/home/ubuntu/origin_tls_files`.
  *** `origin_tls_server_ca_filename`: filename (without path) of the Server CA.
  *** `origin_tls_client_cert_filename`: filename (without path) of the Client cert. This is for Mutual TLS only, leave unset otherwise.
  *** `origin_tls_client_key_filename`: filename (without path) of the Client key. For Mutual TLS only, leave unset otherwise.
-** The configuration for proxy-to-Target TLS is done in the same way but using the Target-specific configuration parameters (`target_tls_*`).
+** The configuration for proxy-to-Target TLS is done in the same way but using the Target-specific configuration variables (`target_tls_*`).
 
 == Application-to-proxy TLS
 
