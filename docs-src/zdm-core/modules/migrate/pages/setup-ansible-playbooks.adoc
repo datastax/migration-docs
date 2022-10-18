@@ -141,8 +141,7 @@ At this point, the {zdm-utility}:
 * Has written the {zdm-utility} configuration to the default file, `ansible_container_init_config`.
 * Presents a summary of the results thus far, and prompts you to Continue. Example:
 +
-image:zdm-go-utility-results2.png[{zdm-utility} Inventory Results are displayed in the terminal]
-[ TODO replace prompt image with zdm-go-utility-results3]
+image:zdm-go-utility-results3.png[A summary of the configuration provided is displayed in the terminal]
 . If you agree, enter `Y` to proceed.
 
 The {zdm-utility} now:
@@ -151,6 +150,4 @@ The {zdm-utility} now:
 * Creates, configures and starts the Ansible Control Host container.
 * Displays a message. Example:
 
-image:zdm-go-utility-success.png[Ansible Docker container success messages]
-
-[ TODO replace image with zdm-go-utility-success3 ]
+image:zdm-go-utility-success3.png[Ansible Docker container success messages]
