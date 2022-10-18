@@ -35,7 +35,7 @@ The PAYG and Enterprise plans have many benefits over the Free plan, such as the
 Assign your preferred values for the serverless database:
 
 * **Name**
-* **Keyspace** - this is a handle that establishes the database's context in subsequent DDL and DML statements
+* **Keyspace**: this is a handle that establishes the database's context in subsequent DDL and DML statements
 * **Cloud provider**: AWS is used in this guide's example; however you can choose your preferred cloud provider
 * **Region**: choose your geographically preferred region - you can subsequently add more regions
 
@@ -69,9 +69,10 @@ With the Astra DB database in an **Active** status, download its SCB from Astra 
 . Select the **Java driver** and click on **Download bundle**.
 . Copy the SCB to your client application instance:
 +
-```bash
+[source,bash]
+----
 scp -i <your_ssh_key> secure-connect-<target cluster name>.zip ubuntu@<public IP of client application instance>:
-```
+----
 
 === Create the client application schema on your Astra DB cluster
 

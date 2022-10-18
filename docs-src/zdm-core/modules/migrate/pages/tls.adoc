@@ -26,15 +26,16 @@ The {zdm-proxy} does not accept a JKS keystore, requiring the raw files instead.
 
 To view the files contained in a JKS keystore and their aliases:
 
-```bash
+[source,bash]
+----
 keytool -list -keystore <path_to_keystore.jks>
-```
+----
 
 To extract a file from a JKS keystore:
 
-```
+----
 keytool -exportcert -keystore <path_to_jks_store> -alias <file_alias> -file <path_to_destination_file> -rfc
-```
+----
 
 Please note the `-rfc` option, which extracts the files in non-binary PEM format.
 
