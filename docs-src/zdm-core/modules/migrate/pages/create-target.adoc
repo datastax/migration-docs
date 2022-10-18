@@ -28,7 +28,7 @@ To use a generic Cassandra or DSE cluster, you will have to:
 
 === Create an Astra DB serverless cluster
 
-Log into the Astra Portal and create a serverless Astra DB database. You can start with a Free plan, but consider upgrading during your migration project to an Astra DB Pay As You Go (PAYG) or Enterprise plan, to take advantage of additional functionality -- such as Exporting Metrics to external third-party apps, Bring Your Own Keys, and other features.
+Log into the Astra Portal and create a serverless Astra DB database. You can start with a Free plan, but consider upgrading during your migration project to an Astra DB Pay As You Go (PAYG) or Enterprise plan, to take advantage of additional functionality -- such as Exporting Metrics to external third-party applications, Bring Your Own Keys, and other features.
 
 The PAYG and Enterprise plans have many benefits over the Free plan, such as the ability to lift rate limiting, and avoiding hibernation timeouts.
 

@@ -1,6 +1,6 @@
 = Introduction to {zdm-product}
 
-Enterprises today depend on the ability to reliably migrate mission-critical apps and data to cloud environments with zero downtime during the migration.
+Enterprises today depend on the ability to reliably migrate mission-critical client applications and data to cloud environments with zero downtime during the migration.
 
 At {company}, we've developed a set of thoroughly-tested self-service tools, automation scripts, examples, and documented procedures that walk you through well-defined migration phases.
 
@@ -41,7 +41,7 @@ First, a couple of key terms used throughout the {zdm-product} documentation and
 
 * **Origin:** This cluster is your existing Cassandra-based environment, whether it's open-source Apache Cassandra, DSE, or Astra DB Classic.
 
-* **Target:** This cluster is the new environment to which you want to migrate apps and data with zero downtime.
+* **Target:** This cluster is the new environment to which you want to migrate client applications and data with zero downtime.
 
 For additional terms, see the xref:glossary.adoc[glossary].
 
