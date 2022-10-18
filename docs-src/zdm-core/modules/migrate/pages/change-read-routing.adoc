@@ -4,7 +4,7 @@ This topic explains how you can configure the {zdm-proxy} to route all reads to 
 
 You would typically do this once you have migrated all the existing data from Origin and completed all validation checks and reconciliation if necessary.
 
-This operation is a configuration change that can be carried out as explained xref:migration-manage-proxy-instances.adoc#change-mutable-config-property[here].
+This operation is a configuration change that can be carried out as explained xref:manage-proxy-instances.adoc#change-mutable-config-property[here].
 
 If you're not there already, `ssh` back into the jumphost:
 

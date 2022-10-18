@@ -67,6 +67,7 @@ docker cp zdm-ansible-container:/home/ubuntu/zdm_proxy_archived_logs/<zdm_proxy_
 ```
 The archive will be copied to the specified destination directory on the jumphost.
 
+[[change-mutable-config-variable]]
 == Change a mutable configuration variable
 
 The following configuration variables are considered mutable and can be changed in a rolling fashion on an existing {zdm-proxy} deployment.
@@ -74,13 +75,13 @@ The following configuration variables are considered mutable and can be changed 
 Commonly changed variables, located in `vars/zdm_proxy_core_config.yml`:
 
 * `primary_cluster`:
-** This variable determines which cluster is currently considered the xref:migration-glossary.adoc#_primary_cluster[primary cluster]. At the start of the migration, the primary cluster is Origin, as it contains all the data.  In Phase 4 of the migration, once all the existing data has been transferred and any validation / reconciliation step has been successfully executed, you can switch the primary cluster to be Target.
+** This variable determines which cluster is currently considered the xref:glossary.adoc#_primary_cluster[primary cluster]. At the start of the migration, the primary cluster is Origin, as it contains all the data.  In Phase 4 of the migration, once all the existing data has been transferred and any validation / reconciliation step has been successfully executed, you can switch the primary cluster to be Target.
 ** Valid values: `ORIGIN`, `TARGET`
 * `read_mode`:
 ** This variable determines how reads are handled by the {zdm-proxy}
 ** Valid values:
 *** `PRIMARY_ONLY`: reads are only sent synchronously to the primary cluster. This is the default behavior.
-*** `DUAL_ASYNC_ON_SECONDARY`: reads are sent synchronously to the primary cluster and also asynchronously to the secondary cluster. See xref:migration-enable-async-dual-reads.adoc[].
+*** `DUAL_ASYNC_ON_SECONDARY`: reads are sent synchronously to the primary cluster and also asynchronously to the secondary cluster. See xref:enable-async-dual-reads.adoc[].
 ** Typically, when choosing `DUAL_ASYNC_ON_SECONDARY` you will want to ensure that `primary_cluster` is still set to `ORIGIN`. When you are ready to use Target as the primary cluster, you should revert `read_mode` to `PRIMARY_ONLY`.
 * `log_level`:
 ** Defaults to `INFO`.

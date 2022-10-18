@@ -1,0 +1,4 @@
+[NOTE]
+====
+This suite of tools allows for zero downtime migration only if your database meets the minimum xref:feasibility-checklists.adoc[requirements]. If your database does not meet these requirements, you can complete the migration from Origin to Target, but downtime might be necessary to finish the migration.
+====

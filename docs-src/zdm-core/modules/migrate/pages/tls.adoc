@@ -4,8 +4,8 @@
 
 The TLS configuration is an optional part of the initial {zdm-proxy} configuration. See the information here in this topic, and then refer to the {zdm-automation} topics that cover:
 
-* xref:migration-setup-ansible-playbooks.adoc[]
-* xref:migration-deploy-proxy-monitoring.adoc[]
+* xref:setup-ansible-playbooks.adoc[]
+* xref:deploy-proxy-monitoring.adoc[]
 
 == Introduction
 
@@ -64,7 +64,7 @@ All files must be in plain-text, non-binary format.
 
 For each self-managed cluster requiring TLS (Origin and/or Target), execute the following steps:
 
-* If your TLS files are in a JKS keystore, extract them as plain text (see xref:migration-tls.adoc#_retrieving_files_from_a_jks_keystore[]])
+* If your TLS files are in a JKS keystore, extract them as plain text (see xref:tls.adoc#_retrieving_files_from_a_jks_keystore[]])
 * Upload the following files to the jumphost:
 ** For one-way TLS, only the server CA.
 ** For Mutual TLS, the server CA, the client cert and the client key.
@@ -111,7 +111,7 @@ All files must be in plain-text, non-binary format.
 
 Here are the steps to configure application-to-proxy TLS:
 
-* If your TLS files are in a JKS keystore, extract them as plain text (see xref:migration-tls.adoc#_retrieving_files_from_a_jks_keystore[]])
+* If your TLS files are in a JKS keystore, extract them as plain text (see xref:tls.adoc#_retrieving_files_from_a_jks_keystore[]])
 * Upload the required files to the jumphost: Server CA, Server certificate and Server key
 * From a shell on the jumphost, copy the files to the `zdm_proxy_tls_files` TLS directory into the Ansible Control Host container: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/zdm_proxy_tls_files`
 * Ensure that you have a shell open to the container. If you do not, you can open it with `docker exec -it zdm-ansible-container bash`
@@ -130,4 +130,4 @@ Remember that in this case, the {zdm-proxy} is the TLS server; thus the word `se
 
 This is all that is needed at this point. As part of its normal execution, the proxy deployment playbook will automatically distribute all TLS files and apply the TLS configuration to all {zdm-proxy} instances.
 
-Just go back to xref:migration-deploy-proxy-monitoring.adoc#_advanced_configuration_optional[Optional advanced configuration] to finalize the {zdm-proxy} configuration and then execute the deployment playbook.
+Just go back to xref:deploy-proxy-monitoring.adoc#_advanced_configuration_optional[Optional advanced configuration] to finalize the {zdm-proxy} configuration and then execute the deployment playbook.

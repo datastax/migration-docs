@@ -2,7 +2,7 @@
 
 In this topic, we'll see how to create and prepare a new cluster to be used as Target.
 
-This section covers in detail the steps to prepare a DataStax Astra DB serverless database, and also outlines how to create and prepare a different cluster, which could be for example Cassandra 4.0.x or DSE 6.8.x.
+This section covers in detail the steps to prepare a {company} Astra DB serverless database, and also outlines how to create and prepare a different cluster, which could be for example Cassandra 4.0.x or DSE 6.8.x.
 
 == Overview
 
@@ -60,7 +60,7 @@ Your cluster's Secure Connect Bundle (SCB) will be needed by:
 * Your client application, to connect directly to Astra DB near the end of the migration
 * Cassandra Data Migrator or DSBulk Migrator, to migrate and validate data into Astra DB
 
-// * The DataStax Bulk Migrator to import the existing data into Astra
+// * The {company} Bulk Migrator to import the existing data into Astra
 
 With the Astra DB database in an **Active** status, download its SCB from Astra Portal. It's a zip file that contains the TLS encryption certificates and other metadata to connect to your database. Note that the credentials are not contained in the SCB.
 

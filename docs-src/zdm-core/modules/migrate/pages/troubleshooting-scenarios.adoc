@@ -194,7 +194,7 @@ at input 'CALL' ([CALL]...))\"\n","stream":"stderr","time":"2022-07-20T13:10:47.
 
 The log message indicates that the server doesn't recognize the word “CALL” in the query string which most likely means that it is a RPC (remote procedure call). From the proxy logs alone, it is not possible to see what method is being called by the query but it's very likely the RPC that the drivers use to send DSE Insights data to the server.
 
-Most DataStax drivers have DSE Insights reporting enabled by default when they detect a server version that supports it (regardless of whether the feature is enabled on the server side or not). The driver might also have it enabled for Astra DB depending on what server version Astra DB is returning for queries involving the `system.local` and `system.peers` tables.
+Most {company} drivers have DSE Insights reporting enabled by default when they detect a server version that supports it (regardless of whether the feature is enabled on the server side or not). The driver might also have it enabled for Astra DB depending on what server version Astra DB is returning for queries involving the `system.local` and `system.peers` tables.
 
 === Workaround
 
@@ -303,7 +303,7 @@ The Astra DevOps API is likely temporarily unavailable.
 
 === Workaround
 
-Download the Astra DB Secure Connect Bundle (SCB) manually and provide its path to the {zdm-automation} as explained xref:migration-deploy-proxy-monitoring.adoc#_core_configuration[here]. For information about the SCB, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[working with secure connect bundle, window="_blank"].
+Download the Astra DB Secure Connect Bundle (SCB) manually and provide its path to the {zdm-automation} as explained xref:deploy-proxy-monitoring.adoc#_core_configuration[here]. For information about the SCB, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[working with secure connect bundle, window="_blank"].
 
 
 == Metadata service (Astra) returned not successful status code 4xx or 5xx
