@@ -24,9 +24,9 @@ ubuntu@52772568517c:~$
 
 You can `ls` to see the resources in the Docker container. The most important resource is the `zdm-proxy-automation`.
 
-Now, `cd` into `zdm-proxy-automation` and `ls` to see its content. From there, cd to the `ansible` subdirectory and `ls`. Example:
+Now, `cd` into `zdm-proxy-automation/ansible` and `ls`. Example:
 
-image:zdm-ansible-container-ls.png[] [TODO update image]
+image:zdm-ansible-container-ls.png[] [TODO update image replacing it with zdm-ansible-container-ls3]
 
 == Configure the {zdm-proxy}
 
