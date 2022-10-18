@@ -31,8 +31,8 @@ A jumphost is a server on a network used to access and manage devices in a separ
 The jumphost will serve three purposes:
 
 * Accessing the {zdm-proxy} machines
-* Serving as the Ansible Control Host to run the automation
-* Running the ZDM monitoring stack, which uses Prometheus and Grafana to expose the metrics of all the {zdm-proxy} instances in a preconfigured dashboard.
+* Serving as the Ansible Control Host to run the {zdm-automation}
+* Running the {zdm-shortproduct} monitoring stack, which uses Prometheus and Grafana to expose the metrics of all the {zdm-proxy} instances in a preconfigured dashboard.
 
 [TIP]
 ====
@@ -43,11 +43,11 @@ Let's get started.
 
 == Proxy deployment setup on the jumphost
 
-To run the automation, the Ansible Control Host needs to be able to connect to all other instances of the {zdm-proxy} deployment. For this reason, it needs to have the SSH key required by those instances.
+To run the {zdm-automation}, the Ansible Control Host needs to be able to connect to all other instances of the {zdm-proxy} deployment. For this reason, it needs to have the SSH key required by those instances.
 
 === Add SSH keys to the jumphost
 
-From your local machine, transfer (`scp`) the SSH private key for the ZDM deployment to the jumphost. Example:
+From your local machine, transfer (`scp`) the SSH private key for the {zdm-shortproduct} deployment to the jumphost. Example:
 
 ```bash
 scp -F <path to zdm_ssh_config> <zdm key> jumphost:
@@ -99,9 +99,9 @@ You can also pass a custom configuration file to the {zdm-utility} with the opti
 
 [NOTE]
 ====
-The {zdm-utility} will validate each parameter that you enter. In case of invalid parameters, it will display specific messages to help you fix the problem.
+The {zdm-utility} will validate each variable that you enter. In case of invalid variables, it will display specific messages to help you fix the problem.
 
-You have five attempts to enter valid parameters. You can always run the {zdm-utility} again, if necessary.
+You have five attempts to enter valid variables. You can always run the {zdm-utility} again, if necessary.
 ====
 
 . Enter the path to, and name, of the SSH private key to access the proxy hosts. Example:
@@ -127,7 +127,7 @@ The created file will be named `zdm_ansible_inventory` in your working directory
 172.18.12.191
 ```
 + To finish entering private IP addresses, simply press ENTER at the prompt.
-. Optionally, when prompted, you can enter the private IP address of your Monitoring instance, which will use Prometheus to store data and Grafana to visualize it into a preconfigured dashboard. It is strongly recommended exposing the {zdm-proxy} metrics in the preconfigured dashboard for easy monitoring. You can skip this step if you haven't decided which machine to use for monitoring, or if you wish to use your own monitoring stack.
+. Optionally, when prompted, you can enter the private IP address of your Monitoring instance, which will use Prometheus to store data and Grafana to visualize it into a preconfigured dashboard. It is strongly recommended exposing the {zdm-proxy} metrics in the preconfigured dashboard that ships with the {zdm-automation} for easy monitoring. You can skip this step if you haven't decided which machine to use for monitoring, or if you wish to use your own monitoring stack.
 +
 In this example, we'll enter the same IP of the Ansible control host (the jumphost machine on which we're running the {zdm-utility}). Example:
 +
@@ -139,7 +139,7 @@ At this point, the {zdm-utility}:
 +
 * Has created the Ansible Inventory to the default file, `zdm_ansible_inventory`.
 * Has written the {zdm-utility} configuration to the default file, `ansible_container_init_config`.
-* Presents a summary of the results thus far, and prompts you to Continue. Example:
+* Presents a summary of the configuration thus far, and prompts you to Continue. Example:
 +
 image:zdm-go-utility-results3.png[A summary of the configuration provided is displayed in the terminal]
 . If you agree, enter `Y` to proceed.
