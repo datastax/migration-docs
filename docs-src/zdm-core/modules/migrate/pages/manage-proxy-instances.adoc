@@ -93,7 +93,7 @@ Other, rarely changed variables:
 * Target username / password, in `vars/zdm_proxy_core_config.yml`)
 * Advanced configuration variables, located in `vars/zdm_proxy_advanced_config.yml`:
 ** `zdm_proxy_max_clients_connections`:
-*** Maximum number of client connections that the {zdm-proxy} should accept. Each client connection results in additional cluster connections and causes the allocation of several in-memory structures, so this parameter can be tweaked to cap the total number on each instance. A high number of client connections per proxy instance may cause some performance degradation, especially at high throughput.
+*** Maximum number of client connections that the {zdm-proxy} should accept. Each client connection results in additional cluster connections and causes the allocation of several in-memory structures, so this variable can be tweaked to cap the total number on each instance. A high number of client connections per proxy instance may cause some performance degradation, especially at high throughput.
 *** Defaults to `1000`
 ** `replace_cql_functions`:
 *** Whether the {zdm-proxy} should replace standard CQL function calls in write requests with a value computed at proxy level.
@@ -142,7 +142,7 @@ This playbook operates by recreating each proxy container one by one. The {zdm-p
 
 The {zdm-proxy} version is displayed at startup, in a message such as `Starting ZDM proxy version ...`. It can also be retrieved at any time by using the `version` option as in the following command.
 ```bash
-docker run --rm datastax/zdm-proxy:2.x -version
+docker run --rm datastax/zdm-proxy:2.0.x -version
 ```
 
 The playbook for configuration changes can also be used to upgrade the {zdm-proxy} version in a rolling fashion. All containers will be recreated with the image of the specified version. The same behavior and observations as above apply here.
@@ -161,12 +161,14 @@ ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
 
 == Scaling operations
 
-{zdm-automation} doesn't provide a way to perform scaling up/down operations in a rolling fashion. Instead, we recommend that you deploy a new proxy cluster on the side, and move the client applications to the new proxy cluster (if absolutely necessary). To do so, create a new inventory file so that it contains one line for each machine where you want a proxy instance to be deployed and run the `deploy_zdm_proxy.yml` playbook again. This will result in a brief interruption of availability of the whole {zdm-proxy} deployment.
+{zdm-automation} doesn't provide a way to perform scaling up/down operations in a rolling fashion. Instead, we recommend that you deploy a new {zdm-proxy} cluster on the side, and move the client applications to the new proxy cluster (if absolutely necessary). To do so, create a new inventory file so that it contains one line for each machine where you want a proxy instance to be deployed and run the `deploy_zdm_proxy.yml` playbook again. This will result in a brief interruption of availability of the whole {zdm-proxy} deployment.
 
 If you are not using the {zdm-automation} and want to remove or add a proxy manually, follow these steps:
 
 . If adding a {zdm-proxy} instance, prepare and configure it appropriately based on the other instances.
 
-. Update the `ADDRESSES` configuration variable on all {zdm-proxy} instances - removing or adding the {zdm-proxy} instance's address to the list.
+. Update the `ZDM_PROXY_TOPOLOGY_ADDRESSES` environment variable on all {zdm-proxy} instances - removing or adding the {zdm-proxy} instance's address to the list.
+
+. Set the `ZDM_PROXY_TOPOLOGY_INDEX` on the new {zdm-proxy} instance to be the next sequential integer after the highest one in your existing deployment
 
 . Perform a rolling restart on all {zdm-proxy} instances.
