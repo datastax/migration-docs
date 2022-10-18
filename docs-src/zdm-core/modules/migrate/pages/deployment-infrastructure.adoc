@@ -82,7 +82,7 @@ To connect to the jumphost from an external machine, ensure that its IP address 
 
 To simplify connecting to the jumphost and, through it, to the {zdm-proxy} instances, you can create a custom SSH config file. You can use this template and replace all the placeholders in angle brackets with the appropriate values for your deployment, adding more entries if you have more than three proxy instances. Save this file, for example calling it `zdm_ssh_config`.
 
-```bash
+```
 Host <jumphost_private_IP_address> jumphost
   Hostname <jumphost_public_IP_address>
   Port 22
