@@ -4,7 +4,7 @@ See the troubleshooting tips in this topic for information that can help you tro
 
 == How to retrieve {zdm-proxy} log files
 
-If {zdm-proxy} was deployed using the {zdm-automation}, the utility contains an Ansible playbook that retrieves the logs. For details, see the next xref:troubleshooting-tips.adoc#how-to-view-retrieve-logs[troubleshooting tip].
+If {zdm-proxy} was deployed using the {zdm-automation}, the automation contains an Ansible playbook that retrieves the logs. For details, see the next xref:troubleshooting-tips.adoc#how-to-view-retrieve-logs[troubleshooting tip].
 
 If you did not use the {zdm-automation}, the steps to retrieve the logs depends on how you deployed the {zdm-proxy}. If
 Docker is used, enter the following command to export the logs of a container to a file:
@@ -49,7 +49,7 @@ This playbook creates a single zip file, called `zdm_proxy_logs_<current_timesta
 
 Make sure that the log level of the {zdm-proxy} is set to the appropriate value:
 
-* If you deployed the proxy through the {zdm-automation}, the log level is determined by the property `log_level` in `vars/zdm_proxy_advanced_config.yml`. This value can be changed in a rolling fashion by editing this property and running the playbook `update_zdm_proxy.yml`. For more, see xref:manage-proxy-instances.adoc#change-mutable-config-property[].
+* If you deployed the proxy through the {zdm-automation}, the log level is determined by the variable `log_level` in `vars/zdm_proxy_advanced_config.yml`. This value can be changed in a rolling fashion by editing this variable and running the playbook `update_zdm_proxy.yml`. For more, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[].
 
 * If you did not use the {zdm-automation} to deploy the proxy, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
 
@@ -68,7 +68,7 @@ msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
 
 === Proxy configuration
 
-The first few lines of the proxy log file contains all the configuration settings and values. They are printed in a long JSON string format. You can copy/paste the string into a JSON formatter/viewer to make it easier to read. Example log message:
+The first few lines of the proxy log file contains all the configuration variables and values. They are printed in a long JSON string format. You can copy/paste the string into a JSON formatter/viewer to make it easier to read. Example log message:
 
 [source,json]
 ----
@@ -78,7 +78,7 @@ msg=\"Parsed configuration: {\\\"ProxyIndex\\\":1,\\\"ProxyAddresses\\\":"...",
 ","stream":"stderr","time":"2022-10-01T11:50:48.339225051Z"}
 ----
 
-Seeing the configuration settings is useful while troubleshooting issues. However, remember to check the log level setting to ensure you're viewing the intended types of messages. Setting the log level setting to `DEBUG` might cause a slight performance degradation.
+Seeing the configuration settings is useful while troubleshooting issues. However, remember to check the log level variable to ensure you're viewing the intended types of messages. Setting the log level setting to `DEBUG` might cause a slight performance degradation.
 
 === Be aware of current log level
 
@@ -242,7 +242,7 @@ If you encounter a problem during your migration, please contact us. In the {zdm
 * If Astra DB is being used, please let us know in the issue description.
 * Screenshots of the {zdm-proxy} metrics dashboards from Grafana or whatever visualization tool you use. If you can provide a way for us to access those metrics directly that would be even better.
 * Application/Driver logs
-* Driver and version that the application is using
+* Driver and version that the client application is using
 
 === Reporting a performance issue
 

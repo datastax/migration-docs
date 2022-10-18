@@ -7,14 +7,14 @@ This phase consists of changing the `read_mode` configuration variable in `vars/
 read_mode: DUAL_ASYNC_ON_SECONDARY
 ----
 
-Before making the change, you should still have your Origin cluster as the primary cluster, which is the default:
+Before making the change, you should still have Origin as the primary cluster, which is the default:
 
 [source,yml]
 ----
 primary_cluster: ORIGIN # or empty
 ----
 
-To apply this change, run the `rolling_update_zdm_proxy.yml` playbook as explained xref:manage-proxy-instances.adoc#_change_a_mutable_configuration_variable[here].
+To apply this change, run the `rolling_update_zdm_proxy.yml` playbook as explained xref:manage-proxy-instances.adoc#change-mutable-config-variable[here].
 
 This optional phase introduces an additional check to make sure that Target can handle the load without timeouts or unacceptable latencies. You would typically perform this step once you have migrated all the existing data from Origin and completed all validation checks and reconciliation, if necessary.
 
@@ -40,4 +40,4 @@ Because the client application is not impacted by these asynchronous reads, the 
 * Check the metrics of the cluster itself
 * Check the asynchronous reads section of the {zdm-proxy} metrics
 
-In the {zdm-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads where you can see latency percentiles, error rates, and some other metrics specific to these requests. For more, see xref:troubleshooting-tips.adoc#_use_metrics_to_identify_any_issues[Use metrics to identify any issues] in the troubleshooting tips.
+In the {zdm-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads where you can see latency percentiles, error rates, and some other metrics specific to these requests. For more, see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[Use metrics to identify any issues] in the troubleshooting tips.

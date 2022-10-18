@@ -54,7 +54,7 @@ As noted, you'll see some differences in individual drivers:
 
 The details may vary but you'll still see the same general pattern described in the pseudocode in each of the drivers.
 
-This topic does not describe details or APIs for any of the {company} drivers mentioned above.  All of the drivers come with a complete set of documentation for exactly this task.  The following links provide some good starting points for learning about the interfaces for each specific driver:
+This topic does not describe details or APIs for any of the {company} drivers mentioned above.  All the drivers come with a complete set of documentation for exactly this task.  The following links provide some good starting points for learning about the interfaces for each specific driver:
 
 * The https://docs.datastax.com/en/developer/java-driver/latest/manual/core/[core driver section^] of the Java driver manual
 * The https://docs.datastax.com/en/developer/python-driver/latest/getting_started/[getting started guide^] for the Python driver
@@ -83,7 +83,7 @@ The documentation for the {company} drivers provides information about how to co
 
 === ZDM Demo Client
 
-https://github.com/alicel/zdm-demo-client/[ZDM Demo Client^] is a minimal Java web application which provides a simple, stripped-down example of an application built to work with {zdm-proxy}.  After updating connection information you can compile and run the application locally and interact with it using HTTP clients such as `curl` or `wget`.
+https://github.com/alicel/zdm-demo-client/[ZDM Demo Client^] is a minimal Java web application which provides a simple, stripped-down example of an application built to work with {zdm-proxy}. After updating connection information you can compile and run the application locally and interact with it using HTTP clients such as `curl` or `wget`.
 
 You can find the details of building and running ZDM Demo Client in the https://github.com/alicel/zdm-demo-client/blob/master/README.md[README^].
 
@@ -91,9 +91,9 @@ You can find the details of building and running ZDM Demo Client in the https://
 
 https://github.com/absurdfarce/themis[Themis^] is a Java command-line client application that allows you to insert randomly-generated data into some combination of these three sources:
 
-* Directly into the Origin cluster
-* Directly into the Target cluster
-* Into the {zdm-proxy}, and subsequently on to the Origin and Target
+* Directly into Origin
+* Directly into Target
+* Into the {zdm-proxy}, and subsequently on to Origin and Target
 
 The client application can then be used to query the inserted data.  This allows you to validate that the {zdm-proxy} is reading and writing data from the expected sources.  Configuration details for the clusters and/or {zdm-proxy} are defined in a YAML file.  Details are in the https://github.com/absurdfarce/themis/blob/main/README.md[README^].
 

@@ -81,6 +81,6 @@ For installation and usage details, see the {cstar-data-migrator} repo's https:/
 
 * `generate-script` generates a migration script that, once executed, will perform the desired data migration, using a pre-existing DSBulk installation. Please note: this command does not actually migrate the data; it only generates the migration script.
 
-* `generate-ddl` reads the schema from Origin and generates CQL files to recreate it in Target.
+* `generate-ddl` reads the schema from Origin and generates CQL files to recreate it in an Astra DB cluster used as Target.
 
 For installation and usage details, see the {dsbulk-migrator} repo's https://github.com/datastax/dsbulk-migrator/blob/main/README.md[README, window="_blank"]. 

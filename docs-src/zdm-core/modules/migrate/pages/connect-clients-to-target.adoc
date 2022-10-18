@@ -53,7 +53,7 @@ If your client application uses an old version of the driver without built-in SC
 
 The great news is that, if your driver has built-in support for the Astra DB Secure Connect Bundle (SCB), the changes to enable your application to connect to Astra DB are minimal.
 
-Recalling the xref:connect-clients-to-proxy.adoc#_connecting_datastax_drivers_to_cassandra[pseudocode] to enable your client application to connect to the proxy, here it is how it needs to change to connect directly to Astra DB:
+Recalling the xref:connect-clients-to-proxy.adoc#_connecting_company_drivers_to_cassandra[pseudocode] to enable your client application to connect to the proxy, here it is how it needs to change to connect directly to Astra DB:
 
 [source]
 ----
