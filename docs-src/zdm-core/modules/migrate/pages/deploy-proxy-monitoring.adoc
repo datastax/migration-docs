@@ -12,15 +12,17 @@ You must have completed the Ansible setup as described in the xref:setup-ansible
 
 You can connect to the Docker container by opening a shell on it:
 
-```bash
+[source,bash]
+----
 docker exec -it zdm-ansible-container bash
-```
+----
 
 You're now connected to the container, at a prompt such as this example:
 
-```bash
+[source,bash]
+----
 ubuntu@52772568517c:~$
-```
+----
 
 You can `ls` to see the resources in the Docker container. The most important resource is the `zdm-proxy-automation`.
 
@@ -67,7 +69,8 @@ Save the file and exit the editor.
 
 Example of a completed `zdm_proxy_core_config.yml` file for a migration from a self-managed Origin to an Astra DB Target:
 
-```yml
+[source,yml]
+----
 ##############################
 #### ORIGIN CONFIGURATION ####
 ##############################
@@ -112,7 +115,7 @@ read_mode: PRIMARY_ONLY
 
 ## Proxy log level. Defaults to INFO. Setting it to DEBUG may have a small performance impact.
 log_level: INFO
-```
+----
 
 === Enable TLS encryption (optional)
 
@@ -140,9 +143,11 @@ The {zdm-proxy} exposes metrics on port 14001 by default. This port is used by P
 
 Now you can run the playbook that you've configured above. From the shell connected to the container:
 
-```bash
+[source,bash]
+----
 ansible-playbook deploy_zdm_proxy.yml -i zdm_ansible_inventory
-```
+----
+
 That's it!
 
 == Indications of success on Origin and Target clusters
@@ -153,13 +158,15 @@ How can you confirm that the ZDM proxies are up and running?
 
 After running the playbook, you can `ssh` into one of the servers where one of the deployed {zdm-proxy} instances is running. You can do so from within the Ansible container, or directly from the jumphost machine:
 
-```bash
+[source,bash]
+----
 ssh ubuntu@<zdm proxy ip address>
-```
+----
 
 Then, use the `docker logs` command to view the logs of this ZDM proxy instance:
 
-```bash
+[source,bash]
+----
    .
    .
    .
@@ -174,36 +181,42 @@ time="2022-10-01T22:21:42Z" level=info msg="Initialized target control connectio
 port: 9042, host_id: 6973271339454cfea5ee0a84c7377eaa} 6ec35bc3-4ff4-4740-a16c-03496b74f822:Host{addr: 10.0.86.211, port: 9042, host_id: 6ec35bc34ff44740a16c03496b74f822} 93ded666-501a-4f2c-b77c-179c02a89b5e:Host{addr: 10.0.52.85, port: 9042, host_id: 93ded666501a4f2cb77c179c02a89b5e}], Assigned Hosts: [Host{addr: 10.0.52.85, port: 9042, host_id: 93ded666501a4f2cb77c179c02a89b5e}]."
 time="2022-07-27T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
 time="2022-07-27T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
-```
+----
 
 [ TODO change output above with updated names ]
 
 In the logs, the important information to notice is:
 
-```bash
+[source,bash]
+----
 time="2022-07-27T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
 time="2022-07-27T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
-```
+----
 
 Also, you can check the status of the running Docker image. Example:
 
-```bash
+[source,bash]
+----
 ubuntu@ip-172-18-10-111:~$ sudo docker ps
 CONTAINER ID  IMAGE                         COMMAND  CREATED      STATUS     PORTS   NAMES
 02470bbc1338  datastax/zdm-proxy:1.x  "/main"  2 hours ago  Up 2 hours         zdm-proxy-container
-```
+----
+
 == Setting up Monitoring on the control host
 
 Follow these steps to install the monitoring stack.  We'll use https://grafana.com/[Grafana] to visualize the data.
 
 Make sure you are connected to the Ansible Control Host docker container. As above, you can do so from the jumphost machine by running:
-```bash
+[source,bash]
+----
 docker exec -it zdm-ansible-container bash
-```
+----
+
 You will see a prompt like:
-```bash
+[source,bash]
+----
 ubuntu@52772568517c:~$
-```
+----
 
 === Configure the Grafana credentials
 
@@ -215,9 +228,10 @@ Edit the file `zdm_monitoring_config.yml`, located in `zdm-proxy-automation/ansi
 
 Use the following command:
 
-```bash
+[source,bash]
+----
 ansible-playbook deploy_zdm_monitoring.yml -i zdm_ansible_inventory
-```
+----
 
 === Check the Grafana dashboard
 
@@ -225,9 +239,8 @@ In a browser, open http://<jumphost_public_ip>:3000.
 
 Login with:
 
-**username**: admin
-
-**password**: the password you configured
+* **username**: admin
+* **password**: the password you configured
 
 [TIP]
 ====

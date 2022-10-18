@@ -55,7 +55,8 @@ The great news is that, if your driver has built-in support for the Astra DB Sec
 
 Recalling the xref:connect-clients-to-proxy.adoc#_connecting_datastax_drivers_to_cassandra[pseudocode] to enable your client application to connect to the proxy, here it is how it needs to change to connect directly to Astra DB:
 
-```pseudocode
+[source]
+----
 // Create an object to represent a Cassandra cluster
 // Ne: there is no need to specify contact points when connecting to Astra DB. All connection information is implicitly passed in the SCB
 Cluster my_cluster = Cluster.build_new_cluster(username="my_AstraDB_client_ID", password="my_AstraDB_client_secret", secure_connect_bundle="/path/to/scb.zip")
@@ -75,7 +76,7 @@ my_cluster.close()
 
 // Display the release version to the user
 print(release_version)
-```
+----
 
 As noted before, this pseudocode is just a guideline to illustrate the changes that are needed. For the specific syntax that applies to your driver, please refer to the documentation for your driver language and version:
 

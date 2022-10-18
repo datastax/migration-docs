@@ -12,7 +12,8 @@ Refer the following troubleshooting scenarios for information about resolving co
 
 In the Java 4.x driver logs, the following issues can manifest during session initialization, or after initialization.
 
-```log
+[source,log]
+----
 [s0|/10.169.241.224:9042] Fatal error while initializing pool, forcing the node down (UnsupportedProtocolVersionException: [/10.169.241.224:9042] Host does not support protocol version DSE_V2)
 
 [s0|/10.169.241.24:9042] Fatal error while initializing pool, forcing the node down (UnsupportedProtocolVersionException: [/10.169.241.24:9042] Host does not support protocol version DSE_V2)
@@ -22,7 +23,7 @@ In the Java 4.x driver logs, the following issues can manifest during session in
 [s0] Failed to connect with protocol DSE_V1, retrying with V4
 
 [s0] Failed to connect with protocol DSE_V2, retrying with DSE_V1
-```
+----
 
 === Cause
 
@@ -44,11 +45,12 @@ To force the protocol version on the Java driver, check this section of the http
 
 {zdm-proxy} logs contain:
 
-```log
+[source,log]
+----
 {"log":"time=\"2022-10-01T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR] Protocol v5 detected while decoding a frame.
 Returning a protocol error to the client to force a downgrade: ERROR PROTOCOL ERROR (code=ErrorCode ProtocolError [0x0000000A],
 msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":"2022-07-20T12:02:12.379287735Z"}
-```
+----
 
 === Cause
 
@@ -74,7 +76,8 @@ If you find one of these messages with a higher log level (especially `level=err
 
 {zdm-proxy} logs contain:
 
-```log
+[source,log]
+----
 time="2022-10-01T19:58:15+01:00" level=info msg="Starting proxy..."
 time="2022-10-01T19:58:15+01:00" level=info msg="Parsed Topology Config: TopologyConfig{VirtualizationEnabled=false, Addresses=[127.0.0.1], Count=1, Index=0, NumTokens=8}"
 time="2022-10-01T19:58:15+01:00" level=info msg="Parsed Origin contact points: [127.0.0.1]"
@@ -99,7 +102,7 @@ time="2022-10-01T19:58:15+01:00" level=debug msg="Waiting until control connecti
 time="2022-10-01T19:58:15+01:00" level=debug msg="Shutting down the schedulers and metrics handler..."
 time="2022-10-01T19:58:15+01:00" level=info msg="Proxy shutdown complete."
 time="2022-10-01T19:58:15+01:00" level=error msg="Couldn't start proxy, retrying in 2.229151525s: failed to initialize origin control connection: could not open control connection to ORIGIN, tried endpoints: [127.0.0.1:9042]."
-```
+----
 
 === Cause
 
@@ -109,14 +112,14 @@ The control connections of the {zdm-proxy} don't perform protocol version negoti
 
 None.
 
-
 == Authentication errors
 
 === Symptoms
 
-```log
+[source,log]
+----
 {"log":"\u001b[33mWARN\u001b[0m[0110] Secondary (TARGET) handshake failed with an auth error, returning ERROR AUTHENTICATION ERROR (code=ErrorCode AuthenticationError [0x00000100], msg=We recently improved your database security. To find out more and reconnect, see https://docs.datastax.com/en/astra/docs/manage-application-tokens.html) to client. \r\n","stream":"stdout","time":"2022-09-06T18:31:31.348472345Z"}
-```
+----
 
 === Cause
 
@@ -124,11 +127,11 @@ Credentials are incorrect or have insufficient permissions.
 
 There are three sets of credentials in play with ZDM:
 
-* Target - credentials that you set in the proxy configuration through the `ZDM_TARGET_USERNAME` and `ZDM_TARGET_PASSWORD` settings.
+* Target: credentials that you set in the proxy configuration through the `ZDM_TARGET_USERNAME` and `ZDM_TARGET_PASSWORD` settings.
 
-* Origin - credentials that you set in the proxy configuration through the `ZDM_ORIGIN_USERNAME` and `ZDM_ORIGIN_PASSWORD` settings.
+* Origin: credentials that you set in the proxy configuration through the `ZDM_ORIGIN_USERNAME` and `ZDM_ORIGIN_PASSWORD` settings.
 
-* Client - credentials that the client application sends to the proxy during the connection handshake, these are set in the application configuration, not the proxy configuration.
+* Client: credentials that the client application sends to the proxy during the connection handshake, these are set in the application configuration, not the proxy configuration.
 
 This error means that at least one of these three sets of credentials are incorrect or have insufficient permissions.
 
@@ -143,7 +146,6 @@ If the proxy is able to start up -- that is, this message can be seen in the log
 Then the authentication error is happening when a client application tries to open a connection to the proxy. In this case, the issue is with the Client credentials so the application itself is using invalid credentials (incorrect username/password or insufficient permissions).
 
 Note that the proxy startup message has log level `INFO` so if the configured log level on the proxy is `warning` or `error`,  you will have to rely on other ways to know whether the {zdm-proxy} started correctly. You can check if the docker container is running (or process if docker isn't being used) or if there is a log message similar to `Error launching proxy`.
-
 
 
 == The {zdm-proxy} listens on a custom port, and all applications are able to connect to one proxy instance only
@@ -172,11 +174,11 @@ As a result, port 14035 will only be used for the contact point initially discov
 
 In the application, ensure that the custom port is explicitly indicated using the `.withPort(<customPort>)` API. In the above example:
 
-```java
+[source,java]
+----
 .addContactPoints("172.18.10.36", "172.18.11.48", "172.18.12.61")
 .withPort(14035)
-```
-
+----
 
 
 == Syntax error " no viable alternative at input 'CALL' " in proxy logs
@@ -185,11 +187,13 @@ In the application, ensure that the custom port is explicitly indicated using th
 
 {zdm-proxy} logs contain:
 
-```log
+[source,log]
+----
 {"log":"time=\"2022-10-01T13:10:47Z\" level=debug msg=\"Recording TARGET-CONNECTOR other error:
 ERROR SYNTAX ERROR (code=ErrorCode SyntaxError [0x00002000], msg=line 1:0 no viable alternative
 at input 'CALL' ([CALL]...))\"\n","stream":"stderr","time":"2022-07-20T13:10:47.322882877Z"}
-```
+----
+
 === Cause
 
 The log message indicates that the server doesn't recognize the word “CALL” in the query string which most likely means that it is a RPC (remote procedure call). From the proxy logs alone, it is not possible to see what method is being called by the query but it's very likely the RPC that the drivers use to send DSE Insights data to the server.
@@ -224,7 +228,8 @@ Check the credentials that are being used by looking up the `vars/zdm_monitoring
 
 {zdm-proxy} log contains:
 
-```
+[source]
+----
 INFO[0000] [openTCPConnection] Opening connection to 10.0.63.163:9042
 INFO[0000] [openTCPConnection] Successfully established connection with 10.0.63.163:9042
 INFO[0000] [openTLSConnection] Opening TLS connection to 10.0.63.163:9042 using underlying TCP connection
@@ -249,7 +254,8 @@ ERRO[0049] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, r
 ERRO[0056] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, retrying in 10s...
 ERRO[0066] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, retrying in 10s...
 ERRO[0076] Client Handler could not be created: ORIGIN-CONNECTOR context timed out or cancelled while opening connection to ORIGIN: context deadline exceeded
-```
+----
+
 === Cause
 
 {zdm-proxy} has connectivity only to a subset of the nodes.
@@ -291,11 +297,12 @@ If you expect {zdm-proxy} instances to go down frequently, change the reconnecti
 
 {zdm-automation}'s logs:
 
-```log
+[source,log]
+----
 fatal: [10.255.13.6]: FAILED! => {"changed": false, "elapsed": 0, "msg": "Status code was -1 and not [200]:
 Connection failure: Remote end closed connection without response", "redirected": false, "status": -1, "url":
 "https://api.astra.datastax.com/v2/databases/REDACTED/secureBundleURL"}
-```
+----
 
 === Cause
 
@@ -312,10 +319,11 @@ Download the Astra DB Secure Connect Bundle (SCB) manually and provide its path 
 
 The {zdm-proxy} doesn't start and the following appears on the proxy logs:
 
-```log
+[source,log]
+----
 Couldn't start proxy: error initializing the connection configuration or control connection for Target:
 metadata service (Astra) returned not successful status code
-```
+----
 
 === Cause
 
@@ -338,13 +346,14 @@ We recommend starting with a token that has the Database Administrator role in A
 
 Dual reads are enabled and following messages are in the {zdm-proxy} logs:
 
-```log
+[source,log]
+----
 {"log":"\u001b[33mWARN\u001b[0m[430352] Async Request (OpCode EXECUTE [0x0A]) timed out after 10000 ms. \r\n","stream":"stdout","time":"2022-10-03T17:29:42.548941854Z"}
 
 {"log":"\u001b[33mWARN\u001b[0m[430368] Could not find async request context for stream id 331 received from async connector. It either timed out or a protocol error occurred. \r\n","stream":"stdout","time":"2022-10-03T17:29:58.378080933Z"}
 
 {"log":"\u001b[33mWARN\u001b[0m[431533] Could not send async request due to an error while storing the request state: stream id map ran out of stream ids: channel was empty. \r\n","stream":"stdout","time":"2022-10-03T17:49:23.786335428Z"}
-```
+----
 
 === Cause
 
@@ -366,9 +375,10 @@ If these errors are being constantly written to the log files (for minutes or ev
 
 Every 10 minutes a message is logged in the {zdm-proxy} logs showing a disconnect that was caused by Astra DB.
 
-```log
+[source,log]
+----
 {"log":"\u001b[36mINFO\u001b[0m[426871] [TARGET-CONNECTOR] REDACTED disconnected \r\n","stream":"stdout","time":"2022-10-01T16:31:41.48598498Z"}
-```
+----
 
 === Cause
 
