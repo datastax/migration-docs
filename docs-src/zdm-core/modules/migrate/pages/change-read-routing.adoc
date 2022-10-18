@@ -8,18 +8,22 @@ This operation is a configuration change that can be carried out as explained xr
 
 If you're not there already, `ssh` back into the jumphost:
 
-```bash
+[source,bash]
+----
 ssh -F ~/.ssh/zdm_ssh_config jumphost
-```
+----
 
 On the jumphost, connect to the Ansible Control Host container:
-```bash
+[source,bash]
+----
 docker exec -it zdm-ansible-container bash
-```
+----
+
 You will see a prompt like:
-```bash
+[source,bash]
+----
 ubuntu@52772568517c:~$
-```
+----
 
 Now open the configuration file `vars/zdm_proxy_core_config.yml` for editing.
 
@@ -27,8 +31,9 @@ Change the variable `primary_cluster` to `TARGET`.
 
 Run the playbook that changes the configuration of the existing {zdm-proxy} deployment:
 
-```bash
+[source,bash]
+----
 ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
-```
+----
 
 Wait for the {zdm-proxy} instances to be restarted by Ansible, one by one. All instances will now send all reads to Target instead of Origin. In other words, Target is now the primary cluster, but the {zdm-proxy} is still keeping Origin up-to-date.

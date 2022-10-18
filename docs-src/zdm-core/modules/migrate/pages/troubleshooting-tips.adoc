@@ -9,9 +9,11 @@ If {zdm-proxy} was deployed using the {zdm-automation}, the utility contains an 
 If you did not use the {zdm-automation}, the steps to retrieve the logs depends on how you deployed the {zdm-proxy}. If
 Docker is used, enter the following command to export the logs of a container to a file:
 
-```bash
+[source,bash]
+----
 docker logs my-container > log.txt
-```
+----
+
 [TIP]
 ====
 You may need to use `sudo` to run the `docker` command.
@@ -27,17 +29,19 @@ Keep in mind that docker logs are deleted if the container is recreated.
 
 When deployed through the {zdm-automation}, each {zdm-proxy} instance runs as a Docker container. You can view its logs by connecting to the proxy machine and running the following command:
 
-```bash
+[source,bash]
+----
 sudo docker container logs zdm-proxy-container
-```
+----
 
 You can retrieve logs of all proxy instances using a dedicated playbook: `collect_zdm_proxy_logs.yml`.
 
 If you are using the jumphost as your Ansible control host, no configuration changes are necessary. You can view the playbook's configuration values in `vars/zdm_proxy_log_collection_config.yml`. All default values are fine in most cases:
 
-```bash
+[source,bash]
+----
 ansible-playbook collect_proxy_logs.yml -i zdm_ansible_inventory
-```
+----
 
 This playbook creates a single zip file, called `zdm_proxy_logs_<current_timestamp>.zip`, in the desired directory (this defaults to `/home/ubuntu/zdm_proxy_archived_logs` in the Ansible Control Host container). This zip file contains the logs from all proxy instances.
 
@@ -55,22 +59,24 @@ Here are the most common messages you'll find in the proxy logs:
 
 Assuming the Log Level is not filtering out `INFO` entries, you can look for the following type of log message in order to verify that the {zdm-proxy} is starting up correctly. Example:
 
-```json
+[source,json]
+----
 {"log":"time=\"2022-10-01T11:50:48Z\" level=info
 msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
 \"\n","stream":"stderr","time":"2022-10-01T11:50:48.522097083Z"}
-```
+----
 
 === Proxy configuration
 
 The first few lines of the proxy log file contains all the configuration settings and values. They are printed in a long JSON string format. You can copy/paste the string into a JSON formatter/viewer to make it easier to read. Example log message:
 
-```json
+[source,json]
+----
 {"log":"time=\"2022-10-01T11:50:48Z\" level=info
 msg=\"Parsed configuration: {\\\"ProxyIndex\\\":1,\\\"ProxyAddresses\\\":"...",
 [remaining of json string removed for simplicity]
 ","stream":"stderr","time":"2022-10-01T11:50:48.339225051Z"}
-```
+----
 
 Seeing the configuration settings is useful while troubleshooting issues. However, remember to check the log level setting to ensure you're viewing the intended types of messages. Setting the log level setting to `DEBUG` might cause a slight performance degradation.
 
@@ -90,12 +96,13 @@ When you find a log message that looks like an error, the most important thing i
 
 Here's an example of a log message that looks like an error, but it's actually an expected and normal message:
 
-```json
+[source,json]
+----
 {"log":"time=\"2022-10-01T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR]
 Protocol v5 detected while decoding a frame. Returning a protocol message
 to the client to force a downgrade: PROTOCOL (code=Code Protocol [0x0000000A],
 msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":"2022-10-01T12:02:12.379287735Z"}
-```
+----
 
 There are cases where protocol errors are fatal so they will kill an active connection that was being used to serve requests. However, if you find a log message similar to the example above with log level `debug`, then it's likely not an issue. Instead, it's more likely an expected part of the handshake process during the connection initialization; that is, the normal protocol version negotiation.
 
@@ -104,17 +111,19 @@ There are cases where protocol errors are fatal so they will kill an active conn
 In the {zdm-proxy} logs, the first message contains the version string (just before the message that shows the configuration):
 
 
-```
+[source,console]
+----
 time="2022-10-11T13:37:28+01:00" level=info msg="Starting ZDM proxy version 2.0.0"
 time="2022-10-11T13:37:28+01:00" level=info msg="Parsed configuration: {removed for simplicity}"
-```
+----
 
 You can also provide a `-version` command line parameter to the {zdm-proxy} and it will only print the version. Example:
 
-```bash
+[source,bash]
+----
 docker run --rm datastax/zdm-proxy:2.x -version
 ZDM proxy version 2.0.0
-```
+----
 
 [TIP]
 ====
@@ -143,8 +152,8 @@ image:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories 
 ==== Proxy-level metrics
 
 * Latency
-** Read Latency - total latency measured by the {zdm-proxy} (including post processing like response aggregation) for read requests. This metric has two labels (reads_origin and reads_target), the label that has data will depend on which cluster is receiving the reads (controlled by the `ZDM_PRIMARY_CLUSTER` configuration setting of the {zdm-proxy}).
-** Write Latency- total latency measured by the {zdm-proxy} (including post processing like response aggregation) for write requests.
+** Read Latency: total latency measured by the {zdm-proxy} (including post processing like response aggregation) for read requests. This metric has two labels (reads_origin and reads_target), the label that has data will depend on which cluster is receiving the reads (controlled by the `ZDM_PRIMARY_CLUSTER` configuration setting of the {zdm-proxy}).
+** Write Latency: total latency measured by the {zdm-proxy} (including post processing like response aggregation) for write requests.
 
 * Throughput (same structure as the previous latency metrics)
 ** Read Throughput
@@ -155,29 +164,29 @@ image:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories 
 * Number of client connections
 
 * Prepared Statement cache
-** Cache Misses - meaning, a prepared statement was sent to the {zdm-proxy}, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again
+** Cache Misses: meaning, a prepared statement was sent to the {zdm-proxy}, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again
 ** Number of cached prepared statements
 
-* Request Failure Rates - Number of request failures per interval. You can set the interval via the `Error Rate interval` dashboard variable at the top.
-** Read Failure Rate - one `cluster` label with two settings: `origin` and `target`. The label that contains data depends on the `ZDM_PRIMARY_CLUSTER` setting (same as the latency and throughput metrics)
-** Write Failure Rate - one `failed_on` label with three settings: `origin`, `target` and `both`
-*** `failed_on=origin` - the write request failed on the Origin cluster ONLY
-*** `failed_on=target` - the write request failed on the Target cluster ONLY
-*** `failed_on=both` - the write request failed on BOTH clusters
+* Request Failure Rates: number of request failures per interval. You can set the interval via the `Error Rate interval` dashboard variable at the top.
+** Read Failure Rate: one `cluster` label with two settings: `origin` and `target`. The label that contains data depends on the `ZDM_PRIMARY_CLUSTER` setting (same as the latency and throughput metrics)
+** Write Failure Rate: one `failed_on` label with three settings: `origin`, `target` and `both`
+*** `failed_on=origin`: the write request failed on the Origin cluster ONLY
+*** `failed_on=target`: the write request failed on the Target cluster ONLY
+*** `failed_on=both`: the write request failed on BOTH clusters
 
-* Request Failure Counters - Number of total request failures (resets when the {zdm-proxy} instance is restarted)
-** Read Failure Counters - same labels as read failure rate
-** Write Failure Counters - same labels as write failure rate
+* Request Failure Counters: Number of total request failures (resets when the {zdm-proxy} instance is restarted)
+** Read Failure Counters: same labels as read failure rate
+** Write Failure Counters: same labels as write failure rate
 
 To see error metrics by error type, see the node-level error metrics on the next section.
 
 ==== Node-level metrics
 
-* Latency - metrics on this bucket are not split by request type like the proxy level latency metrics so writes and reads are mixed together
-** Origin - latency measured by the {zdm-proxy} up to the point it received a response from the Origin connection
-** Target - latency measured by the {zdm-proxy} up to the point it received a response from the Target connection
+* Latency: metrics on this bucket are not split by request type like the proxy level latency metrics so writes and reads are mixed together
+** Origin: latency measured by the {zdm-proxy} up to the point it received a response from the Origin connection
+** Target: latency measured by the {zdm-proxy} up to the point it received a response from the Target connection
 
-* Throughput - same as node level latency metrics, reads and writes are mixed together
+* Throughput: same as node level latency metrics, reads and writes are mixed together
 
 * Number of connections per ORIGIN node and per TARGET node
 
@@ -197,16 +206,16 @@ These metrics are specific to asynchronous reads so they are only populated if a
 
 * Latency
 * Throughput
-* Number of dedicated connections per node for async reads - whether it's ORIGIN or TARGET connections depends on the {zdm-proxy} configuration. That is, if the primary cluster is `ORIGIN` then the asynchronous reads are sent to TARGET.
+* Number of dedicated connections per node for async reads: whether it's ORIGIN or TARGET connections depends on the {zdm-proxy} configuration. That is, if the primary cluster is `ORIGIN` then the asynchronous reads are sent to TARGET.
 * Number of errors per error type per node
 
 ==== Insights via the {zdm-proxy} metrics
 
 Some examples of problems manifesting on these metrics:
 
-* Number of client connections close to 1000 per {zdm-proxy} instance -  By default, {zdm-proxy} starts rejecting client connections after 1000.
-* Always increasing PS cache metrics - both the **entries** and **misses** metrics
-* Error metrics depending on the error type - these need to be evaluated on a per-case basis
+* Number of client connections close to 1000 per {zdm-proxy} instance: by default, {zdm-proxy} starts rejecting client connections after 1000.
+* Always increasing PS cache metrics: both the **entries** and **misses** metrics
+* Error metrics depending on the error type: these need to be evaluated on a per-case basis
 
 === Go runtime metrics dashboard and system dashboard
 
@@ -228,7 +237,7 @@ The ZDM monitoring stack also includes a system-level dashboard collected throug
 If you encounter a problem during your migration, please contact us. In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
 
 * {zdm-proxy} version
-* {zdm-proxy} logs - ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change
+* {zdm-proxy} logs: ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change
 * Version of database software on the Origin and Target clusters (relevant for DSE and Apache Cassandra deployments only)
 * If Astra DB is being used, please let us know in the issue description.
 * Screenshots of the {zdm-proxy} metrics dashboards from Grafana or whatever visualization tool you use. If you can provide a way for us to access those metrics directly that would be even better.

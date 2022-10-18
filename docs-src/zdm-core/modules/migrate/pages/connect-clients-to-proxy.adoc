@@ -22,7 +22,8 @@ These drivers provide a native implementation of the messaging protocols used to
 
 Perhaps the simplest way to demonstrate how to use the {company} drivers to connect your client application to a Cassandra cluster is an example in the form of some sample code.  But there's a bit of a problem: the {company} drivers are independent projects implemented natively in the relevant programming language.  This approach offers the benefit of allowing each project to provide an API that makes the most sense for the language or platform on which it's implemented.  Unfortunately it also means there is some variation between languages.  With that in mind, the following pseudocode provides reasonable guidance for understanding how a client application might use one of the drivers.
 
-```pseudocode
+[source]
+----
 // Create an object to represent a Cassandra cluster listening for connections at
 // 10.20.30.40 on the default port (9042).  The username and password are necessary
 // only if your Cassandra cluster has authentication enabled.
@@ -43,7 +44,7 @@ my_cluster.close()
 
 // Display the release version to the user
 print(release_version) 
-```
+----
 
 As noted, you'll see some differences in individual drivers:
 

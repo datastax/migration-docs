@@ -2,15 +2,17 @@
 
 This phase consists of changing the `read_mode` configuration variable in `vars/zdm_proxy_core_config.yml` from `PRIMARY_ONLY` (the default) to `DUAL_ASYNC_ON_SECONDARY`. Example:
 
-```yml
+[source,yml]
+----
 read_mode: DUAL_ASYNC_ON_SECONDARY
-```
+----
 
 Before making the change, you should still have your Origin cluster as the primary cluster, which is the default:
 
-```yml
+[source,yml]
+----
 primary_cluster: ORIGIN # or empty
-```
+----
 
 To apply this change, run the `rolling_update_zdm_proxy.yml` playbook as explained xref:manage-proxy-instances.adoc#_change_a_mutable_configuration_variable[here].
 

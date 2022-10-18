@@ -10,31 +10,37 @@ In this topic, we'll learn how to perform simple operations on your {zdm-proxy} 
 All these operations can be easily done by running Ansible playbooks.
 
 Make sure you are connected to the Ansible Control Host Docker container. As explained before, you can do so from the jumphost machine by running:
-```bash
+
+[source,bash]
+----
 docker exec -it zdm-ansible-container bash
-```
+----
+
 You will see a prompt like:
-```bash
+
+[source,bash]
+----
 ubuntu@52772568517c:~$
-```
+----
 
 == Perform a rolling restart of the proxies
 
 Connect to the Ansible Control Host Docker container as explained above and run:
 
-```bash
+[source,bash]
+----
 ansible-playbook rolling_restart_zdm_proxy.yml -i zdm_ansible_inventory
-```
+----
 
 This is all that is needed.
 
 This playbook restarts each proxy container one by one, without impacting the availability of the {zdm-proxy} deployment. It automates the following steps:
 
-. It stops one container gracefully, waiting for it to shut down
-. It starts the container again
+. It stops one container gracefully, waiting for it to shut down.
+. It starts the container again.
 . It checks that the container has come up successfully by checking the readiness endpoint:
-.. If unsuccessful, it repeats the check for six times at 5-second intervals and eventually interrupts the whole process if the check still fails
-.. If successful, it waits for 10 seconds and then moves on to the next container
+.. If unsuccessful, it repeats the check for six times at 5-second intervals and eventually interrupts the whole process if the check still fails.
+.. If successful, it waits for 10 seconds and then moves on to the next container.
 
 == Access the proxy logs
 
@@ -44,9 +50,11 @@ To confirm that the {zdm-proxy} instances are operating normally, or investigate
 
 The {zdm-proxy} runs as a Docker container on each proxy host. Its logs can be viewed by connecting to a proxy host and running the following command:
 
-```bash
+[source,bash]
+----
 sudo docker container logs zdm-proxy-container
-```
+----
+
 To leave the logs open and continuously output the latest log messages, append the `--follow` option to the command above.
 
 === Collect the logs
@@ -55,16 +63,20 @@ You can easily retrieve the logs of all {zdm-proxy} instances using a dedicated 
 
 Connect to the Ansible Control Host container as explained above and run:
 
-```bash
+[source,bash]
+----
 ansible-playbook collect_zdm_proxy_logs.yml -i zdm_ansible_inventory
-```
+----
 
 This playbook creates a single zip file, called `zdm_proxy_logs_<current_timestamp>.zip`, containing the logs from all proxy instances, and stores it on the Ansible Control Host Docker container in the directory `/home/ubuntu/zdm_proxy_archived_logs`.
 
 To copy the zip file from the container to the jumphost, open a shell on the jumphost and run the following command:
-```bash
+
+[source,bash]
+----
 docker cp zdm-ansible-container:/home/ubuntu/zdm_proxy_archived_logs/<zdm_proxy_logs zip archive name> <destination_directory_on_jumphost>
-```
+----
+
 The archive will be copied to the specified destination directory on the jumphost.
 
 [[change-mutable-config-variable]]
@@ -124,40 +136,51 @@ To change any of these variables, edit the desired values in `vars/zdm_proxy_cor
 
 To apply the configuration changes to the {zdm-proxy} instances in a rolling fashion, run the following command:
 
-```bash
+[source,bash]
+----
 ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
-```
+----
 
 This playbook operates by recreating each proxy container one by one. The {zdm-proxy} deployment remains available at all times and can be safely used throughout this operation. The playbook automates the following steps:
 
-. It stops one container gracefully, waiting for it to shut down
-. It recreates the container and starts it up:
-.. This is because containers are considered immutable, so a configuration change is a destructive action
-.. Please note that this will remove the previous container and its logs. Make sure you collect the logs prior to this operation if you want to keep them.
+. It stops one container gracefully, waiting for it to shut down.
+. It recreates the container and starts it up.
++
+[IMPORTANT]
+====
+A configuration change is a destructive action because containers are considered immutable.
+Note that this will remove the previous container and its logs. Make sure you collect the logs prior to this operation if you want to keep them.
+====
 . It checks that the container has come up successfully by checking the readiness endpoint:
-.. If unsuccessful, it repeats the check for six times at 5-second intervals and eventually interrupts the whole process if the check still fails
-.. If successful, it waits for 10 seconds and then moves on to the next container
+.. If unsuccessful, it repeats the check for six times at 5-second intervals and eventually interrupts the whole process if the check still fails.
+.. If successful, it waits for 10 seconds and then moves on to the next container.
 
 == Upgrade the proxy version
 
 The {zdm-proxy} version is displayed at startup, in a message such as `Starting ZDM proxy version ...`. It can also be retrieved at any time by using the `version` option as in the following command.
-```bash
+
+[source,bash]
+----
 docker run --rm datastax/zdm-proxy:2.0.x -version
-```
+----
 
 The playbook for configuration changes can also be used to upgrade the {zdm-proxy} version in a rolling fashion. All containers will be recreated with the image of the specified version. The same behavior and observations as above apply here.
 
 To perform an upgrade, change the version tag number to the desired version in `vars/zdm_proxy_container.yml`:
-```bash
+
+[source,bash]
+----
 zdm_proxy_image: datastax/zdm-proxy:x.y.z
-```
+----
+
 Replacing x.y.z with the version you would like to upgrade to.
 
-Then simply run the same playbook as above, with the following command:
+Then run the same playbook as above, with the following command:
 
-```bash
+[source,bash]
+----
 ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
-```
+----
 
 == Scaling operations
 
@@ -166,9 +189,6 @@ ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
 If you are not using the {zdm-automation} and want to remove or add a proxy manually, follow these steps:
 
 . If adding a {zdm-proxy} instance, prepare and configure it appropriately based on the other instances.
-
 . Update the `ZDM_PROXY_TOPOLOGY_ADDRESSES` environment variable on all {zdm-proxy} instances - removing or adding the {zdm-proxy} instance's address to the list.
-
-. Set the `ZDM_PROXY_TOPOLOGY_INDEX` on the new {zdm-proxy} instance to be the next sequential integer after the highest one in your existing deployment
-
+. Set the `ZDM_PROXY_TOPOLOGY_INDEX` on the new {zdm-proxy} instance to be the next sequential integer after the highest one in your existing deployment.
 . Perform a rolling restart on all {zdm-proxy} instances.

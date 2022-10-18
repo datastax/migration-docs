@@ -41,7 +41,8 @@ For large data migrations, including cases where advanced logging is needed, {cs
 
 In its settings, you'll identify values for your Origin and Target databases. A subset example:
 
-```conf
+[source]
+----
 spark.migrate.origin.isAstra                               false
 spark.migrate.origin.host                                  localhost
 spark.migrate.origin.username                              some-username
@@ -57,7 +58,7 @@ spark.migrate.target.read.consistency.level                LOCAL_QUORUM
 spark.migrate.target.keyspaceTable                         test.a2
 spark.migrate.target.autocorrect.missing                   false
 spark.migrate.target.autocorrect.mismatch                  false
-```
+----
 
 [TIP]
 ====
