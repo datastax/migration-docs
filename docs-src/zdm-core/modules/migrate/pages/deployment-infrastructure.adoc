@@ -44,7 +44,12 @@ We will use the term "machine" to indicate a cloud instance (on any cloud provid
 *** 16 vCPUs
 *** 64GB RAM
 *** 200GB - 2TB storage (if you use dsbulk-migrator to unload multiple terabytes of data from origin, then load into target, you may need to consider more space to accommodate the data that needs to be staged)
-*** Equivalent to AWS m5.4xlarge / GCP e2-standard-16 / Azure D16v5
+*** Equivalent to AWS `m5.4xlarge` / GCP `e2-standard-16` / Azure `D16v5`
+
+[NOTE]
+====
+Scenario: when you have close to 12 TB's data and n number of tables, to speed up migration of your existing data, you can run with (for example) 4 machines equivalent of AWS `m5.4xlarge` and either run dsbulk-migrator on each machine with each one responsible for a quarter of the full token range, or leverage the parallelism from a spark job to run the migration process across all 4 machines.
+====
 
 === Connectivity
 The {zdm-proxy} machines must be reachable by:
