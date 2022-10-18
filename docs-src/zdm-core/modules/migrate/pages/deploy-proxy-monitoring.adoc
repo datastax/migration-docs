@@ -37,13 +37,13 @@ The {zdm-proxy} configuration is broken down into three files:
  * `zdm_proxy_custom_tls_config.yml`, to configure TLS encryption if desired.
 
 === Core configuration
-The next step is to edit the `zdm_proxy_core_config.yml` file in the Docker container. You'll want to enter your Cassandra/DSE username, password, and other values.
+The next step is to edit the `zdm_proxy_core_config.yml` file in the Docker container. You'll want to enter your Cassandra/DSE username, password, and other variables.
 
 In the container shell, `cd` to `~/zdm-proxy-automation/ansible/vars` and edit `zdm_proxy_core_config.yml`
 
-There are two identical sets of parameters to configure the {zdm-proxy} to connect to the cluster. One set is for Origin and its parameters are prefixed with `origin`, while the one for Target uses the `target` prefix.
+There are two identical sets of variables to configure the {zdm-proxy} to connect to the cluster. One set is for Origin and its variables are prefixed with `origin`, while the set of variables for Target uses the `target` prefix. In the explanation below, `*` indicates any of these two prefixes as appropriate.
 
-These two sections are very important and are always required. Populate the appropriate parameters in each section for the respective cluster, by uncommenting the parameters and specifying their values as follows:
+These two sections are very important and are always required. Populate the appropriate variables in each section for the respective cluster, by uncommenting the variables and specifying their values as follows:
 
 . Cluster credentials:
 .. If it is a self-managed cluster, `*_username` and `*_password` must be valid credentials for it. Leave blank if authentication is not enabled on the cluster.
@@ -58,9 +58,9 @@ These two sections are very important and are always required. Populate the appr
 ... Specify its path in `*_astra_secure_connect_bundle_path`.
 .. Otherwise, if you wish the automation to download the cluster's Secure Connect Bundle for you, just specify its database id in `*_astra_db_id` and the token for a valid `R/W User` Astra role in `*_astra_token`
 
-Global settings that do not need changing at this time:
+Global variables that do not need changing at this time:
 . `primary_cluster`: which cluster is going to be the primary source of truth. This should be left set to its default value of `ORIGIN` at the start of the migration, and will be changed to `TARGET` after migrating all existing data.
-. `read_mode`: leave to its default value of `PRIMARY_ONLY`. Global see xref:enable-async-dual-reads.adoc[] for more information on this parameter.
+. `read_mode`: leave to its default value of `PRIMARY_ONLY`. Global see xref:enable-async-dual-reads.adoc[] for more information on this variable.
 . `log_level`: leave to its default of `INFO`.
 
 Save the file and exit the editor.
@@ -122,13 +122,13 @@ If you wish to enable TLS encryption between the client application and the {zdm
 
 Here are some additional configuration variables that you may wish to review and change *at deployment time* in specific cases. All these variables are located in `vars/zdm_proxy_advanced_config.yml`.
 
-All advanced configuration variables not listed here are considered mutable and can be changed later if needed (changes can be easily applied to existing deployments in a rolling fashion using the relevant Ansible playbook).
+All advanced configuration variables not listed here are considered mutable and can be changed later if needed (changes can be easily applied to existing deployments in a rolling fashion using the relevant Ansible playbook, as explainer later).
 
 ==== Multi-datacenter clusters
 
 If Origin is a multi-datacenter cluster, you will need to specify the name of the datacenter that the {zdm-proxy} should consider local. To do this, set the property `origin_local_datacenter` to the datacenter name. Likewise, for multi-datacenter Target clusters you will need to set `target_local_datacenter` appropriately.
 
-These two properties are located in `vars/zdm_proxy_advanced_configuration.yml`. Note that this is not relevant for multi-region Astra DB clusters, where this is handled through region-specific Secure Connect Bundles.
+These two variables are located in `vars/zdm_proxy_advanced_configuration.yml`. Note that this is not relevant for multi-region Astra DB clusters, where this is handled through region-specific Secure Connect Bundles.
 
 ==== Ports
 
@@ -136,7 +136,7 @@ Each {zdm-proxy} instance listens on port 9042 by default, like a regular Cassan
 
 The {zdm-proxy} exposes metrics on port 14001 by default. This port is used by Prometheus to scrape the application-level proxy metrics. This can be changed by setting `metrics_port` to a different value if desired.
 
-== Use Ansible to deploy the proxy
+== Use Ansible to deploy the {zdm-proxy}
 
 Now you can run the playbook that you've configured above. From the shell connected to the container:
 
