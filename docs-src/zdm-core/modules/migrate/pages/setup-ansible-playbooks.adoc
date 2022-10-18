@@ -59,22 +59,41 @@ ssh -F <path to zdm_ssh_config> <zdm key> jumphost
 
 == Running the {zdm-utility}
 
-From the jumphost, download the {zdm-utility}'s executable:
+From the jumphost, download the {zdm-utility}'s executable. Releases are available here: 
+
+https://github.com/datastax/zdm-proxy-automation/releases
+
+The executable filename format is `zdm-util-<platform>-<version>`.
+
+Download example:
+
 ```bash
-curl .... [TODO add exact command with download URL]
+wget https://github.com/datastax/zdm-proxy-automation/releases/download/v2.0.0/zdm-util-linux-amd64-v2.0.0.tgz 
 ```
 
-Run the {zdm-utility}:
+Once downloaded, unzip it:
+
 ```bash
-go run main.go  [TODO add correct command once the executable has been created]
+tar -xvf zdm-util-linux-amd64-v2.0.0.tgz
+```
+
+Run the {zdm-utility}. Example:
+
+```bash
+./zdm-util-v2.0.0
 ```
 
 The utility prompts you for a few configuration values, then creates and initializes the Ansible Control Host container.
+
 [TIP]
 ====
 The {zdm-utility} will store the configuration that you provide into a file named `ansible_container_init_config`. If you run the utility again, it will detect the file  and ask you if you wish to use that configuration or discard it. If the configuration is not fully valid, you will be prompted for the missing or invalid parameters only.
 
-You can also pass a custom configuration file to the {zdm-utility} with the optional command-line parameter `-utilConfigFile` [TODO add example command]
+You can also pass a custom configuration file to the {zdm-utility} with the optional command-line parameter `-utilConfigFile`. Example:
+
+```bash
+./zdm-util-v2.0.0 -utilConfigFile your_config_file
+```
 ====
 
 [NOTE]

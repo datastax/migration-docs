@@ -231,5 +231,5 @@ Login with:
 
 [TIP]
 ====
-For Grafana dashboard examples and details about the metrics you can observe, see xref:migration-troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips.
+For Grafana dashboard examples and details about the metrics you can observe, see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips.
 ====
