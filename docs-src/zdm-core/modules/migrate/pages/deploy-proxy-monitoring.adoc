@@ -24,9 +24,9 @@ ubuntu@52772568517c:~$
 
 You can `ls` to see the resources in the Docker container. The most important resource is the `zdm-proxy-automation`.
 
-Now, `cd` into `zdm-proxy-automation` and `ls` to see its content. From there, cd to the `ansible` subdirectory and `ls`. Example:
+Now, `cd` into `zdm-proxy-automation/ansible` and `ls`. Example:
 
-image:zdm-ansible-container-ls.png[] [TODO update image]
+image:zdm-ansible-container-ls3.png[Contents of the Ansible Control Host container]
 
 == Configure the {zdm-proxy}
 
@@ -176,8 +176,6 @@ time="2022-07-27T22:21:42Z" level=info msg="Proxy connected and ready to accept 
 time="2022-07-27T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
 ```
 
-[ TODO change output above with updated names ]
-
 In the logs, the important information to notice is:
 
 ```bash
@@ -189,8 +187,8 @@ Also, you can check the status of the running Docker image. Example:
 
 ```bash
 ubuntu@ip-172-18-10-111:~$ sudo docker ps
-CONTAINER ID  IMAGE                         COMMAND  CREATED      STATUS     PORTS   NAMES
-02470bbc1338  datastax/zdm-proxy:1.x  "/main"  2 hours ago  Up 2 hours         zdm-proxy-container
+CONTAINER ID  IMAGE                     COMMAND  CREATED      STATUS     PORTS   NAMES
+02470bbc1338  datastax/zdm-proxy:2.0.x  "/main"  2 hours ago  Up 2 hours         zdm-proxy-container
 ```
 == Setting up Monitoring on the control host
 
