@@ -17,7 +17,8 @@ image:docker-container-and-zdm-utility.png[ZDM Proxy connections from Docker con
 == Prerequisites
 
 . You must have already provisioned the ZDM infrastructure, which means you must have the server machines ready, and know their IP addresses. These can be in the cloud provider of your choice or on-premise.
-. Docker needs to be installed on the machine that will be used as the Ansible Control Host, and the `docker` command must not require superuser privileges. The instructions to do this are available for each platform in the official Docker documentation. (Alice's note: add links)
+. Docker needs to be installed on the machine that will be used as the Ansible Control Host. For comprehensive installation instructions, please refer to the https://docs.docker.com/engine/install/#server[official Docker documentation].
+. The `docker` command must not require superuser privileges. The instructions to do this can be found https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[here].
 
 That's it!
 
@@ -63,7 +64,7 @@ From the jumphost, download the {zdm-utility}'s executable. Releases are availab
 
 https://github.com/datastax/zdm-proxy-automation/releases
 
-The executable filename format is `zdm-util-<platform>-<version>`.
+The downloadable archive name format is `zdm-util-<platform>-<version>`.
 
 Download example:
 
@@ -141,7 +142,7 @@ At this point, the {zdm-utility}:
 * Presents a summary of the results thus far, and prompts you to Continue. Example:
 +
 image:zdm-go-utility-results2.png[{zdm-utility} Inventory Results are displayed in the terminal]
-[ TODO replace prompt image with one with updated names]
+[ TODO replace prompt image with zdm-go-utility-results3]
 . If you agree, enter `Y` to proceed.
 
 The {zdm-utility} now:
@@ -152,4 +153,4 @@ The {zdm-utility} now:
 
 image:zdm-go-utility-success.png[Ansible Docker container success messages]
 
-[ TODO replace with updated message]
+[ TODO replace image with zdm-go-utility-success3 ]
