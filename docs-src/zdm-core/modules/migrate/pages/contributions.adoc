@@ -10,8 +10,6 @@ The code sources for additional {zdm-product} components -- including {zdm-utili
 
 {zdm-proxy} is licensed under the open-source https://github.com/datastax/zdm-proxy/blob/main/LICENSE[**Apache-2.0 license agreement**, window="_blank"].  
 
-(**John's note:** We're changing our GH-hosted LICENSE text soon to instead reference Apache-2.0.)
-
 == Contributor License Agreement
 
 Acceptance of the {company} https://cla.datastax.com/[Contributor License Agreement, window="_blank"] (CLA) is required before we can consider accepting your {zdm-proxy} code contribution. Refer to the https://cla.datastax.com/[CLA terms, window="_blank"] and, if you agree, indicate your acceptance on each Pull Request (PR) that you submit while using the https://github.com/datastax/zdm-proxy[{zdm-proxy} GitHub repository, window="_blank"]. 
