@@ -1,12 +1,12 @@
 = Feasibility checks
 
-Before starting your migration, refer to the following considerations to ensure that your client application workload and Originxref:glossary.adoc#origin[**Origin**] are suitable for this {zdm-product} process.
+Before starting your migration, refer to the following considerations to ensure that your client application workload and xref:glossary.adoc#origin[**Origin**] are suitable for this {zdm-product} process.
 
 == Cassandra Native Protocol version and cluster version support
 
 {zdm-proxy} supports protocol versions `v3`, `v4`, `DSE_V1`, and `DSE_V2`.
 
-{zdm-proxy} technically doesn't support `v5``. If `v5` is requested, the proxy handles protocol negotiation so that the client application properly downgrades the protocol version to `v4`. This means that any client application using a recent driver that supports protocol version `v5` can be migrated using the {zdm-proxy} (as long as it does not use v5-specific functionality).
+{zdm-proxy} technically doesn't support `v5`. If `v5` is requested, the proxy handles protocol negotiation so that the client application properly downgrades the protocol version to `v4`. This means that any client application using a recent driver that supports protocol version `v5` can be migrated using the {zdm-proxy} (as long as it does not use v5-specific functionality).
 
 [IMPORTANT]
 ====
