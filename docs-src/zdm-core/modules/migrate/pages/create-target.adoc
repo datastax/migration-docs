@@ -84,7 +84,7 @@ In Astra Portal, create each corresponding keyspace and tables. The keyspace nam
 
 * Tables can be defined as usual in regular CQL, but the only table property that can be optionally set in Astra DB is `default_time_to_live`. Please remove all other table properties (such as compaction strategy, `gc_grace_seconds` and so on).
 
-* Materialized Views (MVs) and certain types of indexes are not supported in Astra DB, and should be replaced with supported indexes. See link:https://docs.datastax.com/en/astra-serverless/docs/plan/planning.html#_serverless_database_limits[Serverless database limits] for more details
+* Materialized Views (MVs) and certain types of indexes are not supported in Astra DB, and should be replaced with supported indexes. See link:https://docs.datastax.com/en/astra-serverless/docs/plan/planning.html#_serverless_database_limits[Serverless database limits] for more details.
 
 To aid you in preparing the schema from the DDL used in a non-Astra cluster, you may wish to consider the `generate-ddl` functionality in the link:https://github.com/datastax/dsbulk-migrator[DSBulk Migrator]. Note that Materialized Views and indexes are not automatically converted by this tool.
 

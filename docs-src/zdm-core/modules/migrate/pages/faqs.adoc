@@ -53,7 +53,7 @@ For more, see xref:introduction.adoc[].
 
 Migrating client applications between clusters is a need that arises in many scenarios. For example, you may want to:
 
-* Move to a cloud-native, managed service such as Astra DB
+* Move to a cloud-native, managed service such as Astra DB.
 * Migrate your client application to a brand new cluster, on a more recent version and perhaps on new infrastructure, or even a different CQL database entirely, without intermediate upgrade steps and ensuring that you always have an easy way to rollback in case of issues.
 * Separate out a client application from a shared cluster to a dedicated one.
 * Consolidate client applications, currently running on separate clusters, into fewer clusters or even a single one.
