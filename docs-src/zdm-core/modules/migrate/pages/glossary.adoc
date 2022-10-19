@@ -7,8 +7,8 @@ Here are a few terms used throughout the {company} {zdm-product} documentation a
 
 A repeatable, re-usable, simple configuration management and multi-machine deployment system, one that is well suited to deploying complex applications. For details about the playbooks available in {zdm-automation}, see:
 
-* xref:setup-ansible-playbooks.adoc[]
-* xref:deploy-proxy-monitoring.adoc[]
+* xref:setup-ansible-playbooks.adoc[].
+* xref:deploy-proxy-monitoring.adoc[].
 
 == Asynchronous dual reads
 

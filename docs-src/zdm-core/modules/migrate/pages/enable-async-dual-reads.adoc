@@ -22,7 +22,7 @@ This optional phase introduces an additional check to make sure that Target can 
 
 When using the {zdm-proxy}, all writes are synchronously sent to both Origin and Target. Reads operate differently: with the default read mode, reads are only sent to the primary cluster (Origin by default).
 
-Before changing the read routing so that reads are routed to Target (phase 4), you may want to temporarily send the reads to both clusters so that they can make sure that Target can handle the full workload of reads and writes.
+Before changing the read routing so that reads are routed to Target (phase 4), you may want to temporarily send the reads to both clusters, to make sure that Target can handle the full workload of reads and writes.
 
 If you set the proxy's read mode configuration variable (`read_mode`) to `DUAL_ASYNC_ON_SECONDARY`, then asynchronous dual reads will be enabled. That change will result in reads being additionally sent to the secondary cluster. The proxy will return the read response to the client application as soon as the primary cluster's response arrives.
 
@@ -40,4 +40,4 @@ Because the client application is not impacted by these asynchronous reads, the 
 * Check the metrics of the cluster itself
 * Check the asynchronous reads section of the {zdm-proxy} metrics
 
-In the {zdm-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads where you can see latency percentiles, error rates, and some other metrics specific to these requests. For more, see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[Use metrics to identify any issues] in the troubleshooting tips.
+In the {zdm-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads where you can see latency percentiles, error rates, and some other metrics specific to these requests. For more, see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[How to leverage the metrics] in the troubleshooting tips.
