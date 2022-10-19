@@ -48,7 +48,7 @@ We will use the term "machine" to indicate a cloud instance (on any cloud provid
 
 [NOTE]
 ====
-Scenario: when you have close to 12 TBs of data and <n> number of tables, to speed up the migration of your existing data, you can run with (for example) 4 machines that are the equivalent of an AWS `m5.4xlarge`.  Then run {dsbulk-migrator} on each machine, with each one responsible for a quarter of the full token range. Or leverage the parallelism from a {cassandra-data-migrator} Spark job to run the migration process across all 4 machines.
+Scenario: when you have close to 12 TBs of data and <n> number of tables, to speed up the migration of your existing data, you can run with (for example) 4 machines that are the equivalent of an AWS `m5.4xlarge`.  Then run {dsbulk-migrator} on each machine, with each one responsible for a quarter of the full token range. Or leverage the parallelism from a {cstar-data-migrator} Spark job to run the migration process across all 4 machines.
 ====
 
 === Connectivity

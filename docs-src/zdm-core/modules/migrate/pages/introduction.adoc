@@ -71,7 +71,7 @@ image:zdm-workflow3.png[Migration workflow from client application to {zdm-proxy
 * With no changes required to your client application code itself, {zdm-proxy} does the work to route writes to Origin and Target.
 * Cassandra Data Migrator and/or DSBulk Migrator can migrate data between clusters of any supported types. See the next section for an introduction to these tools.
 * Initially during the migration, {zdm-proxy} always reads from Origin.
-* Once all the data has been imported into Target, you can run any validation and / or reconciliation on it. You can also optionally enable asynchronous reads to be sent to Target to try out the performance and validate that it can handle your application live request load before cutting over.
+* Once all the data has been imported into Target, you can run any validation and/or reconciliation on it. You can also optionally enable asynchronous reads to be sent to Target to try out the performance and validate that it can handle your application live request load before cutting over.
 * At this point, the read routing on the {zdm-proxy} is switched to Target so that all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary cluster.
 * Finally, the client application can be moved off the proxy and connected directly to Target, at which point the migration is complete.
 
