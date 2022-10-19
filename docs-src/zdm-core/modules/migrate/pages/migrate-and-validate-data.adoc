@@ -19,9 +19,9 @@ In general:
 
 They're available in the following GitHub repos:
 
-* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo
+* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo.
 
-* https://github.com/datastax/dsbulk-migrator[DSBulk Migrator^] repo
+* https://github.com/datastax/dsbulk-migrator[DSBulk Migrator^] repo.
 
 Refer to the README in each repo for the latest, detailed instructions to install and use these data migrators. The READMEs include prerequisites, download resources, configuration, and command-line usage information. 
 
@@ -29,7 +29,7 @@ Refer to the README in each repo for the latest, detailed instructions to instal
 
 Here's a quick summary of the features per data migration tool. See each repo's README for details. 
 
-== {cstar-data-migrator} 
+=== {cstar-data-migrator}
 
 For large data migrations, including cases where advanced logging is needed, {cstar-data-migrator} is designed to:
 
@@ -71,7 +71,7 @@ In the case of data written by non-idempotent writes, it is necessary to reconci
 
 For installation and usage details, see the {cstar-data-migrator} repo's https://github.com/datastax/cassandra-data-migrator/blob/main/README.md[README, window="_blank"]. 
 
-== {dsbulk-migrator}
+=== {dsbulk-migrator}
 
 {dsbulk-migrator}, which is based on {company} Bulk Loader (DSBulk), is best for migrating smaller amounts of data, and/or when you can shard data from table rows into more manageable quantities.  
 

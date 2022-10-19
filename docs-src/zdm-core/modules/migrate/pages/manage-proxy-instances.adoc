@@ -87,10 +87,10 @@ The following configuration variables are considered mutable and can be changed 
 Commonly changed variables, located in `vars/zdm_proxy_core_config.yml`:
 
 * `primary_cluster`:
-** This variable determines which cluster is currently considered the xref:glossary.adoc#_primary_cluster[primary cluster]. At the start of the migration, the primary cluster is Origin, as it contains all the data.  In Phase 4 of the migration, once all the existing data has been transferred and any validation / reconciliation step has been successfully executed, you can switch the primary cluster to be Target.
-** Valid values: `ORIGIN`, `TARGET`
+** This variable determines which cluster is currently considered the xref:glossary.adoc#_primary_cluster[primary cluster]. At the start of the migration, the primary cluster is Origin, as it contains all the data.  In Phase 4 of the migration, once all the existing data has been transferred and any validation/reconciliation step has been successfully executed, you can switch the primary cluster to be Target.
+** Valid values: `ORIGIN`, `TARGET`.
 * `read_mode`:
-** This variable determines how reads are handled by the {zdm-proxy}
+** This variable determines how reads are handled by the {zdm-proxy}.
 ** Valid values:
 *** `PRIMARY_ONLY`: reads are only sent synchronously to the primary cluster. This is the default behavior.
 *** `DUAL_ASYNC_ON_SECONDARY`: reads are sent synchronously to the primary cluster and also asynchronously to the secondary cluster. See xref:enable-async-dual-reads.adoc[].
@@ -101,12 +101,12 @@ Commonly changed variables, located in `vars/zdm_proxy_core_config.yml`:
 
 Other, rarely changed variables:
 
-* Origin username / password, in `vars/zdm_proxy_core_config.yml`)
-* Target username / password, in `vars/zdm_proxy_core_config.yml`)
+* Origin username/password, in `vars/zdm_proxy_core_config.yml`)
+* Target username/password, in `vars/zdm_proxy_core_config.yml`)
 * Advanced configuration variables, located in `vars/zdm_proxy_advanced_config.yml`:
 ** `zdm_proxy_max_clients_connections`:
 *** Maximum number of client connections that the {zdm-proxy} should accept. Each client connection results in additional cluster connections and causes the allocation of several in-memory structures, so this variable can be tweaked to cap the total number on each instance. A high number of client connections per proxy instance may cause some performance degradation, especially at high throughput.
-*** Defaults to `1000`
+*** Defaults to `1000`.
 ** `replace_cql_functions`:
 *** Whether the {zdm-proxy} should replace standard CQL function calls in write requests with a value computed at proxy level.
 *** Currently, only the replacement of `now()` is supported.
@@ -117,13 +117,13 @@ Other, rarely changed variables:
 *** Defaults to `10000` ms. If your client application has a higher client-side timeout because it is expected to generate requests that take longer to complete, you need to increase this timeout accordingly.
 ** `origin_connection_timeout_ms` and `target_connection_timeout_ms`:
 *** Timeout (in ms) when attempting to establish a connection from the proxy to Origin or Target.
-*** Defaults to `30000` ms
+*** Defaults to `30000` ms.
 ** `async_handshake_timeout_ms`:
 *** Timeout (in ms) when performing the initialization (handshake) of a proxy-to-secondary cluster connection that will be used solely for asynchronous dual reads.
 *** If this timeout occurs, the asynchronous reads will not be sent. This has no impact on the handling of synchronous requests: the {zdm-proxy} will continue to handle all synchronous reads and writes normally.
-*** Defaults to `4000` ms
+*** Defaults to `4000` ms.
 ** `metrics_enabled`:
-*** Whether metrics collection should be enabled
+*** Whether metrics collection should be enabled.
 *** Boolean value. Defaults to `true`, but can be set to `false` to completely disable metrics collection. This is not recommended.
 
 Deprecated variables, which will be removed in a future {zdm-proxy} release:
@@ -173,7 +173,7 @@ To perform an upgrade, change the version tag number to the desired version in `
 zdm_proxy_image: datastax/zdm-proxy:x.y.z
 ----
 
-Replacing x.y.z with the version you would like to upgrade to.
+Replace x.y.z with the version you would like to upgrade to.
 
 Then run the same playbook as above, with the following command:
 
