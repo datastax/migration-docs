@@ -8,17 +8,17 @@ This section covers in detail the steps to prepare a {company} Astra DB serverle
 
 If you intend to use Astra DB as Target for the migration, you will need to:
 
-* Create an Astra DB serverless cluster
-* Retrieve its Secure Connect Bundle (SCB) and upload it to the application instances
-* Create Astra DB access credentials for the cluster
-* Create the client application schema
+* Create an Astra DB serverless cluster;
+* Retrieve its Secure Connect Bundle (SCB) and upload it to the application instances;
+* Create Astra DB access credentials for the cluster;
+* Create the client application schema.
 
 To use a generic Cassandra or DSE cluster, you will have to:
 
-* Provision the infrastructure for your new cluster
-* Create the cluster with the desired version of Cassandra or DSE
-* Configure the cluster according to your requirements
-* Create the client application schema
+* Provision the infrastructure for your new cluster;
+* Create the cluster with the desired version of Cassandra or DSE;
+* Configure the cluster according to your requirements;
+* Create the client application schema.
 
 == Using an Astra DB database as Target
 
@@ -34,10 +34,10 @@ The PAYG and Enterprise plans have many benefits over the Free plan, such as the
 
 Assign your preferred values for the serverless database:
 
-* **Name**
-* **Keyspace**: this is a handle that establishes the database's context in subsequent DDL and DML statements
-* **Cloud provider**: AWS is used in this guide's example; however you can choose your preferred cloud provider
-* **Region**: choose your geographically preferred region - you can subsequently add more regions
+* **Name**.
+* **Keyspace**: this is a handle that establishes the database's context in subsequent DDL and DML statements.
+* **Cloud provider**: AWS is used in this guide's example; however you can choose your preferred cloud provider.
+* **Region**: choose your geographically preferred region - you can subsequently add more regions.
 
 When the Astra DB reaches **Active** status, perform the following steps in an Astra DB user account. Create an IAM token with the "Read/Write User" role. This role will be used by the client application, the {zdm-proxy}, and the {zdm-automation}.
 
@@ -57,15 +57,15 @@ For more information about role permissions, see link:https://docs.datastax.com/
 
 Your cluster's Secure Connect Bundle (SCB) will be needed by:
 
-* Your client application, to connect directly to Astra DB near the end of the migration
-* Cassandra Data Migrator or DSBulk Migrator, to migrate and validate data into Astra DB
+* Your client application, to connect directly to Astra DB near the end of the migration;
+* Cassandra Data Migrator or DSBulk Migrator, to migrate and validate data into Astra DB.
 
 // * The {company} Bulk Migrator to import the existing data into Astra
 
 With the Astra DB database in an **Active** status, download its SCB from Astra Portal. It's a zip file that contains the TLS encryption certificates and other metadata to connect to your database. Note that the credentials are not contained in the SCB.
 
 . In Astra Portal, go to the Dashboard and select the serverless database that you created in the prior step.
-. Click on **Connect**
+. Click on **Connect**.
 . Select the **Java driver** and click on **Download bundle**.
 . Copy the SCB to your client application instance:
 +

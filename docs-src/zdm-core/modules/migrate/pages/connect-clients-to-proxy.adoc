@@ -1,8 +1,8 @@
 = Connect your client applications to {zdm-proxy}
 
-The {zdm-proxy} is designed to look and feel very much like a conventional Cassandra&reg; cluster.  You communicate with it using the CQL query language used in your existing client applications.  It understands the same messaging protocols used by Cassandra, DataStax Enterprise (DSE) server or {company} Astra DB.  As a result, most of your client applications won't be able to distinguish between connecting to {zdm-proxy} and connecting directly to your Cassandra cluster.
+The {zdm-proxy} is designed to look and feel very much like a conventional Cassandra&reg; cluster. You communicate with it using the CQL query language used in your existing client applications. It understands the same messaging protocols used by Cassandra, DataStax Enterprise (DSE) server and {company} Astra DB. As a result, most of your client applications won't be able to distinguish between connecting to {zdm-proxy} and connecting directly to your Cassandra cluster.
 
-In this topic, we explain how to connect your client applications to a Cassandra cluster.  We then move on to discuss how this process changes when connecting to a {zdm-proxy}.  We conclude by describing two sample client applications that serve as a real-world examples of how to build a client application that works effectively with {zdm-proxy}.
+On this page, we explain how to connect your client applications to a Cassandra cluster.  We then move on to discuss how this process changes when connecting to a {zdm-proxy}.  We conclude by describing two sample client applications that serve as a real-world examples of how to build a client application that works effectively with {zdm-proxy}.
 
 You can use the provided sample client applications, in addition to your own, as a quick way to validate that the deployed {zdm-proxy} is reading and writing data from the expected Origin and Target clusters.
 
@@ -27,16 +27,16 @@ Perhaps the simplest way to demonstrate how to use the {company} drivers to conn
 // Create an object to represent a Cassandra cluster listening for connections at
 // 10.20.30.40 on the default port (9042).  The username and password are necessary
 // only if your Cassandra cluster has authentication enabled.
-Cluster my_cluster = Cluster.build_new_cluster(contact_points = “10.20.30.40”, username="myusername", password="mypassword")
+Cluster my_cluster = Cluster.build_new_cluster(contact_points = "10.20.30.40", username="myusername", password="mypassword")
 
 // Connect our Cluster object to our Cassandra cluster, returning a Session
 Session my_session = my_cluster.connect()
 
 // Execute a query, returning a ResultSet
-ResultSet my_result_set = my_session.execute(“select release_version from system.local”)
+ResultSet my_result_set = my_session.execute("select release_version from system.local")
 
-// Retrieve the “release_version” column from the first row of our result set
-String release_version = my_result_set.first_row().get_column(“release_version”)
+// Retrieve the "release_version" column from the first row of our result set
+String release_version = my_result_set.first_row().get_column("release_version")
 
 // Close our Session and Cluster
 my_session.close()
@@ -48,19 +48,19 @@ print(release_version)
 
 As noted, you'll see some differences in individual drivers:
 
-* New versions of the Java driver no longer define a Cluster object
-** Client programs create a Session directly instead
-* And the Node.js driver has no notion of a Cluster or Session at all, instead using a Client object to represent this functionality.  
+* New versions of the Java driver no longer define a Cluster object:
+** Client programs create a Session directly instead;
+* and the Node.js driver has no notion of a Cluster or Session at all, instead using a Client object to represent this functionality.
 
 The details may vary but you'll still see the same general pattern described in the pseudocode in each of the drivers.
 
 This topic does not describe details or APIs for any of the {company} drivers mentioned above.  All the drivers come with a complete set of documentation for exactly this task.  The following links provide some good starting points for learning about the interfaces for each specific driver:
 
-* The https://docs.datastax.com/en/developer/java-driver/latest/manual/core/[core driver section^] of the Java driver manual
-* The https://docs.datastax.com/en/developer/python-driver/latest/getting_started/[getting started guide^] for the Python driver
-* The https://docs.datastax.com/en/developer/csharp-driver/latest/index.html#basic-usage[basic usage section^] of the C# driver documentation
-* The https://docs.datastax.com/en/developer/cpp-driver/latest/topics/[getting started section^] of the C/C++ driver documentation
-* The https://docs.datastax.com/en/developer/nodejs-driver/latest/#basic-usage[basic usage section^] of the Node.js driver documentation
+* The https://docs.datastax.com/en/developer/java-driver/latest/manual/core/[core driver section^] of the Java driver manual.
+* The https://docs.datastax.com/en/developer/python-driver/latest/getting_started/[getting started guide^] for the Python driver.
+* The https://docs.datastax.com/en/developer/csharp-driver/latest/index.html#basic-usage[basic usage section^] of the C# driver documentation.
+* The https://docs.datastax.com/en/developer/cpp-driver/latest/topics/[getting started section^] of the C/C++ driver documentation.
+* The https://docs.datastax.com/en/developer/nodejs-driver/latest/#basic-usage[basic usage section^] of the Node.js driver documentation.
 
 [TIP]
 ====
@@ -74,7 +74,7 @@ We mentioned above that connecting to a {zdm-proxy} should be almost indistingui
 * If your {zdm-proxy} is configured with an Origin or Target cluster with **user authentication enabled**, you have to provide these credentials when connecting to the proxy.
 ** You should use the credentials for Target in most cases.
 ** You only need to supply credentials for Origin if Target does not have authentication enabled but Origin does.
-* If your {zdm-proxy} is configured to use Astra DB as an Origin or Target, you do not need to provide an Astra secure connect bundle (SCB) when connecting to the proxy. You will, however, have to supply your Astra client ID and secret as a username and password (respectively).
+* If your {zdm-proxy} is configured to use Astra DB as an Origin or Target, you do not need to provide an Astra Secure Connect Bundle (SCB) when connecting to the proxy. You will, however, have to supply your Astra client ID and secret as a username and password (respectively).
 * Client applications should not enable compression when connecting through the {zdm-proxy}.
 
 == Sample client applications
