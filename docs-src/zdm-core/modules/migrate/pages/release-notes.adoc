@@ -28,16 +28,16 @@ The {zdm-product} process requires you to be able to perform rolling restarts of
 With the {company} {zdm-product} 2.0 release, you can migrate any Cassandra Query Language (CQL) compliant datastore from its Origin (current) environment to a new Target. Just a few of the supported migration examples:
 
 * From an existing self-managed Cassandra or DSE cluster to cloud-native Astra DB or vice versa. For example, migrate:
-** Cassandra 2.1.x, 3.11.x, or 4.0.x to Astra DB
-** DSE 4.8.x, 5.1.x, or 6.8.x to Astra DB
-** And more
+** Cassandra 2.1.x, 3.11.x, or 4.0.x to Astra DB,
+** DSE 4.8.x, 5.1.x, or 6.8.x to Astra DB,
+** And more.
 * From an existing Cassandra or DSE cluster to another Cassandra or DSE cluster. For example, migrate:
-** Cassandra 2.1.x or 3.11.x to 4.0.x
-** DSE 4.8.x or 5.1.x to DSE 6.8.x
-** Cassandra 2.1.x, 3.11.x or 4.0.x to DSE 6.8.x
-** DSE 4.8.x to Cassandra 4.0.x
-** And more
-* From Astra DB Classic to Astra DB Serverless
+** Cassandra 2.1.x or 3.11.x to 4.0.x,
+** DSE 4.8.x or 5.1.x to DSE 6.8.x,
+** Cassandra 2.1.x, 3.11.x or 4.0.x to DSE 6.8.x,
+** DSE 4.8.x to Cassandra 4.0.x,
+** And more.
+* From Astra DB Classic to Astra DB Serverless.
 
 === {zdm-proxy} 2.0 revisions
 
