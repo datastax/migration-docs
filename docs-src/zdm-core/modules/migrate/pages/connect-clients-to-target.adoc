@@ -42,7 +42,7 @@ The SCB support was made available beginning the following versions in the drive
 
 * https://docs.datastax.com/en/developer/cpp-driver/latest/changelog/#2-14-0[Beginning `2.14.0` of {company} C++ Driver^]
 
-* https://docs.datastax.com/en/developer/csharp-driver/latest/changelog/#3-12-0[Beginning `3.12.0` of {company} C# Driver^]
+* https://docs.datastax.com/en/developer/csharp-driver/latest/changelog/#3-12-0[Beginning `3.12.0` of {company} C\# Driver^]
 
 * https://docs.datastax.com/en/developer/java-driver/latest/changelog/#3-8-0[Beginning `3.8.0` & `4.3.0` of {company} Java Driver^]
 
