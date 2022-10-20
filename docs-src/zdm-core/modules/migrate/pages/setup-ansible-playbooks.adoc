@@ -143,7 +143,7 @@ To finish entering private IP addresses, simply press ENTER at the prompt.
 +
 [NOTE]
 ====
-It is highly recommended to configure a monitoring instance, if you don't have a monitoring stack. For migrations that may run for multiple days, it is essential that you use metrics to understand the performance and health of the {zdm-proxy} instances. For Grafana dashboard examples and details about the metrics you can observe, see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips.
+We highly recommended that you configure a monitoring instance if you don't have a monitoring stack. For migrations that may run for multiple days, it is essential that you use metrics to understand the performance and health of the {zdm-proxy} instances. You cannot rely solely on information in the logs. They report connection or protocol errors, but do not give you enough information on how the proxy is working and how each cluster is responding. Metrics, however, provide especially helpful data. For Grafana dashboard examples and details about the metrics you can observe, see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips.
 ====
 +
 In this example, we'll enter the same IP of the Ansible control host (the jumphost machine on which we're running the {zdm-utility}). Example:
