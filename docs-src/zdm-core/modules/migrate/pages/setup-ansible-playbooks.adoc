@@ -143,7 +143,7 @@ To finish entering private IP addresses, simply press ENTER at the prompt.
 +
 [NOTE]
 ====
-It is highly recommended to configure a monitoring instance, if you don't have a monitoring stack. For migration that may run for multiple days, it is essential to use metrics to understand the performance and health of the {zdm-proxy} instances.
+It is highly recommended to configure a monitoring instance, if you don't have a monitoring stack. For migrations that may run for multiple days, it is essential that you use metrics to understand the performance and health of the {zdm-proxy} instances. For Grafana dashboard examples and details about the metrics you can observe, see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips.
 ====
 +
 In this example, we'll enter the same IP of the Ansible control host (the jumphost machine on which we're running the {zdm-utility}). Example:
