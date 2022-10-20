@@ -139,7 +139,13 @@ The created file will be named `zdm_ansible_inventory` in your working directory
 +
 To finish entering private IP addresses, simply press ENTER at the prompt.
 
-. Optionally, when prompted, you can enter the private IP address of your Monitoring instance, which will use Prometheus to store data and Grafana to visualize it into a preconfigured dashboard. It is strongly recommended exposing the {zdm-proxy} metrics in the preconfigured dashboard that ships with the {zdm-automation} for easy monitoring. You can skip this step if you haven't decided which machine to use for monitoring, or if you wish to use your own monitoring stack. +
+. Optionally, when prompted, you can enter the private IP address of your Monitoring instance, which will use Prometheus to store data and Grafana to visualize it into a preconfigured dashboard. It is strongly recommended exposing the {zdm-proxy} metrics in the preconfigured dashboard that ships with the {zdm-automation} for easy monitoring. You can skip this step if you haven't decided which machine to use for monitoring, or if you wish to use your own monitoring stack.
++
+[NOTE]
+====
+It is highly recommended to configure a monitoring instance, if you don't have a monitoring stack. For migration that may run for multiple days, it is essential to use metrics to understand the performance and healthiness of the proxy instances.
+====
++
 In this example, we'll enter the same IP of the Ansible control host (the jumphost machine on which we're running the {zdm-utility}). Example:
 +
 [source,bash]
