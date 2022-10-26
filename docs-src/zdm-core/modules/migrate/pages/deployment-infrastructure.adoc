@@ -21,34 +21,35 @@ To deploy the {zdm-proxy} and its companion monitoring stack, you will have to p
 
 We will use the term "machine" to indicate a cloud instance (on any cloud provider), a VM, or a physical server.
 
-* N machines to run the desired number of {zdm-proxy} instances
-** You will need one machine for each {zdm-proxy} instance
+* N machines to run the desired number of {zdm-proxy} instances:
+** You will need one machine for each {zdm-proxy} instance.
 ** Requirements for each {zdm-proxy} instance:
-*** Ubuntu Linux 18.04 or newer
-*** 4 vCPUs
-*** 8GB RAM
-*** 20GB - 100GB root volume
-*** Equivalent to AWS `c5.xlarge` / GCP `e2-standard-4` / Azure `A4 v2`
-* One machine for the jumphost, which is typically also used as Ansible Control Host and to run the monitoring stack (Prometheus + Grafana)
+*** Ubuntu Linux 18.04 or newer;
+*** 4 vCPUs;
+*** 8GB RAM;
+*** 20GB - 100GB root volume;
+*** Equivalent to AWS `c5.xlarge` / GCP `e2-standard-4` / Azure `A4 v2`;
+* One machine for the jumphost, which is typically also used as Ansible Control Host and to run the monitoring stack (Prometheus + Grafana):
 ** The most common option is using a single machine for all these functions, but you could split these functions across different machines if you prefer.
 ** Requirements:
-*** Ubuntu Linux 18.04 or newer
-*** 8 vCPUs
-*** 16GB RAM
-*** 200GB - 500GB storage (depending on the amount of metrics history that you wish to retain)
-*** Equivalent to AWS `c5.2xlarge` / GCP `e2-standard-8` / Azure `A8 v2`
-* 1-N machines to run either {dsbulk-migrator} or {cstar-data-migrator}
+*** Ubuntu Linux 18.04 or newer;
+*** For the monitoring stack, ensure the init system in use is `systemd`;
+*** 8 vCPUs;
+*** 16GB RAM;
+*** 200GB - 500GB storage (depending on the amount of metrics history that you wish to retain);
+*** Equivalent to AWS `c5.2xlarge` / GCP `e2-standard-8` / Azure `A8 v2`;
+* 1-M machines to run either {dsbulk-migrator} or {cstar-data-migrator}.
 ** It's recommended that you start with at least one VM with 16 vCPUs and 64GB RAM and a minimum of 200GB storage. Depending on the total amount of data that is planned for migration, more than one VM may be needed.
 ** Requirements:
-*** Ubuntu Linux 18.04 or newer
-*** 16 vCPUs
-*** 64GB RAM
-*** 200GB - 2TB storage (if you use dsbulk-migrator to unload multiple terabytes of data from origin, then load into target, you may need to consider more space to accommodate the data that needs to be staged)
-*** Equivalent to AWS `m5.4xlarge` / GCP `e2-standard-16` / Azure `D16v5`
+*** Ubuntu Linux 18.04 or newer;
+*** 16 vCPUs;
+*** 64GB RAM;
+*** 200GB - 2TB storage (if you use dsbulk-migrator to unload multiple terabytes of data from origin, then load into target, you may need to consider more space to accommodate the data that needs to be staged);
+*** Equivalent to AWS `m5.4xlarge` / GCP `e2-standard-16` / Azure `D16v5`;
 
 [NOTE]
 ====
-Scenario: when you have close to 12 TBs of data and <n> number of tables, to speed up the migration of your existing data, you can run with (for example) 4 machines that are the equivalent of an AWS `m5.4xlarge`.  Then run {dsbulk-migrator} on each machine, with each one responsible for a quarter of the full token range. Or leverage the parallelism from a {cstar-data-migrator} Spark job to run the migration process across all 4 machines.
+Scenario: when you have close to 12 TBs of data and several tables, to speed up the migration of your existing data, you can run with (for example) 4 machines that are the equivalent of an AWS `m5.4xlarge`, a GCP `e2-standard-16` or an Azure `D16v5`.  Then run {dsbulk-migrator} on each machine, with each one responsible for a quarter of the full token range. Or leverage the parallelism from a {cstar-data-migrator} Spark job to run the migration process across all 4 machines.
 ====
 
 === Connectivity
@@ -69,12 +70,12 @@ The connectivity requirements for the jumphost / monitoring machine are:
 * Connecting to the {zdm-proxy} instances: on port 14001 for metrics collection, and on port 22 to run the Ansible automation and for log inspection or troubleshooting
 * Allowing incoming ssh connections from outside, potentially from allowed IP ranges only
 * Exposing the Grafana UI on port 3000
-* Important: it is strongly recommended **restricting external access** to this machine to specific IP ranges (for example, the IP range of your corporate networks or trusted VPNs)
+* Important: it is strongly recommended **to restrict external access** to this machine to specific IP ranges (for example, the IP range of your corporate networks or trusted VPNs)
 
-The {zdm-proxy} and monitoring machines must be able to connect externally to download:
+The {zdm-proxy} and monitoring machines must be able to connect externally, as the automation will download:
 
-* Various software packages (Docker, Prometheus, Grafana)
-* {zdm-proxy} image from DockerHub repo
+* Various software packages (Docker, Prometheus, Grafana);
+* {zdm-proxy} image from DockerHub repo.
 
 === Connecting to the ZDM infrastructure from an external machine
 

@@ -26,7 +26,7 @@ To connect to your Astra DB cluster, you will need:
 * The Secure Connect Bundle (SCB) for your Astra DB cluster:
 ** This is a zip archive containing connection metadata and files to automatically enable Mutual TLS encryption between your client application and Astra DB.
 ** There is one SCB for each Astra DB cluster (or one for each region of an Astra DB Multi-region cluster).
-** The SCB **does not contain** any credentials.
+** The SCB **does not contain** your DB credentials.
 
 The SCB can be downloaded from the Astra Portal as follows:
 

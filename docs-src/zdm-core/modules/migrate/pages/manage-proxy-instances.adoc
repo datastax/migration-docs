@@ -25,6 +25,10 @@ ubuntu@52772568517c:~$
 
 == Perform a rolling restart of the proxies
 
+Although this operation is not required in any particular step of the migration,
+you may still find it convenient in some circumstances. For this reason, there
+is a specific playbook that does exactly that.
+
 Connect to the Ansible Control Host Docker container as explained above and run:
 
 [source,bash]

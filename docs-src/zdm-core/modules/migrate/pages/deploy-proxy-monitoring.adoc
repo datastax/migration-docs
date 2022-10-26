@@ -41,7 +41,7 @@ The {zdm-proxy} configuration is broken down into three files:
 === Core configuration
 The next step is to edit the `zdm_proxy_core_config.yml` file in the Docker container. You'll want to enter your Cassandra/DSE username, password, and other variables.
 
-In the container shell, `cd` to `~/zdm-proxy-automation/ansible/vars` and edit `zdm_proxy_core_config.yml`
+In the container shell, `cd` to `~/zdm-proxy-automation/ansible/vars` and edit `zdm_proxy_core_config.yml`. The `vi` and `nano` text editors are available in the container.
 
 There are two identical sets of variables to configure the {zdm-proxy} to connect to the cluster. One set is for Origin and its variables are prefixed with `origin`, while the set of variables for Target uses the `target` prefix. In the explanation below, `*` indicates any of these two prefixes as appropriate.
 
@@ -49,7 +49,7 @@ These two sections are very important and are always required. Populate the appr
 
 . Cluster credentials:
 .. If it is a self-managed cluster, `*_username` and `*_password` must be valid credentials for it. Leave blank if authentication is not enabled on the cluster.
-.. If it is an Astra DB cluster, `*_username` must be the Client ID and `*_password` the Client Secret of a valid `R/W User` Astra role.
+.. If it is an Astra DB cluster, `*_username` must be the Client ID and `*_password` the Client Secret of a valid Astra DB token with the `R/W User` role.
 . Contact points and port (only relevant for self-managed clusters, leave unset for Astra clusters)
 .. `*_contact points` comma-separated list of IP addresses of the cluster's seed nodes.
 .. `*_port`: port on which the cluster listens for client connections. Defaults to 9042.
@@ -58,7 +58,7 @@ These two sections are very important and are always required. Populate the appr
 ... Download it from the Astra Portal and place it on the jumphost
 ... Copy it to the container. Open a new shell on the jumphost, run `docker cp <your_scb.zip> zdm-ansible-container:/home/ubuntu`
 ... Specify its path in `*_astra_secure_connect_bundle_path`.
-.. Otherwise, if you wish the automation to download the cluster's Secure Connect Bundle for you, just specify its database id in `*_astra_db_id` and the token for a valid `R/W User` Astra role in `*_astra_token`
+.. Otherwise, if you wish the automation to download the cluster's Secure Connect Bundle for you, just specify its https://docs.datastax.com/en/astra-serverless/docs/astra-faq.html#_where_do_i_find_the_database_id_and_organization_id[database id^] in `*_astra_db_id` and the token for a valid `R/W User` Astra role in `*_astra_token`
 
 Global variables that do not need changing at this time:
 
@@ -164,7 +164,7 @@ After running the playbook, you can `ssh` into one of the servers where one of t
 ssh ubuntu@<zdm proxy ip address>
 ----
 
-Then, use the `docker logs` command to view the logs of this ZDM proxy instance:
+Then, use the `docker logs` command to view the logs of this ZDM proxy instance (remember on these machines Docker is available to superusers):
 
 [source,bash]
 ----

@@ -36,7 +36,7 @@ Assign your preferred values for the serverless database:
 
 * **Name**.
 * **Keyspace**: this is a handle that establishes the database's context in subsequent DDL and DML statements.
-* **Cloud provider**: AWS is used in this guide's example; however you can choose your preferred cloud provider.
+* **Cloud provider**: You can choose your preferred cloud provider among AWS, GCP and Azure (only GCP is available to Free Tier accounts).
 * **Region**: choose your geographically preferred region - you can subsequently add more regions.
 
 When the Astra DB reaches **Active** status, perform the following steps in an Astra DB user account. Create an IAM token with the "Read/Write User" role. This role will be used by the client application, the {zdm-proxy}, and the {zdm-automation}.
@@ -87,6 +87,12 @@ In Astra Portal, create each corresponding keyspace and tables. The keyspace nam
 * Materialized Views (MVs) and certain types of indexes are not supported in Astra DB, and should be replaced with supported indexes. See link:https://docs.datastax.com/en/astra-serverless/docs/plan/planning.html#_serverless_database_limits[Serverless database limits^] for more details.
 
 To aid you in preparing the schema from the DDL used in a non-Astra cluster, you may wish to consider the `generate-ddl` functionality in the link:https://github.com/datastax/dsbulk-migrator[DSBulk Migrator]. Note that Materialized Views and indexes are not automatically converted by this tool.
+
+Note that CQL statements, such as those used to reproduce the schema on the target database, can be executed in Astra DB
+in two ways:
+
+. the Astra DB interface offers a CQL Console directly https://docs.datastax.com/en/astra-serverless/docs/connect/cql/connect-cqlsh.html#_embedded_astra_db_cql_shell[in the browser^];
+. alternatively, you can connect remotely from any machine as long as you use an Astra DB-compatible https://docs.datastax.com/en/astra-serverless/docs/connect/cql/connect-cqlsh.html#_standalone_cql_shell[standalone `cqlsh` client^] (and provide the necessary connection secrets).
 
 == Using a generic CQL cluster as Target
 

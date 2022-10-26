@@ -17,10 +17,16 @@ image:docker-container-and-zdm-utility.png[ZDM Proxy connections from Docker con
 == Prerequisites
 
 . You must have already provisioned the ZDM infrastructure, which means you must have the server machines ready, and know their IP addresses. These can be in the cloud provider of your choice or on-premise.
-. Docker needs to be installed on the machine that will be used as the Ansible Control Host. For comprehensive installation instructions, please refer to the https://docs.docker.com/engine/install/#server[official Docker documentation].
+. Docker needs to be installed on the machine that will be running the Ansible Control Host container. For comprehensive installation instructions, please refer to the https://docs.docker.com/engine/install/#server[official Docker documentation].
 . The `docker` command must not require superuser privileges. The instructions to do this can be found https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[here].
 
 That's it!
+
+[NOTE]
+====
+Please note that the manual, non-superuser installation of Docker described above is to be done on the machine that will run the Ansible Control Host.
+From that point, the automation will take care of installing Docker on the ZDM Proxy machines without further intervention.
+====
 
 == Jumphost
 
@@ -93,7 +99,7 @@ The utility prompts you for a few configuration values, then creates and initial
 
 [TIP]
 ====
-The {zdm-utility} will store the configuration that you provide into a file named `ansible_container_init_config`. If you run the utility again, it will detect the file  and ask you if you wish to use that configuration or discard it. If the configuration is not fully valid, you will be prompted for the missing or invalid parameters only.
+The {zdm-utility} will store the configuration that you provide into a file named `ansible_container_init_config` in the current directory. If you run the utility again, it will detect the file  and ask you if you wish to use that configuration or discard it. If the configuration is not fully valid, you will be prompted for the missing or invalid parameters only.
 
 You can also pass a custom configuration file to the {zdm-utility} with the optional command-line parameter `-utilConfigFile`. Example:
 
