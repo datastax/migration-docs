@@ -11,7 +11,7 @@ The TLS configuration is an optional part of the initial {zdm-proxy} configurati
 
 * All TLS configuration is optional. Enable TLS between the {zdm-proxy} and any cluster that requires it, and/or between your client application and the {zdm-proxy} if required.
 
-* Proxy-to-cluster TLS can be configured between the {zdm-proxy} and Origin/Target (either or both) as desired. Each set of configuration is independent of the other. When using proxy-to-cluster TLS, the {zdm-proxy} acts as the TLS client and the cluster as the TLS server. One-way TLS and Mutual TLS are both supported and can be enabled depending on each cluster's requirements.
+* Proxy-to-cluster TLS can be configured between the {zdm-proxy} and Origin/Target (either or both) as desired. Each set of configurations is independent of the other. When using proxy-to-cluster TLS, the {zdm-proxy} acts as the TLS client and the cluster as the TLS server. One-way TLS and Mutual TLS are both supported and can be enabled depending on each cluster's requirements.
 
 * When using application-to-proxy TLS, your client application is the TLS client and the {zdm-proxy} is the TLS server. One-way TLS and Mutual TLS are both supported.
 
@@ -53,10 +53,10 @@ The files required to configure proxy-to-cluster TLS are:
 
 [TIP]
 ====
-If your Origin cluster requires TLS, your client application will already be using these files when configuring its connection to it.
+If your Origin cluster requires TLS, your client application will already be using these files in its configuration to connect to it.
 ====
 
-[TIP]
+[NOTE]
 ====
 All files must be in plain-text, non-binary format.
 ====

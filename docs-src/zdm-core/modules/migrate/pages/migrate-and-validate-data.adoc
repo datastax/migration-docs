@@ -1,6 +1,6 @@
 = Tools to migrate and validate data
 
-This topic introduces you to the benefits of using two data migration tools during your migration project:
+This topic introduces you to the benefits of using two free, open-source data migration tools during your migration project:
 
 * {cstar-data-migrator}
 * {dsbulk-migrator}
