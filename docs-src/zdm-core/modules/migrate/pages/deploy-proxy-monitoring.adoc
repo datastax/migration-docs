@@ -17,7 +17,7 @@ You can connect to the Docker container by opening a shell on it:
 docker exec -it zdm-ansible-container bash
 ----
 
-You're now connected to the container, at a prompt such as this example:
+You're now connected to the container, at a prompt such as this:
 
 [source,bash]
 ----
@@ -49,7 +49,7 @@ These two sections are very important and are always required. Populate the appr
 
 . Cluster credentials:
 .. If it is a self-managed cluster, `*_username` and `*_password` must be valid credentials for it. Leave blank if authentication is not enabled on the cluster.
-.. If it is an Astra DB cluster, `*_username` must be the Client ID and `*_password` the Client Secret of a valid Astra DB token with the `R/W User` role.
+.. If it is an Astra DB cluster, authentication is always enabled: `*_username` must be the Client ID and `*_password` the Client Secret of a valid Astra DB set of credentials with the `R/W User` role.
 . Contact points and port (only relevant for self-managed clusters, leave unset for Astra clusters)
 .. `*_contact points` comma-separated list of IP addresses of the cluster's seed nodes.
 .. `*_port`: port on which the cluster listens for client connections. Defaults to 9042.
@@ -58,7 +58,9 @@ These two sections are very important and are always required. Populate the appr
 ... Download it from the Astra Portal and place it on the jumphost
 ... Copy it to the container. Open a new shell on the jumphost, run `docker cp <your_scb.zip> zdm-ansible-container:/home/ubuntu`
 ... Specify its path in `*_astra_secure_connect_bundle_path`.
-.. Otherwise, if you wish the automation to download the cluster's Secure Connect Bundle for you, just specify its https://docs.datastax.com/en/astra-serverless/docs/astra-faq.html#_where_do_i_find_the_database_id_and_organization_id[database id^] in `*_astra_db_id` and the token for a valid `R/W User` Astra role in `*_astra_token`
+.. Otherwise, if you wish the automation to download the cluster's Secure Connect Bundle for you, just specify the two following variables:
+... `*_astra_db_id`: the cluster's https://docs.datastax.com/en/astra-serverless/docs/astra-faq.html#_where_do_i_find_the_database_id_and_organization_id[database id^].
+... `*_astra_token`: the token field from a valid set of credentials for a `R/W User` Astra role (this is the long string that starts with `AstraCS:`).
 
 Global variables that do not need changing at this time:
 
@@ -142,7 +144,7 @@ The {zdm-proxy} exposes metrics on port 14001 by default. This port is used by P
 
 == Use Ansible to deploy the {zdm-proxy}
 
-Now you can run the playbook that you've configured above. From the shell connected to the container:
+Now you can run the playbook that you've configured above. From the shell connected to the container, ensure that you are in `/home/ubuntu/zdm-proxy-automation/ansible` and run:
 
 [source,bash]
 ----
@@ -228,7 +230,7 @@ Edit the file `zdm_monitoring_config.yml`, located in `zdm-proxy-automation/ansi
 
 === Run the monitoring playbook
 
-Use the following command:
+Ensure that you are in `/home/ubuntu/zdm-proxy-automation/ansible` and then run the following command:
 
 [source,bash]
 ----
