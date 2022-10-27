@@ -115,7 +115,7 @@ For more information on how to handle non-deterministic functions please refer t
 
 Given that there are two separate clusters involved, the state of each cluster may be different. For conditional writes, this may create a divergent state for a time. It may not make a difference in many cases, but if non-idempotent operations are used, we recommend a reconciliation phase in the migration before and after switching reads to rely on Target (setting Target as the primary cluster). 
 
-For details about using the {cstar-data-migrator}, see xref:migrate-and-validate-data.adoc[tools to migrate and validate data, window="_blank"].
+For details about using the {cstar-data-migrator}, see xref:migrate-and-validate-data.adoc[].
 
 [TIP]
 ====

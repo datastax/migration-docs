@@ -1,4 +1,4 @@
-= Change the read routing
+= Change read routing to Target
 
 This topic explains how you can configure the {zdm-proxy} to route all reads to Target instead of Origin.
 

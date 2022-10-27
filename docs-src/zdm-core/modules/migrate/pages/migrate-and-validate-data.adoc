@@ -1,4 +1,4 @@
-= Tools to migrate and validate data
+= Migrate and validate data
 
 This topic introduces you to the benefits of using two free, open-source data migration tools during your migration project:
 
@@ -37,7 +37,7 @@ For large data migrations, including cases where advanced logging is needed, {cs
 * Report differences in a detailed log file
 * Reconcile any missing records and fix any data inconsistencies in the target, if you enable `autocorrect` in a config file
 
-{cstar-data-migrator} runs in a lightweight, easily set up Apache Spark wrapper. For example, you can configure a `sparkConf.properties` file for the environment. There's a sample https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/sparkConf.properties[sparkConf.properties] configuration example in the GitHub repo.
+{cstar-data-migrator} runs in a lightweight, easily set up Apache Spark wrapper. For example, you can configure a `sparkConf.properties` file for the environment. There's a sample https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/sparkConf.properties[sparkConf.properties^] configuration example in the GitHub repo.
 
 In its settings, you'll identify values for your Origin and Target databases. A subset example:
 

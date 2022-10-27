@@ -2,7 +2,6 @@
 
 This section presents the following:
 
-* xref:faqs.adoc[FAQs]
 * xref:glossary.adoc[Glossary]
 * xref:troubleshooting.adoc[Troubleshooting]
 ** xref:troubleshooting-tips.adoc[Troubleshooting tips]
