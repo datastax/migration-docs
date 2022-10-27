@@ -30,14 +30,14 @@ From that point, the automation will take care of installing Docker on the ZDM P
 
 == Jumphost
 
-In this guide, we'll use a jumphost as our Ansible Control Host.
+In this guide, we'll use a jumphost to run the Ansible Control Host container.
 
 A jumphost is a server on a network used to access and manage devices in a separate security zone, providing a controlled means of access between them. The jumphost can be, for example, a Ubuntu server machine that is able to access the server machines that you wish to use for your {zdm-proxy} deployment.
 
 The jumphost will serve three purposes:
 
 * Accessing the {zdm-proxy} machines
-* Serving as the Ansible Control Host to run the {zdm-automation}
+* Running the Ansible Control Host container, from which the {zdm-automation} can be run
 * Running the {zdm-shortproduct} monitoring stack, which uses Prometheus and Grafana to expose the metrics of all the {zdm-proxy} instances in a preconfigured dashboard.
 
 [TIP]
@@ -176,3 +176,10 @@ The {zdm-utility} now:
 * Displays a message. Example:
 
 image:zdm-go-utility-success3.png[Ansible Docker container success messages]
+
+[NOTE]
+====
+Depending on your circumstances, you can make different choices in the ZDM Utility, which will result in a path that is slightly different to the one explained here. The utility will guide you through the process with meaningful, self-explanatory messages and help you rectify any issue that you may encounter.
+
+The successful outcome will always be a configured Ansible Control Host container ready to run the {zdm-automation}.
+====
