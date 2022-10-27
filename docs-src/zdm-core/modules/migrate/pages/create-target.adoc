@@ -55,20 +55,20 @@ For more information about role permissions, see link:https://docs.datastax.com/
 
 === Get the Secure Connect Bundle and upload to client instances
 
-Your cluster's Secure Connect Bundle (SCB) will be needed by:
+Your cluster's xref:glossary.adoc#_secure_connect_bundle_scb[Secure Connect Bundle] (SCB) is a zip file that contains the TLS encryption certificates and other metadata to connect to your database.
+It will be needed by:
 
 * Your client application, to connect directly to Astra DB near the end of the migration;
 * Cassandra Data Migrator or DSBulk Migrator, to migrate and validate data into Astra DB.
 
+Note that the credentials are **not contained** in the SCB.
+
 // * The {company} Bulk Migrator to import the existing data into Astra
 
-With the Astra DB database in an **Active** status, download its SCB from Astra Portal. It's a zip file that contains the TLS encryption certificates and other metadata to connect to your database. Note that the credentials are not contained in the SCB.
+include::partial$tip-scb.adoc[]
 
-. In Astra Portal, go to the Dashboard and select the serverless database that you created in the prior step.
-. Click on **Connect**.
-. Select the **Java driver** and click on **Download bundle**.
-. Copy the SCB to your client application instance:
-+
+To copy the SCB to your client application instance, use `scp`:
+
 [source,bash]
 ----
 scp -i <your_ssh_key> secure-connect-<target cluster name>.zip ubuntu@<public IP of client application instance>:

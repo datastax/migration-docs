@@ -46,7 +46,7 @@ See xref:glossary.adoc#_asynchronous_dual_reads[async dual reads].
 
 == Secure Connect Bundle (SCB)
 
-A ZIP file generated in https://astra.datastax.com[Astra Portal^] that contains connection metadata and TLS encryption certificates (but never your credentials) for your Astra DB database. For details, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[Working with the Secure Connect Bundle^].
+A ZIP file generated in https://astra.datastax.com[Astra Portal^] that contains connection metadata and TLS encryption certificates (but not the database credentials) for your Astra DB database. For details, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[Working with the Secure Connect Bundle^].
 
 [[target]]
 == Target

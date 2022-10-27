@@ -116,7 +116,7 @@ The {zdm-utility} will validate each variable that you enter. In case of invalid
 You have five attempts to enter valid variables. You can always run the {zdm-utility} again, if necessary.
 ====
 
-. Enter the path to, and name, of the SSH private key to access the proxy hosts. Example:
+. Enter the path to, and name of, the SSH private key to access the proxy hosts. Example:
 +
 [source,bash]
 ----

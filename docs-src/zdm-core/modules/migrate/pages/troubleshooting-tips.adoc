@@ -4,10 +4,15 @@ Refer to the tips on this page for information that can help you troubleshoot is
 
 == How to retrieve {zdm-proxy} log files
 
-If {zdm-proxy} was deployed using the {zdm-automation}, the automation contains an Ansible playbook that retrieves the logs. For details, see the next xref:troubleshooting-tips.adoc#how-to-view-retrieve-logs[troubleshooting tip].
+Depending on how you deployed {zdm-proxy}, there may be different ways to access
+the logs.
+If you used the {zdm-automation}, see xref:manage-proxy-instances.adoc#_view_the_logs[View the logs] for a quick way
+to view the logs of a single proxy instance.
+Follow the instructions on xref:manage-proxy-instances.adoc#_collect_the_logs[Collect the logs],
+instead, for a playbook that systematically retrieves all logs by all instances and packages them in a zip archive for later inspection.
 
-If you did not use the {zdm-automation}, the steps to retrieve the logs depends on how you deployed the {zdm-proxy}. If
-Docker is used, enter the following command to export the logs of a container to a file:
+If you did not use the {zdm-automation}, you might have to access the logs differently.
+If Docker is used, enter the following command to export the logs of a container to a file:
 
 [source,bash]
 ----
@@ -23,27 +28,6 @@ You may need to use `sudo` to run the `docker` command.
 ====
 Keep in mind that docker logs are deleted if the container is recreated.
 ====
-
-[#how-to-view-retrieve-logs]
-== How to retrieve the {zdm-proxy} logs using the {zdm-automation}
-
-When deployed through the {zdm-automation}, each {zdm-proxy} instance runs as a Docker container. You can view its logs by connecting to the proxy machine and running the following command:
-
-[source,bash]
-----
-sudo docker container logs zdm-proxy-container
-----
-
-You can retrieve logs of all proxy instances using a dedicated playbook: `collect_zdm_proxy_logs.yml`.
-
-If you are using the jumphost as your Ansible control host, no configuration changes are necessary. You can view the playbook's configuration values in `vars/zdm_proxy_log_collection_config.yml`. All default values are fine in most cases:
-
-[source,bash]
-----
-ansible-playbook collect_proxy_logs.yml -i zdm_ansible_inventory
-----
-
-This playbook creates a single zip file, called `zdm_proxy_logs_<current_timestamp>.zip`, in the desired directory (this defaults to `/home/ubuntu/zdm_proxy_archived_logs` in the Ansible Control Host container). This zip file contains the logs from all proxy instances.
 
 == What to look for in the logs
 
