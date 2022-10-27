@@ -69,13 +69,48 @@ The links above lead to the documentation for the most recent version of each dr
 
 == Connecting {company} drivers to {zdm-proxy}
 
-We mentioned above that connecting to a {zdm-proxy} should be almost indistinguishable from connecting directly to your Cassandra cluster.  That design decision means there isn't much to say here; everything we discussed in the section above also applies when connecting your {company} driver to a {zdm-proxy}.  There are a few extra considerations to keep in mind, though, when using the proxy:
+We mentioned above that connecting to a {zdm-proxy} should be almost indistinguishable from connecting directly to your Cassandra cluster. This design decision means there isn't much to say here; everything we discussed in the section above also applies when connecting your {company} driver to a {zdm-proxy}. There are a few extra considerations to keep in mind, though, when using the proxy.
 
-* If your {zdm-proxy} is configured with an Origin or Target cluster with **user authentication enabled**, you have to provide these credentials when connecting to the proxy.
-** You should use the credentials for Target in most cases.
-** You only need to supply credentials for Origin if Target does not have authentication enabled but Origin does.
-* If your {zdm-proxy} is configured to use Astra DB as an Origin or Target, you do not need to provide an Astra Secure Connect Bundle (SCB) when connecting to the proxy. You will, however, have to supply your Astra client ID and secret as a username and password (respectively).
-* Client applications should not enable compression when connecting through the {zdm-proxy}.
+=== Client-side compression
+Client applications must not enable client-side compression when connecting through the {zdm-proxy}, as this is not currently supported. This is disabled by default in all drivers, but if it was enabled in your client application configuration it will have to be temporarily disabled when connecting to the {zdm-proxy}.
+
+=== Client application credentials
+The credentials provided by the client application are used when forwarding its requests. However, the client application has no notion that there are two clusters involved: from its point of view, it talks to just one cluster as usual. For this reason, the {zdm-proxy} will only use the client application credentials when forwarding requests to one cluster (typically Target), and it will resort to using the credentials in its own configuration to forward requests to the other cluster (typically Origin).
+
+This means that:
+
+* If your {zdm-proxy} is configured with an Origin or Target cluster with **user authentication enabled**, your client application has to provide credentials when connecting to the proxy.
+** If both clusters require authentication, your client application must pass the credentials for Target. This is also the case if only Target requires authentication but Origin does not.
+** If Origin requires authentication but Target does not, your client application must supply credentials for Origin.
+** If neither cluster requires authentication, no credentials are needed.
+
+[cols="1,1,1"]
+|===
+|Auth enabled on Origin
+|Auth enabled on Target
+|Client application credentials
+
+|Yes
+|Yes
+|Target
+
+|No
+|Yes
+|Target
+
+|Yes
+|No
+|Origin
+
+|No
+|No
+|No credentials
+
+|===
+
+=== A note on the Astra Secure Connect Bundle
+If your {zdm-proxy} is configured to use Astra DB as an Origin or Target, your client application **does not need** to provide an Astra Secure Connect Bundle (SCB) when connecting to the proxy. It will, however, have to supply the Astra client ID and client secret as a username and password (respectively).
+
 
 == Sample client applications
 
