@@ -230,7 +230,7 @@ Edit the file `zdm_monitoring_config.yml`, located in `zdm-proxy-automation/ansi
 
 === Run the monitoring playbook
 
-Use the following command:
+Ensure that you are in `/home/ubuntu/zdm-proxy-automation/ansible` and then run the following command:
 
 [source,bash]
 ----
