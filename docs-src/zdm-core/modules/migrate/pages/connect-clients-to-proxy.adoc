@@ -6,6 +6,8 @@ On this page, we explain how to connect your client applications to a Cassandra 
 
 You can use the provided sample client applications, in addition to your own, as a quick way to validate that the deployed {zdm-proxy} is reading and writing data from the expected Origin and Target clusters.
 
+Finally, we will explain how to connect the `cqlsh` command-line client to the {zdm-proxy}.
+
 == {company} drivers
 
 At DataStax, we've developed and maintain a set of drivers for client applications to use when connecting to Cassandra, DSE, or Astra DB:
@@ -133,3 +135,30 @@ https://github.com/absurdfarce/themis[Themis^] is a Java command-line client app
 The client application can then be used to query the inserted data.  This allows you to validate that the {zdm-proxy} is reading and writing data from the expected sources.  Configuration details for the clusters and/or {zdm-proxy} are defined in a YAML file.  Details are in the https://github.com/absurdfarce/themis/blob/main/README.md[README^].
 
 In addition to any utility as a validation tool, Themis also serves as an example of a larger client application which uses the Java driver to connect to a {zdm-proxy} -- as well as directly to Cassandra or Astra DB clusters -- and perform operations.  The configuration logic as well as the cluster and session management code have been cleanly separated into distinct packages to make them easy to understand.
+
+== Connecting CQLSH to the {zdm-proxy}
+
+https://downloads.datastax.com/#cqlsh[CQLSH^] is a simple, command-line client that is able to connect to any CQL cluster, enabling you to interactively send CQL requests to it. CQLSH comes pre-installed on any Cassandra or DSE node, or it can be downloaded and run as a standalone client on any machine able to connect to the desired cluster.
+
+Using CQLSH to connect to a {zdm-proxy} instance is very easy:
+
+* Download CQLSH for free from https://downloads.datastax.com/#cqlsh[here] on a machine that has connectivity to the {zdm-proxy} instances:
+** To connect to the {zdm-proxy}, any version is fine.
+** The Astra-ready version additionally supports connecting directly to an Astra DB cluster by passing the cluster's Secure Connect Bundle and valid credentials.
+* Install it by uncompressing the archive: `tar -xvf cqlsh-<...>.tar.gz`.
+* Navigate to the `cqlsh-<...>/bin` directory, for example `cd cqlsh-astra/bin`.
+* Launch CQLSH:
+** Specify the IP of a {zdm-proxy} instance.
+** Use the appropriate credentials for the {zdm-proxy}, as explained xref:_client_application_credentials[above].
+
+For example, if one of your {zdm-proxy} instances has IP Address `172.18.10.34`, the command would look like:
+[source,bash]
+----
+./cqlsh 172.18.10.34 -u <my_creds_user> -p <my_creds_password>
+----
+
+If credentials are not required, just omit the `-u` and `-p` options.
+
+
+
+
