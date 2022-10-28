@@ -1,6 +1,6 @@
 = Troubleshooting
 
-Welcome to the {zdm-product} (ZDM) troubleshooting topics. We've organized the descriptions this way:
+The troubleshooting information for {zdm-product} is organized as follows:
 
 * xref:troubleshooting-tips.adoc[] - general advice and some common issues you may encounter.
 * xref:troubleshooting-scenarios.adoc[] - specific descriptions of error conditions, and advice on how to solve the issues.
