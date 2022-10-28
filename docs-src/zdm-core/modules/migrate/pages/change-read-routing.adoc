@@ -40,13 +40,15 @@ Wait for the {zdm-proxy} instances to be restarted by Ansible, one by one. All i
 
 == Verifying the read routing change
 
-Once the read routing configuration change has been rolled out, you may want to verify that reads are correctly sent to Target as expected. This is not a required or even suggested step, but you may wish to do it for peace of mind.
+Once the read routing configuration change has been rolled out, you may want to verify that reads are correctly sent to Target as expected. This is not a required step, but you may wish to do it for peace of mind.
 
 [IMPORTANT]
 ====
 Issuing a `DESCRIBE` or a read to any system table through the {zdm-proxy} is *not* a valid test.
 
-The {zdm-proxy} handles reads to system tables differently, by intercepting them and always routing them to Origin, sometimes partly populating them at proxy level. This means that system reads are not representative of how the {zdm-proxy} routes regular user reads: even after you switched the configuration to read from Target, all system reads will still go to Origin.
+The {zdm-proxy} handles reads to system tables differently, by intercepting them and always routing them to Origin, in some cases partly populating them at proxy level.
+
+This means that system reads are *not representative* of how the {zdm-proxy} routes regular user reads: even after you switched the configuration to read from Target, all system reads will still go to Origin.
 
 The same is true for `DESCRIBE` operations.
 
@@ -54,7 +56,7 @@ The same is true for `DESCRIBE` operations.
 
 Verifying that the correct routing is taking place is a slightly cumbersome operation, due to the fact that the purpose of the ZDM process is to align the clusters and therefore, by definition, the data will be identical on both sides.
 
-For this reason, the only way to do a manual verification test is to force a discrepancy between the clusters. To do this, you could consider using the xref:connect-clients-to-proxy.adoc#_themis_client[Themis sample client application].
+For this reason, the only way to do a manual verification test is to force a discrepancy of some test data between the clusters. To do this, you could consider using the xref:connect-clients-to-proxy.adoc#_themis_client[Themis sample client application]. This client application connects directly to Origin, Target and the {zdm-proxy}, inserts some test data in its own table and allows you to view the results of reads from each source. Please refer to its README for more information.
 
 Alternatively, you could follow this manual procedure:
 
