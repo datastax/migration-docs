@@ -6,6 +6,7 @@ You would typically do this once you have migrated all the existing data from Or
 
 This operation is a configuration change that can be carried out as explained xref:manage-proxy-instances.adoc#change-mutable-config-variable[here].
 
+== Changing the read routing configuration
 If you're not there already, `ssh` back into the jumphost:
 
 [source,bash]
