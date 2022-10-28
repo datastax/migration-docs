@@ -4,10 +4,15 @@ Refer to the tips on this page for information that can help you troubleshoot is
 
 == How to retrieve the {zdm-proxy} log files
 
-If {zdm-proxy} was deployed using the {zdm-automation}, the automation contains an Ansible playbook that retrieves the logs. For details, see the next xref:troubleshooting-tips.adoc#how-to-view-retrieve-logs[troubleshooting tip].
+Depending on how you deployed {zdm-proxy}, there may be different ways to access
+the logs.
+If you used the {zdm-automation}, see xref:manage-proxy-instances.adoc#_view_the_logs[View the logs] for a quick way
+to view the logs of a single proxy instance.
+Follow the instructions on xref:manage-proxy-instances.adoc#_collect_the_logs[Collect the logs],
+instead, for a playbook that systematically retrieves all logs by all instances and packages them in a zip archive for later inspection.
 
-If you did not use the {zdm-automation}, the steps to retrieve the logs depends on how you deployed the {zdm-proxy}. If
-Docker is used, enter the following command to export the logs of a container to a file:
+If you did not use the {zdm-automation}, you might have to access the logs differently.
+If Docker is used, enter the following command to export the logs of a container to a file:
 
 [source,bash]
 ----
@@ -23,19 +28,6 @@ You may need to use `sudo` to run the `docker` command.
 ====
 Keep in mind that docker logs are deleted if the container is recreated.
 ====
-
-[#how-to-view-retrieve-logs]
-== How to retrieve the {zdm-proxy} logs using the {zdm-automation}
-
-When deployed through the {zdm-automation}, each {zdm-proxy} instance runs as a Docker container.
-
-You can view its logs by connecting to the {zdm-proxy} machine and running the following command:
-[source,bash]
-----
-sudo docker container logs zdm-proxy-container
-----
-
-You can also retrieve logs of all {zdm-proxy} instances using a dedicated playbook, as explained xref:manage-proxy-instances.adoc#_collect_the_logs[here].
 
 == What to look for in the logs
 
@@ -160,7 +152,7 @@ image:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories 
 ** Number of cached prepared statements.
 
 * Request Failure Rates: number of request failures per interval. You can set the interval via the `Error Rate interval` dashboard variable at the top.
-** Read Failure Rate: one `cluster` label with two settings: `origin` and `target`. The label that contains data depends on the `ZDM_PRIMARY_CLUSTER` setting (same as the latency and throughput metrics explained above).
+** Read Failure Rate: one `cluster` label with two settings: `origin` and `target`. The label that contains data depends on which cluster is currently considered the primary (same as the latency and throughput metrics explained above).
 ** Write Failure Rate: one `failed_on` label with three settings: `origin`, `target` and `both`.
 *** `failed_on=origin`: the write request failed on Origin ONLY.
 *** `failed_on=target`: the write request failed on Target ONLY.
