@@ -2,7 +2,7 @@
 
 Refer to the tips on this page for information that can help you troubleshoot issues with your migration.
 
-== How to retrieve {zdm-proxy} log files
+== How to retrieve the {zdm-proxy} log files
 
 If {zdm-proxy} was deployed using the {zdm-automation}, the automation contains an Ansible playbook that retrieves the logs. For details, see the next xref:troubleshooting-tips.adoc#how-to-view-retrieve-logs[troubleshooting tip].
 
