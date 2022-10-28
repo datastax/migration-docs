@@ -142,7 +142,7 @@ https://downloads.datastax.com/#cqlsh[CQLSH^] is a simple, command-line client t
 
 Using CQLSH to connect to a {zdm-proxy} instance is very easy:
 
-* Download CQLSH for free from https://downloads.datastax.com/#cqlsh[here] on a machine that has connectivity to the {zdm-proxy} instances:
+* Download CQLSH for free from https://downloads.datastax.com/#cqlsh[here^] on a machine that has connectivity to the {zdm-proxy} instances:
 ** To connect to the {zdm-proxy}, any version is fine.
 ** The Astra-ready version additionally supports connecting directly to an Astra DB cluster by passing the cluster's Secure Connect Bundle and valid credentials.
 * Install it by uncompressing the archive: `tar -xvf cqlsh-<...>.tar.gz`.
