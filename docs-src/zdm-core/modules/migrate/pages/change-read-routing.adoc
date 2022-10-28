@@ -45,7 +45,7 @@ Once the read routing configuration change has been rolled out, you may want to 
 
 [IMPORTANT]
 ====
-Issuing a `DESCRIBE` or a read to any system table through the {zdm-proxy} is s *not* a valid verification.
+Issuing a `DESCRIBE` or a read to any system table through the {zdm-proxy} is *not* a valid verification.
 
 The {zdm-proxy} handles reads to system tables differently, by intercepting them and always routing them to Origin, in some cases partly populating them at proxy level.
 
