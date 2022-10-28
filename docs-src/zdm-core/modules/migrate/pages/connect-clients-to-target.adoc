@@ -28,29 +28,24 @@ To connect to your Astra DB cluster, you will need:
 ** There is one SCB for each Astra DB cluster (or one for each region of an Astra DB Multi-region cluster).
 ** The SCB **does not contain** your DB credentials.
 
-The SCB can be downloaded from the Astra Portal as follows:
+include::partial$tip-scb.adoc[]
 
-. From your Dashboard page in Astra Portal, select your database.
-. On the Overview page, select Connect.
-. In the **Select a Method** section, select Drivers and then Legacy from the dropdown menu to select your driver type from the list to load language-specific instructions.
-. Click **Download Bundle**.
-. The `secure-connect-database_name.zip` file is downloaded to your machine.
+You will also need to check whether the driver used by your client application has native support for the xref:glossary.adoc#_secure_connect_bundle_scb[Astra DB Secure Connect Bundle]. To do so, please refer to the documentation for your driver language and version,
+and check the per-language https://docs.datastax.com/en/driver-matrix/docs/version-compatibility.html[driver compatibility matrix^] for details (look for the support status in the **Astra / Cloud** column for your driver version).
 
-You will also need to check whether the driver used by your client application has native support for the xref:glossary.adoc#_secure_connect_bundle_scb[Astra DB Secure Connect Bundle]. To do so, please refer to the documentation for your driver language and version.
-
-The SCB support was made available beginning the following versions in the drivers:
-
-* https://docs.datastax.com/en/developer/cpp-driver/latest/changelog/#2-14-0[Beginning `2.14.0` of {company} C++ Driver^].
-
-* https://docs.datastax.com/en/developer/csharp-driver/latest/changelog/#3-12-0[Beginning `3.12.0` of {company} C\# Driver^]
-
-* https://docs.datastax.com/en/developer/java-driver/latest/changelog/#3-8-0[Beginning `3.8.0` & `4.3.0` of {company} Java Driver^].
-
-* https://github.com/datastax/nodejs-driver/blob/master/CHANGELOG.md#440[Beginning `4.4.0` of {company} Nodejs Driver^].
-
-* https://docs.datastax.com/en/developer/python-dse-driver/latest/CHANGELOG/#id24[Beginning `2.11.0` & `3.20.0` of {company} Python Driver^].
-
-Based on this, follow the instructions in the relevant section below.
+// The SCB support was made available beginning the following versions in the drivers:
+// 
+// * https://docs.datastax.com/en/developer/cpp-driver/latest/changelog/#2-14-0[Beginning `2.14.0` of {company} C++ Driver^].
+// 
+// * https://docs.datastax.com/en/developer/csharp-driver/latest/changelog/\#3-12-0[Beginning `3.12.0` of {company} C# Driver^]
+// 
+// * https://docs.datastax.com/en/developer/java-driver/latest/changelog/#3-8-0[Beginning `3.8.0` & `4.3.0` of {company} Java Driver^].
+// 
+// * https://github.com/datastax/nodejs-driver/blob/master/CHANGELOG.md#440[Beginning `4.4.0` of {company} Nodejs Driver^].
+// 
+// * https://docs.datastax.com/en/developer/python-dse-driver/latest/CHANGELOG/#id24[Beginning `2.11.0` & `3.20.0` of {company} Python Driver^].
+// 
+// Based on this, follow the instructions in the relevant section below.
 
 [TIP]
 ====

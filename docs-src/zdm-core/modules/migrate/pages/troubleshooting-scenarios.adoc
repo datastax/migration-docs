@@ -261,7 +261,10 @@ ERRO[0076] Client Handler could not be created: ORIGIN-CONNECTOR context timed o
 {zdm-proxy} has connectivity only to a subset of the nodes.
 
 The control connection (during {zdm-proxy} startup) cycles through the nodes until it finds one that can be connected to.
-For client connections, the proxy cycles through the "assigned nodes" only (which could have been discovered, they might not be in the contact points).
+For client connections, each proxy instance cycles through its "assigned nodes" only.
+_(The "assigned nodes" are a different subset of the cluster nodes for each proxy instance,
+generally non-overlapping between proxy instances so as to avoid any interference with the load balancing already in place at client-side driver level.
+The assigned nodes are not necessarily contact points: even discovered nodes undergo assignment to proxy instances.)_
 
 In the example above, the {zdm-proxy} doesn't have connectivity to 10.0.63.20, which was chosen as the origin node for the incoming client connection, but it was able to connect to 10.0.63.163 during startup.
 
