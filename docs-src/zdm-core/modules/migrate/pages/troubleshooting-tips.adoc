@@ -186,7 +186,7 @@ To see error metrics by error type, see the node-level error metrics on the next
 
 ==== Asynchronous read requests metrics
 
-These metrics are specific to asynchronous reads, so they are only populated if asynchronous dual reads are enabled. This is done by setting the {zdm-automation} variable `read_mode`, or its equivalent environment variable `ZDM_READ_MODE`, to `ASYNC_READS_ON_SECONDARY` as explained xref:enable-async-dual-reads.adoc[here].
+These metrics are specific to asynchronous reads, so they are only populated if asynchronous dual reads are enabled. This is done by setting the {zdm-automation} variable `read_mode`, or its equivalent environment variable `ZDM_READ_MODE`, to `DUAL_ASYNC_ON_SECONDARY` as explained xref:enable-async-dual-reads.adoc[here].
 
 These metrics track:
 
