@@ -77,12 +77,11 @@ Client applications must not enable client-side compression when connecting thro
 === Client application credentials
 The credentials provided by the client application are used when forwarding its requests. However, the client application has no notion that there are two clusters involved: from its point of view, it talks to just one cluster as usual. For this reason, the {zdm-proxy} will only use the client application credentials when forwarding requests to one cluster (typically Target), and it will resort to using the credentials in its own configuration to forward requests to the other cluster (typically Origin).
 
-This means that:
+This means that, if your {zdm-proxy} is configured with an Origin or Target cluster with **user authentication enabled**, your client application has to provide credentials when connecting to the proxy:
 
-* If your {zdm-proxy} is configured with an Origin or Target cluster with **user authentication enabled**, your client application has to provide credentials when connecting to the proxy.
-** If both clusters require authentication, your client application must pass the credentials for Target. This is also the case if only Target requires authentication but Origin does not.
-** If Origin requires authentication but Target does not, your client application must supply credentials for Origin.
-** If neither cluster requires authentication, no credentials are needed.
+* If both clusters require authentication, your client application must pass the credentials for Target. This is also the case if only Target requires authentication but Origin does not.
+* If Origin requires authentication but Target does not, your client application must supply credentials for Origin.
+* If neither cluster requires authentication, no credentials are needed.
 
 [cols="1,1,1"]
 |===
