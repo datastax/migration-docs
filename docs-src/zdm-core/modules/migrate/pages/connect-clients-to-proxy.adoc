@@ -149,16 +149,13 @@ Using CQLSH to connect to a {zdm-proxy} instance is very easy:
 * Navigate to the `cqlsh-<...>/bin` directory, for example `cd cqlsh-astra/bin`.
 * Launch CQLSH:
 ** Specify the IP of a {zdm-proxy} instance.
+** Specify the port on which the {zdm-proxy} listens for client connections, if different to `9042`.
 ** Use the appropriate credentials for the {zdm-proxy}, as explained xref:_client_application_credentials[above].
 
-For example, if one of your {zdm-proxy} instances has IP Address `172.18.10.34`, the command would look like:
+For example, if one of your {zdm-proxy} instances has IP Address `172.18.10.34` and listens on port `14002`, the command would look like:
 [source,bash]
 ----
-./cqlsh 172.18.10.34 -u <my_creds_user> -p <my_creds_password>
+./cqlsh 172.18.10.34 14002 -u <my_creds_user> -p <my_creds_password>
 ----
 
-If credentials are not required, just omit the `-u` and `-p` options.
-
-
-
-
+If the {zdm-proxy} listens on port `9042`, you can omit the port from the command above. If credentials are not required, just omit the `-u` and `-p` options.
