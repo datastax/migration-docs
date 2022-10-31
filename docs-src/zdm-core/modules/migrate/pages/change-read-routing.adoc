@@ -43,7 +43,7 @@ Wait for the {zdm-proxy} instances to be restarted by Ansible, one by one. All i
 
 Once the read routing configuration change has been rolled out, you may want to verify that reads are correctly sent to Target as expected. This is not a required step, but you may wish to do it for peace of mind.
 
-[IMPORTANT]
+[TIP]
 ====
 Issuing a `DESCRIBE` or a read to any system table through the {zdm-proxy} is *not* a valid verification.
 
