@@ -1,6 +1,6 @@
 = Deploy the {zdm-proxy} and monitoring
 
-This page explains how to use the Ansible automation playbooks that you set up in the xref:setup-ansible-playbooks.adoc[prior topic] to deploy the proxy and its monitoring stack.
+This page explains how to use the Ansible automation playbooks that you set up in the xref:setup-ansible-playbooks.adoc[prior topic] to deploy the {zdm-proxy} and its monitoring stack.
 
 Once completed, you will have a working and fully monitored {zdm-proxy} deployment.
 
@@ -8,9 +8,11 @@ Once completed, you will have a working and fully monitored {zdm-proxy} deployme
 
 You must have completed the Ansible setup as described in the xref:setup-ansible-playbooks.adoc[prior topic].
 
-== Access the Docker container
+No other prerequisites or dependencies are needed. The playbooks will automatically install all the required software packages as part of their operation.
 
-You can connect to the Docker container by opening a shell on it:
+== Access the Ansible Control Host Docker container
+
+You can connect to the Ansible Control Host Docker container by opening a shell on it:
 
 [source,bash]
 ----
@@ -24,7 +26,7 @@ You're now connected to the container, at a prompt such as this:
 ubuntu@52772568517c:~$
 ----
 
-You can `ls` to see the resources in the Docker container. The most important resource is the `zdm-proxy-automation`.
+You can `ls` to see the resources in the Ansible Control Host Docker container. The most important resource is the `zdm-proxy-automation`.
 
 Now, `cd` into `zdm-proxy-automation/ansible` and `ls`. Example:
 
@@ -151,7 +153,7 @@ Now you can run the playbook that you've configured above. From the shell connec
 ansible-playbook deploy_zdm_proxy.yml -i zdm_ansible_inventory
 ----
 
-That's it!
+That's it! A {zdm-proxy} container has been created on each proxy host.
 
 == Indications of success on Origin and Target clusters
 

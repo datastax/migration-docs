@@ -21,11 +21,6 @@ docker logs my-container > log.txt
 
 [TIP]
 ====
-You may need to use `sudo` to run the `docker` command.
-====
-
-[TIP]
-====
 Keep in mind that docker logs are deleted if the container is recreated.
 ====
 

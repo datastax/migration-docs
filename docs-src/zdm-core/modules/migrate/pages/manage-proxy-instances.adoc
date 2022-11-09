@@ -25,9 +25,8 @@ ubuntu@52772568517c:~$
 
 == Perform a rolling restart of the proxies
 
-Although this operation is not required in any particular step of the migration,
-you may still find it convenient in some circumstances. For this reason, there
-is a specific playbook that does exactly that.
+Although this operation is not required in any particular step of the migration, you may still find it convenient in some circumstances. For this reason, there
+is a specific playbook that performs this operation.
 
 Connect to the Ansible Control Host Docker container as explained above and run:
 
@@ -38,13 +37,22 @@ ansible-playbook rolling_restart_zdm_proxy.yml -i zdm_ansible_inventory
 
 This is all that is needed.
 
+[NOTE]
+====
+This playbook simply restarts the existing {zdm-proxy} containers. It does **not** apply any configuration change or change the version.
+
+If you wish to xref:change-mutable-config-variable[apply configuration changes] or xref:_upgrade_the_proxy_version[perform version upgrades] in a rolling fashion, follow the instructions in the respective sections.
+====
+
 This playbook restarts each proxy container one by one, without impacting the availability of the {zdm-proxy} deployment. It automates the following steps:
 
 . It stops one container gracefully, waiting for it to shut down.
 . It starts the container again.
 . It checks that the container has come up successfully by checking the readiness endpoint:
 .. If unsuccessful, it repeats the check for six times at 5-second intervals and eventually interrupts the whole process if the check still fails.
-.. If successful, it waits for 10 seconds and then moves on to the next container.
+.. If successful, it waits for a configurable interval and then moves on to the next container.
+
+The pause between the restart of each {zdm-proxy} instance defaults to 10 seconds. If you wish to change this value, you can edit `vars/zdm_playbook_internal_config.yml` (located in `zdm-proxy-automation/ansible/vars`) and set it to the desired number of seconds.
 
 == Access the proxy logs
 
@@ -158,6 +166,8 @@ Note that this will remove the previous container and its logs. Make sure you co
 . It checks that the container has come up successfully by checking the readiness endpoint:
 .. If unsuccessful, it repeats the check for six times at 5-second intervals and eventually interrupts the whole process if the check still fails.
 .. If successful, it waits for 10 seconds and then moves on to the next container.
+
+The pause between the restart of each {zdm-proxy} instance defaults to 10 seconds. If you wish to change this value, you can edit `vars/zdm_playbook_internal_config.yml` (located in `zdm-proxy-automation/ansible/vars`) and set it to the desired number of seconds.
 
 == Upgrade the proxy version
 
