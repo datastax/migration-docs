@@ -203,10 +203,26 @@ CONTAINER ID  IMAGE                     COMMAND  CREATED      STATUS     PORTS  
 02470bbc1338  datastax/zdm-proxy:2.0.x  "/main"  2 hours ago  Up 2 hours         zdm-proxy-container
 ----
 
-== Setting up Monitoring on the control host
+== Setting up the Monitoring stack
 
-Follow these steps to install the monitoring stack.  We'll use https://grafana.com/[Grafana] to visualize the data.
+The {zdm-automation} enables you to easily set up a self-contained monitoring stack that is preconfigured to collect metrics from your {zdm-proxy} instances and display them in ready-to-use Grafana dashboards.
 
+
+
+The monitoring stack is deployed entirely on Docker. It includes the following components, all deployed as Docker containers:
+
+* Prometheus node exporter, which runs on each {zdm-proxy} host and makes OS- and host-level metrics available to Prometheus
+* Prometheus server, to collect metrics from the {zdm-proxy} process, its Golang runtime and the Prometheus node exporter
+* Grafana, to visualize all these metrics in three preconfigured dashboards (see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips for details)
+
+After running the playbook described here, you will have a fully configured monitoring stack connected to your {zdm-proxy} deployment.
+
+[NOTE]
+====
+There are no additional prerequisites or dependencies for this playbook to execute. If it is not already present, Docker will automatically be installed by the playbook on your chosen monitoring server.
+====
+
+=== Connect to the Ansible Control Host
 Make sure you are connected to the Ansible Control Host docker container. As above, you can do so from the jumphost machine by running:
 
 [source,bash]
@@ -248,5 +264,5 @@ Login with:
 
 [TIP]
 ====
-For Grafana dashboard examples and details about the metrics you can observe, see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips.
+Details about the metrics you can observe are available in xref:troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips.
 ====
