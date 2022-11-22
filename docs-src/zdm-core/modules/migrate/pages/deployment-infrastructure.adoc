@@ -33,7 +33,6 @@ We will use the term "machine" to indicate a cloud instance (on any cloud provid
 ** The most common option is using a single machine for all these functions, but you could split these functions across different machines if you prefer.
 ** Requirements:
 *** Ubuntu Linux 18.04 or newer;
-*** For the monitoring stack, ensure the init system in use is `systemd`;
 *** 8 vCPUs;
 *** 16GB RAM;
 *** 200GB - 500GB storage (depending on the amount of metrics history that you wish to retain);

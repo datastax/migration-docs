@@ -21,11 +21,6 @@ docker logs my-container > log.txt
 
 [TIP]
 ====
-You may need to use `sudo` to run the `docker` command.
-====
-
-[TIP]
-====
 Keep in mind that docker logs are deleted if the container is recreated.
 ====
 
@@ -119,7 +114,7 @@ Do not use `--rm` when actually launching the {zdm-proxy} otherwise you will not
 
 The {zdm-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format. At the moment this is the only way to obtain metrics from {zdm-proxy}, but we plan to introduce other ways to expose metrics in the future.
 
-The {zdm-automation} can deploy Prometheus and Grafana, configuring them automatically, as explained xref:deploy-proxy-monitoring.adoc#_setting_up_monitoring_on_the_control_host[here]. The Grafana dashboards are ready to go with metrics that are being scraped from the {zdm-proxy} instances.
+The {zdm-automation} can deploy Prometheus and Grafana, configuring them automatically, as explained xref:deploy-proxy-monitoring.adoc#_setting_up_the_monitoring_stack[here]. The Grafana dashboards are ready to go with metrics that are being scraped from the {zdm-proxy} instances.
 
 If you already have a Grafana deployment then you can import the dashboards from the two ZDM dashboard files https://github.com/datastax/zdm-proxy-automation/tree/main/grafana-dashboards[on this location^].
 
