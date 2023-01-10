@@ -54,6 +54,7 @@ asciidoc:
     serverless: 'serverless'
     serverless_cap: 'Serverless'
     astra_stream: 'Astra Streaming'
+    astra_ui: 'Astra Portal'
     advanced: 'no'
 
     stargate-docker-tag: v1.0.41
