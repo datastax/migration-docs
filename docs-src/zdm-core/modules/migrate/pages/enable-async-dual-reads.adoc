@@ -41,3 +41,10 @@ Because the client application is not impacted by these asynchronous reads, the 
 * Check the asynchronous reads section of the {zdm-proxy} metrics
 
 In the {zdm-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads where you can see latency percentiles, error rates, and some other metrics specific to these requests. For more, see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[How to leverage the metrics] in the troubleshooting tips.
+
+== Reminder to switch off async dual reads
+
+[TIP]
+====
+Once you are satisfied that your Target cluster is ready and tuned appropriately to handle the production read load, you can decide to switch your sync reads to Target. At this point, be sure to also disable async dual reads by reverting `read_mode` in `vars/zdm_proxy_core_config.yml` to `PRIMARY_ONLY`. This step is  explained in more detail in the xref:change-read-routing.adoc[next topic].
+====

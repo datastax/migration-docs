@@ -6,6 +6,18 @@ You would typically do this once you have migrated all the existing data from Or
 
 This operation is a configuration change that can be carried out as explained xref:manage-proxy-instances.adoc#change-mutable-config-variable[here].
 
+[TIP]
+====
+If you performed the optional steps described in the prior topic, xref:enable-async-dual-reads.adoc[] -- to verify that your Target cluster was ready and tuned appropriately to handle the production read load -- be sure to disable async dual reads when you're done testing. If you haven't already, revert `read_mode` in `vars/zdm_proxy_core_config.yml` to `PRIMARY_ONLY` when switching sync reads to Target. Example:
+
+[source,yml]
+----
+read_mode: PRIMARY_ONLY
+----
+
+Otherwise, if you don't disable async dual reads, {zdm-proxy} instances would continue to send async reads to Origin, which, although harmless, is unnecessary.
+====
+
 == Changing the read routing configuration
 If you're not there already, `ssh` back into the jumphost:
 
@@ -51,7 +63,7 @@ The {zdm-proxy} handles reads to system tables differently, by intercepting them
 
 This means that system reads are *not representative* of how the {zdm-proxy} routes regular user reads: even after you switched the configuration to read from Target as the primary cluster, all system reads will still go to Origin.
 
-Although `DESCRIBE` requests are not system requests, they are also generally resolved in a different way to regular requests, and should not be used as a means to verify the read routing behaviour.
+Although `DESCRIBE` requests are not system requests, they are also generally resolved in a different way to regular requests, and should not be used as a means to verify the read routing behavior.
 
 ====
 
