@@ -42,7 +42,6 @@ For more, see xref:introduction.adoc[].
 ** Report differences in a detailed log file
 ** Reconcile any missing records and fix any data inconsistencies between Origin and Target, if you enable `autocorrect` in a configuration file
 * **{dsbulk-migrator}** is provided to migrate smaller amounts of data from Origin to Target
-// (up to 20 GBs) **[ TODO: verify max guidelines ]
 * Well-defined steps in this migration documentation, organized as a sequence of phases.
 
 == What exactly is {zdm-proxy}?
@@ -59,6 +58,12 @@ Migrating client applications between clusters is a need that arises in many sce
 * Consolidate client applications, currently running on separate clusters, into fewer clusters or even a single one.
 
 Bottom line: You want to migrate your critical database infrastructure without risk or concern that your users' experiences will be affected.
+
+== Which releases of Cassandra or DSE are supported for migrations?
+
+include::partial$supported-releases.adoc[]
+
+include::partial$migration-scenarios.adoc[]
 
 == What challenges does {zdm-shortproduct} solve?
 
@@ -108,4 +113,4 @@ When moving your client applications and data from on-premise Cassandra Query La
 
 Ranging from large enterprises to small teams, IT managers, operators, and developers are realizing that the Total Cost of Ownership (TCO) with cloud solutions is much lower than continuing to run on-prem physical data centers.
 
-A CNDB like Astra DB is a different environment. Running on proven cloud providers like AWS, Google Cloud, and Azure, Astra DB greatly reduces complexity and increases convenience by surfacing a subset of configurable settings, providing a well-designed UI known as Astra Portal, and a set of APIs to interact programmatically with your Astra DB organizations and databases.
+A CNDB like Astra DB is a different environment. Running on proven cloud providers like AWS, Google Cloud, and Azure, Astra DB greatly reduces complexity and increases convenience by surfacing a subset of configurable settings, providing a well-designed UI known as {astra_ui}, and a set of APIs to interact programmatically with your Astra DB organizations and databases.
