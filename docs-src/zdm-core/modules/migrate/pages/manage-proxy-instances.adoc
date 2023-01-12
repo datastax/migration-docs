@@ -139,7 +139,7 @@ Other, rarely changed variables:
 *** Boolean value. Defaults to `true`, but can be set to `false` to completely disable metrics collection. This is not recommended.
 [[zdm_proxy_max_stream_ids]]
 ** `zdm_proxy_max_stream_ids`:
-*** In the CQL protocol every request has a unique id, named stream id. This variable allows to tune the maximum pool size of the available stream ids managed by the {zdm-proxy} per client connection. In the application client, the stream ids are managed internally by the driver, and in most drivers the max number is 2048 (the same default value used in the proxy). If you have a custom driver configuration with a higher value, you should change this property accordingly.
+*** In the CQL protocol every request has a unique id, named stream id. This variable allows you to tune the maximum pool size of the available stream ids managed by the {zdm-proxy} per client connection. In the application client, the stream ids are managed internally by the driver, and in most drivers the max number is 2048 (the same default value used in the proxy). If you have a custom driver configuration with a higher value, you should change this property accordingly.
 *** Defaults to `2048`.
 
 Deprecated variables, which will be removed in a future {zdm-proxy} release:
