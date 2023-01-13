@@ -180,9 +180,18 @@ The pause between the restart of each {zdm-proxy} instance defaults to 10 second
 
 The {zdm-proxy} version is displayed at startup, in a message such as `Starting ZDM proxy version ...`. It can also be retrieved at any time by using the `version` option as in the following command.
 
+Example:
+
 [source,bash]
 ----
-docker run --rm datastax/zdm-proxy:2.0.x -version
+docker run --rm datastax/zdm-proxy:<version> -version
+----
+
+Here's an example for {zdm-proxy} 2.1.x:
+
+[source,bash]
+----
+docker run --rm datastax/zdm-proxy:2.1.x -version
 ----
 
 The playbook for configuration changes can also be used to upgrade the {zdm-proxy} version in a rolling fashion. All containers will be recreated with the image of the specified version. The same behavior and observations as above apply here.
@@ -194,7 +203,14 @@ To perform an upgrade, change the version tag number to the desired version in `
 zdm_proxy_image: datastax/zdm-proxy:x.y.z
 ----
 
-Replace x.y.z with the version you would like to upgrade to.
+Replace x.y.z with the version you would like to upgrade to. 
+
+{zdm-proxy} example:
+
+[source,bash]
+----
+zdm_proxy_image: datastax/zdm-proxy:2.1.0
+----
 
 Then run the same playbook as above, with the following command:
 

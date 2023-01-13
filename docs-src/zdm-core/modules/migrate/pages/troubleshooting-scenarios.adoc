@@ -2,9 +2,9 @@
 
 Refer the following troubleshooting scenarios for information about resolving common migration issues. Each section presents:
 
-* Symptoms;
-* Cause;
-* Workaround.
+* Symptoms
+* Cause
+* Workaround
 
 == Unsupported protocol version error on the client application
 

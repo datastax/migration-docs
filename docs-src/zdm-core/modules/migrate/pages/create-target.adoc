@@ -8,17 +8,17 @@ This section covers in detail the steps to prepare a {company} Astra DB serverle
 
 If you intend to use Astra DB as Target for the migration, you will need to:
 
-* Create an Astra DB serverless cluster;
-* Retrieve its Secure Connect Bundle (SCB) and upload it to the application instances;
-* Create Astra DB access credentials for the cluster;
-* Create the client application schema.
+* Create an Astra DB serverless cluster
+* Retrieve its Secure Connect Bundle (SCB) and upload it to the application instances
+* Create Astra DB access credentials for the cluster
+* Create the client application schema
 
 To use a generic Cassandra or DSE cluster, you will have to:
 
-* Provision the infrastructure for your new cluster;
-* Create the cluster with the desired version of Cassandra or DSE;
-* Configure the cluster according to your requirements;
-* Create the client application schema.
+* Provision the infrastructure for your new cluster
+* Create the cluster with the desired version of Cassandra or DSE
+* Configure the cluster according to your requirements
+* Create the client application schema
 
 == Using an Astra DB database as Target
 
