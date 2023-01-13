@@ -1,6 +1,42 @@
 = {company} {zdm-product} Release Notes
 
-== ZDM 2.0 release
+== ZDM 2.1.0 release
+
+13 January 2023
+
+The ZDM 2.1.0 release adds {zdm-proxy} heartbeat functionality and provides several bug fixes.
+
+The periodic heartbeat feature in 2.1.0 has been implemented to keep alive idle cluster connections. 
+
+{zdm-proxy} now sends heartbeats every 30 seconds by default. You can tune the heartbeat interval with the Ansible configuration variable `heartbeat_insterval_ms`, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you do not use the {zdm-automation}.
+
+DataStax strongly recommends that you use version 2.1.0 (or newer) to benefit from this improvement, especially if you have a read-only workload.
+
+To verify which {zdm-proxy} version you're running, see this xref:troubleshooting-tips.adoc#_how_to_identify_the_zdm_proxy_version[topic, window="_blank"]. 
+
+To find out how to upgrade an existing {zdm-proxy} deployment, see xref:manage-proxy-instances.adoc#_upgrade_the_proxy_version[Upgrade the proxy version, window="_blank"].
+
+=== {zdm-proxy} 2.1.0 changes
+
+For the latest information about {zdm-proxy} new features and other changes, please refer to these GitHub-hosted documents in the open-source {zdm-proxy} repo:
+
+* https://github.com/datastax/zdm-proxy/blob/main/RELEASE_NOTES.md[RELEASE_NOTES^]
+
+* https://github.com/datastax/zdm-proxy/blob/main/CHANGELOG/CHANGELOG-2.1.md[CHANGELOG 2.1^]
+
+=== {zdm-proxy} 2.1.0 documentation updates
+
+The following topics have been updated for the 2.1.0 release:
+
+* xref:feasibility-checklists.adoc#_read_only_applications[Read-only applications, window="_blank"]. See the notes indicating that this issue is solved by the {zdm-proxy} 2.1.0 release.
+
+* xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable, window="_blank"]. See the `heartbeat_interval_ms` and `zdm-proxy_max_stream_ids` information. 
+
+* xref:troubleshooting-scenarios.adoc#_async_read_timeouts_stream_id_map_exhausted[Async read timeouts, window="_blank"]. See the clarification in the *Workaround* section indicating that this issue is solved by the {zdm-proxy} 2.1.0 release.  
+
+* xref:troubleshooting-tips.adoc#_node_level_metrics[Node-level metrics, window="_blank"].  See the "Number of Used Stream Ids" section. 
+
+== ZDM 2.0.0 release
 
 18 October 2022
 
