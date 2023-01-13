@@ -36,9 +36,9 @@ image:zdm-ansible-container-ls3.png[Contents of the Ansible Control Host contain
 
 The {zdm-proxy} configuration is broken down into three files:
 
- * `zdm_proxy_core_config.yml`, containing configuration that is always required;
- * `zdm_proxy_advanced_config.yml`, containing advanced configuration that may be required in some scenarios but can be usually left to its default values;
- * `zdm_proxy_custom_tls_config.yml`, to configure TLS encryption if desired.
+ * `zdm_proxy_core_config.yml`, containing configuration that is always required
+ * `zdm_proxy_advanced_config.yml`, containing advanced configuration that may be required in some scenarios but can be usually left to its default values
+ * `zdm_proxy_custom_tls_config.yml`, to configure TLS encryption if desired
 
 === Core configuration
 The next step is to edit the `zdm_proxy_core_config.yml` file in the Docker container. You'll want to enter your Cassandra/DSE username, password, and other variables.
@@ -179,30 +179,30 @@ ubuntu@ip-172-18-10-111:~$ sudo docker logs zdm-proxy-container
    .
    .
    .
-time="2022-10-01T22:21:42Z" level=info msg="Initialized origin control connection. Cluster Name: OriginCluster, Hosts: map[3025c4ad-7d6a-4398-b56e-87d33509581d:Host{addr: 191.100.20.61,
+time="2023-01-13T22:21:42Z" level=info msg="Initialized origin control connection. Cluster Name: OriginCluster, Hosts: map[3025c4ad-7d6a-4398-b56e-87d33509581d:Host{addr: 191.100.20.61,
 port: 9042, host_id: 3025c4ad7d6a4398b56e87d33509581d} 7a6293f7-5cc6-4b37-9952-88a4b15d59f8:Host{addr: 191.100.20.85, port: 9042, host_id: 7a6293f75cc64b37995288a4b15d59f8} 997856cd-0406-45d1-8127-4598508487ed:Host{addr: 191.100.20.93, port: 9042, host_id: 997856cd040645d181274598508487ed}], Assigned Hosts: [Host{addr: 191.100.20.61, port: 9042, host_id: 3025c4ad7d6a4398b56e87d33509581d}]."
 
-time="2022-10-01T22:21:42Z" level=info msg="Initialized target control connection. Cluster Name: cndb, Hosts: map[69732713-3945-4cfe-a5ee-0a84c7377eaa:Host{addr: 10.0.79.213,
+time="2023-01-13T22:21:42Z" level=info msg="Initialized target control connection. Cluster Name: cndb, Hosts: map[69732713-3945-4cfe-a5ee-0a84c7377eaa:Host{addr: 10.0.79.213,
 port: 9042, host_id: 6973271339454cfea5ee0a84c7377eaa} 6ec35bc3-4ff4-4740-a16c-03496b74f822:Host{addr: 10.0.86.211, port: 9042, host_id: 6ec35bc34ff44740a16c03496b74f822} 93ded666-501a-4f2c-b77c-179c02a89b5e:Host{addr: 10.0.52.85, port: 9042, host_id: 93ded666501a4f2cb77c179c02a89b5e}], Assigned Hosts: [Host{addr: 10.0.52.85, port: 9042, host_id: 93ded666501a4f2cb77c179c02a89b5e}]."
-time="2022-07-27T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
-time="2022-07-27T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
+time="2023-01-13T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
+time="2023-01-13T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
 ----
 
 In the logs, the important information to notice is:
 
 [source,bash]
 ----
-time="2022-07-27T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
-time="2022-07-27T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
+time="2023-01-13T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
+time="2023-01-13T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
 ----
 
-Also, you can check the status of the running Docker image. Example:
+Also, you can check the status of the running Docker image. Here's an example with {zdm-proxy} 2.1.0:
 
 [source,bash]
 ----
 ubuntu@ip-172-18-10-111:~$ sudo docker ps
 CONTAINER ID  IMAGE                     COMMAND  CREATED      STATUS     PORTS   NAMES
-02470bbc1338  datastax/zdm-proxy:2.0.x  "/main"  2 hours ago  Up 2 hours         zdm-proxy-container
+02470bbc1338  datastax/zdm-proxy:2.1.x  "/main"  2 hours ago  Up 2 hours         zdm-proxy-container
 ----
 
 == Setting up the Monitoring stack
@@ -243,8 +243,8 @@ ubuntu@52772568517c:~$
 
 Edit the file `zdm_monitoring_config.yml`, located in `zdm-proxy-automation/ansible/vars`:
 
-* `grafana_admin_user`: leave unchanged (defaults to `admin`);
-* `grafana_admin_password`: set to the password of your choice.
+* `grafana_admin_user`: leave unchanged (defaults to `admin`)
+* `grafana_admin_password`: set to the password of your choice
 
 === Run the monitoring playbook
 
@@ -261,8 +261,8 @@ In a browser, open http://<jumphost_public_ip>:3000.
 
 Login with:
 
-* **username**: admin;
-* **password**: the password you configured.
+* **username**: admin
+* **password**: the password you configured
 
 [TIP]
 ====

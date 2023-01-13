@@ -74,25 +74,32 @@ https://github.com/datastax/zdm-proxy-automation/releases
 
 The downloadable archive name format is `zdm-util-<platform>-<version>`.
 
-Download example:
+Download example with <version> placeholder:
 
 [source,bash]
 ----
-wget https://github.com/datastax/zdm-proxy-automation/releases/download/v2.0.0/zdm-util-linux-amd64-v2.0.0.tgz 
+wget https://github.com/datastax/zdm-proxy-automation/releases/download/<version>/zdm-util-linux-amd64-<version>.tgz 
 ----
 
-Once downloaded, unzip it:
-
-[source,bash]
-----
-tar -xvf zdm-util-linux-amd64-v2.0.0.tgz
-----
-
-Run the {zdm-utility}. Example:
+Here's an example to wget {zdm-proxy} 2.1.0:
 
 [source,bash]
 ----
-./zdm-util-v2.0.0
+wget https://github.com/datastax/zdm-proxy-automation/releases/download/v2.1.0/zdm-util-linux-amd64-v2.1.0.tgz 
+----
+
+Once downloaded, unzip it. Here's an example with {zdm-proxy} 2.1.0:
+
+[source,bash]
+----
+tar -xvf zdm-util-linux-amd64-v2.1.0.tgz
+----
+
+Run the {zdm-utility}. Here's an example with {zdm-proxy} 2.1.0:
+
+[source,bash]
+----
+./zdm-util-v2.1.0
 ----
 
 The utility prompts you for a few configuration values, then creates and initializes the Ansible Control Host container.
@@ -103,9 +110,11 @@ The {zdm-utility} will store the configuration that you provide into a file name
 
 You can also pass a custom configuration file to the {zdm-utility} with the optional command-line parameter `-utilConfigFile`. Example:
 
+Here's an example with {zdm-proxy} 2.1.0:
+
 [source,bash]
 ----
-./zdm-util-v2.0.0 -utilConfigFile your_config_file
+./zdm-util-v2.1.0 -utilConfigFile your_config_file
 ----
 ====
 

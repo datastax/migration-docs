@@ -70,8 +70,8 @@ For each self-managed cluster requiring TLS (Origin and/or Target), execute the 
 ** For one-way TLS, only the server CA.
 ** For Mutual TLS, the server CA, the client cert and the client key.
 * From a shell on the jumphost, copy the files to the relevant TLS directory into the Ansible Control Host container:
-** For Origin: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/origin_tls_files`;
-** For Target: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/target_tls_files`.
+** For Origin: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/origin_tls_files`
+** For Target: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/target_tls_files`
 
 There is a set of TLS configuration variables for Origin and a separate set for Target, so that they can be configured independently as desired.
 

@@ -41,6 +41,15 @@ It is also highly recommended to perform tests and benchmarks when connected dir
 
 === Read-only applications
 
+Read-only applications require special handling only if you are using {zdm-proxy} versions older than 2.1.0.
+
+[TIP]
+====
+If you have an existing {zdm-proxy} deployment, you can check which version you are running as explained xref:troubleshooting-tips.adoc#_how_to_identify_the_zdm_proxy_version[here]. To find out how to upgrade an existing {zdm-proxy} deployment, please see xref:manage-proxy-instances.adoc#_upgrade_the_proxy_version[here].
+====
+
+==== Versions older than 2.1.0
+
 If a client application only sends `SELECT` statements to a database connection then you may find that {zdm-proxy} terminates these read-only connections periodically, which may result in request errors if the driver is not configured to retry these requests in these conditions.
 
 This happens because {company} Astra DB terminates idle connections after some inactivity period (usually around 10 minutes). If Astra DB is your Target and a client connection is only sending read requests to the {zdm-proxy}, then the Astra DB connection that is paired to that client connection will remain idle and will be eventually terminated.
@@ -48,6 +57,10 @@ This happens because {company} Astra DB terminates idle connections after some i
 A potential workaround is to not connect these read-only client applications to {zdm-proxy}, but you need to ensure that these client applications switch reads to Target at any point after all the data has been migrated and all validation and reconciliation has completed.
 
 Another work around is to implement a mechanism in your client application that creates a new `Session` periodically to avoid the {company} Astra DB inactivity timeout. You can also implement some kind of meaningless write request that the application sends periodically to make sure the {company} Astra DB connection doesn't idle.
+
+==== Version 2.1.0 and newer
+
+This issue is solved in version 2.1.0 of the {zdm-proxy}, which introduces periodic heartbeats to keep alive idle cluster connections. We strongly recommend using version 2.1.0 (or newer) to benefit from this improvement, especially if you have a read-only workload.
 
 == Advanced workloads (DataStax Enterprise)
 

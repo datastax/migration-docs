@@ -2,9 +2,9 @@
 
 Refer the following troubleshooting scenarios for information about resolving common migration issues. Each section presents:
 
-* Symptoms;
-* Cause;
-* Workaround.
+* Symptoms
+* Cause
+* Workaround
 
 == Unsupported protocol version error on the client application
 
@@ -368,13 +368,21 @@ If the log files are being spammed with these messages then it is likely that an
 
 === Workaround
 
-Keep in mind that any errors in the async request path (dual reads / read mirroring) will not affect the client application so these log messages might be useful to predict what may happen when the reads are switched over to the TARGET cluster but async read errors/warnings by themselves do not cause any impact to the client.
+Keep in mind that any errors in the async request path (dual reads) will not affect the client application so these log messages might be useful to predict what may happen when the reads are switched over to the TARGET cluster but async read errors/warnings by themselves do not cause any impact to the client.
+
+Starting in version 2.1.0, you can now tune the maximum number of stream ids available per connection, which by default is 2048. You can increase it to match your driver configuration through the xref:manage-proxy-instances.adoc#zdm_proxy_max_stream_ids[zdm_proxy_max_stream_ids] property.
 
 If these errors are being constantly written to the log files (for minutes or even hours) then it is likely that only an application OR {zdm-proxy} restart will fix it. If you find an issue like this please submit an https://github.com/datastax/zdm-proxy/issues[Issue, window="_blank"] in our GitHub repo.
 
 
 
 == Client application closed connection errors every 10 minutes when migrating to Astra DB
+
+[NOTE]
+====
+This issue is fixed in {zdm-proxy} 2.1.0. See the Fix section below.
+====
+
 
 === Symptoms
 
@@ -389,11 +397,12 @@ Every 10 minutes a message is logged in the {zdm-proxy} logs showing a disconnec
 
 Astra DB terminates idle connections after 10 minutes of inactivity. If a client application is only sending reads through a connection then the Target (i.e. Astra in this case) connection will not get any traffic because ZDM forwards all reads to the Origin connection.
 
-=== Workaround
+=== Fix
 
-We have no work around at this time other than asking users to send a non-read request periodically to make sure the Astra connection doesn't idle.
-
-
+This issue has been fixed in {zdm-proxy} 2.1.0. 
+We encourage you to upgrade to that version or greater. 
+By default, {zdm-proxy} now sends heartbeats after 30 seconds of inactivity on a cluster connection, to keep it alive. 
+You can tune the heartbeat interval with the Ansible configuration variable `heartbeat_insterval_ms`, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you do not use the {zdm-automation}.
 
 == Performance degradation with ZDM
 

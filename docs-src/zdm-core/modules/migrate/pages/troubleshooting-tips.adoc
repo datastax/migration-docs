@@ -40,9 +40,9 @@ Assuming the Log Level is not filtering out `INFO` entries, you can look for the
 
 [source,json]
 ----
-{"log":"time=\"2022-10-01T11:50:48Z\" level=info
+{"log":"time=\"2023-01-13T11:50:48Z\" level=info
 msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
-\"\n","stream":"stderr","time":"2022-10-01T11:50:48.522097083Z"}
+\"\n","stream":"stderr","time":"2023-01-13T11:50:48.522097083Z"}
 ----
 
 === {zdm-proxy} configuration
@@ -51,10 +51,10 @@ The first few lines of the {zdm-proxy} log file contains all the configuration v
 
 [source,json]
 ----
-{"log":"time=\"2022-10-01T11:50:48Z\" level=info
+{"log":"time=\"2023-01-13T11:50:48Z\" level=info
 msg=\"Parsed configuration: {\\\"ProxyIndex\\\":1,\\\"ProxyAddresses\\\":"...",
 [remaining of json string removed for simplicity]
-","stream":"stderr","time":"2022-10-01T11:50:48.339225051Z"}
+","stream":"stderr","time":"2023-01-13T11:50:48.339225051Z"}
 ----
 
 Seeing the configuration settings is useful while troubleshooting issues. However, remember to check the log level variable to ensure you're viewing the intended types of messages. Setting the log level setting to `DEBUG` might cause a slight performance degradation.
@@ -77,10 +77,10 @@ Here's an example of a log message that looks like an error, but it's actually a
 
 [source,json]
 ----
-{"log":"time=\"2022-10-01T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR]
+{"log":"time=\"2023-01-13T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR]
 Protocol v5 detected while decoding a frame. Returning a protocol message
 to the client to force a downgrade: PROTOCOL (code=Code Protocol [0x0000000A],
-msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":"2022-10-01T12:02:12.379287735Z"}
+msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":"2023-01-13T12:02:12.379287735Z"}
 ----
 
 There are cases where protocol errors are fatal so they will kill an active connection that was being used to serve requests. However, if you find a log message similar to the example above with log level `debug`, then it's likely not an issue. Instead, it's more likely an expected part of the handshake process during the connection initialization; that is, the normal protocol version negotiation.
@@ -92,8 +92,8 @@ In the {zdm-proxy} logs, the first message contains the version string (just bef
 
 [source,console]
 ----
-time="2022-10-11T13:37:28+01:00" level=info msg="Starting ZDM proxy version 2.0.0"
-time="2022-10-11T13:37:28+01:00" level=info msg="Parsed configuration: {removed for simplicity}"
+time="2023-01-13T13:37:28+01:00" level=info msg="Starting ZDM proxy version 2.1.0"
+time="2023-01-13T13:37:28+01:00" level=info msg="Parsed configuration: {removed for simplicity}"
 ----
 
 You can also provide a `-version` command line parameter to the {zdm-proxy} and it will only print the version. Example:
@@ -101,7 +101,7 @@ You can also provide a `-version` command line parameter to the {zdm-proxy} and 
 [source,bash]
 ----
 docker run --rm datastax/zdm-proxy:2.x -version
-ZDM proxy version 2.0.0
+ZDM proxy version 2.1.0
 ----
 
 [TIP]
@@ -169,6 +169,9 @@ To see error metrics by error type, see the node-level error metrics on the next
 
 * Number of connections per Origin node and per Target node.
 
+* Number of Used Stream Ids:
+** Tracks the total number of used xref:manage-proxy-instances.adoc#zdm_proxy_max_stream_ids[stream ids] ("request ids") per connection type (Origin, Target and Async).
+
 * Number of errors per error type per Origin node and per Target node. Possible values for the `error` type label:
 ** `error=client_timeout`,
 ** `error=read_failure`,
@@ -217,7 +220,7 @@ The ZDM monitoring stack also includes a system-level dashboard collected throug
 
 If you encounter a problem during your migration, please contact us. In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
 
-* {zdm-proxy} version.
+* {zdm-proxy} version (see xref:_how_to_identify_the_zdm_proxy_version[here]).
 * {zdm-proxy} logs: ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change.
 * Version of database software on the Origin and Target clusters (relevant for DSE and Apache Cassandra deployments only).
 * If Astra DB is being used, please let us know in the issue description.
