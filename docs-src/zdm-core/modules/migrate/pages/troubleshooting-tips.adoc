@@ -220,7 +220,7 @@ The ZDM monitoring stack also includes a system-level dashboard collected throug
 
 If you encounter a problem during your migration, please contact us. In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
 
-* {zdm-proxy} version.
+* {zdm-proxy} version (see xref:_how_to_identify_the_zdm_proxy_version[here]).
 * {zdm-proxy} logs: ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change.
 * Version of database software on the Origin and Target clusters (relevant for DSE and Apache Cassandra deployments only).
 * If Astra DB is being used, please let us know in the issue description.

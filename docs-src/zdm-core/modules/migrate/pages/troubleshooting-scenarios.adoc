@@ -399,8 +399,7 @@ Astra DB terminates idle connections after 10 minutes of inactivity. If a client
 
 === Fix
 
-This issue has been fixed in {zdm-proxy} 2.1.0. We encourage you to upgrade to that version or greater. The proxy will now send heartbeats, every 30 seconds by default, through the idle connection to keep it alive. The heartbeat interval can be tuned with the `ZDM_HEARTBEAT_INTERVAL_MS` property.
-
+This issue has been fixed in {zdm-proxy} 2.1.0. We encourage you to upgrade to that version or greater. The proxy will now send heartbeats, every 30 seconds by default, through the idle connection to keep it alive. The heartbeat interval can be tuned with the Ansible configuration variable `heartbeat_insterval_ms`, or by directly setting `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you do not use the {zdm-automation}.
 
 
 == Performance degradation with ZDM
