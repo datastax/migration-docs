@@ -3,7 +3,8 @@
 Refer to the tips on this page for information that can help you troubleshoot issues with your migration.
 
 == How to retrieve the {zdm-proxy} log files
-
+[%collapsible]
+=====
 Depending on how you deployed {zdm-proxy}, there may be different ways to access
 the logs.
 If you used the {zdm-automation}, see xref:manage-proxy-instances.adoc#_view_the_logs[View the logs] for a quick way
@@ -23,9 +24,11 @@ docker logs my-container > log.txt
 ====
 Keep in mind that docker logs are deleted if the container is recreated.
 ====
+=====
 
 == What to look for in the logs
-
+[%collapsible]
+=====
 Make sure that the log level of the {zdm-proxy} is set to the appropriate value:
 
 * If you deployed the {zdm-proxy} through the {zdm-automation}, the log level is determined by the variable `log_level` in `vars/zdm_proxy_advanced_config.yml`. This value can be changed in a rolling fashion by editing this variable and running the playbook `update_zdm_proxy.yml`. For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
@@ -84,9 +87,11 @@ msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":
 ----
 
 There are cases where protocol errors are fatal so they will kill an active connection that was being used to serve requests. However, if you find a log message similar to the example above with log level `debug`, then it's likely not an issue. Instead, it's more likely an expected part of the handshake process during the connection initialization; that is, the normal protocol version negotiation.
+=====
 
 == How to identify the {zdm-proxy} version
-
+[%collapsible]
+=====
 In the {zdm-proxy} logs, the first message contains the version string (just before the message that shows the configuration):
 
 
@@ -117,9 +122,11 @@ The {zdm-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus 
 The {zdm-automation} can deploy Prometheus and Grafana, configuring them automatically, as explained xref:deploy-proxy-monitoring.adoc#_setting_up_the_monitoring_stack[here]. The Grafana dashboards are ready to go with metrics that are being scraped from the {zdm-proxy} instances.
 
 If you already have a Grafana deployment then you can import the dashboards from the two ZDM dashboard files https://github.com/datastax/zdm-proxy-automation/tree/main/grafana-dashboards[on this location^].
+=====
 
 === Grafana dashboard for {zdm-proxy} metrics
-
+[%collapsible]
+=====
 There are three groups of metrics in this dashboard:
 
 * Proxy level metrics.
@@ -127,9 +134,11 @@ There are three groups of metrics in this dashboard:
 * Asynchronous read requests metrics.
 
 image:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of ZDM metrics for the proxy.]
+=====
 
 ==== Proxy-level metrics
-
+[%collapsible]
+=====
 * Latency:
 ** Read Latency: total latency measured by the {zdm-proxy} (including post-processing like response aggregation) for read requests. This metric has two labels (`reads_origin` and `reads_target`): the label that has data will depend on which cluster is receiving the reads, i.e. which cluster is currently considered the xref:glossary.adoc#_primary_cluster[primary cluster]. This is configured by the {zdm-automation} through the variable `primary_cluster`, or directly through the environment variable `ZDM_PRIMARY_CLUSTER` of the {zdm-proxy}.
 ** Write Latency: total latency measured by the {zdm-proxy} (including post-processing like response aggregation) for write requests.
@@ -158,9 +167,11 @@ image:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories 
 ** Write Failure Counters: same labels as write failure rate.
 
 To see error metrics by error type, see the node-level error metrics on the next section.
+=====
 
 ==== Node-level metrics
-
+[%collapsible]
+=====
 * Latency: metrics on this bucket are not split by request type like the proxy level latency metrics so writes and reads are mixed together:
 ** Origin: latency measured by the {zdm-proxy} up to the point it received a response from the Origin connection.
 ** Target: latency measured by the {zdm-proxy} up to the point it received a response from the Target connection.
@@ -192,9 +203,11 @@ These metrics track:
 * Throughput.
 * Number of dedicated connections per node for async reads: whether it's Origin or Target connections depends on the {zdm-proxy} configuration. That is, if the primary cluster is Origin, then the asynchronous reads are sent to Target.
 * Number of errors per error type per node.
+=====
 
 ==== Insights via the {zdm-proxy} metrics
-
+[%collapsible]
+=====
 Some examples of problems manifesting on these metrics:
 
 * Number of client connections close to 1000 per {zdm-proxy} instance: by default, {zdm-proxy} starts rejecting client connections after having accepted 1000 of them.
@@ -215,9 +228,11 @@ Some examples of problem areas on these Go runtime metrics:
 * Always increasing number of goroutines.
 
 The ZDM monitoring stack also includes a system-level dashboard collected through the Prometheus Node Exporter. This dashboard contains hardware and OS-level metrics for the host on which the proxy runs. This can be useful to check the available resources and identify low-level bottlenecks or issues.
+=====
 
 == Reporting an issue
-
+[%collapsible]
+=====
 If you encounter a problem during your migration, please contact us. In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
 
 * {zdm-proxy} version (see xref:_how_to_identify_the_zdm_proxy_version[here]).
@@ -227,9 +242,11 @@ If you encounter a problem during your migration, please contact us. In the {zdm
 * Screenshots of the {zdm-proxy} metrics dashboards from Grafana or whatever visualization tool you use. If you can provide a way for us to access those metrics directly that would be even better.
 * Application/Driver logs.
 * Driver and version that the client application is using.
+=====
 
 === Reporting a performance issue
-
+[%collapsible]
+=====
 If the issue is related to performance, troubleshooting can be more complicated and dynamic. Because of this we request additional information to be provided which usually comes down to the answers to a few questions (in addition to the information from the prior section):
 
 * Which statement types are being used: simple, prepared, batch?
@@ -237,3 +254,4 @@ If the issue is related to performance, troubleshooting can be more complicated 
 * How many parameters does each statement have?
 * Is CQL function replacement enabled? You can see if this feature is enabled by looking at the value of the Ansible advanced configuration variable `replace_cql_functions` if using the automation, or the environment variable `ZDM_REPLACE_CQL_FUNCTIONS` otherwise. CQL function replacement is disabled by default.
 * If permissible within your security rules, please provide us access to the {zdm-proxy} metrics dashboard. Screenshots are fine but for performance issues it is more helpful to have access to the actual dashboard so the team can use all the data from these metrics in the troubleshooting process.
+=====
