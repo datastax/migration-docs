@@ -45,7 +45,7 @@ Before your migration begins, you'll need to satisfy prerequisites, prepare your
 
 image:zdm-migration-phases6a.png[Migration phases from start to finish]
 
-* **Phase 1:** Connect your client applications to the {zdm-proxy}. This activates the dual-write logic: writes will be "bifurcated" (sent both to Origin and Target), while reads will be executed on Origin only.
+* **Phase 1:** Deploy the {zdm-proxy} and connect your client applications. This activates the dual-write logic: writes will be "bifurcated" (sent both to Origin and Target), while reads will be executed on Origin only.
 
 * **Phase 2:** Migrate existing data using {cstar-data-migrator} and/or {dsbulk-migrator}. Validate that the migrated data is correct, while continuing to perform dual writes.
 
