@@ -5,7 +5,7 @@
 *** xref:deployment-infrastructure.adoc[Deployment and infrastructure considerations]
 *** xref:create-target.adoc[Create target environment for migration]
 *** xref:rollback.adoc[Understand rollback options]
-** xref:phase1.adoc[Phase 1: Connect clients to {zdm-proxy}]
+** xref:phase1.adoc[Phase 1: Deploy {zdm-proxy} and connect client applications]
 *** xref:setup-ansible-playbooks.adoc[Set up the {zdm-automation} with {zdm-utility}]
 *** xref:deploy-proxy-monitoring.adoc[Deploy the {zdm-proxy} and monitoring]
 **** xref:tls.adoc[Configure Transport Layer Security]
