@@ -1,4 +1,4 @@
-= Phase 1: Connect clients to {zdm-proxy}
+= Phase 1: Deploy {zdm-proxy} and connect client applications
 
 This section presents the following:
 
