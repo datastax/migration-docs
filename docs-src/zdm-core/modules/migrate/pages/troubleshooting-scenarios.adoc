@@ -6,6 +6,23 @@ Refer the following troubleshooting scenarios for information about resolving co
 * Cause
 * Workaround
 
+== Configuration changes are not being applied by the automation
+
+=== Symptoms
+
+You changed the values of some configuration variables in the automation and then rolled them out using the `rolling_update_zdm_proxy.yml` playbook, but these changes are not taking effect on your {zdm-proxy} instances.
+
+=== Cause
+
+The {zdm-proxy} configuration comprises a number of variables, but only a subset of these can be changed on an existing deployment in a rolling fashion. The variables that can be changed with a rolling update are listed xref:manage-proxy-instances.adoc#change-mutable-config-variable[here].
+
+All other configuration variables excluded from the list above are considered immutable and can only be changed by a redeployment. This is by design: immutable configuration variables should not be changed after finalizing the deployment prior to starting the migration, so allowing them to be changed through a rolling update would risk accidentally propagating some misconfiguration that could compromise the deployment's integrity.
+
+=== Workaround
+
+To change the value of configuration variables that are considered immutable, simply run the `deploy_zdm_proxy.yml` playbook again. This playbook can be run as many times as necessary and will just recreate the entire {zdm-proxy} deployment from scratch with the provided configuration. Please note that this does not happen in a rolling fashion: the existing {zdm-proxy} instances will be torn down all at the same time prior to being recreated, resulting in a brief window in which the whole {zdm-proxy} deployment will become unavailable.
+
+
 == Unsupported protocol version error on the client application
 
 === Symptoms

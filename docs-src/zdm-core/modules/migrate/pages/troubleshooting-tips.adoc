@@ -28,7 +28,7 @@ Keep in mind that docker logs are deleted if the container is recreated.
 
 Make sure that the log level of the {zdm-proxy} is set to the appropriate value:
 
-* If you deployed the {zdm-proxy} through the {zdm-automation}, the log level is determined by the variable `log_level` in `vars/zdm_proxy_advanced_config.yml`. This value can be changed in a rolling fashion by editing this variable and running the playbook `update_zdm_proxy.yml`. For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
+* If you deployed the {zdm-proxy} through the {zdm-automation}, the log level is determined by the variable `log_level` in `vars/zdm_proxy_core_config.yml`. This value can be changed in a rolling fashion by editing this variable and running the playbook `rolling_update_zdm_proxy.yml`. For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
 
 * If you did not use the {zdm-automation} to deploy the {zdm-proxy}, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
 
