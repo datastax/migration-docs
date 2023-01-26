@@ -39,7 +39,7 @@ First, a couple of key terms used throughout the {zdm-product} documentation and
 
 For additional terms, see the xref:glossary.adoc[glossary].
 
-Your migration project can occur through a sequence of phases, with zero downtime. 
+Your migration project occurs through a sequence of phases, with zero downtime. 
 
 Before your migration begins, you'll need to satisfy prerequisites, prepare your environment, and set up the recommended infrastructure. Then, start in Phase 1 and progress through each phase in sequence:  
 
