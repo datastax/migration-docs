@@ -6,9 +6,9 @@ At {company}, we've developed a set of thoroughly-tested self-service tools, aut
 
 We call this product suite {company} {zdm-product} ({zdm-shortproduct}). 
 
-{zdm-shortproduct} provides a simple and reliable way for you to migrate applications from any CQL-based cluster (https://cassandra.apache.org/_/index.html[Apache Cassandra&reg;^], https://www.datastax.com/products/datastax-enterprise[DataStax Enterprise (DSE)^], https://www.datastax.com/products/datastax-astra[Astra DB^], or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
+{zdm-shortproduct} provides a simple and reliable way for you to migrate applications from any CQL-based cluster (https://cassandra.apache.org/_/index.html[Apache Cassandra&reg;^], https://www.datastax.com/products/datastax-enterprise[DataStax Enterprise (DSE)^], https://www.datastax.com/products/datastax-astra[{astra_db}^], or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
 
-* You can move your application to Astra DB, DSE, or Cassandra with no downtime and with minimal configuration changes. For more, see <<migration-workflow, migration workflow>>.
+* You can move your application to {astra_db}, DSE, or Cassandra with no downtime and with minimal configuration changes.  
 * Your clusters will be kept in sync at all times by a dual-write logic configuration.
 * You can xref:rollback.adoc[rollback] at any point, for complete peace of mind.
 
@@ -29,17 +29,33 @@ include::partial$supported-releases.adoc[]
 
 include::partial$migration-scenarios.adoc[]
 
+== A fun way to learn: {zdm-product} Interactive Lab
+
+We've built a complementary learning resource that is a companion to this comprehensive ZDM documentation. It's the {zdm-product} Interactive Lab, available for you here:
+
+link:https://www.datastax.com/dev/zdm[https://www.datastax.com/dev/zdm, window="_blank"]
+
+* All you need is a browser and a GitHub account. 
+* There's nothing to install for the lab, which opens in a pre-configured GitPod environment. 
+* You'll learn about a full migration without leaving your browser!
+
+We encourage you to explore this free hands-on interactive lab from {company} Academy. It's an excellent, detailed view of the migration process. The lab describes and demonstrates all the steps and automation performed to prepare for, and complete, a migration from any Cassandra/DSE/{astra_db} database to another Cassandra/DSE/{astra_db} database across clusters. 
+
+This interactive resource spans the pre-migration prerequisites and each of the five key migration phases. 
+
+For an introduction to the terms and illustrated phases, see the next section.
+
 == Migration phases
 
 First, a couple of key terms used throughout the {zdm-product} documentation and software components:
 
-* **Origin:** This cluster is your existing Cassandra-based environment, whether it's open-source Apache Cassandra, DSE, or Astra DB Classic.
+* **Origin:** This cluster is your existing Cassandra-based environment, whether it's open-source Apache Cassandra, DSE, or {astra_db} Classic.
 
 * **Target:** This cluster is the new environment to which you want to migrate client applications and data with zero downtime.
 
 For additional terms, see the xref:glossary.adoc[glossary].
 
-Your migration project can occur through a sequence of phases, with zero downtime, as illustrated in this high-level view.
+Your migration project can occur through a sequence of phases, with zero downtime, as illustrated above.
 
 Before your migration begins, you'll need to satisfy prerequisites, prepare your environment, and set up the recommended infrastructure. Then, start in Phase 1 and progress through each phase in sequence:  
 
@@ -81,7 +97,7 @@ The {zdm-proxy} itself doesn't have any capability to migrate data or knowledge 
 
 === Role of {zdm-proxy}
 
-We created {zdm-proxy} to function between the application and both databases (Origin and Target). The databases can be any CQL-compatible data store (e.g. Apache Cassandra, DataStax Enterprise and Astra DB). The proxy always sends every write operation (Insert, Update, Delete) synchronously to both clusters at the desired Consistency Level:
+We created {zdm-proxy} to function between the application and both databases (Origin and Target). The databases can be any CQL-compatible data store (e.g. Apache Cassandra, DataStax Enterprise and {astra_db}). The proxy always sends every write operation (Insert, Update, Delete) synchronously to both clusters at the desired Consistency Level:
 
 * If the write is successful in both clusters, it returns a successful acknowledgement to the client application
 * If the write fails on either cluster, the failure is passed back to the client application so that it can retry it as appropriate, based on its own retry policy.
@@ -142,7 +158,7 @@ As part of the overall migration process, you can use {cstar-data-migrator} and/
 
 Use {cstar-data-migrator} to:
 
-* Migrate your data from any CQL-supported Origin to any CQL-supported Target. Examples of databases that support CQL are Apache Cassandra, DataStax Enterprise and Astra DB.
+* Migrate your data from any CQL-supported Origin to any CQL-supported Target. Examples of databases that support CQL are Apache Cassandra, DataStax Enterprise and {astra_db}.
 * Validate migration accuracy and performance using examples that provide a smaller, randomized data set
 * Preserve internal `writetime` timestamps and Time To Live (TTL) values
 * Take advantage of advanced data types (Sets, Lists, Maps, UDTs)
