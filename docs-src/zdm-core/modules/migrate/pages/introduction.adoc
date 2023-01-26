@@ -41,9 +41,9 @@ link:https://www.datastax.com/dev/zdm[https://www.datastax.com/dev/zdm, window="
 
 We encourage you to explore this free hands-on interactive lab from {company} Academy. It's an excellent, detailed view of the migration process. The lab describes and demonstrates all the steps and automation performed to prepare for, and complete, a migration from any Cassandra/DSE/{astra_db} database to another Cassandra/DSE/{astra_db} database across clusters. 
 
-This interactive resource spans the pre-migration prerequisites and each of the five key migration phases. 
+The interactive lab spans the pre-migration prerequisites and each of the five key migration phases. 
 
-For an introduction to the terms and illustrated phases, see the next section.
+For a quick introduction to the terms and illustrated phases, see the section below.
 
 == Migration phases
 
@@ -55,7 +55,7 @@ First, a couple of key terms used throughout the {zdm-product} documentation and
 
 For additional terms, see the xref:glossary.adoc[glossary].
 
-Your migration project can occur through a sequence of phases, with zero downtime, as illustrated above.
+Your migration project can occur through a sequence of phases, with zero downtime. 
 
 Before your migration begins, you'll need to satisfy prerequisites, prepare your environment, and set up the recommended infrastructure. Then, start in Phase 1 and progress through each phase in sequence:  
 
