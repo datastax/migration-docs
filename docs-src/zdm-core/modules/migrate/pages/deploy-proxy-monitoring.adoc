@@ -199,9 +199,9 @@ If the {zdm-proxy} instances fail to start up due to mistakes in the configurati
 
 [NOTE]
 ====
-With the exception of the Origin and Target credentials, which can be changed for existing deployments in a rolling fashion, all cluster-related configuration variables are considered immutable and can only be changed by recreating the deployment.
+With the exception of the Origin and Target credentials and the `primary_cluster` variable, which can all be changed for existing deployments in a rolling fashion, all cluster connection configuration variables are considered immutable and can only be changed by recreating the deployment.
 
-If you wish to change any of the cluster configuration variables (other than credentials) on an existing deployment, you will need to re-run the `deploy_zdm_proxy.yml` playbook. This playbook can be run as many times as necessary.
+If you wish to change any of the cluster connection configuration variables (other than credentials and `primary_cluster`) on an existing deployment, you will need to re-run the `deploy_zdm_proxy.yml` playbook. This playbook can be run as many times as necessary.
 
 Please note that running the `deploy_zdm_proxy.yml` playbook will result in a brief window of unavailability of the whole {zdm-proxy} deployment while all the {zdm-proxy} instances are torn down and recreated.
 ====
