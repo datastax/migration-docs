@@ -48,9 +48,9 @@ In the container shell, `cd` to `~/zdm-proxy-automation/ansible/vars` and edit `
 
 [NOTE]
 ====
-Until version 2.1.0 of the {zdm-automation}, the `zdm_proxy_cluster_config.yml` file did not exist and all the configuration variables for Origin and Target were at the top of the `zdm_proxy_core_config.yml` file.
+Starting in version 2.2.0 of the {zdm-automation}, we added the `zdm_proxy_cluster_config.yml` file to contain all the configuration variables for Origin and Target. Prior to version 2.2.0, the variables were in the `zdm_proxy_core_config.yml` file.
 
-If you are using an automation version up to 2.1.0 (included), please use `zdm_proxy_core_config.yml` to configure access to your clusters.
+If you are using an automation version up to and including 2.1.0, please use `zdm_proxy_core_config.yml` to configure access to your clusters.
 ====
 
 There are two identical sets of variables to configure the {zdm-proxy} to connect to the cluster. One set is for Origin and its variables are prefixed with `origin`, while the set of variables for Target uses the `target` prefix. In the explanation below, `*` indicates any of these two prefixes as appropriate.
