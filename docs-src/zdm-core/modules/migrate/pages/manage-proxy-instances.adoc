@@ -113,8 +113,8 @@ Commonly changed variables, located in `vars/zdm_proxy_core_config.yml`:
 
 Other, rarely changed variables:
 
-* Origin username/password, in `vars/zdm_proxy_core_config.yml`)
-* Target username/password, in `vars/zdm_proxy_core_config.yml`)
+* Origin username/password, in `vars/zdm_proxy_cluster_config.yml`)
+* Target username/password, in `vars/zdm_proxy_cluster_config.yml`)
 * Advanced configuration variables, located in `vars/zdm_proxy_advanced_config.yml`:
 ** `zdm_proxy_max_clients_connections`:
 *** Maximum number of client connections that the {zdm-proxy} should accept. Each client connection results in additional cluster connections and causes the allocation of several in-memory structures, so this variable can be tweaked to cap the total number on each instance. A high number of client connections per proxy instance may cause some performance degradation, especially at high throughput.
@@ -151,7 +151,7 @@ Deprecated variables, which will be removed in a future {zdm-proxy} release:
 ** Whether the credentials provided by the client application are for Origin.
 ** Boolean value. Defaults to `false` (the client application is expected to pass Target credentials), can be set to `true` if the client passes credentials for Origin instead.
 
-To change any of these variables, edit the desired values in `vars/zdm_proxy_core_config.yml` and/or `vars/zdm_proxy_advanced_config.yml`.
+To change any of these variables, edit the desired values in `vars/zdm_proxy_core_config.yml`, `vars/zdm_proxy_cluster_config.yml` (credentials only) and/or `vars/zdm_proxy_advanced_config.yml` (mutable variables only, as listed above).
 
 To apply the configuration changes to the {zdm-proxy} instances in a rolling fashion, run the following command:
 
@@ -175,6 +175,15 @@ Note that this will remove the previous container and its logs. Make sure you co
 .. If successful, it waits for 10 seconds and then moves on to the next container.
 
 The pause between the restart of each {zdm-proxy} instance defaults to 10 seconds. If you wish to change this value, you can edit `vars/zdm_playbook_internal_config.yml` (located in `zdm-proxy-automation/ansible/vars`) and set it to the desired number of seconds.
+
+[NOTE]
+====
+All configuration variables that are not listed in this section are considered immutable and can only be changed by recreating the deployment.
+
+If you wish to change any of the immutable configuration variables on an existing deployment, you will need to re-run the deployment playbook (`deploy_zdm_proxy.yml`, as documented in xref:deploy-proxy-monitoring.adoc[this page]). This playbook can be run as many times as necessary.
+
+Please note that running the `deploy_zdm_proxy.yml` playbook will result in a brief window of unavailability of the whole {zdm-proxy} deployment while all the {zdm-proxy} instances are torn down and recreated.
+====
 
 == Upgrade the proxy version
 
