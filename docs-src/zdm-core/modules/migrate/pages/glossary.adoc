@@ -53,6 +53,10 @@ A ZIP file generated in https://astra.datastax.com[Astra Portal^] that contains 
 
 The new cluster to which you want to migrate client applications and data with zero downtime.
 
+[[zdm-automation]]
+== {zdm-automation}
+An Ansible-based tool that allows you to deploy and manage the {zdm-proxy} instances and associated monitoring stack. To simplify its setup, the suite includes the {zdm-utility}. This interactive utility creates a Docker container acting as the Ansible Control Host. The Ansible playbooks constitute the {zdm-automation}.
+
 [[zdm-proxy]]
 == ZDM Proxy
 
