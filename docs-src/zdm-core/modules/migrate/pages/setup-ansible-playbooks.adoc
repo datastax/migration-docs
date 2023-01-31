@@ -158,7 +158,7 @@ To finish entering private IP addresses, simply press ENTER at the prompt.
 +
 [NOTE]
 ====
-We highly recommended that you configure a monitoring instance if you don't intend to use a monitoring stack that you already have. For migrations that may run for multiple days, it is essential that you use metrics to understand the performance and health of the {zdm-proxy} instances.
+We highly recommend that you configure a monitoring instance, unless you intend to use a monitoring stack that you already have. For migrations that may run for multiple days, it is essential that you use metrics to understand the performance and health of the {zdm-proxy} instances.
 
 You cannot rely solely on information in the logs. They report connection or protocol errors, but do not give you enough information on how the {zdm-proxy} is working and how each cluster is responding. Metrics, however, provide especially helpful data and the graphs show you how they vary over time. The monitoring stack ships with preconfigured Grafana dashboards that are automatically set up as part of the monitoring deployment.
 

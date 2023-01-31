@@ -34,16 +34,24 @@ image:zdm-ansible-container-ls3.png[Contents of the Ansible Control Host contain
 
 == Configure the {zdm-proxy}
 
-The {zdm-proxy} configuration is broken down into three files:
+The {zdm-proxy} configuration is broken down into four files:
 
- * `zdm_proxy_core_config.yml`, containing configuration that is always required
- * `zdm_proxy_advanced_config.yml`, containing advanced configuration that may be required in some scenarios but can be usually left to its default values
- * `zdm_proxy_custom_tls_config.yml`, to configure TLS encryption if desired
+* `zdm_proxy_cluster_config.yml`, containing all the configuration that allows the proxy to connect to Origin and Target. This is always required.
+* `zdm_proxy_core_config.yml`, containing important configuration that is commonly used and changed during the migration.
+* `zdm_proxy_advanced_config.yml`, containing advanced configuration that may be required in some scenarios but can be usually left to its default values.
+* `zdm_proxy_custom_tls_config.yml`, to configure TLS encryption if desired.
 
-=== Core configuration
-The next step is to edit the `zdm_proxy_core_config.yml` file in the Docker container. You'll want to enter your Cassandra/DSE username, password, and other variables.
+=== Cluster and core configuration
+The next step is to edit the `zdm_proxy_cluster_config.yml` file in the Docker container. You'll want to enter your Cassandra/DSE username, password, and other variables.
 
-In the container shell, `cd` to `~/zdm-proxy-automation/ansible/vars` and edit `zdm_proxy_core_config.yml`. The `vi` and `nano` text editors are available in the container.
+In the container shell, `cd` to `~/zdm-proxy-automation/ansible/vars` and edit `zdm_proxy_cluster_config.yml`. The `vi` and `nano` text editors are available in the container.
+
+[NOTE]
+====
+Starting in version 2.2.0 of the {zdm-automation}, we added the `zdm_proxy_cluster_config.yml` file to contain all the configuration variables for Origin and Target. Prior to version 2.2.0, the variables were in the `zdm_proxy_core_config.yml` file.
+
+If you are using an automation version up to and including 2.1.0, please use `zdm_proxy_core_config.yml` to configure access to your clusters.
+====
 
 There are two identical sets of variables to configure the {zdm-proxy} to connect to the cluster. One set is for Origin and its variables are prefixed with `origin`, while the set of variables for Target uses the `target` prefix. In the explanation below, `*` indicates any of these two prefixes as appropriate.
 
@@ -64,15 +72,9 @@ These two sections are very important and are always required. Populate the appr
 ... `*_astra_db_id`: the cluster's https://docs.datastax.com/en/astra-serverless/docs/astra-faq.html#_where_do_i_find_the_database_id_and_organization_id[database id^].
 ... `*_astra_token`: the token field from a valid set of credentials for a `R/W User` Astra role (this is the long string that starts with `AstraCS:`).
 
-Global variables that do not need changing at this time:
-
-. `primary_cluster`: which cluster is going to be the primary source of truth. This should be left set to its default value of `ORIGIN` at the start of the migration, and will be changed to `TARGET` after migrating all existing data.
-. `read_mode`: leave to its default value of `PRIMARY_ONLY`. See xref:enable-async-dual-reads.adoc[] for more information on this variable.
-. `log_level`: leave to its default of `INFO`.
-
 Save the file and exit the editor.
 
-Example of a completed `zdm_proxy_core_config.yml` file for a migration from a self-managed Origin to an Astra DB Target:
+Example of a completed `zdm_proxy_cluster_config.yml` file for a migration from a self-managed Origin to an Astra DB Target:
 
 [source,yml]
 ----
@@ -100,27 +102,15 @@ target_password: "Yc+U_2.gu,9woy0w...9JpAZGt+CCn5"
 target_astra_db_id: "d425vx9e-f2...c871k"
 target_astra_token: "AstraCS:dUTGnRs...jeiKoIqyw:01...29dfb7"
 
-####################################
-#### READ ROUTING CONFIGURATION ####
-####################################
-
-## Cluster currently considered as "primary" by the ZDM proxy. Valid values are ORIGIN (default) or TARGET.
-## This is the current "source of truth" cluster.
-## Reads are always sent synchronously to the primary cluster, and their results (or any errors) are returned to the client application.
-primary_cluster: ORIGIN
-
-## Read handling behaviour.
-## Valid values: PRIMARY_ONLY (read synchronously from primary only) and DUAL_ASYNC_ON_SECONDARY (read synchronously from primary, and asynchronously from secondary)
-## Defaults to PRIMARY_ONLY. Set to DUAL_ASYNC_ON_SECONDARY for read mirroring.
-read_mode: PRIMARY_ONLY
-
-#################
-#### LOGGING ####
-#################
-
-## Proxy log level. Defaults to INFO. Setting it to DEBUG may have a small performance impact.
-log_level: INFO
 ----
+
+The other file you need to be aware of is `zdm_proxy_core_config.yml`. This file contains some global variables that will be used in subsequent steps during the migration. It is good to familiarize yourself with this file, although these configuration variables do not need changing at this time:
+
+. `primary_cluster`: which cluster is going to be the primary source of truth. This should be left set to its default value of `ORIGIN` at the start of the migration, and will be changed to `TARGET` after migrating all existing data.
+. `read_mode`: leave to its default value of `PRIMARY_ONLY`. See xref:enable-async-dual-reads.adoc[] for more information on this variable.
+. `log_level`: leave to its default of `INFO`.
+
+Leave all these variables to their defaults for now.
 
 === Enable TLS encryption (optional)
 
@@ -204,6 +194,18 @@ ubuntu@ip-172-18-10-111:~$ sudo docker ps
 CONTAINER ID  IMAGE                     COMMAND  CREATED      STATUS     PORTS   NAMES
 02470bbc1338  datastax/zdm-proxy:2.1.x  "/main"  2 hours ago  Up 2 hours         zdm-proxy-container
 ----
+
+If the {zdm-proxy} instances fail to start up due to mistakes in the configuration, you can simply rectify the incorrect configuration values and run the deployment playbook again.
+
+[NOTE]
+====
+With the exception of the Origin and Target credentials and the `primary_cluster` variable, which can all be changed for existing deployments in a rolling fashion, all cluster connection configuration variables are considered immutable and can only be changed by recreating the deployment.
+
+If you wish to change any of the cluster connection configuration variables (other than credentials and `primary_cluster`) on an existing deployment, you will need to re-run the `deploy_zdm_proxy.yml` playbook. This playbook can be run as many times as necessary.
+
+Please note that running the `deploy_zdm_proxy.yml` playbook will result in a brief window of unavailability of the whole {zdm-proxy} deployment while all the {zdm-proxy} instances are torn down and recreated.
+====
+
 
 == Setting up the Monitoring stack
 
