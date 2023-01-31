@@ -11,9 +11,9 @@ Starting in version 2.2.0 of the {zdm-automation}, we added the `zdm_proxy_clust
 This change is backward compatible. If you previously populated the variables in `zdm_proxy_core_config.yml`, these variables will be honored and take precedence over any variables in `zdm_proxy_cluster_config.yml`, if both files are present.
 ====
 
-We encourage existing 2.x ZDM users to upgrade to the 2.2.0 version of {zdm-automation}. To do so, simply `git pull` from the `main` branch of https://github.com/datastax/zdm-proxy-automation from within the Ansible Control Host container. From the GitHub repo for {zdm-automation}, you can also check out the specific tag (such as `2.2.0`) if you want.
+We encourage existing 2.x ZDM users to upgrade to the 2.2.0 version of {zdm-automation}. To do so, simply `git pull` the `main` branch of https://github.com/datastax/zdm-proxy-automation from within the Ansible Control Host container. You can also check out a https://github.com/datastax/zdm-proxy-automation/releases/tag/v2.2.0[specific tag^], such as `v2.2.0`.
 
-For more about the YML files to configure access to your clusters, see xref:deploy-proxy-monitoring.adoc#_configure_the_zdm_proxy[this topic].
+For more about the YML files used to configure access to your clusters, see xref:deploy-proxy-monitoring.adoc#_configure_the_zdm_proxy[this topic].
 
 [NOTE]
 ====
