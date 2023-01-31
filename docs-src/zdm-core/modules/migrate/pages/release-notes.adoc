@@ -6,9 +6,14 @@
 
 Starting in version 2.2.0 of the {zdm-automation}, we added the `zdm_proxy_cluster_config.yml` file to contain all the configuration variables for Origin and Target. Prior to version 2.2.0, the variables were in the `zdm_proxy_core_config.yml` file.
 
-We encourage existing 2.x ZDM users to upgrade to the 2.2.0 version of {zdm-automation}. To do so, simply `git pull` from the `main` branch of https://github.com/datastax/zdm-proxy-automation. 
+[TIP]
+====
+This change is backward compatible. If you previously populated the variables in `zdm_proxy_core_config.yml`, these variables will be honored and take precedence over any variables in `zdm_proxy_cluster_config.yml`, if both files are present.
+====
 
-For more, see xref:deploy-proxy-monitoring.adoc#_configure_the_zdm_proxy[Configure the ZDM Proxy].
+We encourage existing 2.x ZDM users to upgrade to the 2.2.0 version of {zdm-automation}. To do so, simply `git pull` from the `main` branch of https://github.com/datastax/zdm-proxy-automation from within the Ansible Control Host container. From the GitHub repo for {zdm-automation}, you can also check out the specific tag (such as `2.2.0`) if you want.
+
+For more about the YML files to configure access to your clusters, see xref:deploy-proxy-monitoring.adoc#_configure_the_zdm_proxy[this topic].
 
 [NOTE]
 ====
@@ -45,7 +50,7 @@ For the latest information about {zdm-proxy} new features and other changes, ple
 
 The following topics have been updated for the 2.1.0 release:
 
-* xref:feasibility-checklists.adoc#_read_only_applications[Read-only applications, window="_blank"]. See the notes indicating that this issue is solved by the {zdm-proxy} 2.1.0 release.
+* xref:feasibility-checklists.adoc#_read_only_applications[Feasibility checks for read-only applications, window="_blank"]. See the notes indicating that this issue is solved by the {zdm-proxy} 2.1.0 release.
 
 * xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable, window="_blank"]. See the `heartbeat_interval_ms` and `zdm-proxy_max_stream_ids` information. 
 
