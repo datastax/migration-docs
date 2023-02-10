@@ -103,14 +103,20 @@ Yes, and here's a summary:
 
 * For application-to-proxy TLS, the application is the TLS client and the {zdm-proxy} is the TLS server. One-way TLS and Mutual TLS are both supported.
 * For proxy-to-cluster TLS, the {zdm-proxy} acts as the TLS client and the cluster as the TLS server. One-way TLS and Mutual TLS are both supported.
-* When the {zdm-proxy} connects to Astra DB clusters, it always implicitly uses Mutual TLS. This is done through the Secure Connect Bundle (SCB) and does not require any extra configuration.
+* When the {zdm-proxy} connects to {astra_db} clusters, it always implicitly uses Mutual TLS. This is done through the Secure Connect Bundle (SCB) and does not require any extra configuration.
 
 For TLS details, see xref:tls.adoc[].
 
+== How does {zdm-proxy} handle Lightweight Transactions (LWTs)?
+
+{zdm-proxy} handles LWTs as write operations. The proxy sends the LWT to Origin and Target clusters concurrently, and waits for a response from both. {zdm-proxy} will return a `success` status to the client if both Origin and Target send successful acknowledgements, or otherwise will return a `failure` status if one or both do not return an acknowledgement.
+
+What sets LWTs apart from regular writes is that they are conditional. For important details, including the client context for a returned `applied` flag, see xref:feasibility-checklists.adoc#_lightweight_transactions_and_the_applied_flag[Lightweight Transactions and the `applied` flag].
+
 == What are the benefits of using a cloud-native database?
 
-When moving your client applications and data from on-premise Cassandra Query Language (CQL) based data stores (Cassandra or DSE) to a cloud-native database (CNDB) like Astra DB, it's important to acknowledge the fundamental differences ahead. With on-premise infrastructure, of course, you have total control of the datacenter's physical infrastructure, software configurations, and your custom procedures. At the same time, with on-premise clusters you take on the cost of infrastructure resources, maintenance, operations, and personnel.
+When moving your client applications and data from on-premise Cassandra Query Language (CQL) based data stores (Cassandra or DSE) to a cloud-native database (CNDB) like {astra_db}, it's important to acknowledge the fundamental differences ahead. With on-premise infrastructure, of course, you have total control of the datacenter's physical infrastructure, software configurations, and your custom procedures. At the same time, with on-premise clusters you take on the cost of infrastructure resources, maintenance, operations, and personnel.
 
 Ranging from large enterprises to small teams, IT managers, operators, and developers are realizing that the Total Cost of Ownership (TCO) with cloud solutions is much lower than continuing to run on-prem physical data centers.
 
-A CNDB like Astra DB is a different environment. Running on proven cloud providers like AWS, Google Cloud, and Azure, Astra DB greatly reduces complexity and increases convenience by surfacing a subset of configurable settings, providing a well-designed UI known as {astra_ui}, and a set of APIs to interact programmatically with your Astra DB organizations and databases.
+A CNDB like {astra_db} is a different environment. Running on proven cloud providers like AWS, Google Cloud, and Azure, {astra_db} greatly reduces complexity and increases convenience by surfacing a subset of configurable settings, providing a well-designed UI known as {astra_ui}, plus a set of APIs and commands to interact with your {astra_db} organizations and databases.

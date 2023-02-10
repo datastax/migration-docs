@@ -140,9 +140,17 @@ For details about using the {cstar-data-migrator}, see xref:migrate-and-validate
 Some application workloads can tolerate inconsistent data in some cases (especially for counter values) in which case you may not need to do anything special to handle those non-idempotent operations.
 ====
 
-=== Lightweight Transactions applied flag
+=== Lightweight Transactions and the `applied` flag
 
-{zdm-proxy} forwards lightweight transactions to both Origin and Target. However, it only returns the `applied` value from the primary cluster which is the cluster from where read results are returned to the client application (by default, that is Origin). This means that when you set Target as your primary cluster, the `applied` value returned to the client application will come from Target.
+{zdm-proxy} handles LWTs as write operations. The proxy sends the LWT to Origin and Target clusters concurrently, and waits for a response from both. {zdm-proxy} will return a `success` status to the client if both Origin and Target send successful acknowledgements, or otherwise will return a `failure` status if one or both do not return an acknowledgement.
+
+What sets LWTs apart from regular writes is that they are conditional. In other words, a LWT can appear to have been successful (its execution worked as expected). However, the change will be applied only if the LWT's condition was met. Whether the condition was met depends on the state of the data on the cluster. In a migration, the clusters will not be in sync until all existing data has been imported into Target. Up to that point, an LWT's condition can be evaluated differently on each side, leading to a different outcome even though the LWT was technically successful on both sides. 
+
+The response that a cluster sends after executing a LWT includes a flag called `applied`. This flag tells the client whether the LWT update was actually applied. The status depends on the condition, which in turn depends on the state of the data. When {zdm-proxy} receives a response from both Origin and Target, each response would have its own `applied` flag. 
+
+However, {zdm-proxy} can only return a *single response* to the client. Recall that the client has no knowledge that there are two clusters behind the proxy. Therefore, {zdm-proxy} returns the `applied` flag from the cluster that is *currently used as primary*. If your client has logic that depends on the `applied` flag, be aware that during the migration, you will only have visibility of the flag coming from the primary cluster; that is, the cluster to which synchronous reads are routed.
+
+To reiterate, {zdm-proxy} only returns the `applied` value from the primary cluster, which is the cluster from where read results are returned to the client application (by default, Origin). This means that when you set Target as your primary cluster, the `applied` value returned to the client application will come from Target.
 
 == Driver retry policy and query idempotence
 
