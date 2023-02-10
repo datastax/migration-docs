@@ -20,11 +20,13 @@ include::partial$supported-releases.adoc[]
 If you are using a very old driver or cluster version that only supports Thrift then you need to change your client application to use CQL and potentially upgrade your cluster before starting the migration process.
 ====
 
-This means that {zdm-proxy} supports the following cluster versions (Origin/Target):
+This means that {zdm-proxy} supports migrations of the following cluster versions (Origin/Target):
 
-* Apache Cassandra&reg; from 2.1+ up to (and including) Apache Cassandra 4.x. Apache Cassandra 2.0 support will be introduced when protocol version v2 is supported.
-* DataStax Enterprise 4.8+. DataStax Enterprise 4.6 and 4.7 support will be introduced when protocol version v2 is supported.
-* {company} Astra DB (both Serverless and Classic)
+* Apache Cassandra&reg; 2.1 and higher versions, up to (and including) Apache Cassandra 4.x. 
+Apache Cassandra 2.0 migration support may be introduced when protocol version v2 is supported.
+* DataStax Enterprise 4.7.1+ and higher versions. 
+DataStax Enterprise 4.6 migration support may be introduced when protocol version v2 is supported.
+* {company} {astra_db} (Serverless and Classic)
 
 [TIP]
 ====
