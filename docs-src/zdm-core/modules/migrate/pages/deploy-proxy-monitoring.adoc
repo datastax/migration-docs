@@ -155,7 +155,7 @@ After running the playbook, you can `ssh` into one of the servers where one of t
 
 [source,bash]
 ----
-ssh ubuntu@<zdm proxy ip address>
+ssh <linux user>@<zdm proxy ip address>
 ----
 
 Then, use the `docker logs` command to view the logs of this ZDM proxy instance (remember on these machines Docker is available to superusers):

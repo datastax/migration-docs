@@ -32,7 +32,7 @@ From that point, the automation will take care of installing Docker on the ZDM P
 
 In this guide, we'll use a jumphost to run the Ansible Control Host container.
 
-A jumphost is a server on a network used to access and manage devices in a separate security zone, providing a controlled means of access between them. The jumphost can be, for example, a Ubuntu server machine that is able to access the server machines that you wish to use for your {zdm-proxy} deployment.
+A jumphost is a server on a network used to access and manage devices in a separate security zone, providing a controlled means of access between them. The jumphost can be, for example, a Linux server machine that is able to access the server machines that you wish to use for your {zdm-proxy} deployment.
 
 The jumphost will serve three purposes:
 
@@ -129,7 +129,7 @@ You have five attempts to enter valid variables. You can always run the {zdm-uti
 +
 [source,bash]
 ----
-/home/ubuntu/my-zdm-key
+~/my-zdm-key
 ----
 
 . Enter the common prefix of the private IP addresses of the proxy hosts. Example:
