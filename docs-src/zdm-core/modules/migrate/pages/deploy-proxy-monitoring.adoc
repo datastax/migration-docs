@@ -173,7 +173,9 @@ Readiness expanded GET format:
 GET "http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:{{ metrics_port }}/health/readiness"
 ----
 
-The default port for metrics collection is `14001`. Optionally, you can specify a custom, non-default port that was set via a configuration change. See the section on xref:deploy-proxy-monitoring.adoc#_cluster_and_core_configuration[contact points and port].
+The default port for metrics collection is `14001`. 
+Optionally, you may have overridden this port when you deployed the {zdm-proxy} specifying a custom, non-default port that was set by changing the value of the configuration variable `metrics_port`. 
+See xref:deploy-proxy-monitoring.adoc#_ports[this section] for more information.
 
 Readiness example:
 

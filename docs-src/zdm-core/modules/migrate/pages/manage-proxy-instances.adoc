@@ -56,7 +56,7 @@ The pause between the restart of each {zdm-proxy} instance defaults to 10 second
 
 [TIP]
 ====
-To check the state of your {zdm-proxy} instances, you have a couple options. See xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[Indications of success on Origin and Target clusters].
+To check the state of your {zdm-proxy} instances, you have a couple of options. See xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[Indications of success on Origin and Target clusters].
 ====
 
 == Access the proxy logs
