@@ -177,12 +177,42 @@ The default port for metrics collection is `14001`.
 Optionally, you may have overridden this port when you deployed the {zdm-proxy} specifying a custom, non-default port that was set by changing the value of the configuration variable `metrics_port`. 
 See xref:deploy-proxy-monitoring.adoc#_ports[this section] for more information.
 
-Readiness example:
 
+[tabs]
+====
+Readiness example::
++
+--
 [source,bash]
 ----
-http://172.18.10.40:14001/health/readiness
+GET "http://172.18.10.40:14001/health/readiness"
 ----
+--
++
+Result::
++
+--
+[source,bash]
+----
+{
+   "OriginStatus":{
+      "Addr":"<origin_node_addr>",
+      "CurrentFailureCount":0,
+      "FailureCountThreshold":1,
+      "Status":"UP"
+   },
+   "TargetStatus":{
+      "Addr":"<target_node_addr>",
+      "CurrentFailureCount":0,
+      "FailureCountThreshold":1,
+      "Status":"UP"
+   },
+   "Status":"UP"
+}
+----
+--
+====
+
 
 === Check {zdm-proxy} instances via docker logs
 
