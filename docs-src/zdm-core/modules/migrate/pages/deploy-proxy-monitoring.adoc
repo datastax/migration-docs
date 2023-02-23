@@ -149,7 +149,7 @@ That's it! A {zdm-proxy} container has been created on each proxy host.
 
 The playbook will create one {zdm-proxy} instance for each proxy host listed in the inventory file. It will indicate the operations that it is performing and print out any errors, or a success confirmation message at the end.
 
-How can you confirm that the ZDM proxies are up and running? Here are two options:
+Confirm that the ZDM proxies are up and running by using one of the following options:
 
 * Call the `liveness` and `readiness` HTTP endpoints for {zdm-proxy} instances
 * Check {zdm-proxy} instances via docker logs
