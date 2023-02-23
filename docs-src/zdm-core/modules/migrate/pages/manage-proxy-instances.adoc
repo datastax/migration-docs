@@ -25,8 +25,8 @@ ubuntu@52772568517c:~$
 
 == Perform a rolling restart of the proxies
 
-Although this operation is not required in any particular step of the migration, you may still find it convenient in some circumstances. For this reason, there
-is a specific playbook that performs this operation.
+Although this operation is not required in any particular step of the migration, you may still find it convenient in some circumstances. 
+For this reason, there is a specific playbook that performs this operation.
 
 Connect to the Ansible Control Host Docker container as explained above and run:
 
@@ -53,6 +53,11 @@ This playbook restarts each proxy container one by one, without impacting the av
 .. If successful, it waits for a configurable interval and then moves on to the next container.
 
 The pause between the restart of each {zdm-proxy} instance defaults to 10 seconds. If you wish to change this value, you can edit `vars/zdm_playbook_internal_config.yml` (located in `zdm-proxy-automation/ansible/vars`) and set it to the desired number of seconds.
+
+[TIP]
+====
+To check the state of your {zdm-proxy} instances, you have a couple of options. See xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[Indications of success on Origin and Target clusters].
+====
 
 == Access the proxy logs
 

@@ -61,9 +61,10 @@ scp -F <path to zdm_ssh_config> <zdm key> jumphost:
 ----
 
 Now connect to the jumphost.
+
 [source,bash]
 ----
-ssh -F <path to zdm_ssh_config> <zdm key> jumphost
+ssh -F <path to zdm_ssh_config> jumphost
 ----
 
 == Running the {zdm-utility}
