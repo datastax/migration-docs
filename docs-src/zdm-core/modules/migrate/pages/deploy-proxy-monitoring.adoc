@@ -1,6 +1,6 @@
 = Deploy the {zdm-proxy} and monitoring
 
-This page explains how to use the Ansible automation playbooks that you set up in the xref:setup-ansible-playbooks.adoc[prior topic] to deploy the {zdm-proxy} and its monitoring stack.
+This topic explains how to use the Ansible automation playbooks that you set up in the xref:setup-ansible-playbooks.adoc[prior topic] to deploy the {zdm-proxy} and its monitoring stack.
 
 Once completed, you will have a working and fully monitored {zdm-proxy} deployment.
 
@@ -34,7 +34,7 @@ image:zdm-ansible-container-ls3.png[Contents of the Ansible Control Host contain
 
 == Configure the {zdm-proxy}
 
-The {zdm-proxy} configuration is broken down into four files:
+The {zdm-proxy} configuration is composed of four files:
 
 * `zdm_proxy_cluster_config.yml`, containing all the configuration that allows the proxy to connect to Origin and Target. This is always required.
 * `zdm_proxy_core_config.yml`, containing important configuration that is commonly used and changed during the migration.
@@ -149,7 +149,40 @@ That's it! A {zdm-proxy} container has been created on each proxy host.
 
 The playbook will create one {zdm-proxy} instance for each proxy host listed in the inventory file. It will indicate the operations that it is performing and print out any errors, or a success confirmation message at the end.
 
-How can you confirm that the ZDM proxies are up and running?
+How can you confirm that the ZDM proxies are up and running? Here are two options:
+
+* Call the `liveness` and `readiness` HTTP endpoints for {zdm-proxy} instances
+* Check {zdm-proxy} instances via docker logs
+
+=== Call the `liveness` and `readiness` HTTP endpoints
+
+ZDM metrics provide `/health/liveness` and `/health/readiness` HTTP endpoints, which you can call to determine the state of {zdm-proxy} instances. It's often fine to simply submit the `readiness` check to return the proxy's state.
+
+The format:
+
+[source,bash]
+----
+http://<zdm proxy private ip>:<metrics port>/health/liveness
+http://<zdm proxy private ip>:<metrics port>/health/readiness
+----
+
+Readiness expanded GET format:
+
+[source,bash]
+----
+GET "http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:{{ metrics_port }}/health/readiness"
+----
+
+The default port for metrics collection is `14001`. Optionally, you can specify a custom, non-default port that was set via a configuration change. See the section on xref:deploy-proxy-monitoring.adoc#_cluster_and_core_configuration[contact points and port].
+
+Readiness example:
+
+[source,bash]
+----
+http://172.18.10.40:14001/health/readiness
+----
+
+=== Check {zdm-proxy} instances via docker logs
 
 After running the playbook, you can `ssh` into one of the servers where one of the deployed {zdm-proxy} instances is running. You can do so from within the Ansible container, or directly from the jumphost machine:
 
