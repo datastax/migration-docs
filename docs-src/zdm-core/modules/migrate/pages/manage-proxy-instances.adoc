@@ -65,11 +65,11 @@ To confirm that the {zdm-proxy} instances are operating normally, or investigate
 
 === View the logs
 
-The {zdm-proxy} runs as a Docker container on each proxy host. Its logs can be viewed by connecting to a proxy host and running the following command (remember on these machines Docker is available to superusers):
+The {zdm-proxy} runs as a Docker container on each proxy host. Its logs can be viewed by connecting to a proxy host and running the following command.
 
 [source,bash]
 ----
-sudo docker container logs zdm-proxy-container
+docker container logs zdm-proxy-container
 ----
 
 To leave the logs open and continuously output the latest log messages, append the `--follow` (or `-f`) option to the command above.
