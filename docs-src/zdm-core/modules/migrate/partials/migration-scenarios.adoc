@@ -18,3 +18,4 @@ Here are just a few examples of migration scenarios that are supported when movi
 
 * From https://docs.datastax.com/en/astra-classic/docs[Astra DB Classic] to https://docs.datastax.com/en/astra-serverless/docs[Astra DB Serverless]
 
+* From any CQL-based database type/version to the equivalent CQL-based database type/version, but with differently configured clusters. Examples in this scenario: migrate to consolidate multiple clusters of a given DSE version into one DSE cluster of the same version; or migrate to expand a single Cassandra cluster into multiple Cassandra clusters of the same version.
