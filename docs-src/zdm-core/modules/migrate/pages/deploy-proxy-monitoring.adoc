@@ -185,7 +185,7 @@ Readiness example::
 --
 [source,bash]
 ----
-GET "http://172.18.10.40:14001/health/readiness"
+curl -G "http://172.18.10.40:14001/health/readiness"
 ----
 --
 +
