@@ -1,11 +1,21 @@
 = Leverage metrics provided by {zdm-proxy}
 
+This topic provides detailed information about the metrics captured by the {zdm-proxy} and explains how to interpret the metrics. 
+
+== Benefits
+
+The {zdm-proxy} gathers a large number of metrics, which allows you to gain deep insights into how it is operating with regard to its communication with client applications and clusters, as well as its request handling.
+
+Having visibility on all aspects of the {zdm-proxy}'s behavior is extremely important in the context of a migration of critical client applications, and is a great help in building confidence in the process and troubleshooting any issues. For this reason, we strongly encourage you to monitor the {zdm-proxy}, either by deploying the self-contained monitoring stack provided by the {zdm-automation} or by importing the pre-built Grafana dashboards in your own monitoring infrastructure.
+
+== Retrieving the {zdm-proxy} metrics
+
 {zdm-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format.  
 
 {zdm-automation} can deploy Prometheus and Grafana, configuring them automatically, as explained xref:deploy-proxy-monitoring.adoc#_setting_up_the_monitoring_stack[here]. The Grafana dashboards are ready to go with metrics that are being scraped from the {zdm-proxy} instances.
 
-If you already have a Grafana deployment then you can import the dashboards from the two ZDM dashboard files https://github.com/datastax/zdm-proxy-automation/tree/main/grafana-dashboards[on this location^].
-
+If you already have a Grafana deployment then you can import the dashboards from the two ZDM dashboard files from this https://github.com/datastax/zdm-proxy-automation/tree/main/grafana-dashboards[{zdm-automation} GitHub location^].
+ 
 == Grafana dashboard for {zdm-proxy} metrics
 
 There are three groups of metrics in this dashboard:

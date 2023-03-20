@@ -2,8 +2,3 @@ Overall, you can use {zdm-proxy} to migrate:
 
 * **From:** Any Cassandra 2.1.6 or higher release, or from any DSE 4.7.1 or higher release
 * **To:** Any equivalent or higher release of Cassandra, or to any equivalent or higher release of DSE, or to {astra_db}
-
-[NOTE]
-====
-We indicate that you can migrate *to* any "equivalent or higher release" because some users may want to use {zdm-product} to continue with the same Cassandra/DSE version with the resulting clusters set up in a different configuration. Examples: migrate to consolidate multiple clusters of a given DSE version into one DSE cluster of the same version; or migrate to expand a single Cassandra cluster into multiple Cassandra clusters of the same version. ZDM makes that type of equivalent migration possible, as well as enabling migrations from a given version to a higher version and/or to a different type of cluster.
-====

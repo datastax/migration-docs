@@ -42,7 +42,7 @@ asciidoc:
     zdm-shortproduct: 'ZDM'
     zdm-proxy: 'ZDM Proxy'
     zdm-utility: 'ZDM Utility'
-    zdm-automation: 'ZDM Automation'
+    zdm-automation: 'ZDM Proxy Automation'
     cstar-data-migrator: 'Cassandra Data Migrator'
     dsbulk-migrator: 'DSBulk Migrator'
 

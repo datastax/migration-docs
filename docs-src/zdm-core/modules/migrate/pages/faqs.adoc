@@ -65,6 +65,10 @@ include::partial$supported-releases.adoc[]
 
 include::partial$migration-scenarios.adoc[]
 
+== Does {zdm-shortproduct} migrate clusters?
+
+{zdm-shortproduct} does not migrate clusters. With {zdm-shortproduct}, we are migrating data and applications *between clusters*.  At the end of the migration, your application will be running on your new cluster, which will have been populated with all the relevant data.
+
 == What challenges does {zdm-shortproduct} solve?
 
 Before {company} {zdm-product} was available, migrating client applications between clusters involved granular and intrusive client application code changes, extensive migration preparation, and a window of downtime to the client application's end users.
@@ -77,7 +81,8 @@ The suite of {zdm-product} tools from {company} is free and open-sourced.
 
 == Is there support available if I have questions or issues during our migration?
 
-If needed, {zdm-proxy} and related software tools in the migration suite include technical assistance by https://support.datastax.com/s/[{company} Support^].
+If needed, {zdm-proxy} and related software tools in the migration suite include technical assistance by https://support.datastax.com/s/[{company} Support^], if you have a DataStax Luna service contract with {company}. 
+https://www.datastax.com/products/luna[Luna] is a subscription to the Apache Cassandra support and expertise at DataStax. 
 
 For any observed problems with the {zdm-proxy}, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^] in the {zdm-proxy} GitHub repo.
 
@@ -85,17 +90,18 @@ Additional examples serve as templates, from which you can learn about migration
 
 == Where are the public GitHub repos?
 
-All the {company} {zdm-product} GitHub repos are public. You are welcome to read the source and submit feedback via GitHub Issues per repo. In addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion.
+All the {company} {zdm-product} GitHub repos are public and open source. You are welcome to read the code and submit feedback via GitHub Issues per repo. In addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion. To submit PRs, you must for first agree to the https://cla.datastax.com/[DataStax Contribution License Agreement (CLA)].
 
-* https://github.com/datastax/zdm-proxy[{zdm-proxy}^] 
+* https://github.com/datastax/zdm-proxy[{zdm-proxy}^] repo for ZDM Proxy.
 
-* https://github.com/datastax/zdm-proxy-automation[{zdm-automation}^]
+* https://github.com/datastax/zdm-proxy-automation[{zdm-automation}^] repo for the Ansible-based {zdm-proxy} Automation, which includes the ZDM Utility.
 
-* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^]
+* https://github.com/datastax/cassandra-data-migrator[cassandra-data-migrator^] repo for the tool that supports migrating larger data quantities as well as detailed verifications and reconciliation options.
 
-* https://github.com/datastax/dsbulk-migrator[DSBulk Migrator^]
+* https://github.com/datastax/dsbulk-migrator[dsbulk-migrator^] repo for the tool that allows simple data migrations without validation and reconciliation capabilities.
 
 // * https://github.com/datastax/migration-docs[Migration documentation^]
+
 
 == Does {zdm-proxy} support Transport Layer Security (TLS)?
 
@@ -116,6 +122,16 @@ What sets LWTs apart from regular writes is that they are conditional. For impor
 == Can {zdm-proxy} be deployed as a sidecar?
 
 {zdm-proxy} should not be deployed as a sidecar.
+
+{zdm-proxy} was designed to mimic a Cassandra cluster. For this reason, we recommend deploying multiple {zdm-proxy} instances, each running on a dedicated machine, instance, or VM.
+
+For best performance, this deployment should be close to the client applications (ideally on the same local network) but not co-deployed on the same machines as the client applications. This way, each client application instance can connect to all {zdm-proxy} instances, just as it would connect to all nodes in a Cassandra cluster (or datacenter).
+
+This deployment model gives maximum resilience and failure tolerance guarantees and allows the client application driver to continue using the same load balancing and retry mechanisms that it would normally use.
+
+Conversely, deploying a single {zdm-proxy} instance would undermine this resilience mechanism and create a single point of failure, which could affect the client applications if one or more nodes of the underlying clusters (Origin or Target) go offline. In a sidecar deployment, each client application instance would be connecting to a single {zdm-proxy} instance, and would therefore be exposed to this risk.
+
+For more information, see xref:deployment-infrastructure.adoc#_choosing_where_to_deploy_the_proxy[Choosing where to deploy the proxy].
 
 == What are the benefits of using a cloud-native database?
 
