@@ -185,7 +185,7 @@ Readiness example::
 --
 [source,bash]
 ----
-GET "http://172.18.10.40:14001/health/readiness"
+curl -G "http://172.18.10.40:14001/health/readiness"
 ----
 --
 +
@@ -223,14 +223,14 @@ After running the playbook, you can `ssh` into one of the servers where one of t
 ssh <linux user>@<zdm proxy ip address>
 ----
 
-Then, use the `docker logs` command to view the logs of this ZDM proxy instance (remember on these machines Docker is available to superusers):
+Then, use the `docker logs` command to view the logs of this ZDM proxy instance.
 
 [source,bash]
 ----
    .
    .
    .
-ubuntu@ip-172-18-10-111:~$ sudo docker logs zdm-proxy-container
+ubuntu@ip-172-18-10-111:~$ docker logs zdm-proxy-container
    .
    .
    .
@@ -255,7 +255,7 @@ Also, you can check the status of the running Docker image. Here's an example wi
 
 [source,bash]
 ----
-ubuntu@ip-172-18-10-111:~$ sudo docker ps
+ubuntu@ip-172-18-10-111:~$ docker ps
 CONTAINER ID  IMAGE                     COMMAND  CREATED      STATUS     PORTS   NAMES
 02470bbc1338  datastax/zdm-proxy:2.1.x  "/main"  2 hours ago  Up 2 hours         zdm-proxy-container
 ----
