@@ -1,6 +1,18 @@
-= Enable asynchronous dual reads
+= Phase 3: Enable asynchronous dual reads
 
-This phase consists of changing the `read_mode` configuration variable in `vars/zdm_proxy_core_config.yml` from `PRIMARY_ONLY` (the default) to `DUAL_ASYNC_ON_SECONDARY`. Example:
+In this phase, you can optionally enable asynchronous dual reads. The idea is to test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target.
+
+Illustrated view of this phase:
+
+image:zdm-migration-phase3.png[Phase 3 diagram shows optional step enabling async dual reads to test performance of Target.]
+
+For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
+
+== Steps
+
+The steps consist of changing the `read_mode` configuration variable in `vars/zdm_proxy_core_config.yml` from `PRIMARY_ONLY` (the default) to `DUAL_ASYNC_ON_SECONDARY`. 
+
+Example:
 
 [source,yml]
 ----
@@ -16,7 +28,10 @@ primary_cluster: ORIGIN # or empty
 
 To apply this change, run the `rolling_update_zdm_proxy.yml` playbook as explained xref:manage-proxy-instances.adoc#change-mutable-config-variable[here].
 
+[NOTE]
+====
 This optional phase introduces an additional check to make sure that Target can handle the load without timeouts or unacceptable latencies. You would typically perform this step once you have migrated all the existing data from Origin and completed all validation checks and reconciliation, if necessary.
+====
 
 == Asynchronous Dual Reads mode
 

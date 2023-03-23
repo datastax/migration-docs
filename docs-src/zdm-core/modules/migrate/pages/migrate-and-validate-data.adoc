@@ -1,11 +1,17 @@
-= Migrate and validate data
+= Phase 2: Migrate and validate data
 
-This topic introduces you to the benefits of using two free, open-source data migration tools during your migration project:
+This topic presents the benefits of using two free, open-source data migration tools during your migration project:
 
 * {cstar-data-migrator}
 * {dsbulk-migrator}
 
 These tools provide helpful features and may be used to match the requirements of your Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB databases.  The tools can help you migrate data from any Cassandra Origin (Cassandra/DSE/Astra DB) to any Cassandra Target (Cassandra/DSE/Astra DB).
+
+Illustrated view of this phase:
+
+image:zdm-migration-phase2.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
+
+For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
 == What's the difference between these data migration tools?
 

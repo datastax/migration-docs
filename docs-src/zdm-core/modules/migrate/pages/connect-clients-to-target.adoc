@@ -1,4 +1,4 @@
-= Connect your client applications directly to Target
+= Step 5: Connect your client applications directly to Target
 
 At this point in our migration phases, we've completed:
 
@@ -11,6 +11,12 @@ At this point in our migration phases, we've completed:
 * Phase 4: Changed read routing to Target.
 
 Now we're ready to perform Phase 5, in which we will configure our client applications to connect directly to Target. The way you do this varies based on whether your Target is Astra DB or a regular Apache Cassandra&reg; or DataStax Enterprise cluster.
+
+Illustrated view of this phase:
+
+image:zdm-migration-phase5.png[Phase 5 diagram shows apps no longer using proxy and instead connected directly to Target.]
+
+For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
 == Configuring your driver to connect to a generic CQL cluster
 
