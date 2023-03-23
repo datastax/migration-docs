@@ -23,7 +23,7 @@ This design ensures that new data is always written to both clusters, and that a
 ====
 {zdm-proxy} has been designed to run in a **clustered** fashion so that it is never a single point of failure. Unless it is for a demo or local testing environment, a {zdm-proxy} deployment should always comprise multiple {zdm-proxy} instances.
 
-We will often use the term **{zdm-proxy}** to indicate the whole deployment, and **{zdm-proxy} instance** to refer to an individual proxy process in the deployment.
+The term {zdm-proxy} indicates the whole deployment, and {zdm-proxy} instance refers to an individual proxy process in the deployment.
 ====
 
 == Key features of {zdm-proxy}
