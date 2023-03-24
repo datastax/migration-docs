@@ -7,3 +7,9 @@ This section presents the following:
 ** xref:tls.adoc[]
 * xref:connect-clients-to-proxy.adoc[]
 * xref:manage-proxy-instances.adoc[]
+
+Illustrated view of this phase:
+
+image:zdm-migration-phase1.png[Phase 1 diagram shows deployed ZDM Proxy instances, client app connections to proxies, and Target is setup.]
+
+For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].

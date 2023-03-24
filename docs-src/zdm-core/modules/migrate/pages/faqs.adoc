@@ -21,15 +21,15 @@ However, it is important to emphasize that the {zdm-proxy} can be freely used to
 
 == Can you illustrate the overall workflow and phases of a migration?
 
-Here's a high-level view:
+See the diagrams of the ZDM xref:introduction.adoc#_migration_phases[migration phases].
 
-image:zdm-workflow3.png[Migration workflow from client to {zdm-proxy} with dual writes to Origin and Target.]
+== Do you offer an interactive self-guided lab to help me learn about ZDM migrations at my own pace?
 
-Here are the phases of a migration from start to finish:
+Yes! Here's a fun way to learn. 
 
-image:zdm-migration-phases6a.png[Migration phases from start to finish]
+include::partial$interactive-lab.adoc[]
 
-For more, see xref:introduction.adoc[].
+The interactive lab spans the pre-migration prerequisites and each of the five key migration phases. 
 
 == What components are provided with ZDM?
 

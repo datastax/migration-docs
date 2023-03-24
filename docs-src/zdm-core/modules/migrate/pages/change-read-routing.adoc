@@ -1,8 +1,16 @@
-= Change read routing to Target
+= Phase 4: Change read routing to Target
 
 This topic explains how you can configure the {zdm-proxy} to route all reads to Target instead of Origin.
 
-You would typically do this once you have migrated all the existing data from Origin and completed all validation checks and reconciliation if necessary.
+Illustrated view of this phase:
+
+image:zdm-migration-phase4.png[Phase 4 diagram shows read routing on ZDM Proxy was switched to Target.]
+
+For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
+
+== Steps
+
+You would typically perform these steps once you have migrated all the existing data from Origin, and completed all validation checks and reconciliation if necessary.
 
 This operation is a configuration change that can be carried out as explained xref:manage-proxy-instances.adoc#change-mutable-config-variable[here].
 

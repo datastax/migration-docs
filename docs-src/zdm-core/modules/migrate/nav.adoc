@@ -1,4 +1,5 @@
 * xref:introduction.adoc[Migrating]
+** xref:components.adoc[Components]
 ** xref:faqs.adoc[FAQs]
 ** xref:preliminary-steps.adoc[Preliminary steps]
 *** xref:feasibility-checklists.adoc[Feasibility checks]
