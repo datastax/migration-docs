@@ -14,13 +14,13 @@ Here are just a few examples of migration scenarios that are supported when movi
 
 ** Cassandra 2.1.6+, 3.11.x, 4.0.x, or 4.1.x to {astra_db}
 
-** DSE 4.7.1+, 4.8.x, 5.1.x, or 6.8.x to {astra_db}
+** DSE 4.7.1+, 4.8.x, 5.1.x, 6.7.x or 6.8.x to {astra_db}
 
 * From an existing Cassandra or DSE cluster to another Cassandra or DSE cluster. For example:
 
 ** Cassandra 2.1.6+ or 3.11.x to Cassandra 4.0.x or 4.1.x
 
-** DSE 4.7.1+, 4.8.x, or 5.1.x to DSE 6.8.x
+** DSE 4.7.1+, 4.8.x, 5.1.x or 6.7.x to DSE 6.8.x
 
 ** Cassandra 2.1.6+, 3.11.x, 4.0.x, or 4.1.x to DSE 6.8.x
 
