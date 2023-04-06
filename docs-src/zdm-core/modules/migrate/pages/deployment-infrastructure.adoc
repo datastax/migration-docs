@@ -48,8 +48,10 @@ We will use the term "machine" to indicate a cloud instance (on any cloud provid
 
 [NOTE]
 ====
-Scenario: when you have close to 12 TBs of data and several tables, to speed up the migration of your existing data, you can run with (for example) 4 machines that are the equivalent of an AWS `m5.4xlarge`, a GCP `e2-standard-16` or an Azure `D16v5`.  Then run {dsbulk-migrator} on each machine, with each one responsible for a quarter of the full token range. Or leverage the parallelism from a {cstar-data-migrator} Spark job to run the migration process across all 4 machines.
+Scenario: when you have close to 12 TBs of data and several tables, to speed up the migration of your existing data, you can run with (for example) 4 machines that are the equivalent of an AWS `m5.4xlarge`, a GCP `e2-standard-16` or an Azure `D16v5`.  Then run {dsbulk-migrator} on each machine, with each one responsible for a quarter of the full token range. 
 ====
+
+// TODO: investigate how to "leverage the parallelism of {cstar-data-migrator} to run the migration process across all 4 machines."
 
 === Connectivity
 The {zdm-proxy} machines must be reachable by:
