@@ -8,6 +8,11 @@ image:zdm-migration-phase3.png[Phase 3 diagram shows optional step enabling asyn
 
 For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
+[TIP]
+====
+As you test the performance on Target, be sure to examine the async read metrics. As noted in the xref:#_validating_performance_and_error_rate[section] below, you can learn more in xref:metrics.adoc#_asynchronous_read_requests_metrics[Asynchronous read requests metrics].
+====
+
 == Steps
 
 The steps consist of changing the `read_mode` configuration variable in `vars/zdm_proxy_core_config.yml` from `PRIMARY_ONLY` (the default) to `DUAL_ASYNC_ON_SECONDARY`. 
@@ -55,7 +60,9 @@ Because the client application is not impacted by these asynchronous reads, the 
 * Check the metrics of the cluster itself
 * Check the asynchronous reads section of the {zdm-proxy} metrics
 
-In the {zdm-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads where you can see latency percentiles, error rates, and some other metrics specific to these requests. For more, see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[How to leverage the metrics] in the troubleshooting tips.
+In the {zdm-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads where you can see latency percentiles, error rates, and some other metrics specific to these requests. 
+
+For more, see xref:metrics.adoc#_asynchronous_read_requests_metrics[Asynchronous read requests metrics].
 
 == Reminder to switch off async dual reads
 

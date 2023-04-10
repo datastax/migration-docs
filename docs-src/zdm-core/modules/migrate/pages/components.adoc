@@ -65,7 +65,7 @@ For details, see:
 
 == Data migration tools
 
-As part of the overall migration process, you can use {cstar-data-migrator} and/or {dsbulk-migrator} to migrate your data.
+As part of the overall migration process, you can use {cstar-data-migrator} and/or {dsbulk-migrator} to migrate your data. Or you can use other technologies, such as Apache Spark™, to write your own custom data migration process.
 
 === {cstar-data-migrator}
 
