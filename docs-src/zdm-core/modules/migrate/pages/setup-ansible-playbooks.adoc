@@ -96,7 +96,7 @@ Once downloaded, unzip it. Here's an example with {zdm-utility} 2.3.0:
 tar -xvf zdm-util-linux-amd64-v2.3.0.tgz
 ----
 
-Run the {zdm-utility}. Here's an example with {zdm-proxy} 2.3.0:
+Run the {zdm-utility}. Here's an example with {zdm-utility} 2.3.0:
 
 [source,bash]
 ----
