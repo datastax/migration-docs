@@ -111,11 +111,11 @@ The {zdm-utility} will store the configuration that you provide into a file name
 
 You can also pass a custom configuration file to the {zdm-utility} with the optional command-line parameter `-utilConfigFile`. Example:
 
-Here's an example with {zdm-proxy} 2.3.0:
+Here's an example with {zdm-utility} 2.3.0:
 
 [source,bash]
 ----
-./zdm-util-v2.d.0 -utilConfigFile your_config_file
+./zdm-util-v2.3.0 -utilConfigFile your_config_file
 ----
 ====
 
