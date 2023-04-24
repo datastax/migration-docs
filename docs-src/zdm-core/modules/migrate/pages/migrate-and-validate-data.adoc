@@ -1,6 +1,5 @@
 = Phase 2: Migrate and validate data
 :page-tag: migration,zdm,zero-downtime,validate-data
-
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 
 This topic presents the benefits of using two free, open-source data migration tools during your migration project:

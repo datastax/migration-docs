@@ -1,6 +1,5 @@
 = {company} {zdm-product} Release Notes
 :page-tag: migration,zdm,zero-downtime,release-notes
-
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 
 == {zdm-automation} 2.3.0 update

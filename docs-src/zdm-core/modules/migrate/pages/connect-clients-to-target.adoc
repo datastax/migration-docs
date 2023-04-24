@@ -1,6 +1,5 @@
 = Step 5: Connect your client applications directly to Target
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps,target
-
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 
 At this point in our migration phases, we've completed:

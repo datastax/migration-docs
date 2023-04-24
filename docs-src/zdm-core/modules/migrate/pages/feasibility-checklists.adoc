@@ -1,6 +1,5 @@
 = Feasibility checks
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,feasibility
-
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 
 Before starting your migration, refer to the following considerations to ensure that your client application workload and xref:glossary.adoc#origin[**Origin**] are suitable for this {zdm-product} process.
