@@ -1,4 +1,7 @@
 = Set up the {zdm-automation} with {zdm-utility}
+:page-tag: migration,zdm,zero-downtime,zdm-automation,zdm-proxy,ansible
+
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
 
 This page explains how to use the {zdm-utility} to set up the Ansible Control Host container for the {zdm-automation}.
 
@@ -12,7 +15,7 @@ The {zdm-automation} uses **Ansible**, which deploys and configures the {zdm-pro
 
 Configuring a machine to serve as the Ansible Control Host is very easy using the {zdm-utility}. This is a Golang (Go) executable program that runs anywhere. This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use. From this container, you will be able to easily configure and run the {zdm-automation} Ansible playbooks.
 
-image:docker-container-and-zdm-utility.png[ZDM Proxy connections from Docker container created by ZDM Utility]
+image::{imagesprefix}docker-container-and-zdm-utility.png[ZDM Proxy connections from Docker container created by ZDM Utility]
 
 == Prerequisites
 
@@ -75,7 +78,7 @@ https://github.com/datastax/zdm-proxy-automation/releases
 
 The downloadable archive name format is `zdm-util-<platform>-<version>`.
 
-Download example with <version> placeholder. Latest image:https://img.shields.io/github/v/release/datastax/zdm-proxy-automation?color=green&display_name=tag[GitHub release (latest by date)]:
+Download example with <version> placeholder. Latest image::{imagesprefix}https://img.shields.io/github/v/release/datastax/zdm-proxy-automation?color=green&display_name=tag[GitHub release (latest by date)]:
 
 [source,bash]
 ----
@@ -181,7 +184,7 @@ At this point, the {zdm-utility}:
 * Has written the {zdm-utility} configuration to the default file, `ansible_container_init_config`.
 * Presents a summary of the configuration thus far, and prompts you to Continue. Example:
 
-image:zdm-go-utility-results3.png[A summary of the configuration provided is displayed in the terminal]
+image::{imagesprefix}zdm-go-utility-results3.png[A summary of the configuration provided is displayed in the terminal]
 
 If you agree, enter `Y` to proceed.
 
@@ -191,7 +194,7 @@ The {zdm-utility} now:
 * Creates, configures and starts the Ansible Control Host container.
 * Displays a message. Example:
 
-image:zdm-go-utility-success3.png[Ansible Docker container success messages]
+image::{imagesprefix}zdm-go-utility-success3.png[Ansible Docker container success messages]
 
 [NOTE]
 ====

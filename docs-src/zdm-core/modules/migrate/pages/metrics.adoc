@@ -1,4 +1,7 @@
 = Leverage metrics provided by {zdm-proxy}
+:page-tag: migration,zdm,zero-downtime,metrics
+
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
 
 This topic provides detailed information about the metrics captured by the {zdm-proxy} and explains how to interpret the metrics. 
 
@@ -24,7 +27,7 @@ There are three groups of metrics in this dashboard:
 * Node level metrics
 * Asynchronous read requests metrics
 
-image:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of ZDM metrics for the proxy.]
+image::{imagesprefix}zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of ZDM metrics for the proxy.]
 
 === Proxy-level metrics
 
@@ -103,7 +106,7 @@ Some examples of problems manifesting on these metrics:
 
 This dashboard in Grafana is not as important as the {zdm-proxy} dashboard. However, it may be useful to troubleshoot performance issues. Here you can see memory usage, Garbage Collection (GC) duration, open fds (file descriptors - useful to detect leaked connections), and the number of goroutines:
 
-image:zdm-golang-dashboard.png[Golang metrics dashboard example is shown.]
+image::{imagesprefix}zdm-golang-dashboard.png[Golang metrics dashboard example is shown.]
 
 Some examples of problem areas on these Go runtime metrics:
 

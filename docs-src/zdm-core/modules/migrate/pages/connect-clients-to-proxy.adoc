@@ -1,4 +1,7 @@
 = Connect your client applications to {zdm-proxy}
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps
+
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
 
 The {zdm-proxy} is designed to look and feel very much like a conventional Cassandra&reg; cluster. You communicate with it using the CQL query language used in your existing client applications. It understands the same messaging protocols used by Cassandra, DataStax Enterprise (DSE) server and {company} Astra DB. As a result, most of your client applications won't be able to distinguish between connecting to {zdm-proxy} and connecting directly to your Cassandra cluster.
 

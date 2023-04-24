@@ -1,4 +1,7 @@
 = Phase 2: Migrate and validate data
+:page-tag: migration,zdm,zero-downtime,validate-data
+
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
 
 This topic presents the benefits of using two free, open-source data migration tools during your migration project:
 
@@ -9,7 +12,7 @@ These tools provide helpful features and may be used to match the requirements o
 
 Illustrated view of this phase:
 
-image:zdm-migration-phase2.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
+image::{imagesprefix}zdm-migration-phase2.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
 
 For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 

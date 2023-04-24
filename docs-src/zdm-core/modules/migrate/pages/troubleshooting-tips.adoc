@@ -1,4 +1,7 @@
 = Troubleshooting tips
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,troubleshooting
+
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
 
 Refer to the tips on this page for information that can help you troubleshoot issues with your migration.
 

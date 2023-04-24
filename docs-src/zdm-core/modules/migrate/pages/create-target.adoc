@@ -1,4 +1,7 @@
 = Create the target environment for your migration
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,target
+
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
 
 In this topic, we'll see how to create and prepare a new cluster to be used as Target.
 
@@ -43,11 +46,11 @@ When the Astra DB reaches **Active** status, perform the following steps in an A
 
 In Astra Portal, choose **Organization Settings** (upper left) from the drop-down menu, and then **Token Management**.  Select the **Read/Write User** role:
 
-image:zdm-token-management1.png[]
+image::{imagesprefix}zdm-token-management1.png[]
 
 Then click **Generate Token**. Astra console displays the generated values. Example:
 
-image:zdm-tokens-generated.png[]
+image::{imagesprefix}zdm-tokens-generated.png[]
 
 Save all credentials (Client ID, Client Secret, and Token) in a clearly named file. For example, you can save all three parts of the new credentials to a file called `my_app_readwrite_user` and store it safely.
 

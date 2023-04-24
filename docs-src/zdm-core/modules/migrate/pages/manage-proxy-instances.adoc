@@ -1,4 +1,7 @@
 = Manage your {zdm-proxy} instances
+:page-tag: migration,zdm,zero-downtime,zdm-proxy
+
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
 
 In this topic, we'll learn how to perform simple operations on your {zdm-proxy} deployment with no interruption to its availability:
 
@@ -214,7 +217,7 @@ To perform an upgrade, change the version tag number to the desired version in `
 
 [source,bash]
 ----
-zdm_proxy_image: datastax/zdm-proxy:x.y.z
+zdm_proxy_image::{imagesprefix} datastax/zdm-proxy:x.y.z
 ----
 
 Replace x.y.z with the version you would like to upgrade to. 
@@ -223,7 +226,7 @@ Replace x.y.z with the version you would like to upgrade to.
 
 [source,bash]
 ----
-zdm_proxy_image: datastax/zdm-proxy:2.1.0
+zdm_proxy_image::{imagesprefix} datastax/zdm-proxy:2.1.0
 ----
 
 Then run the same playbook as above, with the following command:

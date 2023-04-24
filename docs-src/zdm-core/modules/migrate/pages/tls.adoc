@@ -1,4 +1,7 @@
 = Configure Transport Layer Security (TLS)
+:page-tag: migration,zdm,zero-downtime,tls,transport-layer,zdm-proxy
+
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
 
 {zdm-proxy} supports proxy-to-cluster and application-to-proxy TLS encryption.
 
