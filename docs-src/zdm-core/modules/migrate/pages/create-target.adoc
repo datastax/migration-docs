@@ -1,7 +1,7 @@
 = Create the target environment for your migration
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,target
 
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 
 In this topic, we'll see how to create and prepare a new cluster to be used as Target.
 

@@ -1,7 +1,7 @@
 = Troubleshooting
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,troubleshooting
 
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 
 The troubleshooting information for {zdm-product} is organized as follows:
 

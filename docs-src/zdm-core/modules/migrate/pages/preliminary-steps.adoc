@@ -1,7 +1,7 @@
 = Preliminary steps
 :page-tag: migration,zdm,zero-downtime,preliminary-steps
 
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 
 Before starting your migration, verify that you met the prerequisites and performed the preliminary tasks as documented in:
 

@@ -1,7 +1,7 @@
 = Contribution guidelines
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,contributions
 
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 
 {company} {zdm-product} (ZDM) provides a simple and reliable way for users to migrate an existing Apache Cassandra&reg; or DataStax Enterprise cluster to Astra DB, or to any Cassandra/DSE cluster, without any interruption of service to the client applications and data.
 

@@ -1,7 +1,7 @@
 = Understand the rollback options
 :page-tag: migration,zdm,zero-downtime,rollback
 
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 
 At any point during the migration process until the very last phase, if you hit any unexpected issue and need to (in effect) "rollback" the migration, you can always easily revert your client applications to connect directly to Origin. 
 

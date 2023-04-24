@@ -1,7 +1,7 @@
 = Phase 4: Change read routing to Target
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,read-routing
 
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 
 This topic explains how you can configure the {zdm-proxy} to route all reads to Target instead of Origin.
 
