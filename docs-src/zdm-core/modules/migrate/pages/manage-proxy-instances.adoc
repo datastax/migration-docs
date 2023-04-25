@@ -1,7 +1,7 @@
 = Manage your {zdm-proxy} instances
 :page-tag: migration,zdm,zero-downtime,zdm-proxy
-
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 In this topic, we'll learn how to perform simple operations on your {zdm-proxy} deployment with no interruption to its availability:
 

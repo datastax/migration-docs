@@ -1,6 +1,7 @@
 = Introduction to {zdm-product}
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,introduction
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 Enterprises today depend on the ability to reliably migrate mission-critical client applications and data to cloud environments with zero downtime during the migration.
 

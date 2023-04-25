@@ -1,6 +1,7 @@
 = Deployment and infrastructure considerations
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,deploy,infrastructure
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 == Choosing where to deploy the proxy
 A typical {zdm-proxy} deployment is made up of multiple proxy instances. A minimum of three proxy instances is recommended for any deployment apart from those for demo or local testing purposes.
