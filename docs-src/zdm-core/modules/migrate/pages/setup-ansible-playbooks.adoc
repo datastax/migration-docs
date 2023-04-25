@@ -1,6 +1,6 @@
 = Set up the {zdm-automation} with {zdm-utility}
 :page-tag: migration,zdm,zero-downtime,zdm-automation,zdm-proxy,ansible
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 This page explains how to use the {zdm-utility} to set up the Ansible Control Host container for the {zdm-automation}.

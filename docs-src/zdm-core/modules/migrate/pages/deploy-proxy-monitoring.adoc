@@ -1,6 +1,6 @@
 = Deploy the {zdm-proxy} and monitoring
 :page-tag: migration,zdm,zero-downtime,deploy,zdm-proxy,monitoring
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 This topic explains how to use the Ansible automation playbooks that you set up in the xref:setup-ansible-playbooks.adoc[prior topic] to deploy the {zdm-proxy} and its monitoring stack.

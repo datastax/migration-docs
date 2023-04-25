@@ -1,6 +1,6 @@
 = Deployment and infrastructure considerations
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,deploy,infrastructure
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 == Choosing where to deploy the proxy

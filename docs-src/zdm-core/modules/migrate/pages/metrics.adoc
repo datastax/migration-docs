@@ -1,6 +1,6 @@
 = Leverage metrics provided by {zdm-proxy}
 :page-tag: migration,zdm,zero-downtime,metrics
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../../images/]
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 This topic provides detailed information about the metrics captured by the {zdm-proxy} and explains how to interpret the metrics. 
