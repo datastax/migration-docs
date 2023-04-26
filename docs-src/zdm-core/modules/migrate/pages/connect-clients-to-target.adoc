@@ -1,4 +1,7 @@
 = Step 5: Connect your client applications directly to Target
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps,target
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 At this point in our migration phases, we've completed:
 
@@ -14,7 +17,7 @@ Now we're ready to perform Phase 5, in which we will configure our client applic
 
 Illustrated view of this phase:
 
-image:zdm-migration-phase5.png[Phase 5 diagram shows apps no longer using proxy and instead connected directly to Target.]
+image::{imagesprefix}zdm-migration-phase5.png[Phase 5 diagram shows apps no longer using proxy and instead connected directly to Target.]
 
 For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 

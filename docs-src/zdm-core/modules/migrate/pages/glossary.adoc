@@ -1,5 +1,7 @@
 = Glossary
-:page-tag: migration,zdm,glossary
+:page-tag: migration,zdm,zero-downtime,glossary
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 Here are a few terms used throughout the {company} {zdm-product} documentation and code.
 
