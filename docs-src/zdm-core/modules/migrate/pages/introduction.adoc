@@ -1,4 +1,7 @@
 = Introduction to {zdm-product}
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,introduction
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 Enterprises today depend on the ability to reliably migrate mission-critical client applications and data to cloud environments with zero downtime during the migration.
 
@@ -39,13 +42,18 @@ First, a couple of key terms used throughout the {zdm-product} documentation and
 
 For additional terms, see the xref:glossary.adoc[glossary].
 
+[TIP]
+====
+An important migration prerequisite is that you already have the matching schema on Target. A CQL statement that your client application sends to {zdm-proxy} must be able to succeed on both Origin and Target clusters. This means that any keyspace that your client application uses must exist on both Origin and Target with the same name. Table names must also match. For more, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
+====
+
 Your migration project occurs through a sequence of phases, which matches the structure of this ZDM documentation.
 
-image:zdm-migration-all.png[Migration phases from start to finish]
+image::{imagesprefix}zdm-migration-all.png[Migration phases from start to finish]
 
 Before we walk through illustrations of each phase, let's look at a pre-migration, high-level view. At this point, your client applications are performing read/write operations with an existing CQL-compatible database. That is, Apache Cassandra, DSE, or Astra DB.  
 
-image:zdm-migration-before-starting.png[Diagram shows existing CQL-compatible environment before migration starts.]
+image::{imagesprefix}zdm-migration-before-starting.png[Diagram shows existing CQL-compatible environment before migration starts.]
 
 Before your migration begins, you'll need to satisfy prerequisites, prepare your environment, and set up the recommended infrastructure.
 
@@ -53,31 +61,31 @@ Before your migration begins, you'll need to satisfy prerequisites, prepare your
 
 Let's look at Phase 1 of the migration. We'll deploy the ZDM Proxy instances and connect client applications to the proxies. This step activates the dual-write logic. Writes will be "bifurcated" (sent to both Origin and Target), while reads will be executed on Origin only.
 
-image:zdm-migration-phase1.png[Phase 1 diagram shows deployed ZDM Proxy instances, client app connections to proxies, and Target is setup.]
+image::{imagesprefix}zdm-migration-phase1.png[Phase 1 diagram shows deployed ZDM Proxy instances, client app connections to proxies, and Target is setup.]
 
 === Phase 2: Migrate data
 
 In this phase, we migrate existing data using {cstar-data-migrator} and/or {dsbulk-migrator}. Validate that the migrated data is correct, while continuing to perform dual writes.
 
-image:zdm-migration-phase2.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
+image::{imagesprefix}zdm-migration-phase2.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
 
 === Phase 3: Async dual reads
 
 In this phase, you can optionally enable asynchronous dual reads. The idea is to test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target.
 
-image:zdm-migration-phase3.png[Phase 3 diagram shows optional step enabling async dual reads to test performance of Target.]
+image::{imagesprefix}zdm-migration-phase3.png[Phase 3 diagram shows optional step enabling async dual reads to test performance of Target.]
 
 === Phase 4: Route reads to Target
 
 In this phase, the read routing on the {zdm-proxy} is switched to Target so that all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary cluster.
 
-image:zdm-migration-phase4.png[Phase 4 diagram shows read routing on ZDM Proxy was switched to Target.]
+image::{imagesprefix}zdm-migration-phase4.png[Phase 4 diagram shows read routing on ZDM Proxy was switched to Target.]
 
 === Phase 5: Connect directly to Target
 
 In this phase, you'll move your client applications off the {zdm-proxy} and connect the apps directly to Target. Once that happens, the migration is complete.
 
-image:zdm-migration-phase5.png[Phase 5 diagram shows apps no longer using proxy and instead connected directly to Target.]
+image::{imagesprefix}zdm-migration-phase5.png[Phase 5 diagram shows apps no longer using proxy and instead connected directly to Target.]
 
 
 == A fun way to learn: {zdm-product} Interactive Lab

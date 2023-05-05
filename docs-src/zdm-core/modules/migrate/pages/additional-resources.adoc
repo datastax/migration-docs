@@ -1,4 +1,7 @@
 = Additional resources
+:page-tag: migration,zdm,zero-downtime,zdm-proxy
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 This section presents the following:
 

@@ -1,4 +1,7 @@
 = Deploy the {zdm-proxy} and monitoring
+:page-tag: migration,zdm,zero-downtime,deploy,zdm-proxy,monitoring
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 This topic explains how to use the Ansible automation playbooks that you set up in the xref:setup-ansible-playbooks.adoc[prior topic] to deploy the {zdm-proxy} and its monitoring stack.
 
@@ -30,7 +33,7 @@ You can `ls` to see the resources in the Ansible Control Host Docker container. 
 
 Now, `cd` into `zdm-proxy-automation/ansible` and `ls`. Example:
 
-image:zdm-ansible-container-ls3.png[Contents of the Ansible Control Host container]
+image::{imagesprefix}zdm-ansible-container-ls3.png[Contents of the Ansible Control Host container]
 
 == Configure the {zdm-proxy}
 
@@ -122,13 +125,13 @@ Here are some additional configuration variables that you may wish to review and
 
 All advanced configuration variables not listed here are considered mutable and can be changed later if needed (changes can be easily applied to existing deployments in a rolling fashion using the relevant Ansible playbook, as explained later, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable]).
 
-==== Multi-datacenter clusters
+==== *Multi-datacenter clusters*
 
 If Origin is a multi-datacenter cluster, you will need to specify the name of the datacenter that the {zdm-proxy} should consider local. To do this, set the property `origin_local_datacenter` to the datacenter name. Likewise, for multi-datacenter Target clusters you will need to set `target_local_datacenter` appropriately.
 
 These two variables are located in `vars/zdm_proxy_advanced_configuration.yml`. Note that this is not relevant for multi-region Astra DB clusters, where this is handled through region-specific Secure Connect Bundles.
 
-==== Ports
+==== *Ports*
 
 Each {zdm-proxy} instance listens on port 9042 by default, like a regular Cassandra cluster. This can be overridden by setting `zdm_proxy_listen_port` to a different value. This can be useful if the Origin nodes listen on a port that is not 9042 and you want to configure the {zdm-proxy} to listen on that same port to avoid changing the port in your client application configuration.
 
@@ -170,7 +173,7 @@ Readiness expanded GET format:
 
 [source,bash]
 ----
-GET "http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:{{ metrics_port }}/health/readiness"
+curl -G "http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:{{ metrics_port }}/health/readiness"
 ----
 
 The default port for metrics collection is `14001`. 
