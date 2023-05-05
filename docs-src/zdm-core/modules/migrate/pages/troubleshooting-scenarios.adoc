@@ -453,3 +453,33 @@ If you are using simple statements, consider using prepared statements as the be
 Increasing the number of proxies might help, but only if the VMs resources (CPU, RAM or network IO) are near capacity. The {zdm-proxy} doesn't use a lot of RAM, but it uses a lot of CPU and network IO.
 
 Deploying the proxy instances on VMs with faster CPUs and faster network IO might help, but only your own tests will reveal  whether it helps, because it depends on the workload type and details about your environment such as network/VPC configurations, hardware, and so on.
+
+
+== `InsightsRpc` related permissions errors
+
+=== Symptoms
+
+{zdm-proxy} logs contain:
+
+[source,log]
+----
+time="2023-05-05T19:14:31Z" level=debug msg="Recording ORIGIN-CONNECTOR other error: ERROR UNAUTHORIZED (code=ErrorCode Unauthorized [0x00002100], msg=User my_user has no EXECUTE permission on <rpc method InsightsRpc.reportInsight> or any of its parents)"
+time="2023-05-05T19:14:31Z" level=debug msg="Recording TARGET-CONNECTOR other error: ERROR SERVER ERROR (code=ErrorCode ServerError [0x00000000], msg=Unexpected persistence error: Unable to authorize statement com.datastax.bdp.cassandra.cql3.RpcCallStatement)"
+----
+
+=== Cause
+
+This could be the case if the origin (DSE) cluster has Metrics Collector enabled to report metrics for {company} drivers and `my_user` does not have the required permissions. {zdm-proxy} simply passes through these.
+
+=== Solution or Workaround
+
+There are two options to get this fixed.
+
+==== Option 1: Disable DSE Metrics Collector
+
+* On the origin DSE cluster, run `dsetool insights_config --mode DISABLED`
+* Run `dsetool insights_config --show_config` and ensure the `mode` has a value of `DISABLED`
+
+==== Option 2: Use this option if disabling metrics collector is not an option
+
+* Using a superuser role, grant the appropriate permissions to `my_user` role by running `GRANT EXECUTE ON REMOTE OBJECT InsightsRpc TO my_user;`
