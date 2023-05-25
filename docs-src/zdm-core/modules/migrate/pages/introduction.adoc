@@ -49,7 +49,7 @@ An important migration prerequisite is that you already have the matching schema
 
 Your migration project occurs through a sequence of phases, which matches the structure of this ZDM documentation.
 
-image::{imagesprefix}migration-phases-all.png[Migration phases from start to finish.]
+image::{imagesprefix}migration-all-phases.png[Migration phases from start to finish.]
 
 Before we walk through illustrations of each phase, let's look at a pre-migration, high-level view. At this point, your client applications are performing read/write operations with an existing CQL-compatible database. That is, Apache Cassandra, DSE, or Astra DB.  
 
