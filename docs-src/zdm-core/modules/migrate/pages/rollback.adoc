@@ -9,7 +9,7 @@ The migration can be started from scratch once the issue has been addressed.
 
 Let's revisit a diagram presented earlier:
 
-image::{imagesprefix}zdm-migration-phases6a.png[Migration phases from start to finish]
+image::{imagesprefix}migration-phases-all.png[Migration phases from start to finish.]
 
 After moving your client applications off the {zdm-proxy} instances (Phase 5), writes are no longer sent to both Origin and Target clusters: the data on Origin is no longer kept up-to-date, and you lose this seamless rollback option. This is the point at which you commit to using Target permanently. The {zdm-proxy} deployment can be destroyed, and Origin is no longer needed by the client applications that have been migrated.
 

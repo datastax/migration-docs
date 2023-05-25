@@ -7,7 +7,7 @@ In this phase, you can optionally enable asynchronous dual reads. The idea is to
 
 Illustrated view of this phase:
 
-image::{imagesprefix}zdm-migration-phase3.png[Phase 3 diagram shows optional step enabling async dual reads to test performance of Target.]
+image::{imagesprefix}migration-phase3.png[Phase 3 diagram shows optional step enabling async dual reads to test performance of Target.]
 
 For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
