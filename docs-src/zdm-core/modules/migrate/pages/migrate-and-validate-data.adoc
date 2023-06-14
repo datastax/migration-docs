@@ -12,7 +12,7 @@ These tools provide helpful features and may be used to match the requirements o
 
 Illustrated view of this phase:
 
-image::{imagesprefix}migration-phase2.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
+image::{imagesprefix}migration-phase2ra.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
 
 For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
