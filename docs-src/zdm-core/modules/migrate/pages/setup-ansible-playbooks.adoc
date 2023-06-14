@@ -74,11 +74,13 @@ ssh -F <path to zdm_ssh_config> jumphost
 
 From the jumphost, download the {zdm-utility}'s executable. Releases are available here: 
 
-https://github.com/datastax/zdm-proxy-automation/releases
+link:https://github.com/datastax/zdm-proxy-automation/releases[https://github.com/datastax/zdm-proxy-automation/releases^]
 
 The downloadable archive name format is `zdm-util-<platform>-<version>`.
 
-Download example with <version> placeholder. Latest image::{imagesprefix}https://img.shields.io/github/v/release/datastax/zdm-proxy-automation?color=green&display_name=tag[GitHub release (latest by date)]:
+The latest version: 
+
+image:https://img.shields.io/github/v/release/datastax/zdm-proxy-automation?color=green&display_name=tag[GitHub release, latest by date]
 
 [source,bash]
 ----
