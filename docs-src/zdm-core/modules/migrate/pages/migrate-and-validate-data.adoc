@@ -92,8 +92,18 @@ Use {cstar-data-migrator} to migrate and validate tables between Origin and Targ
 * xref:#cstar-prereqs[{cstar-data-migrator} prerequisites]
 * xref:#cstar-install-as-container[Install {cstar-data-migrator} as a Container]
 * xref:#cstar-install-as-jar[Install {cstar-data-migrator} as a JAR file]
-* xref:#cstar-steps[{cstar-data-migrator} steps]
-* xref:#cstar-validation-steps[{cstar-data-migrator} in validation mode]
+* xref:#build-jar-local[Build the JAR for local development (optional)]
+* xref:#cstar-steps[Run {cstar-data-migrator} steps]
+* xref:#cstar-validation-steps[Run {cstar-data-migrator} in validation mode]
+* xref:#cstar-partition-ranges[Migrate or validate specific partition ranges]
+* xref:#cstar-guardrail-checks[Perform large-field guardrail violation checks]
+
+Also refer to the configuration reference tables for the properties file:
+
+* xref:#connection-params[Common connection parameters for Origin and Target]
+* more coming...
+* more coming...
+* more coming...
 
 
 [[cstar-prereqs]]
@@ -101,6 +111,7 @@ Use {cstar-data-migrator} to migrate and validate tables between Origin and Targ
 
 * Install or switch to Java 8. The Spark binaries are compiled with this version of Java.
 * Install https://archive.apache.org/dist/spark/spark-3.3.1/[Spark 3.3.1^] on a single VM (no cluster necessary) where you want to run this job. 
+* Optionally, install https://maven.apache.org/download.cgi[Maven^] 3.8.x, if you want to build the JAR for local development.
 
 You can install Apache Spark by running the following commands:
 
@@ -128,15 +139,31 @@ Download the *latest* JAR file from the {cstar-data-migrator} https://github.com
 Version 4.x of {cstar-data-migrator} is not backward-compatible with *.properties files created in previous versions, and package names have changed. As of 21-Jun-2023, 4.1.0 is the latest version.
 ====
 
+[[build-jar-local]]
+=== Build {cstar-data-migrator} JAR for local development (optional)
+
+Optionally, you can build the {cstar-data-migrator} JAR for local development. (You'll need https://maven.apache.org/download.cgi[Maven^] 3.8.x.)
+
+Example:
+
+[source,bash]
+----
+cd ~/github
+git clone git@github.com:datastax/cassandra-data-migrator.git
+cd cassandra-data-migrator
+mvn clean package
+----
+
+The fat jar (`cassandra-data-migrator-4.x.x.jar`) file should be present now in the `target` folder.
 
 [[cstar-steps]]
 === {cstar-data-migrator} steps
 
-1. Configure for your environment the `cdm*.properties` file that's provided in the GitHub repo. Parameter descriptions and defaults are described in the file. The file can have any name. It does not need to be `cdm.properties` or `cdm-detailed.properties`.
-   * See the simplified sample properties configuration, https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[cdm.properties^]. This version may be sufficient for your environment because it contains the most commonly needed configurable settings.
-   * See the complete sample properties configuration, https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[cdm-detailed.properties^], for the full set of configurable settings.
+1. Configure for your environment the `cdm*.properties` file that's provided in the {cstar-data-migrator} https://github.com/datastax/cassandra-data-migrator/tree/main/src/resources[GitHub repo^]. The file can have any name. It does not need to be `cdm.properties` or `cdm-detailed.properties`. In both versions, only the parameters that aren't commented out will be processed by the `spark-submit` job. Other parameter values use defaults or are ignored. See the descriptions and defaults in each file. Refer to:
+   * The simplified sample properties configuration, https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[cdm.properties^]. This file contains only those parameters that are commonly configured.
+   * The complete sample properties configuration, https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[cdm-detailed.properties^], for the full set of configurable settings.
 
-2. Place the properties file where it can be accessed while running the job via `spark-submit`.
+2. Place the properties file that you elected to use and customize where it can be accessed while running the job via `spark-submit`.
 
 3. Run the job using `spark-submit` command:
 
@@ -187,13 +214,12 @@ Example:
 23/04/06 08:43:06 ERROR DiffJobSession: Inserted missing row in target: [key2]
 ----
 
-
 [TIP]
 ====
 To get the list of missing or mismatched records, grep for all `ERROR` entries in the log files. Differences noted in the log file are listed by primary-key values.
 ====
 
-You can also run the cstar-data-migrator} validation job in an **AutoCorrect** mode. This mode can:
+You can also run the {cstar-data-migrator} validation job in an **AutoCorrect** mode. This mode can:
 
 * Add any missing records from Origin to Target.
 * Update any mismatched records between Origin and Target; this action makes Target the same as Origin.
@@ -211,6 +237,103 @@ spark.cdm.autocorrect.mismatch                    false|true
 The {cstar-data-migrator} validation job will never delete records from Target. The job only adds or updates data on Target.
 ====
 
+[[star-partition-ranges]]
+=== Migrating or validating specific partition ranges
+
+You can also use {cstar-data-migrator} to migrate or validate specific partition ranges, by using a **partition-file** with the name `./<keyspacename>.<tablename>_partitions.csv`. Use the following format in the CSV file, in the current folder as input. 
+Example:
+
+[source,csv]
+----
+-507900353496146534,-107285462027022883
+-506781526266485690,1506166634797362039
+2637884402540451982,4638499294009575633
+798869613692279889,8699484505161403540
+----
+
+Each line in the CSV represents a partition-range (`min,max`). 
+
+Alternatively, you can also pass the partition-file via a command-line parameter. 
+Example:
+
+[source,bash]
+----
+spark-submit --properties-file cdm.properties /
+ --conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" /
+ --conf spark.tokenRange.partitionFile="/<path-to-file>/<csv-input-filename>" /
+ --master "local[*]" /
+ --class com.datastax.cdm.job.<Migrate|DiffData> cassandra-data-migrator-4.x.x.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+----
+
+This mode is specifically useful to processes a subset of partition-ranges that may have failed during a previous run.
+
+[NOTE]
+====
+A file named `./<keyspacename>.<tablename>_partitions.csv` is auto-generated by the migration &amp; validation jobs, in the format shown above, that contains any failed partition ranges. No file is created if there are no failed partitions. You can use this file as an input to process any failed partition in a following run.
+====
+
+[[cstar-guardrail-checks]]
+=== Perform large-field guardrail violation checks
+
+You can use {cstar-data-migrator} to identify large fields from a table that may break your cluster guardrails. For example, {astra_db} has a 10MB limit for a single large field. Specify `--class com.datastax.cdm.job.GuardrailCheck` on the command. Example:
+
+[source,bash]
+----
+./spark-submit --properties-file cdm.properties /
+--conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" /
+--conf spark.cdm.feature.guardrail.colSizeInKB=10000 /
+--master "local[*]" /
+--class com.datastax.cdm.job.GuardrailCheck cassandra-data-migrator-4.x.x.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+----
+
+[[connection-params]]
+=== Common connection parameters for Origin and Target
+
+[cols="3,1,3"]
+|===
+|Property | Default | Notes
+
+| `spark.cdm.connect.origin.host`
+| `localhost`
+| Hostname/IP address of the cluster. May be a comma-separated list, and can follow the `<hostname>:<port>` convention.
+
+| `spark.cdm.connect.origin.port`
+| `9042`
+| Port number to use if not specified on `spark.cdm.connect.origin.host`.
+
+| `spark.cdm.connect.origin.scb`
+| (Not set)
+| Secure Connect Bundle, used to connect to an Astra DB database. Example if set: `file:///aaa/bbb/scb-enterprise.zip`.
+
+| `spark.cdm.connect.origin.username`
+| `cassandra`
+| Username (or `client_id` value) used to authenticate.
+
+| `spark.cdm.connect.origin.password`
+| `cassandra`
+| Password (or `client_secret` value) used to authenticate.
+
+| `spark.cdm.connect.target.host`
+| `localhost`
+| Hostname/IP address of the cluster. May be a comma-separated list, and can follow the `<hostname>:<port>` convention.
+
+| `spark.cdm.connect.target.port`
+| `9042`
+| Port number to use if not specified on `spark.cdm.connect.origin.host`.
+
+| `spark.cdm.connect.target.scb`
+| (Not set)
+| Secure Connect Bundle, used to connect to an Astra DB database. Default is not set. Example if set: `file:///aaa/bbb/my-scb.zip`.
+
+| `spark.cdm.connect.target.username`
+| `cassandra`
+| Username (or `client_id` value) used to authenticate.
+
+| `spark.cdm.connect.origin.password`
+| `cassandra`
+| Password (or `client_secret` value) used to authenticate.
+
+|===
 
 
 
