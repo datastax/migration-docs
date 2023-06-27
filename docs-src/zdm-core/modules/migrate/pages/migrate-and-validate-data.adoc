@@ -44,9 +44,10 @@ Here's a summary of the key features per data migration tool.
 
 === {cstar-data-migrator}
 
-CDM offers functionalities like bulk export, import, data conversion, mapping of column names between Origin and Target, and validation. The CDM capabilities are extensive:
+CDM offers functionalities like bulk export, import, data conversion, mapping of column names between Origin and Target, and validation. 
+The CDM capabilities are extensive:
 
-* Automatic detection of each table's schema (column names, types, keys, collections, UDTs, and other schema items).
+* Automatic detection of each table's schema - column names, types, keys, collections, UDTs, and other schema items.
 * Validation - Log partitions range-level exceptions, use the exceptions file as input for rerun operations.
 * Counter tables to validate the quantity of data migrations.
 * Preserves writetimes and TTLs.
@@ -74,7 +75,7 @@ With new or enhanced capabilities in https://github.com/datastax/cassandra-data-
 
 {dsbulk-migrator}, which is based on {company} Bulk Loader (DSBulk), is best for migrating smaller amounts of data, and/or when you can shard data from table rows into more manageable quantities.  
 
-{dsbulk-migrator} provides the following main commands:
+{dsbulk-migrator} provides the following commands:
 
 * `migrate-live` starts a live data migration using a pre-existing DSBulk installation, or alternatively, the embedded DSBulk version. A "live" migration means that the data migration will start immediately and will be performed by this migrator tool through the desired DSBulk installation.
 
@@ -82,19 +83,143 @@ With new or enhanced capabilities in https://github.com/datastax/cassandra-data-
 
 * `generate-ddl` reads the schema from Origin and generates CQL files to recreate it in an {astra_db} cluster used as Target.
 
-// For installation and usage details, see the 
-// {dsbulk-migrator} repo's https://github.com/datastax/dsbulk-migrator/blob/main/README.md[README, window="_blank"]. 
 
-[[cdm-tasks]]
-== Cassandra Data Migrator tasks
+[[using-cdm]]
+== Using {cstar-data-migrator}
 
-TODO - adding this entire detailed section next...
+Use {cstar-data-migrator} to migrate and validate tables between Origin and Target Cassandra clusters, with available logging and reconciliation support.
+
+* xref:#cstar-prereqs[{cstar-data-migrator} prerequisites]
+* xref:#cstar-install-as-container[Install {cstar-data-migrator} as a Container]
+* xref:#cstar-install-as-jar[Install {cstar-data-migrator} as a JAR file]
+* xref:#cstar-steps[{cstar-data-migrator} steps]
+* xref:#cstar-validation-steps[{cstar-data-migrator} in validation mode]
 
 
-[[dsbulk-migrator-tasks]]
-== {dsbulk-migrator} tasks
+[[cstar-prereqs]]
+=== {cstar-data-migrator} prerequisites
 
-To use {dsbulk-migrator}:
+* Install or switch to Java 8. The Spark binaries are compiled with this version of Java.
+* Install https://archive.apache.org/dist/spark/spark-3.3.1/[Spark 3.3.1^] on a single VM (no cluster necessary) where you want to run this job. 
+
+You can install Apache Spark by running the following commands:
+
+[source,bash]
+----
+wget https://archive.apache.org/dist/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.tgz 
+
+tar -xvzf spark-3.3.1-bin-hadoop3.tgz
+----
+
+[[cstar-install-as-container]]
+=== Install {cstar-data-migrator} as a Container
+
+Get the latest image that includes all dependencies from https://hub.docker.com/r/datastax/cassandra-data-migrator[DockerHub^].
+
+All migration tools (`cassandra-data-migrator` + `dsbulk` + `cqlsh`) are available in the `/assets/` folder of the container.
+
+[[cstar-install-as-jar]]
+=== Install {cstar-data-migrator} as a JAR file
+
+Download the *latest* JAR file from the {cstar-data-migrator} https://github.com/datastax/cassandra-data-migrator/packages/[GitHub repo^]. 
+
+[NOTE]
+====
+Version 4.x of {cstar-data-migrator} is not backward-compatible with *.properties files created in previous versions, and package names have changed. As of 21-Jun-2023, 4.1.0 is the latest version.
+====
+
+
+[[cstar-steps]]
+=== {cstar-data-migrator} steps
+
+1. Configure for your environment the `cdm*.properties` file that's provided in the GitHub repo. Parameter descriptions and defaults are described in the file. The file can have any name. It does not need to be `cdm.properties` or `cdm-detailed.properties`.
+   * See the simplified sample properties configuration, https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[cdm.properties^]. This version may be sufficient for your environment because it contains the most commonly needed configurable settings.
+   * See the complete sample properties configuration, https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[cdm-detailed.properties^], for the full set of configurable settings.
+
+2. Place the properties file where it can be accessed while running the job via `spark-submit`.
+
+3. Run the job using `spark-submit` command:
+
+[source,bash]
+----
+./spark-submit --properties-file cdm.properties /
+--conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" /
+--master "local[*]" /
+--class com.datastax.cdm.job.Migrate cassandra-data-migrator-4.x.x.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+----
+
+[TIP]
+====
+* The `spark-submit` command generates a log file, `logfile_name_*.txt`, to avoid log output on the Terminal console.
+* If the table you're migrating is large (such as over 100GB), you can add the option `--driver-memory 25G --executor-memory 25G`. Example:
+
+[source,bash]
+----
+./spark-submit --properties-file cdm.properties /
+--conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" /
+--master "local[*]" --driver-memory 25G --executor-memory 25G /
+--class com.datastax.cdm.job.Migrate cassandra-data-migrator-4.x.x.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+----
+====
+
+[[cstar-validation-steps]]
+=== {cstar-data-migrator} steps in validation mode
+
+To run your migration job with {cstar-data-migrator} in **data validation mode**, use class option `--class com.datastax.cdm.job.DiffData`. 
+Example:
+
+[source,bash]
+----
+./spark-submit --properties-file cdm.properties /
+--conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" /
+--master "local[*]" /
+--class com.datastax.cdm.job.DiffData cassandra-data-migrator-4.x.x.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+----
+
+The {cstar-data-migrator} validation job will report differences as `ERROR` entries in the log file. 
+Example:
+
+[source,bash]
+----
+23/04/06 08:43:06 ERROR DiffJobSession: Mismatch row found for key: [key3] Mismatch: Target Index: 1 Origin: valueC Target: value999) 
+23/04/06 08:43:06 ERROR DiffJobSession: Corrected mismatch row in target: [key3]
+23/04/06 08:43:06 ERROR DiffJobSession: Missing target row found for key: [key2]
+23/04/06 08:43:06 ERROR DiffJobSession: Inserted missing row in target: [key2]
+----
+
+
+[TIP]
+====
+To get the list of missing or mismatched records, grep for all `ERROR` entries in the log files. Differences noted in the log file are listed by primary-key values.
+====
+
+You can also run the cstar-data-migrator} validation job in an **AutoCorrect** mode. This mode can:
+
+* Add any missing records from Origin to Target.
+* Update any mismatched records between Origin and Target; this action makes Target the same as Origin.
+
+To enable or disable this feature, use one or both of the following settings in your *.properties configuration file.
+
+[source,properties]
+----
+spark.cdm.autocorrect.missing                     false|true
+spark.cdm.autocorrect.mismatch                    false|true
+----
+
+[IMPORTANT]
+====
+The {cstar-data-migrator} validation job will never delete records from Target. The job only adds or updates data on Target.
+====
+
+
+
+
+// ------------------------
+
+[[using-dsbulk-migrator]]
+== Using {dsbulk-migrator}
+
+Use {dsbulk-migrator} to perform simple migration of smaller data quantities, where data validation (other than post-migration row counts) is not necessary.
 
 * xref:#prereqs-dsbulk-migrator[Prerequisites]
 * xref:#building-dsbulk-migrator[Building {dsbulk-migrator}]
@@ -105,14 +230,14 @@ Also see the xref:#dsbulk-migrator-command-line-examples[{dsbulk-migrator} comma
 
 
 [[prereqs-dsbulk-migrator]]
-## Prerequisites
+=== Prerequisites
 
 * Java (TODO: list recommended and supported versions)
 * https://maven.apache.org/download.cgi[Maven^] (TODO: list recommended and supported versions)
 * https://github.com/datastax/simulacron#prerequisites[Simulcron^] for testing (TODO: list recommended and supported versions)
 
 [[building-dsbulk-migrator]]
-## Building {dsbulk-migrator}
+=== Building {dsbulk-migrator}
 
 Building {dsbulk-migrator} is accomplished with Maven. First, clone the git repo to your local machine. Example:
 
@@ -140,8 +265,9 @@ The build produces two distributable fat jars:
   driver; suitable for all operations. Note that this jar is much bigger than the previous one, due
   to the presence of DSBulk classes.
 
+
 [[testing-dsbulk-migrator]]
-## Testing {dsbulk-migrator}
+=== Testing {dsbulk-migrator}
 
 The project contains a few integration tests. Run them with:
 
@@ -156,7 +282,7 @@ tests.
 
 
 [[running-dsbulk-migrator]]
-## Running {dsbulk-migrator}
+=== Running {dsbulk-migrator}
 
 Launch the {dsbulk-migrator} tool:
 
@@ -177,7 +303,7 @@ import cluster is never contacted, import options and DSBulk-related options are
 still needs to access the Origin cluster in order to gather metadata about the keyspaces and tables
 for which to generate DDL statements.
 
-### Live Migration Command Line Options
+==== **Live Migration Command Line Options**
 
 The following options are available for the `migrate-live` command. Most options have sensible default values and do not
 need to be specified, unless you want to override the default value.
@@ -234,7 +360,6 @@ Options `--export-host` and `--export-bundle` are mutually exclusive.
 Must be a positive number or the special value `AUTO`. 
 The default is `AUTO`.
 
-
 | 
 | `--export-max-concurrent-queries=NUM\|AUTO`
 | The maximum number of concurrent queries to execute. 
@@ -265,7 +390,6 @@ This is an advanced setting; you should rarely need to modify the default value.
 | `--export-username=STRING`
 | The username to use to authenticate against the Origin cluster. 
 Options `--export-username` and `--export-password` must be provided together, or not at all.
-
 
 | `-h` 
 | `--help`
@@ -382,7 +506,7 @@ If unspecified, it defaults to the current working directory.
 |===
 
 
-### Script Generation Command Line Options
+==== **Script Generation Command Line Options**
 
 The following options are available for the `generate-script` command. 
 Most options have sensible default values and do not need to be specified, unless you want to override the default value.
@@ -432,7 +556,6 @@ Options `--export-host` and `--export-bundle` are mutually exclusive.
 Must be a positive number or the special value `AUTO`. 
 The default is `AUTO`.
 
-
 | 
 | `--export-max-concurrent-queries=NUM\|AUTO`
 | The maximum number of concurrent queries to execute. 
@@ -463,7 +586,6 @@ This is an advanced setting. You should rarely need to modify the default value.
 | `--export-username=STRING`
 | The username to use to authenticate against the Origin cluster. 
 Options `--export-username` and `--export-password` must be provided together, or not at all.
-
 
 | `-h` 
 | `--help`
@@ -555,7 +677,7 @@ Case-sensitive table names must be entered in their exact case.
 |===
 
 
-### DDL Generation Command Line Options
+==== **DDL Generation Command Line Options**
 
 The following options are available for the `generate-ddl` command. 
 Most options have sensible default values and do not need to be specified, unless you want to override the default value.
@@ -623,7 +745,7 @@ The default is `all`.
 
 
 [[getting-help-with-dsbulk-migrator]]
-## Getting help with {dsbulk-migrator}
+=== Getting help with {dsbulk-migrator}
 
 Use the following command to display the available {dsbulk-migrator} commands:
 
@@ -640,7 +762,7 @@ java -jar /path/to/dsbulk-migrator-embedded-dsbulk.jar COMMAND --help
 ----
 
 [[dsbulk-migrator-command-line-examples]]
-## {dsbulk-migrator} command-line examples
+=== {dsbulk-migrator} command-line examples
 
 [NOTE]
 ====
@@ -648,7 +770,7 @@ These examples show sample `username` and `password` values that are for demonst
 Do not use these values in your environment.
 ==== 
 
-### Generate migration script
+==== **Generate migration script**
 
 Generate a migration script to migrate from an existing Origin cluster to a Target {astra_db} cluster:
 
@@ -666,7 +788,7 @@ Generate a migration script to migrate from an existing Origin cluster to a Targ
         --import-password=s3cr3t
 ----
 
-### Migrate live using external DSBulk install
+==== **Migrate live using external DSBulk install**
 
 Migrate live from an existing Origin cluster to a Target {astra_db} cluster using an external DSBulk installation. 
 Passwords will be prompted interactively:
@@ -685,7 +807,7 @@ Passwords will be prompted interactively:
         --import-password # password will be prompted
 ----
 
-### Migrate live using embedded DSBulk install
+==== **Migrate live using embedded DSBulk install**
 
 Migrate live from an existing Origin cluster to a Target {astra_db} cluster using the embedded DSBulk installation. 
 Passwords will be prompted interactively. 
@@ -715,7 +837,7 @@ In the example above, you must use the `dsbulk-migrator-<VERSION>-embedded-dsbul
 Otherwise, an error will be raised because no embedded DSBulk can be found.
 ====
 
-### Generate DDL 
+==== **Generate DDL**
 
 Generate DDL files to recreate the Origin schema in a Target {astra_db} cluster:
 
