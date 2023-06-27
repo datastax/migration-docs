@@ -32,9 +32,11 @@ Refer to the following GitHub repos:
 
 * https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator}^] repo.
 
-A number of helpful assets are provided in each repo. In particular, the CDM repo provides two configuration templates, with embedded comments and default values, which you can customize to match your data migration's requirements:
+A number of helpful assets are provided in each repo. 
 
-* https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[cdm-detailed.properties, window="_blank"] provides a subset of configuration options with commonly required settings.
+In particular, the CDM repo provides two configuration templates, with embedded comments and default values, which you can customize to match your data migration's requirements:
+
+* https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[cdm.properties, window="_blank"] provides a subset of configuration options with commonly required settings.
 
 * https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[cdm-detailed.properties, window="_blank"] with all available options.
 
@@ -42,6 +44,7 @@ A number of helpful assets are provided in each repo. In particular, the CDM rep
 
 Here's a summary of the key features per data migration tool.  
 
+[[cstar-data-migrator-key-features]]
 === {cstar-data-migrator}
 
 CDM offers functionalities like bulk export, import, data conversion, mapping of column names between Origin and Target, and validation. 
@@ -71,6 +74,9 @@ With new or enhanced capabilities in https://github.com/datastax/cassandra-data-
 * You can populate Target columns with constant values: New columns can be added to the Target table, and populated with constant values.
 * Expand Origin Map Column into Target rows: A Map in Origin can be expanded into multiple rows in Target when the Map key is part of the Target primary key.
 
+For details, see xref:#using-cdm[Using {cstar-data-migrator}] in this topic. 
+
+[[dsbulk-migrator-key-features]]
 === {dsbulk-migrator}
 
 {dsbulk-migrator}, which is based on {company} Bulk Loader (DSBulk), is best for migrating smaller amounts of data, and/or when you can shard data from table rows into more manageable quantities.  
@@ -83,30 +89,39 @@ With new or enhanced capabilities in https://github.com/datastax/cassandra-data-
 
 * `generate-ddl` reads the schema from Origin and generates CQL files to recreate it in an {astra_db} cluster used as Target.
 
+For details, see xref:#using-dsbulk-migrator[Using {dsbulk-migrator}] in this topic. 
+
 
 [[using-cdm]]
 == Using {cstar-data-migrator}
 
 Use {cstar-data-migrator} to migrate and validate tables between Origin and Target Cassandra clusters, with available logging and reconciliation support.
 
-* xref:#cstar-prereqs[{cstar-data-migrator} prerequisites]
-* xref:#cstar-install-as-container[Install {cstar-data-migrator} as a Container]
-* xref:#cstar-install-as-jar[Install {cstar-data-migrator} as a JAR file]
-* xref:#build-jar-local[Build the JAR for local development (optional)]
-* xref:#cstar-steps[Run {cstar-data-migrator} steps]
-* xref:#cstar-validation-steps[Run {cstar-data-migrator} in validation mode]
-* xref:#cstar-partition-ranges[Migrate or validate specific partition ranges]
-* xref:#cstar-guardrail-checks[Perform large-field guardrail violation checks]
+* xref:#cdm-prereqs[{cstar-data-migrator} prerequisites]
+* xref:#cdm-install-as-container[Install {cstar-data-migrator} as a Container]
+* xref:#cdm-install-as-jar[Install {cstar-data-migrator} as a JAR file]
+* xref:#cdm-build-jar-local[Build the JAR for local development (optional)]
+* xref:#cdm-steps[Run {cstar-data-migrator} steps]
+* xref:#cdm-validation-steps[Run {cstar-data-migrator} in validation mode]
+* xref:#cdm-partition-ranges[Migrate or validate specific partition ranges]
+* xref:#cdm-guardrail-checks[Perform large-field guardrail violation checks]
 
-Also refer to the configuration reference tables for the properties file:
+Also refer to the per-property configuration details in this topic:
 
-* xref:#connection-params[Common connection parameters for Origin and Target]
-* more coming...
-* more coming...
-* more coming...
+* xref:#cdm-connection-params[Common connection parameters for Origin and Target]
+* xref:#cdm-origin-schema-params[Origin schema parameters]
+* xref:#cdm-target-schema-params[Target schema parameter]
+* xref:#cdm-auto-correction-params[Auto-correction parameters]
+* xref:#cdm-performance-operations-params[Performance and operations parameters]
+* xref:#cdm-transformation-params[Transformation parameters]
+* xref:#cdm-cassandra-filter-params[Cassandra filter parameters]
+* xref:#cdm-java-filter-params[Java filter parameters]
+* xref:#cdm-constant-column-feature-params[Constant column feature parameters]
+* xref:#cdm-explode-map-feature-params[Explode map feature parameters]
+* xref:#cdm-guardrail-feature-params[Guardrail feature parameters]
+* xref:#cdm-tls-ssl-connection-params[TLS (SSL) connection parameters]
 
-
-[[cstar-prereqs]]
+[[cdm-prereqs]]
 === {cstar-data-migrator} prerequisites
 
 * Install or switch to Java 8. The Spark binaries are compiled with this version of Java.
@@ -122,14 +137,14 @@ wget https://archive.apache.org/dist/spark/spark-3.3.1/spark-3.3.1-bin-hadoop3.t
 tar -xvzf spark-3.3.1-bin-hadoop3.tgz
 ----
 
-[[cstar-install-as-container]]
+[[cdm-install-as-container]]
 === Install {cstar-data-migrator} as a Container
 
 Get the latest image that includes all dependencies from https://hub.docker.com/r/datastax/cassandra-data-migrator[DockerHub^].
 
 All migration tools (`cassandra-data-migrator` + `dsbulk` + `cqlsh`) are available in the `/assets/` folder of the container.
 
-[[cstar-install-as-jar]]
+[[cdm-install-as-jar]]
 === Install {cstar-data-migrator} as a JAR file
 
 Download the *latest* JAR file from the {cstar-data-migrator} https://github.com/datastax/cassandra-data-migrator/packages/[GitHub repo^]. 
@@ -139,7 +154,7 @@ Download the *latest* JAR file from the {cstar-data-migrator} https://github.com
 Version 4.x of {cstar-data-migrator} is not backward-compatible with *.properties files created in previous versions, and package names have changed. As of 21-Jun-2023, 4.1.0 is the latest version.
 ====
 
-[[build-jar-local]]
+[[cdm-build-jar-local]]
 === Build {cstar-data-migrator} JAR for local development (optional)
 
 Optionally, you can build the {cstar-data-migrator} JAR for local development. (You'll need https://maven.apache.org/download.cgi[Maven^] 3.8.x.)
@@ -156,7 +171,7 @@ mvn clean package
 
 The fat jar (`cassandra-data-migrator-4.x.x.jar`) file should be present now in the `target` folder.
 
-[[cstar-steps]]
+[[cdm-steps]]
 === {cstar-data-migrator} steps
 
 1. Configure for your environment the `cdm*.properties` file that's provided in the {cstar-data-migrator} https://github.com/datastax/cassandra-data-migrator/tree/main/src/resources[GitHub repo^]. The file can have any name. It does not need to be `cdm.properties` or `cdm-detailed.properties`. In both versions, only the parameters that aren't commented out will be processed by the `spark-submit` job. Other parameter values use defaults or are ignored. See the descriptions and defaults in each file. Refer to:
@@ -189,7 +204,7 @@ The fat jar (`cassandra-data-migrator-4.x.x.jar`) file should be present now in 
 ----
 ====
 
-[[cstar-validation-steps]]
+[[cdm-validation-steps]]
 === {cstar-data-migrator} steps in validation mode
 
 To run your migration job with {cstar-data-migrator} in **data validation mode**, use class option `--class com.datastax.cdm.job.DiffData`. 
@@ -237,7 +252,7 @@ spark.cdm.autocorrect.mismatch                    false|true
 The {cstar-data-migrator} validation job will never delete records from Target. The job only adds or updates data on Target.
 ====
 
-[[star-partition-ranges]]
+[[cdm--partition-ranges]]
 === Migrating or validating specific partition ranges
 
 You can also use {cstar-data-migrator} to migrate or validate specific partition ranges, by using a **partition-file** with the name `./<keyspacename>.<tablename>_partitions.csv`. Use the following format in the CSV file, in the current folder as input. 
@@ -269,13 +284,13 @@ This mode is specifically useful to processes a subset of partition-ranges that 
 
 [NOTE]
 ====
-A file named `./<keyspacename>.<tablename>_partitions.csv` is auto-generated by the migration &amp; validation jobs, in the format shown above, that contains any failed partition ranges. No file is created if there are no failed partitions. You can use this file as an input to process any failed partition in a following run.
+A file named `./<keyspacename>.<tablename>_partitions.csv` is auto-generated by the migration &amp; validation jobs, in the format shown above. The file contains any failed partition ranges. No file is created if there were no failed partitions. You can use the CSV as input to process any failed partition in a subsequent run.
 ====
 
-[[cstar-guardrail-checks]]
+[[cdm-guardrail-checks]]
 === Perform large-field guardrail violation checks
 
-You can use {cstar-data-migrator} to identify large fields from a table that may break your cluster guardrails. For example, {astra_db} has a 10MB limit for a single large field. Specify `--class com.datastax.cdm.job.GuardrailCheck` on the command. Example:
+Use {cstar-data-migrator} to identify large fields from a table that may break your cluster guardrails. For example, {astra_db} has a 10MB limit for a single large field. Specify `--class com.datastax.cdm.job.GuardrailCheck` on the command. Example:
 
 [source,bash]
 ----
@@ -286,7 +301,7 @@ You can use {cstar-data-migrator} to identify large fields from a table that may
 --class com.datastax.cdm.job.GuardrailCheck cassandra-data-migrator-4.x.x.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
 
-[[connection-params]]
+[[cdm-connection-params]]
 === Common connection parameters for Origin and Target
 
 [cols="3,1,3"]
@@ -335,6 +350,10 @@ You can use {cstar-data-migrator} to identify large fields from a table that may
 
 |===
 
+
+
+
+[[cdm-origin-schema-params]]
 === Origin schema parameters
 
 [cols="3,1,3"]
@@ -372,6 +391,10 @@ The `spark.cdm.transform.custom.writetime` property, if set, would override `spa
 |===
 
 
+
+
+
+[[cdm-target-schema-params]]
 === Target schema parameter
 
 [cols="3,1,3"]
@@ -385,6 +408,10 @@ The `spark.cdm.transform.custom.writetime` property, if set, would override `spa
 |===
 
 
+
+
+
+[[cdm-auto-correction-params]]
 === Auto-correction parameters
 
 Auto-correction parameters allow {cstar-data-migrator} to correct data differences found between Origin and Target when you run the `DiffData` program. Typically, these are run disabled (for "what if" migration testing), which will generate a list of data discrepancies. The reasons for these discrepancies can then be investigated, and if necessary the parameters below can be enabled.
@@ -411,9 +438,165 @@ The `TIMESTAMP` of records may have an effect. If the `WRITETIME` of the Origin 
 | `false`
 | Commented out. By default, Counter tables are not copied when missing, unless explicitly set.  
 
-| More
-| parameters 
-| coming soon, 27-June-2023...
+| `spark.tokenrange.partitionFile`
+| `./<keyspace>.<tablename>_partitions.csv`
+| Commented out. This CSV file is used as input, as well as output when applicable. If the file exists, only the partition ranges in this file will be migrated or validated. Similarly, if exceptions occur while migrating or validating, partition ranges with exceptions will be logged to this file. 
+
+|===
+
+
+
+
+
+
+[[cdm-performance-operations-params]]
+=== Performance and operations parameters
+
+Here are the performance and operations parameters that can affect migration throughput, error handling, and similar concerns.
+
+[cols="3,1,3"]
+|===
+|Property | Default | Notes
+
+| `spark.cdm.perfops.numParts`
+| `10000`
+| In standard operation, the full token range (-2^63..2^63-1) is divided into a number of parts, which will be parallel-processed. You should aim for each part to comprise a total of ≈1-10GB of data to migrate. During initial testing, you may want this to be a small number (such as `1`).
+
+| `spark.cdm.perfops.batchSize`
+| `5`
+| When writing to Target, this comprises the number of records that will be put into an `UNLOGGED` batch. {cstar-data-migrator} will tend to work on the same partition at a time. Thus if your partition sizes are larger, this number may be increased. If the `spark.cdm.perfops.batchSize` would mean that more than 1 partition is often contained in a batch, reduce this parameter's value. Ideally < 1% of batches have more than 1 partition.
+
+| `spark.cdm.perfops.ratelimit.origin`
+| `20000`
+| Concurrent number of operations across all parallel threads from Origin. This value may be adjusted up (or down), depending on the amount of data and the processing capacity of the Origin cluster.
+
+| `spark.cdm.perfops.ratelimit.target` 
+| `40000`
+| Concurrent number of operations across all parallel threads from Target. This may be adjusted up (or down), depending on the amount of data and the processing capacity of the Target cluster.
+
+| `spark.cdm.perfops.consistency.read`
+| `LOCAL_QUORUM`
+| Commented out. Read consistency from Origin, and also from Target when records are read for comparison purposes. The consistency parameters may be one of: `ANY`, `ONE`, `TWO`, `THREE`, `QUORUM`, `LOCAL_ONE`, `EACH_QUORUM`, `LOCAL_QUORUM`, `SERIAL`, `LOCAL_SERIAL`, `ALL`.
+
+| `spark.cdm.perfops.consistency.write`
+| `LOCAL_QUORUM`
+| Commented out. Write consistency to Target. The consistency parameters may be one of: `ANY`, `ONE`, `TWO`, `THREE`, `QUORUM`, `LOCAL_ONE`, `EACH_QUORUM`, `LOCAL_QUORUM`, `SERIAL`, `LOCAL_SERIAL`, `ALL`.
+
+| `spark.cdm.perfops.printStatsAfter`
+| `100000`
+| Commented out. Number of rows of processing after which a progress log entry will be made.
+
+| `spark.cdm.perfops.fetchSizeInRows`
+| `1000`
+| Commented out. This parameter affects the frequency of reads from Origin, and also the frequency of flushes to Target. 
+
+| `spark.cdm.perfops.errorLimit`
+| `0`
+| Commented out. Controls how many errors a thread may encounter during `MigrateData` and `DiffData` operations before failing. Recommendation: set this parameter to a non-zero value **only when not doing** a mutation-type operation, such as when you're running `DiffData` without `.autocorrect`.
+
+|===
+
+
+
+
+[[cdm-transformation-params]]
+=== Transformation parameters
+
+[cols="3,1,3"]
+|===
+|Property | Default | Notes
+
+| Coming
+| soon
+| ...
+
+|===
+
+
+
+[[cdm-cassandra-filter-params]]
+=== Cassandra filter parameters
+
+[cols="3,1,3"]
+|===
+|Property | Default | Notes
+
+| Coming
+| soon
+| ...
+
+|===
+
+
+[[cdm-java-filter-params]]
+=== Java filter parameters
+
+[cols="3,1,3"]
+|===
+|Property | Default | Notes
+
+| Coming
+| soon
+| ...
+
+|===
+
+
+[[cdm-constant-column-feature-params]]
+=== Constant column feature parameters
+
+[cols="3,1,3"]
+|===
+|Property | Default | Notes
+
+| Coming
+| soon
+| ...
+
+|===
+
+
+
+[[cdm-explode-map-feature-params]]
+=== Explode map feature parameters
+
+[cols="3,1,3"]
+|===
+|Property | Default | Notes
+
+| Coming
+| soon
+| ...
+
+|===
+
+
+
+[[cdm-guardrail-feature-params]]
+=== Guardrail feature parameters
+
+[cols="3,1,3"]
+|===
+|Property | Default | Notes
+
+| Coming
+| soon
+| ...
+
+|===
+
+
+
+[[cdm-tls-ssl-connection-params]]
+=== TLS (SSL) connection parameters
+
+[cols="3,1,3"]
+|===
+|Property | Default | Notes
+
+| Coming
+| soon
+| ...
 
 |===
 
