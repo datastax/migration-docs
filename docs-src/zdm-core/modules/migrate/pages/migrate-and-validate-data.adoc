@@ -106,20 +106,8 @@ Use {cstar-data-migrator} to migrate and validate tables between Origin and Targ
 * xref:#cdm-partition-ranges[Migrate or validate specific partition ranges]
 * xref:#cdm-guardrail-checks[Perform large-field guardrail violation checks]
 
-Also refer to the per-property configuration details in this topic:
+Also see the per-property configuration details in the xref:#cdm-reference[{cstar-data-migrator} reference].
 
-* xref:#cdm-connection-params[Common connection parameters for Origin and Target]
-* xref:#cdm-origin-schema-params[Origin schema parameters]
-* xref:#cdm-target-schema-params[Target schema parameter]
-* xref:#cdm-auto-correction-params[Auto-correction parameters]
-* xref:#cdm-performance-operations-params[Performance and operations parameters]
-* xref:#cdm-transformation-params[Transformation parameters]
-* xref:#cdm-cassandra-filter-params[Cassandra filter parameters]
-* xref:#cdm-java-filter-params[Java filter parameters]
-* xref:#cdm-constant-column-feature-params[Constant column feature parameters]
-* xref:#cdm-explode-map-feature-params[Explode map feature parameters]
-* xref:#cdm-guardrail-feature-params[Guardrail feature parameters]
-* xref:#cdm-tls-ssl-connection-params[TLS (SSL) connection parameters]
 
 [[cdm-prereqs]]
 === {cstar-data-migrator} prerequisites
@@ -301,6 +289,22 @@ Use {cstar-data-migrator} to identify large fields from a table that may break y
 --class com.datastax.cdm.job.GuardrailCheck cassandra-data-migrator-4.x.x.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
 
+[[cdm-reference]]
+== {cstar-data-migrator} reference
+
+* xref:#cdm-connection-params[Common connection parameters for Origin and Target]
+* xref:#cdm-origin-schema-params[Origin schema parameters]
+* xref:#cdm-target-schema-params[Target schema parameter]
+* xref:#cdm-auto-correction-params[Auto-correction parameters]
+* xref:#cdm-performance-operations-params[Performance and operations parameters]
+* xref:#cdm-transformation-params[Transformation parameters]
+* xref:#cdm-cassandra-filter-params[Cassandra filter parameters]
+* xref:#cdm-java-filter-params[Java filter parameters]
+* xref:#cdm-constant-column-feature-params[Constant column feature parameters]
+* xref:#cdm-explode-map-feature-params[Explode map feature parameters]
+* xref:#cdm-guardrail-feature-params[Guardrail feature parameters]
+* xref:#cdm-tls-ssl-connection-params[TLS (SSL) connection parameters]
+
 [[cdm-connection-params]]
 === Common connection parameters for Origin and Target
 
@@ -318,7 +322,7 @@ Use {cstar-data-migrator} to identify large fields from a table that may break y
 
 | `spark.cdm.connect.origin.scb`
 | (Not set)
-| Secure Connect Bundle, used to connect to an Astra DB database. Example if set: `file:///aaa/bbb/scb-enterprise.zip`.
+| Secure Connect Bundle, used to connect to an Astra DB database. Example: `file:///aaa/bbb/scb-enterprise.zip`.
 
 | `spark.cdm.connect.origin.username`
 | `cassandra`
@@ -351,8 +355,6 @@ Use {cstar-data-migrator} to identify large fields from a table that may break y
 |===
 
 
-
-
 [[cdm-origin-schema-params]]
 === Origin schema parameters
 
@@ -362,18 +364,18 @@ Use {cstar-data-migrator} to identify large fields from a table that may break y
 
 | `spark.cdm.schema.origin.keyspaceTable`
 | 
-| Required. The `<keyspace>.<table_name>` of the table to be migrated. Table must exist in Origin.
+| Required - the `<keyspace>.<table_name>` of the table to be migrated. Table must exist in Origin.
 
 | `spark.cdm.schema.origin.column.ttl.automatic`
-| `true` (see notes)
-| Recommended, boolean. Default is `true`, unless `spark.cdm.schema.origin.column.ttl.names` is specified. When `true`, the Time To Live (TTL) of the Target record will be determined by finding the maximum TTL of all Origin columns that can have TTL set (which excludes partition key, clustering key, collections/UDT/tuple, and frozen columns). When `false`, and  `spark.cdm.schema.origin.column.ttl.names` is not set, the Target record will have the TTL determined by the Target table configuration.
+| `true`
+| Default is `true`, unless `spark.cdm.schema.origin.column.ttl.names` is specified. When `true`, the Time To Live (TTL) of the Target record will be determined by finding the maximum TTL of all Origin columns that can have TTL set (which excludes partition key, clustering key, collections/UDT/tuple, and frozen columns). When `false`, and  `spark.cdm.schema.origin.column.ttl.names` is not set, the Target record will have the TTL determined by the Target table configuration.
 
 | `spark.cdm.schema.origin.column.ttl.names`
-| (See notes)
+| 
 | Default is empty, meaning the names will be determined automatically if `spark.cdm.schema.origin.column.ttl.automatic` is set. Specify a subset of eligible columns that are used to calculate the TTL of the Target record.
 
 | `spark.cdm.schema.origin.column.writetime.automatic`
-| `true` (see notes)
+| `true`
 | Default is `true`, unless `spark.cdm.schema.origin.column.writetime.names` is specified. When `true`, the `WRITETIME` of the Target record will be determined by finding the maximum `WRITETIME` of all Origin columns that can have `WRITETIME` set (which excludes partition key, clustering key, collections/UDT/tuple, and frozen columns). When `false`, and `spark.cdm.schema.origin.column.writetime.names` is not set, the Target record will have the `WRITETIME` determined by the Target table configuration. 
 [NOTE]
 ====
@@ -386,12 +388,9 @@ The `spark.cdm.transform.custom.writetime` property, if set, would override `spa
 
 | `spark.cdm.schema.origin.column.names.to.target`
 | 
-| Default is empty. If column names are changed between Origin and Target, then this map-like list provides a mechanism to associate the two. The format is `<origin_column_name>:<target_column_name>`. The list is comma-separated. You only need to list renamed columns. 
+| Default is empty. If column names are changed between Origin and Target, then this mapped list provides a mechanism to associate the two. The format is `<origin_column_name>:<target_column_name>`. The list is comma-separated. You only need to list renamed columns. 
 
 |===
-
-
-
 
 
 [[cdm-target-schema-params]]
@@ -402,13 +401,10 @@ The `spark.cdm.transform.custom.writetime` property, if set, would override `spa
 |Property | Default | Notes
 
 | `spark.cdm.schema.target.keyspaceTable` 
-| (See notes)
+| 
 | This parameter is commented out. It's the `<keyspace>.<table_name>` of the table to be migrated into the Target. Table must exist in Target. Default is the value of `spark.cdm.schema.origin.keyspaceTable`.
 
 |===
-
-
-
 
 
 [[cdm-auto-correction-params]]
@@ -416,7 +412,7 @@ The `spark.cdm.transform.custom.writetime` property, if set, would override `spa
 
 Auto-correction parameters allow {cstar-data-migrator} to correct data differences found between Origin and Target when you run the `DiffData` program. Typically, these are run disabled (for "what if" migration testing), which will generate a list of data discrepancies. The reasons for these discrepancies can then be investigated, and if necessary the parameters below can be enabled.
 
-For information about invoking `DiffData` in a {cstar-data-migrator} command, see xref:#cstar-validation-steps[{cstar-data-migrator} steps in validation mode] in this topic.
+For information about invoking `DiffData` in a {cstar-data-migrator} command, see xref:#cdm-validation-steps[{cstar-data-migrator} steps in validation mode] in this topic.
 
 [cols="3,1,3"]
 |===
@@ -443,10 +439,6 @@ The `TIMESTAMP` of records may have an effect. If the `WRITETIME` of the Origin 
 | Commented out. This CSV file is used as input, as well as output when applicable. If the file exists, only the partition ranges in this file will be migrated or validated. Similarly, if exceptions occur while migrating or validating, partition ranges with exceptions will be logged to this file. 
 
 |===
-
-
-
-
 
 
 [[cdm-performance-operations-params]]
@@ -590,6 +582,8 @@ Here are the performance and operations parameters that can affect migration thr
 [[cdm-tls-ssl-connection-params]]
 === TLS (SSL) connection parameters
 
+TLS (SSL) connection parameters, if configured. Note that a secure connect bundle (SCB) embeds these details.
+
 [cols="3,1,3"]
 |===
 |Property | Default | Notes
@@ -601,8 +595,6 @@ Here are the performance and operations parameters that can affect migration thr
 |===
 
 
-
-// ------------------------
 
 [[using-dsbulk-migrator]]
 == Using {dsbulk-migrator}
@@ -618,11 +610,11 @@ Also see the xref:#dsbulk-migrator-command-line-examples[{dsbulk-migrator} comma
 
 
 [[prereqs-dsbulk-migrator]]
-=== Prerequisites
+=== {dsbulk-migrator} prerequisites
 
-* Java (TODO: list recommended and supported versions)
-* https://maven.apache.org/download.cgi[Maven^] (TODO: list recommended and supported versions)
-* https://github.com/datastax/simulacron#prerequisites[Simulcron^] for testing (TODO: list recommended and supported versions)
+* Java (*TODO*: list recommended and supported versions)
+* https://maven.apache.org/download.cgi[Maven^] (*TODO*: list recommended and supported versions)
+* https://github.com/datastax/simulacron#prerequisites[Simulcron^] for testing (*TODO*: list recommended and supported versions)
 
 [[building-dsbulk-migrator]]
 === Building {dsbulk-migrator}
@@ -691,7 +683,20 @@ import cluster is never contacted, import options and DSBulk-related options are
 still needs to access the Origin cluster in order to gather metadata about the keyspaces and tables
 for which to generate DDL statements.
 
-==== **Live Migration Command Line Options**
+
+[[dsbulk-migrator-reference]]
+== {dsbulk-migrator} reference
+
+* xref:#dsbulk-live[Live migration command-line options]
+* xref:#dsbulk-script[Script generation command-line options]
+* xref:#dsbulk-ddl[DDL generation command-line options]
+* xref:#dsbulk-help[Getting {dsbulk-migrator} help]
+* xref:#dsbulk-examples[{dsbulk-migrator} examples]
+
+
+
+[[dsbulk-live]]
+=== Live migration command-line options
 
 The following options are available for the `migrate-live` command. Most options have sensible default values and do not
 need to be specified, unless you want to override the default value.
@@ -839,9 +844,7 @@ Omit the parameter value to be prompted for the password interactively.
 
 | 
 | `--import-username=STRING`
-| The username to use to authenticate against the Target cluster.
-                               Options `--import-username` and `--import-password` must be provided
-                               together, or not at all.
+| The username to use to authenticate against the Target cluster. Options `--import-username` and `--import-password` must be provided together, or not at all.
 
 | `-k`
 | `--keyspaces=REGEX`
@@ -894,7 +897,8 @@ If unspecified, it defaults to the current working directory.
 |===
 
 
-==== **Script Generation Command Line Options**
+[[dsbulk-script]]
+=== Script generation command-line options
 
 The following options are available for the `generate-script` command. 
 Most options have sensible default values and do not need to be specified, unless you want to override the default value.
@@ -1065,7 +1069,9 @@ Case-sensitive table names must be entered in their exact case.
 |===
 
 
-==== **DDL Generation Command Line Options**
+
+[[dsbulk-ddl]]
+=== DDL generation command-line options
 
 The following options are available for the `generate-ddl` command. 
 Most options have sensible default values and do not need to be specified, unless you want to override the default value.
@@ -1133,7 +1139,7 @@ The default is `all`.
 
 
 [[getting-help-with-dsbulk-migrator]]
-=== Getting help with {dsbulk-migrator}
+== Getting help with {dsbulk-migrator}
 
 Use the following command to display the available {dsbulk-migrator} commands:
 
@@ -1149,8 +1155,8 @@ For individual command help and each one's options:
 java -jar /path/to/dsbulk-migrator-embedded-dsbulk.jar COMMAND --help
 ----
 
-[[dsbulk-migrator-command-line-examples]]
-=== {dsbulk-migrator} command-line examples
+[[dsbulk-examples]]
+== {dsbulk-migrator} examples
 
 [NOTE]
 ====
@@ -1158,7 +1164,7 @@ These examples show sample `username` and `password` values that are for demonst
 Do not use these values in your environment.
 ==== 
 
-==== **Generate migration script**
+=== Generate migration script
 
 Generate a migration script to migrate from an existing Origin cluster to a Target {astra_db} cluster:
 
@@ -1176,7 +1182,7 @@ Generate a migration script to migrate from an existing Origin cluster to a Targ
         --import-password=s3cr3t
 ----
 
-==== **Migrate live using external DSBulk install**
+=== Migrate live using external DSBulk install
 
 Migrate live from an existing Origin cluster to a Target {astra_db} cluster using an external DSBulk installation. 
 Passwords will be prompted interactively:
@@ -1195,7 +1201,7 @@ Passwords will be prompted interactively:
         --import-password # password will be prompted
 ----
 
-==== **Migrate live using embedded DSBulk install**
+=== Migrate live using embedded DSBulk install
 
 Migrate live from an existing Origin cluster to a Target {astra_db} cluster using the embedded DSBulk installation. 
 Passwords will be prompted interactively. 
@@ -1225,7 +1231,7 @@ In the example above, you must use the `dsbulk-migrator-<VERSION>-embedded-dsbul
 Otherwise, an error will be raised because no embedded DSBulk can be found.
 ====
 
-==== **Generate DDL**
+=== Generate DDL to recreate Origin schema in Target
 
 Generate DDL files to recreate the Origin schema in a Target {astra_db} cluster:
 
