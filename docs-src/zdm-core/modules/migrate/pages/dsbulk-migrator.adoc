@@ -7,7 +7,7 @@ Use {dsbulk-migrator} to perform simple migration of smaller data quantities, wh
 
 * Java (*TODO*: list recommended and supported versions)
 * https://maven.apache.org/download.cgi[Maven^] (*TODO*: list recommended and supported versions)
-* https://github.com/datastax/simulacron#prerequisites[Simulcron^] for testing (*TODO*: list recommended and supported versions)
+* https://github.com/datastax/simulacron#prerequisites[Simulacron^] for testing (*TODO*: list recommended and supported versions)
 
 [[building-dsbulk-migrator]]
 == Building {dsbulk-migrator}
