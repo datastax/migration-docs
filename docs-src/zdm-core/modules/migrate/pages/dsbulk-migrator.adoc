@@ -5,9 +5,10 @@ Use {dsbulk-migrator} to perform simple migration of smaller data quantities, wh
 [[prereqs-dsbulk-migrator]]
 == {dsbulk-migrator} prerequisites
 
-* Java (*TODO*: list recommended and supported versions)
-* https://maven.apache.org/download.cgi[Maven^] (*TODO*: list recommended and supported versions)
-* https://github.com/datastax/simulacron#prerequisites[Simulacron^] for testing (*TODO*: list recommended and supported versions)
+* Java 11
+* https://maven.apache.org/download.cgi[Maven^] 3.3.x+
+* DSBulk 1.10.x, if you elect to reference your own external installation of DSBulk, instead of the embedded DSBulk that's available within {dsbulk-migrator}
+* https://github.com/datastax/simulacron#prerequisites[Simulacron^] 0.12.x (for integration tests) and its prerequisites
 
 [[building-dsbulk-migrator]]
 == Building {dsbulk-migrator}
