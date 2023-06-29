@@ -158,7 +158,7 @@ Example:
  --conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" /
  --conf spark.cdm.tokenRange.partitionFile="/<path-to-file>/<csv-input-filename>" /
  --master "local[*]" /
- --class com.datastax.cdm.job.<Migrate|DiffData> cassandra-data-migrator-4.x.x.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+ --class com.datastax.cdm.job.<Migrate|DiffData> cassandra-data-migrator-x.y.z.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
 
 This mode is specifically useful to processes a subset of partition-ranges that may have failed during a previous run.
