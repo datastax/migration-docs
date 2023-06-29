@@ -32,7 +32,7 @@ Download the *latest* JAR file from the {cstar-data-migrator} https://github.com
 
 [NOTE]
 ====
-Version 4.x of {cstar-data-migrator} is not backward-compatible with *.properties files created in previous versions, and package names have changed. As of 21-Jun-2023, 4.1.0 is the latest version.
+Version 4.x of {cstar-data-migrator} is not backward-compatible with `*.properties` files created in previous versions, and package names have changed. As of 21-Jun-2023, `4.1.0` is the latest version. If you're starting new, it is recommended to use the latest release version.
 ====
 
 [[cdm-build-jar-local]]
