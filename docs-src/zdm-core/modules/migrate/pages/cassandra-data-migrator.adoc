@@ -251,7 +251,7 @@ Use {cstar-data-migrator} to identify large fields from a table that may break y
 [[cdm-origin-schema-params]]
 === Origin schema parameters
 
-[cols="3,1,3"]
+[cols="3,1,3a"]
 |===
 |Property | Default | Notes
 
@@ -269,7 +269,11 @@ Use {cstar-data-migrator} to identify large fields from a table that may break y
 
 | `spark.cdm.schema.origin.column.writetime.automatic`
 | `true`
-| Default is `true`, unless `spark.cdm.schema.origin.column.writetime.names` is specified. When `true`, the `WRITETIME` of the Target record will be determined by finding the maximum `WRITETIME` of all Origin columns that can have `WRITETIME` set (which excludes partition key, clustering key, collections/UDT/tuple, and frozen columns). When `false`, and `spark.cdm.schema.origin.column.writetime.names` is not set, the Target record will have the `WRITETIME` determined by the Target table configuration. **NOTE**: The `spark.cdm.transform.custom.writetime` property, if set, would override `spark.cdm.schema.origin.column.writetime`.
+| Default is `true`, unless `spark.cdm.schema.origin.column.writetime.names` is specified. When `true`, the `WRITETIME` of the Target record will be determined by finding the maximum `WRITETIME` of all Origin columns that can have `WRITETIME` set (which excludes partition key, clustering key, collections/UDT/tuple, and frozen columns). When `false`, and `spark.cdm.schema.origin.column.writetime.names` is not set, the Target record will have the `WRITETIME` determined by the Target table configuration. 
+[NOTE]
+====
+The `spark.cdm.transform.custom.writetime` property, if set, would override `spark.cdm.schema.origin.column.writetime`.
+====
 
 | `spark.cdm.schema.origin.column.writetime.names`
 | 
@@ -308,7 +312,7 @@ Auto-correction parameters allow {cstar-data-migrator} to correct data differenc
 
 For information about invoking `DiffData` in a {cstar-data-migrator} command, see xref:#cdm-validation-steps[{cstar-data-migrator} steps in validation mode] in this topic.
 
-[cols="3,1,3"]
+[cols="3,1,3a"]
 |===
 |Property | Default | Notes
 
@@ -318,7 +322,11 @@ For information about invoking `DiffData` in a {cstar-data-migrator} command, se
 
 | `spark.cdm.autocorrect.mismatch` 
 | `false`
-| When `true`, data that is different between Origin and Target will be reconciled. **NOTE:** The `TIMESTAMP` of records may have an effect. If the `WRITETIME` of the Origin record (determined with `.writetime.names`) is earlier than the `WRITETIME` of the Target record, the change will not appear in Target. This comparative state may be particularly challenging to troubleshoot if individual columns (cells) have been modified in Target.
+| When `true`, data that is different between Origin and Target will be reconciled. 
+[NOTE]
+====
+The `TIMESTAMP` of records may have an effect. If the `WRITETIME` of the Origin record (determined with `.writetime.names`) is earlier than the `WRITETIME` of the Target record, the change will not appear in Target. This comparative state may be particularly challenging to troubleshoot if individual columns (cells) have been modified in Target.
+====
 
 | `spark.cdm.autocorrect.missing.counter` 
 | `false`
@@ -386,7 +394,7 @@ Parameters to perform schema transformations between Origin and Target.
 
 By default, these parameters are commented out.
 
-[cols="3,1,3"]
+[cols="3,1,3a"]
 |===
 |Property | Default | Notes
 
@@ -405,7 +413,19 @@ Partition and clustering columns cannot have null values, but if these are added
 
 | `spark.cdm.transform.codecs` 
 | 
-| Default is empty. A comma-separated list of additional codecs to enable. See the list below for the current codecs. 
+| Default is empty. A comma-separated list of additional codecs to enable. 
+
+ * `INT_STRING` : int stored in a String.
+ * `DOUBLE_STRING` : double stored in a String.
+ * `BIGINT_STRING` : bigint stored in a String.
+ * `DECIMAL_STRING` : decimal stored in a String.
+ * `TIMESTAMP_STRING_MILLIS` : timestamp stored in a String, as Epoch milliseconds.
+ * `TIMESTAMP_STRING_FORMAT` : timestamp stored in a String, with a custom format.
+
+[NOTE]
+====
+Where there are multiple type pair options, such as with `TIMESTAMP_STRING_*`, only one can be configured at a time with the `spark.cdm.transform.codecs` parameter.
+====
 
 | `spark.cdm.transform.codecs.timestamp.string.format` 
 | `yyyyMMddHHmmss`
@@ -418,19 +438,6 @@ Partition and clustering columns cannot have null values, but if these are added
 
 |===
 
-Regarding the `spark.cdm.transform.codecs` parameter, the current codecs are:
-
-* `INT_STRING`               : int stored in a String.
-* `DOUBLE_STRING`            : double stored in a String.
-* `BIGINT_STRING`            : bigint stored in a String.
-* `DECIMAL_STRING`           : decimal stored in a String.
-* `TIMESTAMP_STRING_MILLIS`  : timestamp stored in a String, as Epoch milliseconds.
-* `TIMESTAMP_STRING_FORMAT`  : timestamp stored in a String, with a custom format.
-
-[NOTE]
-====
-Where there are multiple type pair options, such as with `TIMESTAMP_STRING_*`, only one can be configured at a time with the `spark.cdm.transform.codecs` parameter.
-====
 
 [[cdm-cassandra-filter-params]]
 === Cassandra filter parameters
