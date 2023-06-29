@@ -68,7 +68,7 @@ The fat jar (`cassandra-data-migrator-x.y.z.jar`) file should be present now in 
 ./spark-submit --properties-file cdm.properties /
 --conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" /
 --master "local[*]" /
---class com.datastax.cdm.job.Migrate cassandra-data-migrator-4.x.x.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+--class com.datastax.cdm.job.Migrate cassandra-data-migrator-x.y.z.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
 
 [TIP]
