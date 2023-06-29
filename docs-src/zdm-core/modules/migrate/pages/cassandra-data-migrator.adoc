@@ -50,7 +50,7 @@ cd cassandra-data-migrator
 mvn clean package
 ----
 
-The fat jar (`cassandra-data-migrator-4.x.x.jar`) file should be present now in the `target` folder.
+The fat jar (`cassandra-data-migrator-x.y.z.jar`) file should be present now in the `target` folder.
 
 [[cdm-steps]]
 == {cstar-data-migrator} steps
