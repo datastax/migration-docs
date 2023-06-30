@@ -14,6 +14,8 @@
 *** xref:metrics.adoc[Leverage metrics provided by {zdm-proxy}]
 *** xref:manage-proxy-instances.adoc[Manage your {zdm-proxy} instances]
 ** xref:migrate-and-validate-data.adoc[Phase 2: Migrate and validate data]
+*** xref:cassandra-data-migrator.adoc[Cassandra Data Migrator]
+*** xref:dsbulk-migrator.adoc[DSBulk Migrator]
 ** xref:enable-async-dual-reads.adoc[Phase 3: Enable asynchronous dual reads]
 ** xref:change-read-routing.adoc[Phase 4: Change read routing to Target]
 ** xref:connect-clients-to-target.adoc[Phase 5: Connect client applications directly to Target]
