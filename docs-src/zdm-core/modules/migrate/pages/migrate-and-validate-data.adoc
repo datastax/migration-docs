@@ -61,7 +61,7 @@ The CDM capabilities are extensive:
 * Validate migration accuracy and performance using a smaller randomized data-set.
 * Support for adding custom fixed writetime.
 
-With new or enhanced capabilities in the latest https://github.com/datastax/cassandra-data-migrator/packages/1832128[CDM v4.x release, window="_blank"].
+With new or enhanced capabilities in recent https://github.com/datastax/cassandra-data-migrator/packages/1832128[CDM v4.x releases, window="_blank"].
 
 * Column names can differ between Origin and Target.
 * UDTs can be migrated from Origin to Target, even when the keyspace names differ.
