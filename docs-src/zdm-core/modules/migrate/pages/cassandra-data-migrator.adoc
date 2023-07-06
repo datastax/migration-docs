@@ -28,11 +28,11 @@ All migration tools (`cassandra-data-migrator` + `dsbulk` + `cqlsh`) are availab
 [[cdm-install-as-jar]]
 == Install {cstar-data-migrator} as a JAR file
 
-Download the *latest* JAR file from the {cstar-data-migrator} https://github.com/datastax/cassandra-data-migrator/packages/[GitHub repo^]. image:https://img.shields.io/github/v/release/datastax/cassandra-data-migrator?color=green[Latest release]
+Download the *latest* JAR file from the {cstar-data-migrator} https://github.com/datastax/cassandra-data-migrator/packages/1832128[GitHub repo^]. image:https://img.shields.io/github/v/release/datastax/cassandra-data-migrator?color=green[Latest release]
 
 [NOTE]
 ====
-Version 4.x of {cstar-data-migrator} is not backward-compatible with `*.properties` files created in previous versions, and package names have changed. As of 21-Jun-2023, `4.1.0` is the latest version. If you're starting new, it is recommended to use the latest release version.
+Version 4.x of {cstar-data-migrator} is not backward-compatible with `*.properties` files created in previous versions, and package names have changed. If you're starting new, we recommended that you use the latest released version.
 ====
 
 [[cdm-build-jar-local]]
