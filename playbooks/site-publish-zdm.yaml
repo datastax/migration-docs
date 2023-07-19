@@ -38,8 +38,8 @@ asciidoc:
     page-pagination: ''
     sectanchors: ''
     sectlinks: ''
-    id-prefix: ''
-    id-separator: '-'
+    # idprefix: ''
+    # idseparator: '-'
 
     company: 'DataStax'
     zdm-product: 'Zero Downtime Migration'
@@ -136,5 +136,5 @@ asciidoc:
     # "<repo-name>: 'ssh://github.com/<org-name>/<repo-name>.git'".
     migration-docs: 'ssh://github.com/datastax/migration-docs.git'
 
-    extensions:
-    - '~/work/migration-docs/playbooks/lib/tabs-block.js'
+  extensions:
+  - '@asciidoctor/tabs'
