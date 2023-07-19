@@ -47,46 +47,77 @@ For additional terms, see the xref:glossary.adoc[glossary].
 An important migration prerequisite is that you already have the matching schema on Target. A CQL statement that your client application sends to {zdm-proxy} must be able to succeed on both Origin and Target clusters. This means that any keyspace that your client application uses must exist on both Origin and Target with the same name. Table names must also match. For more, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
 ====
 
-Your migration project occurs through a sequence of phases, which matches the structure of this ZDM documentation.
+Here's an overview of the migration phases, which matches the structure of this ZDM documentation.
 
 image::{imagesprefix}migration-all-phases.png[Migration phases from start to finish.]
 
-Before we walk through illustrations of each phase, let's look at a pre-migration, high-level view. At this point, your client applications are performing read/write operations with an existing CQL-compatible database. That is, Apache Cassandra, DSE, or Astra DB.  
+== Interactive walk-through of the migration phases
 
-image::{imagesprefix}pre-migration0ra.png[Diagram shows existing CQL-compatible environment before migration starts.]
+[.swiper]
+====
+[.slide]
+--
+.Introduction
+To get acquainted with the migration phases from start to finish, try this interactive walk-through presentation. Click the **Start** button below!
 
-Before your migration begins, you'll need to satisfy prerequisites, prepare your environment, and set up the recommended infrastructure.
+image:migration-introduction9.png[Introductory page prompts you to click Start to begin the graphical presentation.]
+--
 
-=== Phase 1: Deploy ZDM Proxy and connect client applications
+[.slide]
+--
+.Phase 0: Before your migration starts
+Let's look at a pre-migration, high-level view. At this point, your client applications are performing read/write operations with an existing CQL-compatible database. That is, Apache Cassandra®, DataStax Enterprise (DSE), or Astra DB.
 
+image:pre-migration0ra9.png[A pre-migration high-level diagram. Your client applications perform read/write operations with an existing CQL-compatible database: Apache Cassandra®, DataStax Enterprise (DSE), or Astra DB.]
+--
+
+[.slide] 
+--
+.Phase 1: Deploy ZDM Proxy and connect client applications
 Let's look at Phase 1 of the migration. We'll deploy the ZDM Proxy instances and connect client applications to the proxies. This step activates the dual-write logic. Writes will be "bifurcated" (sent to both Origin and Target), while reads will be executed on Origin only.
 
-image::{imagesprefix}migration-phase1ra.png[Phase 1 diagram shows deployed ZDM Proxy instances, client app connections to proxies, and Target is setup.]
+image:migration-phase1ra9.png[Migration Phase 1. We deploy ZDM Proxy instances and connect client applications to the proxies. This step activates the dual-write logic. Writes will be "bifurcated" (sent to both Origin and Target), while reads will be executed on Origin only.]
+--
 
-=== Phase 2: Migrate data
+[.slide] 
+--
+.Phase 2: Migrate data
+In this phase, we migrate existing data using Cassandra Data Migrator and/or DSBulk Migrator. Validate that the migrated data is correct, while continuing to perform dual writes.
 
-In this phase, we migrate existing data using {cstar-data-migrator} and/or {dsbulk-migrator}. Validate that the migrated data is correct, while continuing to perform dual writes.
+image:migration-phase2ra9.png[Migration Phase 2. We migrate existing data using Cassandra Data Migrator and/or DSBulk Migrator. Validate that the migrated data is correct, while continuing to perform dual writes.]
+--
 
-image::{imagesprefix}migration-phase2ra.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
-
-=== Phase 3: Async dual reads
-
+[.slide] 
+--
+.Phase 3: Async dual reads
 In this phase, you can optionally enable asynchronous dual reads. The idea is to test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target.
 
-image::{imagesprefix}migration-phase3ra.png[Phase 3 diagram shows optional step enabling async dual reads to test performance of Target.]
+image:migration-phase3ra9.png[Migration Phase 3. Optionally enable asynchronous dual reads. Test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target.
+]
+--
 
-=== Phase 4: Route reads to Target
+[.slide] 
+--
+.Phase 4: Route reads to Target
+In this phase, the read routing on the ZDM Proxy is switched to Target so that all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary cluster.
 
-In this phase, the read routing on the {zdm-proxy} is switched to Target so that all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary cluster.
+image:migration-phase4ra9.png[Migration Phase 4. Read routing on ZDM Proxy is switched to Target so all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary cluster.]
+--
 
-image::{imagesprefix}migration-phase4ra.png[Phase 4 diagram shows read routing on ZDM Proxy was switched to Target.]
+[.slide]
+-- 
+.Phase 5: Connect directly to Target
+In this phase, you'll move your client applications off the ZDM Proxy and connect the apps directly to Target. Once that happens, the migration is complete.
 
-=== Phase 5: Connect directly to Target
+image:migration-phase5ra9.png[Migration Phase 5. Move your client applications off the ZDM Proxy and connect the apps directly to Target. Once that happens, the migration is complete.]
+--
+====
 
-In this phase, you'll move your client applications off the {zdm-proxy} and connect the apps directly to Target. Once that happens, the migration is complete.
 
-image::{imagesprefix}migration-phase5ra.png[Phase 5 diagram shows apps no longer using proxy and instead connected directly to Target.]
-
+[TIP]
+====
+For details on each phase, continue reading the comprehensive topics in this guide. Also check out the {zdm-product} Interactive Lab.
+====
 
 == A fun way to learn: {zdm-product} Interactive Lab
 

@@ -7,7 +7,7 @@ This topic explains how you can configure the {zdm-proxy} to route all reads to 
 
 Illustrated view of this phase:
 
-image::{imagesprefix}migration-phase4ra.png[Phase 4 diagram shows read routing on ZDM Proxy was switched to Target.]
+image::{imagesprefix}migration-phase4ra9.png[Phase 4 diagram shows read routing on ZDM Proxy was switched to Target.]
 
 For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
