@@ -74,7 +74,7 @@ image:pre-migration0ra9.png[A pre-migration high-level diagram. Your client appl
 [.slide] 
 --
 .Phase 1: Deploy ZDM Proxy and connect client applications
-Let's look at Phase 1 of the migration. We'll deploy the ZDM Proxy instances and connect client applications to the proxies. This step activates the dual-write logic. Writes will be "bifurcated" (sent to both Origin and Target), while reads will be executed on Origin only.
+In this first phase, we'll deploy the ZDM Proxy instances and connect client applications to the proxies. This step activates the dual-write logic. Writes will be "bifurcated" (sent to both Origin and Target), while reads will be executed on Origin only.
 
 image:migration-phase1ra9.png[Migration Phase 1. We deploy ZDM Proxy instances and connect client applications to the proxies. This step activates the dual-write logic. Writes will be "bifurcated" (sent to both Origin and Target), while reads will be executed on Origin only.]
 --
