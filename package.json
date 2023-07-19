@@ -3,7 +3,7 @@
   "scripts": {
     "build:prod:zdm": "npm run build:publish:zdm",
     "build:dev:zdm": "npm run build:local:zdm",
-    "build:publish:zdm": "antora --log-level error --fetch --clean playbooks/site-publish-zdm.yaml",
+    "build:publish:zdm": "antora --stacktrace --fetch --clean playbooks/site-publish-zdm.yaml",
     "build:local:zdm": "antora --stacktrace --fetch --clean playbooks/site-local-zdm.yaml",
     "build:linkinator:zdm": "npx linkinator https://docs.datastax.com/en/zdm/docs/ --recurse --skip ' https://localhost?'"
   },
