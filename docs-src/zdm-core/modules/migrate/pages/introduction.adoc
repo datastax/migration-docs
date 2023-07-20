@@ -106,7 +106,7 @@ image::migration-phase4ra9.png["Migration Phase 4. Read routing on ZDM Proxy is 
 .Phase 5: Connect directly to Target
 In this phase, you'll move your client applications off the ZDM Proxy and connect the apps directly to Target. Once that happens, the migration is complete.
 
-image:migration-phase5ra9.png["Migration Phase 5. Move your client applications off the ZDM Proxy and connect the apps directly to Target. Once that happens, the migration is complete."]
+image::migration-phase5ra9.png["Migration Phase 5. Move your client applications off the ZDM Proxy and connect the apps directly to Target. Once that happens, the migration is complete."]
 --
 ====
 
