@@ -55,7 +55,7 @@ An important migration prerequisite is that you already have the matching schema
 ====
 [.slide]
 --
-.Introduction
+.Walk-through the illustrated migration phases
 To get acquainted with the migration phases from start to finish, click the **Start** button below!
 
 image:migration-introduction9.png["Introductory page prompts you to click Start to begin the graphical presentation."]
