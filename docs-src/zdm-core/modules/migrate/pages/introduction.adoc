@@ -98,7 +98,7 @@ image::migration-phase3ra9.png["Migration Phase 3. Optionally enable asynchronou
 .Phase 4: Route reads to Target
 In this phase, the read routing on the ZDM Proxy is switched to Target so that all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary cluster.
 
-image:migration-phase4ra9.png["Migration Phase 4. Read routing on ZDM Proxy is switched to Target so all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary cluster."]
+image::migration-phase4ra9.png["Migration Phase 4. Read routing on ZDM Proxy is switched to Target so all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary cluster."]
 --
 
 [.slide]
