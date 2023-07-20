@@ -90,7 +90,7 @@ image::migration-phase2ra9.png["Migration Phase 2. We migrate existing data usin
 .Phase 3: Async dual reads
 In this phase, you can optionally enable asynchronous dual reads. The idea is to test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target.
 
-image:migration-phase3ra9.png["Migration Phase 3. Optionally enable asynchronous dual reads. Test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target."]
+image::migration-phase3ra9.png["Migration Phase 3. Optionally enable asynchronous dual reads. Test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target."]
 --
 
 [.slide] 
