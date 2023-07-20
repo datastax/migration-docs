@@ -51,14 +51,14 @@ Here's an overview of the migration phases, which matches the structure of this 
 
 image::{imagesprefix}migration-all-phases.png[Migration phases from start to finish.]
 
-== Interactive walk-through of the migration phases
+== Walk-through of the migration phases
 
 [.swiper]
 ====
 [.slide]
 --
 .Introduction
-To get acquainted with the migration phases from start to finish, try this interactive walk-through presentation. Click the **Start** button below!
+To get acquainted with the migration phases from start to finish, click the **Start** button below!
 
 image:migration-introduction9.png[Introductory page prompts you to click Start to begin the graphical presentation.]
 --
