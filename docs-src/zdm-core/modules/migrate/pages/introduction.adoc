@@ -82,7 +82,7 @@ image:migration-phase1ra9.png["Migration Phase 1. We deploy ZDM Proxy instances 
 .Phase 2: Migrate data
 In this phase, we migrate existing data using Cassandra Data Migrator and/or DSBulk Migrator. Validate that the migrated data is correct, while continuing to perform dual writes.
 
-image:migration-phase2ra9.png["Migration Phase 2. We migrate existing data using Cassandra Data Migrator and/or DSBulk Migrator. Validate that the migrated data is correct, while continuing to perform dual writes."]
+image::migration-phase2ra9.png["Migration Phase 2. We migrate existing data using Cassandra Data Migrator and/or DSBulk Migrator. Validate that the migrated data is correct, while continuing to perform dual writes."]
 --
 
 [.slide] 
