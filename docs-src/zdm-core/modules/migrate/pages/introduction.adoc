@@ -64,7 +64,7 @@ image:migration-introduction9.png["Introductory page prompts you to click Start 
 [.slide]
 --
 .Phase 0: Before your migration starts
-Let's look at a pre-migration, high-level view. At this point, your client applications are performing read/write operations with an existing CQL-compatible database. That is, Apache Cassandra®, DataStax Enterprise (DSE), or Astra DB.
+Let's look at a pre-migration, high-level view. At this point, your client applications are performing read/write operations with an existing CQL-compatible database. That is, Apache Cassandra, DSE, or Astra DB.
 
 image:pre-migration0ra9.png["A pre-migration high-level diagram. Your client applications perform read/write operations with an existing CQL-compatible database: Apache Cassandra®, DataStax Enterprise (DSE), or Astra DB."]
 --
