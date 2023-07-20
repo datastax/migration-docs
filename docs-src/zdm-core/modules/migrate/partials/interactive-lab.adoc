@@ -1,3 +1,5 @@
+Now that you've seen a conceptual overview of the process, why not putting what you learned in practice? 
+
 We've built a complementary learning resource that is a companion to this comprehensive ZDM documentation. It's the {zdm-product} Interactive Lab, available for you here:
 
 link:https://www.datastax.com/dev/zdm[https://www.datastax.com/dev/zdm, window="_blank"]
