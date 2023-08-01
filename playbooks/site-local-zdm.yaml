@@ -34,8 +34,8 @@ asciidoc:
     page-pagination: ''
     sectanchors: ''
     sectlinks: ''
-    id-prefix: ''
-    id-separator: '-'
+    # idprefix: ''
+    # idseparator: '-'
 
     company: 'DataStax'
     zdm-product: 'Zero Downtime Migration'
@@ -126,4 +126,4 @@ asciidoc:
     glossary-url: 'https://docs.datastax.com/en/glossary/docs/index.html#'
 
   extensions:
-  - ./lib/tabs-block.js
+  - '@asciidoctor/tabs'

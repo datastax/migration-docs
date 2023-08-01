@@ -1,11 +1,12 @@
 site:
   title: DataStax Zero Downtime Migration
   url: https://docs.datastax.com/en/zdm/docs
-  # The keys.segmentIo site key must be in the site-publish playbook of each
-  # docset. This loads Segment into the docset build, and is a requirement for
-  # collecting site analytics.
+  # The google_analytics and segment_io site keys must be in the release playbook
+  # of each docset. This ensures that the Google Tag Manager (GTM) and Segment
+  # scripts get loaded into the docsets that get published to docs.datastax.com.
   keys:
-    segmentIo: d24gQtyKIUu5mLdkp11xjfiXLhRqx0HH
+    google_analytics: 'GTM-5FSG7Q'
+    segment_io: 'd24gQtyKIUu5mLdkp11xjfiXLhRqx0HH'
 
 output:
   # Bsys requires the output.dir in the site-publish playbook to be specifically
@@ -38,8 +39,8 @@ asciidoc:
     page-pagination: ''
     sectanchors: ''
     sectlinks: ''
-    id-prefix: ''
-    id-separator: '-'
+    # idprefix: ''
+    # idseparator: '-'
 
     company: 'DataStax'
     zdm-product: 'Zero Downtime Migration'
@@ -136,5 +137,5 @@ asciidoc:
     # "<repo-name>: 'ssh://github.com/<org-name>/<repo-name>.git'".
     migration-docs: 'ssh://github.com/datastax/migration-docs.git'
 
-    extensions:
-    - '~/work/migration-docs/playbooks/lib/tabs-block.js'
+  extensions:
+  - '@asciidoctor/tabs'
