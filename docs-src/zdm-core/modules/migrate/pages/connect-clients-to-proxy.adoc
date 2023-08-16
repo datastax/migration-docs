@@ -112,6 +112,9 @@ This means that, if your {zdm-proxy} is configured with an Origin or Target clus
 
 |===
 
+.How different sets of credentials are used by the ZDM Proxy
+image::zdm-proxy-credentials-usage.png[ZDM proxy credentials usage, 550]
+
 === A note on the Astra Secure Connect Bundle
 If your {zdm-proxy} is configured to use Astra DB as an Origin or Target, your client application **does not need** to provide an Astra Secure Connect Bundle (SCB) when connecting to the proxy. It will, however, have to supply the Astra client ID and client secret as a username and password (respectively).
 
