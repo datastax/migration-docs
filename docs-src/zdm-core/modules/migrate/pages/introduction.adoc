@@ -52,7 +52,7 @@ For additional terms, see the xref:glossary.adoc[glossary].
 [.slide]
 --
 .Walk through the illustrated migration phases
-To get acquainted with the migration phases from start to finish, click the **Start** button below the diagram. Additional navigation options are available on subsequent diagrams, allowing you to control the navigation as you discover the key concepts, software components, and sequence of operations.
+To get acquainted with the migration phases from start to finish, click the **Start** button below the diagram. Additional navigation options are available as you proceed through the illustrations and discover the key concepts, software components, and sequence of operations.
 
 image:migration-introduction9.png["Introductory page prompts you to click the Start button to begin the graphical presentation."]
 --
