@@ -42,17 +42,19 @@ First, a couple of key terms used throughout the {zdm-product} documentation and
 
 For additional terms, see the xref:glossary.adoc[glossary].
 
-[TIP]
+[NOTE]
 ====
 An important migration prerequisite is that you already have the matching schema on Target. A CQL statement that your client application sends to {zdm-proxy} must be able to succeed on both Origin and Target clusters. This means that any keyspace that your client application uses must exist on both Origin and Target with the same name. Table names must also match. For more, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
 ====
+
+== Let's begin...
 
 [.swiper]
 ====
 [.slide]
 --
 .Walk through the illustrated migration phases
-To get acquainted with the migration phases from start to finish, click the **Start** button below.
+To get acquainted with the migration phases from start to finish, click the **Start** button below the diagram. Additional navigation options are available on subsequent diagrams, allowing you to control the navigation as you discover the key concepts, software components, and sequence of operations.
 
 image:migration-introduction9.png["Introductory page prompts you to click the Start button to begin the graphical presentation."]
 --
