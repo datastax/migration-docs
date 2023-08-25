@@ -112,7 +112,7 @@ This means that, if your {zdm-proxy} is configured with an Origin or Target clus
 
 |===
 
-.How different sets of credentials are used by the ZDM Proxy
+.How different sets of credentials are used by the ZDM Proxy when authentication is enabled on both clusters
 image::zdm-proxy-credential-usage.png[ZDM proxy credentials usage, 550]
 
 === A note on the Astra Secure Connect Bundle
