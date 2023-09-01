@@ -51,7 +51,13 @@ We will use the term "machine" to indicate a cloud instance (on any cloud provid
 
 [NOTE]
 ====
-Scenario: when you have close to 12 TBs of data and several tables, to speed up the migration of your existing data, you can run with (for example) 4 machines that are the equivalent of an AWS `m5.4xlarge`, a GCP `e2-standard-16` or an Azure `D16v5`.  Then run {dsbulk-migrator} on each machine, with each one responsible for a quarter of the full token range. 
+* Scenario: If you have 20 TBs of existing data to be migrated and want to speed up the migration, you can use (for example) 4 VMs that are the equivalent of an AWS m5.4xlarge, a GCP e2-standard-16 or an Azure D16v5. Then run DSBulk Migrator or Cassandra-Data-Migrator in parallel on each VM, with each one responsible for migrating around 5TB of data. If there is one super large table (e.g. 15 TB of 20 TB is in one table), you can choose to migrate this table in 3 parts on 3 separate VMs in parallel by splitting the full token range into 3 parts and migrate rest of the tables on the 4th VM. 
+
+* Ensure that your Origin and Target clusters can handle high traffic from Cassandra Data Migrator or DSBulk in addition to the live traffic from your application. 
+
+* Test any migration in a lower environment before you plan to do it in production.
+
+* Contact https://support.datastax.com/s/[DataStax support] for help configuring your workload.
 ====
 
 // TODO: investigate how to "leverage the parallelism of {cstar-data-migrator} to run the migration process across all 4 machines."
