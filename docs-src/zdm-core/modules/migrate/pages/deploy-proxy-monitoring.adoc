@@ -129,7 +129,7 @@ All advanced configuration variables not listed here are considered mutable and 
 
 If Origin is a multi-datacenter cluster, you will need to specify the name of the datacenter that the {zdm-proxy} should consider local. To do this, set the property `origin_local_datacenter` to the datacenter name. Likewise, for multi-datacenter Target clusters you will need to set `target_local_datacenter` appropriately.
 
-These two variables are located in `vars/zdm_proxy_advanced_configuration.yml`. Note that this is not relevant for multi-region Astra DB clusters, where this is handled through region-specific Secure Connect Bundles.
+These two variables are located in `vars/zdm_proxy_advanced_config.yml`. Note that this is not relevant for multi-region Astra DB clusters, where this is handled through region-specific Secure Connect Bundles.
 
 ==== *Ports*
 
