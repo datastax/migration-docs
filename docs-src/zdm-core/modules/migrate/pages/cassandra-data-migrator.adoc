@@ -67,22 +67,14 @@ The fat jar (`cassandra-data-migrator-x.y.z.jar`) file should be present now in 
 ----
 ./spark-submit --properties-file cdm.properties /
 --conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" /
---master "local[*]" /
+--master "local[*]" --driver-memory 25G --executor-memory 25G /
 --class com.datastax.cdm.job.Migrate cassandra-data-migrator-x.y.z.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
 
 [TIP]
 ====
-* The `spark-submit` command generates a log file, `logfile_name_*.txt`, to avoid log output on the Terminal console.
-* If the table you're migrating is large (such as over 100GB), you can add the option `--driver-memory 25G --executor-memory 25G`. Example:
-
-[source,bash]
-----
-./spark-submit --properties-file cdm.properties /
---conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" /
---master "local[*]" --driver-memory 25G --executor-memory 25G /
---class com.datastax.cdm.job.Migrate cassandra-data-migrator-x.y.z.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
-----
+* Above command generates a log file `logfile_name_*.txt` to avoid log output on the console.
+* Update the memory options (driver & executor memory) based on your use-case
 ====
 
 [[cdm-validation-steps]]
@@ -95,7 +87,7 @@ Example:
 ----
 ./spark-submit --properties-file cdm.properties /
 --conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" /
---master "local[*]" /
+--master "local[*]" --driver-memory 25G --executor-memory 25G /
 --class com.datastax.cdm.job.DiffData cassandra-data-migrator-x.y.z.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
 
@@ -157,7 +149,7 @@ Example:
 ./spark-submit --properties-file cdm.properties /
  --conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" /
  --conf spark.cdm.tokenRange.partitionFile="/<path-to-file>/<csv-input-filename>" /
- --master "local[*]" /
+ --master "local[*]" --driver-memory 25G --executor-memory 25G /
  --class com.datastax.cdm.job.<Migrate|DiffData> cassandra-data-migrator-x.y.z.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
 
@@ -178,7 +170,7 @@ Use {cstar-data-migrator} to identify large fields from a table that may break y
 ./spark-submit --properties-file cdm.properties /
 --conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" /
 --conf spark.cdm.feature.guardrail.colSizeInKB=10000 /
---master "local[*]" /
+--master "local[*]" --driver-memory 25G --executor-memory 25G /
 --class com.datastax.cdm.job.GuardrailCheck cassandra-data-migrator-4.x.x.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
 
