@@ -11,7 +11,7 @@ This section presents the following:
 * xref:connect-clients-to-proxy.adoc[]
 * xref:manage-proxy-instances.adoc[]
 
-Illustrated view of this phase:
+include::partial$lightbox-tip.adoc[]
 
 image::{imagesprefix}migration-phase1ra.png[Phase 1 diagram shows deployed ZDM Proxy instances, client app connections to proxies, and Target is setup.]
 
