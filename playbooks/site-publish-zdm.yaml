@@ -24,8 +24,7 @@ content:
 
 ui:
   bundle:
-    url: https://github.com/riptano/antora-ui-docs/raw/test-lightbox-ux/gcx/build/ui-bundle.zip
-  # url: https://github.com/riptano/antora-ui-docs/releases/latest/download/ui-bundle.zip
+    url: https://github.com/riptano/antora-ui-docs/releases/latest/download/ui-bundle.zip
     snapshot: true
   # Uncomment the "supplemental_files" line below ONLY IF you're trying to
   # change the banner logo to something other than the default logo provided by
