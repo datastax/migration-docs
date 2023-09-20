@@ -39,7 +39,7 @@ An important migration prerequisite is that you already have the matching schema
 
 == Migration phases
 
-First, a couple of key terms used throughout the {zdm-product} documentation and software components:
+First, a couple of key terms used throughout the ZDM documentation and software components:
 
 * **Origin:** This cluster is your existing Cassandra-based environment, whether it's open-source Apache Cassandra, DSE, or {astra_db} Classic.
 
@@ -47,12 +47,19 @@ First, a couple of key terms used throughout the {zdm-product} documentation and
 
 For additional terms, see the xref:glossary.adoc[glossary].
 
+[TIP]
+====
+To get acquainted with the migration phases, begin by clicking the **Start** button below the diagram.
+You can optionally click the illustrated components to open a larger view. 
+Click again to return to the original view and use the navigation buttons. 
+====
+
 [.swiper]
 ====
 [.slide]
 --
 .Walk through the illustrated migration phases
-To get acquainted with the migration phases from start to finish, click the **Start** button below the diagram. Additional navigation options are available as you proceed through the illustrations and discover the key concepts, software components, and sequence of operations.
+Discover the migration concepts, software components, and sequence of operations.
 
 image:migration-introduction9.png["Introductory page prompts you to click the Start button to begin the graphical presentation."]
 --
