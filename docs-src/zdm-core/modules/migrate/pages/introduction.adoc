@@ -47,12 +47,10 @@ First, a couple of key terms used throughout the ZDM documentation and software 
 
 For additional terms, see the xref:glossary.adoc[glossary].
 
-[TIP]
-====
-To get acquainted with the migration phases, begin by clicking the **Start** button below the diagram.
-You can optionally click the illustrated components to open a larger view. 
-Click again to return to the original view and use the navigation buttons. 
-====
+=== Migration interactive diagram
+
+Click the *Start* button on the interactive diagram below to begin a walkthrough of the migration phases.
+Click the components to open a larger view.
 
 [.swiper]
 ====
