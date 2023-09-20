@@ -15,7 +15,7 @@ At this point in our migration phases, we've completed:
 
 Now we're ready to perform Phase 5, in which we will configure our client applications to connect directly to Target. The way you do this varies based on whether your Target is Astra DB or a regular Apache Cassandra&reg; or DataStax Enterprise cluster.
 
-Illustrated view of this phase:
+include::partial$lightbox-tip.adoc[]
 
 image::{imagesprefix}migration-phase5ra.png[Phase 5 diagram shows apps no longer using proxy and instead connected directly to Target.]
 

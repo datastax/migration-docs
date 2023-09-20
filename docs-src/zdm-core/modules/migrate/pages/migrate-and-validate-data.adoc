@@ -12,7 +12,7 @@ For full details, see these topics:
 
 These tools provide sophisticated features that help you migrate your data from any Cassandra **Origin** (Apache Cassandra&reg;, {company} Enterprise (DSE), {company} {astra_db}) to any Cassandra **Target** (Apache Cassandra, DSE, {company} {astra_db}). 
 
-Illustrated view of this phase:
+include::partial$lightbox-tip.adoc[]
 
 image::{imagesprefix}migration-phase2ra.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
 
