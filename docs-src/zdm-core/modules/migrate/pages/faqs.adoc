@@ -85,7 +85,7 @@ The suite of {zdm-product} tools from {company} is free and open-sourced.
 == Is there support available if I have questions or issues during our migration?
 
 {zdm-proxy} and related software tools in the migration suite include technical assistance by https://support.datastax.com/s/[{company} Support^] for DSE, Luna, and Astra Enterprise subscribers.
-Pay-as-you-go and free-tier users do not have support access and must raise tickets in Astra.
+Pay-as-you-go and free-tier users do not have support access and must raise questions in Astra.
 https://www.datastax.com/products/luna[Luna] is a subscription to the Apache Cassandra support and expertise at DataStax. 
 
 For any observed problems with the {zdm-proxy}, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^] in the {zdm-proxy} GitHub repo.
