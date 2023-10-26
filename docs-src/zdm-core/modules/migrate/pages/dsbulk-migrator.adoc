@@ -6,7 +6,7 @@ Use {dsbulk-migrator} to perform simple migration of smaller data quantities, wh
 == {dsbulk-migrator} prerequisites
 
 * Install or switch to Java 11.
-* Install https://maven.apache.org/download.cgi[Maven^] 3.8.x.
+* Install https://maven.apache.org/download.cgi[Maven^] 3.9.x.
 * Optionally install https://docs.datastax.com/en/dsbulk/docs/installing/install.html[DSBulk Loader, window="_blank"], if you elect to reference your own external installation of DSBulk, instead of the embedded DSBulk that's in {dsbulk-migrator}.
 * Install https://github.com/datastax/simulacron#prerequisites[Simulacron^] 0.12.x and its prerequisites, for integration tests.
 
