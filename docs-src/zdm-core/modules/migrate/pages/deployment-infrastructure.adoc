@@ -43,7 +43,7 @@ We will use the term "machine" to indicate a cloud instance (on any cloud provid
 * 1-M machines to run either {dsbulk-migrator} or {cstar-data-migrator}.
 ** It's recommended that you start with at least one VM with 16 vCPUs and 64GB RAM and a minimum of 200GB storage. Depending on the total amount of data that is planned for migration, more than one VM may be needed.
 ** Requirements:
-*** Ubuntu Linux 18.04 or newer
+*** Ubuntu Linux 20.04 or newer, RedHat Family Linux 7 or newer
 *** 16 vCPUs
 *** 64GB RAM
 *** 200GB - 2TB storage (if you use dsbulk-migrator to unload multiple terabytes of data from origin, then load into target, you may need to consider more space to accommodate the data that needs to be staged)
