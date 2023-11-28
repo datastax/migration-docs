@@ -41,6 +41,7 @@ Local registries not connected to the internet require administrators to manuall
 
 [source,no-highlight]
 ----
+grafana/grafana:7.5.17
 prom/prometheus:latest
 datastax/zdm-ansible:2.x
 prom/node-exporter:latest
