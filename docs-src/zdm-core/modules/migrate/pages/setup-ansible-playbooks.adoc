@@ -40,7 +40,7 @@ This option may not connect all servers directly to the internet.
 
 Option 2: Unconnected local registry::
 Local registries not connected to the internet require administrators to manually add containers to their registry.
-For zdm-util users, this option requires the following five containers to install and configure the jump host, ZDM Proxy, and monitoring:
+For {zdm-utility} users, this option requires the following five containers to install and configure the jump host, ZDM Proxy, and monitoring:
 
 [source,no-highlight]
 ----
