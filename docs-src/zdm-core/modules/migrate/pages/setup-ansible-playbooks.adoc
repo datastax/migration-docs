@@ -23,13 +23,33 @@ image::{imagesprefix}docker-container-and-zdm-utility.png[ZDM Proxy connections 
 . Docker needs to be installed on the machine that will be running the Ansible Control Host container. For comprehensive installation instructions, please refer to the https://docs.docker.com/engine/install/#server[official Docker documentation].
 . The `docker` command must not require superuser privileges. The instructions to do this can be found https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[here].
 
-That's it!
-
 [NOTE]
 ====
 Please note that the manual, non-superuser installation of Docker described above is to be done on the machine that will run the Ansible Control Host.
 From that point, the automation will take care of installing Docker on the ZDM Proxy machines without further intervention.
 ====
+
+== Alternative Docker configurations
+
+There are two options for users who don't want to pull from a specific registry or are not connecting servers directly to the internet.
+
+Option 1: Pull through local cache::
+Servers can connect directly to the Docker local registry so that the server then pulls containers from the internet itself.
+See the https://docs.docker.com/docker-hub/mirror/[Docker documentation] for instructions on how to set up a pull through cache.
+This option makes it possible to only have the local Docker registry connected to the internet.
+
+Option 2: Unconnected local registry::
+Local registries not connected to the internet require administrators to manually add containers to their registry.
+For {zdm-utility} users, this option requires the following five containers to install and configure the jumphost, ZDM Proxy, and monitoring:
+
+[source,no-highlight]
+----
+grafana/grafana:7.5.17
+prom/prometheus:latest
+datastax/zdm-ansible:2.x
+prom/node-exporter:latest
+datastax/zdm-proxy:2.x
+----
 
 == Jumphost
 
