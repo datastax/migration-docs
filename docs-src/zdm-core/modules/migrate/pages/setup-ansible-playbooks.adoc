@@ -36,7 +36,7 @@ There are two options for users who don't want to pull from a specific registry 
 Option 1: Pull through local cache::
 Servers can connect directly to the Docker local registry so that the server then pulls containers from the internet itself.
 See the https://docs.docker.com/docker-hub/mirror/[Docker documentation] for instructions on how to set up a pull through cache.
-This option may not connect all servers directly to the internet.
+This option makes it possible to only have the local Docker registry connected to the internet.
 
 Option 2: Unconnected local registry::
 Local registries not connected to the internet require administrators to manually add containers to their registry.
