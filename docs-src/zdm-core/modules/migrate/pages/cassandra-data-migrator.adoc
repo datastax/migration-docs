@@ -13,9 +13,9 @@ You can install Apache Spark by running the following commands:
 
 [source,bash]
 ----
-wget https://archive.apache.org/dist/spark/spark-3.4.1/spark-3.4.1-bin-hadoop3.tgz 
+wget https://archive.apache.org/dist/spark/spark-3.4.1/spark-3.4.1-bin-hadoop3-scala2.13.tgz
 
-tar -xvzf spark-3.4.1-bin-hadoop3.tgz
+tar -xvzf spark-3.4.1-bin-hadoop3-scala2.13.tgz
 ----
 
 [[cdm-install-as-container]]
