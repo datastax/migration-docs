@@ -5,17 +5,17 @@ Use {cstar-data-migrator} to migrate and validate tables between Origin and Targ
 [[cdm-prereqs]]
 == {cstar-data-migrator} prerequisites
 
-* Install or switch to Java 8. The Spark binaries are compiled with this version of Java.
-* Install https://archive.apache.org/dist/spark/spark-3.4.1/[Spark 3.4.1^] on a single VM (no cluster necessary) where you want to run this job. 
-* Optionally, install https://maven.apache.org/download.cgi[Maven^] 3.9.x, if you want to build the JAR for local development.
+* Install or switch to Java 11. The Spark binaries are compiled with this version of Java.
+* Install https://archive.apache.org/dist/spark/spark-3.4.2/[Spark 3.4.2^] on a single VM (no cluster necessary) where you want to run this job. 
+* Optionally, install https://maven.apache.org/download.cgi[Maven^] 3.9.x if you want to build the JAR for local development.
 
 You can install Apache Spark by running the following commands:
 
 [source,bash]
 ----
-wget https://archive.apache.org/dist/spark/spark-3.4.1/spark-3.4.1-bin-hadoop3-scala2.13.tgz
+wget https://archive.apache.org/dist/spark/spark-3.4.2/spark-3.4.2-bin-hadoop3-scala2.13.tgz
 
-tar -xvzf spark-3.4.1-bin-hadoop3-scala2.13.tgz
+tar -xvzf spark-3.4.2-bin-hadoop3-scala2.13.tgz
 ----
 
 [[cdm-install-as-container]]
