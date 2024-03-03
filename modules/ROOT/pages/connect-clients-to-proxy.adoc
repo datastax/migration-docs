@@ -1,4 +1,5 @@
 = Connect your client applications to {zdm-proxy}
+:navtitle: Connect client applications to ZDM Proxy
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
@@ -21,7 +22,7 @@ At DataStax, we've developed and maintain a set of drivers for client applicatio
 * https://github.com/datastax/cpp-driver[{company} C/C++ driver for Apache Cassandra]
 * https://github.com/datastax/nodejs-driver[{company} Node.js driver for Apache Cassandra]
 
-These drivers provide a native implementation of the messaging protocols used to communicate with a Cassandra or DSE cluster or Astra DB. They allow you to execute queries, iterate through results, access metadata about your cluster, and perform other related activities.  
+These drivers provide a native implementation of the messaging protocols used to communicate with a Cassandra or DSE cluster or Astra DB. They allow you to execute queries, iterate through results, access metadata about your cluster, and perform other related activities.
 
 == Connecting {company} drivers to Cassandra
 
@@ -48,7 +49,7 @@ my_session.close()
 my_cluster.close()
 
 // Display the release version to the user
-print(release_version) 
+print(release_version)
 ----
 
 As noted, you'll see some differences in individual drivers:

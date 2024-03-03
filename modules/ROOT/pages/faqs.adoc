@@ -1,4 +1,5 @@
 = Frequently Asked Questions
+:navtitle: FAQs
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,faq
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
@@ -28,11 +29,11 @@ See the diagrams of the ZDM xref:introduction.adoc#_migration_phases[migration p
 
 == Do you offer an interactive self-guided lab to help me learn about ZDM migrations at my own pace?
 
-Yes! Here's a fun way to learn. 
+Yes! Here's a fun way to learn.
 
 include::partial$interactive-lab.adoc[]
 
-The interactive lab spans the pre-migration prerequisites and each of the five key migration phases. 
+The interactive lab spans the pre-migration prerequisites and each of the five key migration phases.
 
 == What components are provided with ZDM?
 
@@ -86,7 +87,7 @@ The suite of {zdm-product} tools from {company} is free and open-sourced.
 
 {zdm-proxy} and related software tools in the migration suite include technical assistance by https://support.datastax.com/s/[{company} Support^] for DSE and Luna subscribers, and Astra DB users who are on an Enterprise plan.
 Free and Pay As You Go plan users do not have support access and must raise questions in the {astra_ui} chat.
-https://www.datastax.com/products/luna[Luna] is a subscription to the Apache Cassandra support and expertise at DataStax. 
+https://www.datastax.com/products/luna[Luna] is a subscription to the Apache Cassandra support and expertise at DataStax.
 
 For any observed problems with the {zdm-proxy}, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^] in the {zdm-proxy} GitHub repo.
 

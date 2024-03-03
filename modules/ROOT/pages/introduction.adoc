@@ -1,4 +1,5 @@
 = Introduction to {zdm-product}
+:navtitle: Introduction
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,introduction
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
@@ -7,11 +8,11 @@ Enterprises today depend on the ability to reliably migrate mission-critical cli
 
 At {company}, we've developed a set of thoroughly-tested self-service tools, automation scripts, examples, and documented procedures that walk you through well-defined migration phases.
 
-We call this product suite {company} {zdm-product} ({zdm-shortproduct}). 
+We call this product suite {company} {zdm-product} ({zdm-shortproduct}).
 
 {zdm-shortproduct} provides a simple and reliable way for you to migrate applications from any CQL-based cluster (https://cassandra.apache.org/_/index.html[Apache Cassandra&reg;^], https://www.datastax.com/products/datastax-enterprise[DataStax Enterprise (DSE)^], https://www.datastax.com/products/datastax-astra[{astra_db}^], or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
 
-* You can move your application to {astra_db}, DSE, or Cassandra with no downtime and with minimal configuration changes.  
+* You can move your application to {astra_db}, DSE, or Cassandra with no downtime and with minimal configuration changes.
 * Your clusters will be kept in sync at all times by a dual-write logic configuration.
 * You can xref:rollback.adoc[rollback] at any point, for complete peace of mind.
 
@@ -70,7 +71,7 @@ Let's look at a pre-migration, high-level view. At this point, your client appli
 image:pre-migration0ra9.png["Illustrates a pre-migration environment, as summarized in the text. Back and Next buttons are available for navigation within the graphic."]
 --
 
-[.slide] 
+[.slide]
 --
 .Phase 1: Deploy ZDM Proxy and connect client applications
 In this first phase, deploy the ZDM Proxy instances and connect client applications to the proxies. This phase activates the dual-write logic. Writes are bifurcated (sent to both Origin and Target), while reads are executed on Origin only.
@@ -78,7 +79,7 @@ In this first phase, deploy the ZDM Proxy instances and connect client applicati
 image:migration-phase1ra9.png["Illustrates migration Phase 1, as summarized in the text. Back and Next buttons are available for navigation within the graphic."]
 --
 
-[.slide] 
+[.slide]
 --
 .Phase 2: Migrate data
 In this phase, migrate existing data using Cassandra Data Migrator and/or DSBulk Migrator. Validate that the migrated data is correct, while continuing to perform dual writes.
@@ -86,7 +87,7 @@ In this phase, migrate existing data using Cassandra Data Migrator and/or DSBulk
 image:migration-phase2ra9.png["Illustrates migration Phase 2, as summarized in the text. Back and Next buttons are available for navigation within the graphic."]
 --
 
-[.slide] 
+[.slide]
 --
 .Phase 3: Enable asynchronous dual reads
 In this phase, you can optionally enable asynchronous dual reads. The idea is to test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target.
@@ -94,7 +95,7 @@ In this phase, you can optionally enable asynchronous dual reads. The idea is to
 image:migration-phase3ra9.png["Illustrates migration Phase 3, as summarized in the text. Back and Next buttons are available for navigation within the graphic."]
 --
 
-[.slide] 
+[.slide]
 --
 .Phase 4: Route reads to Target
 In this phase, read routing on the ZDM Proxy is switched to Target so that all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary cluster.
@@ -103,7 +104,7 @@ image:migration-phase4ra9.png["Illustrates migration Phase 4, as summarized in t
 --
 
 [.slide]
--- 
+--
 .Phase 5: Connect directly to Target
 In this phase, move your client applications off the ZDM Proxy and connect the apps directly to Target. Once that happens, the migration is complete.
 
@@ -115,4 +116,4 @@ image:migration-phase5ra9.png["Illustrates migration Phase 5, as summarized in t
 
 include::partial$interactive-lab.adoc[]
 
-The interactive lab spans the pre-migration prerequisites and each of the five key migration phases illustrated above. 
+The interactive lab spans the pre-migration prerequisites and each of the five key migration phases illustrated above.

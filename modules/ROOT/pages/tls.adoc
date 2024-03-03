@@ -1,4 +1,5 @@
 = Configure Transport Layer Security (TLS)
+:navtitle: Configure Transport Layer Security
 :page-tag: migration,zdm,zero-downtime,tls,transport-layer,zdm-proxy
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
@@ -18,7 +19,7 @@ The TLS configuration is an optional part of the initial {zdm-proxy} configurati
 
 * When using application-to-proxy TLS, your client application is the TLS client and the {zdm-proxy} is the TLS server. One-way TLS and Mutual TLS are both supported.
 
-* When the {zdm-proxy} connects to Astra DB clusters, it always implicitly uses Mutual TLS. 
+* When the {zdm-proxy} connects to Astra DB clusters, it always implicitly uses Mutual TLS.
 This is done through the Secure Connect Bundle (SCB) and does not require any extra configuration.
 
 == Retrieving files from a JKS keystore

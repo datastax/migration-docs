@@ -1,4 +1,5 @@
 = {company} {zdm-product} Release Notes
+:navtitle: Release notes
 :page-tag: migration,zdm,zero-downtime,release-notes
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
@@ -39,13 +40,13 @@ If you are using a {zdm-automation} version up to and including 2.1.0, please us
 
 The ZDM 2.1.0 release adds {zdm-proxy} heartbeat functionality and provides several bug fixes.
 
-The periodic heartbeat feature in 2.1.0 has been implemented to keep alive idle cluster connections. 
+The periodic heartbeat feature in 2.1.0 has been implemented to keep alive idle cluster connections.
 
 By default, {zdm-proxy} now sends heartbeats after 30 seconds of inactivity on a cluster connection. You can tune the heartbeat interval with the Ansible configuration variable `heartbeat_insterval_ms`, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you do not use the {zdm-automation}.
 
 DataStax strongly recommends that you use version 2.1.0 (or newer) to benefit from this improvement, especially if you have a read-only workload.
 
-To verify which {zdm-proxy} version you're running, see this xref:troubleshooting-tips.adoc#_how_to_identify_the_zdm_proxy_version[topic, window="_blank"]. 
+To verify which {zdm-proxy} version you're running, see this xref:troubleshooting-tips.adoc#_how_to_identify_the_zdm_proxy_version[topic, window="_blank"].
 
 To find out how to upgrade an existing {zdm-proxy} deployment, see xref:manage-proxy-instances.adoc#_upgrade_the_proxy_version[Upgrade the proxy version, window="_blank"].
 
@@ -63,11 +64,11 @@ The following topics have been updated for the 2.1.0 release:
 
 * xref:feasibility-checklists.adoc#_read_only_applications[Feasibility checks for read-only applications, window="_blank"]. See the notes indicating that this issue is solved by the {zdm-proxy} 2.1.0 release.
 
-* xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable, window="_blank"]. See the `heartbeat_interval_ms` and `zdm-proxy_max_stream_ids` information. 
+* xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable, window="_blank"]. See the `heartbeat_interval_ms` and `zdm-proxy_max_stream_ids` information.
 
-* xref:troubleshooting-scenarios.adoc#_async_read_timeouts_stream_id_map_exhausted[Async read timeouts, window="_blank"]. See the clarification in the *Workaround* section indicating that this issue is solved by the {zdm-proxy} 2.1.0 release.  
+* xref:troubleshooting-scenarios.adoc#_async_read_timeouts_stream_id_map_exhausted[Async read timeouts, window="_blank"]. See the clarification in the *Workaround* section indicating that this issue is solved by the {zdm-proxy} 2.1.0 release.
 
-* xref:troubleshooting-tips.adoc#_node_level_metrics[Node-level metrics, window="_blank"].  See the "Number of Used Stream Ids" section. 
+* xref:troubleshooting-tips.adoc#_node_level_metrics[Node-level metrics, window="_blank"].  See the "Number of Used Stream Ids" section.
 
 
 == ZDM 2.0.0 release
@@ -100,7 +101,7 @@ The {zdm-product} process requires you to be able to perform rolling restarts of
 
 === ZDM 2.0.0 documentation updates
 
-Starting with the 2.0.0 version on 18-Oct-2022, the {zdm-product} documentation set is available online, starting https://docs.datastax.com/en/astra-serverless/docs/migrate/introduction.html[here]. 
+Starting with the 2.0.0 version on 18-Oct-2022, the {zdm-product} documentation set is available online, starting https://docs.datastax.com/en/astra-serverless/docs/migrate/introduction.html[here].
 
 == Supported releases
 
