@@ -1,4 +1,4 @@
-.{test}
+.test
 * xref:introduction.adoc[]
 * xref:components.adoc[]
 * xref:faqs.adoc[]
