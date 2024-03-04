@@ -89,7 +89,7 @@ This means that, if your {zdm-proxy} is configured with an Origin or Target clus
 * If Origin requires authentication but Target does not, your client application must supply credentials for Origin.
 * If neither cluster requires authentication, no credentials are needed.
 
-[cols="1,1,1"]
+[cols="1,1,1",width=75%]
 |===
 |Auth enabled on Origin
 |Auth enabled on Target

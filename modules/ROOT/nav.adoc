@@ -2,26 +2,28 @@
 * xref:introduction.adoc[]
 * xref:components.adoc[]
 * xref:faqs.adoc[]
-* Preliminary steps
-** xref:preliminary-steps.adoc[]
+* xref:preliminary-steps.adoc[]
 ** xref:feasibility-checklists.adoc[]
 ** xref:deployment-infrastructure.adoc[]
 ** xref:create-target.adoc[]
 ** xref:rollback.adoc[]
-* Phase 1: Deploy {zdm-proxy} and connect client applications
-** xref:phase1.adoc[]
+//phase 1
+* xref:phase1.adoc[]
 ** xref:setup-ansible-playbooks.adoc[]
 ** xref:deploy-proxy-monitoring.adoc[]
 ** xref:tls.adoc[]
 ** xref:connect-clients-to-proxy.adoc[]
 ** xref:metrics.adoc[]
 ** xref:manage-proxy-instances.adoc[]
-* Phase 2: Migrate and validate data
-** xref:migrate-and-validate-data.adoc[]
+//phase 2
+* xref:migrate-and-validate-data.adoc[]
 ** xref:cassandra-data-migrator.adoc[]
 ** xref:dsbulk-migrator.adoc[]
+//phase 3
 * xref:enable-async-dual-reads.adoc[]
+//phase 4
 * xref:change-read-routing.adoc[]
+//phase 5
 * xref:connect-clients-to-target.adoc[]
 * Troubleshooting
 ** xref:troubleshooting.adoc[]

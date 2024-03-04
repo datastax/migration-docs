@@ -94,7 +94,7 @@ for which to generate DDL statements.
 The following options are available for the `migrate-live` command. Most options have sensible default values and do not
 need to be specified, unless you want to override the default value.
 
-[cols="2,8,14"]
+[cols="2,8,14",width=75%]
 |===
 
 | `-c`
@@ -297,7 +297,7 @@ The following options are available for the `generate-script` command.
 Most options have sensible default values and do not need to be specified, unless you want to override the default value.
 
 
-[cols="2,8,14"]
+[cols="2,8,14",width=75%]
 |===
 
 | `-c` 
@@ -469,7 +469,7 @@ Case-sensitive table names must be entered in their exact case.
 The following options are available for the `generate-ddl` command. 
 Most options have sensible default values and do not need to be specified, unless you want to override the default value.
 
-[cols="2,8,14"]
+[cols="2,8,14",width=75%]
 |===
 
 | `-a`
