@@ -1,5 +1,5 @@
-name: zero-downtime-migration
-title: Zero Downtime Migration
+name: data-migration
+title: Data Migration
 version: ~
 start_page: introduction.adoc
 
