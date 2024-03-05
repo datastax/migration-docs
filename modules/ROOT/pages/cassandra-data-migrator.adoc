@@ -247,33 +247,33 @@ Use {cstar-data-migrator} to identify large fields from a table that may break y
 |===
 |Property | Default | Notes
 
-| `spark.cdm.schema.origin.keyspaceTable`
+| spark.cdm.schema.origin.keyspaceTable
 | 
-| Required - the `<keyspace>.<table_name>` of the table to be migrated. Table must exist in Origin.
+| Required - the <keyspace>.<table_name> of the table to be migrated. Table must exist in Origin.
 
-| `spark.cdm.schema.origin.column.ttl.automatic`
-| `true`
-| Default is `true`, unless `spark.cdm.schema.origin.column.ttl.names` is specified. When `true`, the Time To Live (TTL) of the Target record will be determined by finding the maximum TTL of all Origin columns that can have TTL set (which excludes partition key, clustering key, collections/UDT/tuple, and frozen columns). When `false`, and  `spark.cdm.schema.origin.column.ttl.names` is not set, the Target record will have the TTL determined by the Target table configuration.
+| spark.cdm.schema.origin.column.ttl.automatic
+| true
+| Default is true, unless spark.cdm.schema.origin.column.ttl.names is specified. When true, the Time To Live (TTL) of the Target record will be determined by finding the maximum TTL of all Origin columns that can have TTL set (which excludes partition key, clustering key, collections/UDT/tuple, and frozen columns). When false, and  spark.cdm.schema.origin.column.ttl.names is not set, the Target record will have the TTL determined by the Target table configuration.
 
-| `spark.cdm.schema.origin.column.ttl.names`
+| spark.cdm.schema.origin.column.ttl.names
 | 
-| Default is empty, meaning the names will be determined automatically if `spark.cdm.schema.origin.column.ttl.automatic` is set. Specify a subset of eligible columns that are used to calculate the TTL of the Target record.
+| Default is empty, meaning the names will be determined automatically if spark.cdm.schema.origin.column.ttl.automatic is set. Specify a subset of eligible columns that are used to calculate the TTL of the Target record.
 
-| `spark.cdm.schema.origin.column.writetime.automatic`
-| `true`
-| Default is `true`, unless `spark.cdm.schema.origin.column.writetime.names` is specified. When `true`, the `WRITETIME` of the Target record will be determined by finding the maximum `WRITETIME` of all Origin columns that can have `WRITETIME` set (which excludes partition key, clustering key, collections/UDT/tuple, and frozen columns). When `false`, and `spark.cdm.schema.origin.column.writetime.names` is not set, the Target record will have the `WRITETIME` determined by the Target table configuration. 
+| spark.cdm.schema.origin.column.writetime.automatic
+| true
+| Default is true, unless spark.cdm.schema.origin.column.writetime.names is specified. When true, the WRITETIME of the Target record will be determined by finding the maximum WRITETIME of all Origin columns that can have WRITETIME set (which excludes partition key, clustering key, collections/UDT/tuple, and frozen columns). When false, and spark.cdm.schema.origin.column.writetime.names is not set, the Target record will have the WRITETIME determined by the Target table configuration. 
 [NOTE]
 ====
-The `spark.cdm.transform.custom.writetime` property, if set, would override `spark.cdm.schema.origin.column.writetime`.
+The spark.cdm.transform.custom.writetime property, if set, would override spark.cdm.schema.origin.column.writetime.
 ====
 
-| `spark.cdm.schema.origin.column.writetime.names`
+| spark.cdm.schema.origin.column.writetime.names
 | 
-| Default is empty, meaning the names will be determined automatically if `spark.cdm.schema.origin.column.writetime.automatic` is set. Otherwise, specify a subset of eligible columns that are used to calculate the WRITETIME of the Target record. Example: `data_col1,data_col2,...`
+| Default is empty, meaning the names will be determined automatically if spark.cdm.schema.origin.column.writetime.automatic is set. Otherwise, specify a subset of eligible columns that are used to calculate the WRITETIME of the Target record. Example: data_col1,data_col2,...
 
-| `spark.cdm.schema.origin.column.names.to.target`
+| spark.cdm.schema.origin.column.names.to.target
 | 
-| Default is empty. If column names are changed between Origin and Target, then this mapped list provides a mechanism to associate the two. The format is `<origin_column_name>:<target_column_name>`. The list is comma-separated. You only need to list renamed columns. 
+| Default is empty. If column names are changed between Origin and Target, then this mapped list provides a mechanism to associate the two. The format is <origin_column_name>:<target_column_name>. The list is comma-separated. You only need to list renamed columns. 
 
 |===
 
@@ -390,43 +390,43 @@ By default, these parameters are commented out.
 |===
 |Property | Default | Notes
 
-| `spark.cdm.transform.missing.key.ts.replace.value`
-| `1685577600000`
+| spark.cdm.transform.missing.key.ts.replace.value
+| 1685577600000
 | Timestamp value in milliseconds. 
-Partition and clustering columns cannot have null values, but if these are added as part of a schema transformation between Origin and Target, it is possible that the Origin side is null. In this case, the `Migrate` data operation would fail. This parameter allows a crude constant value to be used in its place, separate from the Constant values feature.
+Partition and clustering columns cannot have null values, but if these are added as part of a schema transformation between Origin and Target, it is possible that the Origin side is null. In this case, the Migrate data operation would fail. This parameter allows a crude constant value to be used in its place, separate from the Constant values feature.
 
-| `spark.cdm.transform.custom.writetime` 
-| `0`
-| Default is 0 (disabled). Timestamp value in microseconds to use as the `WRITETIME` for the Target record. This is useful when the `WRITETIME` of the record in Origin cannot be determined (such as when the only non-key columns are collections). This parameter allows a crude constant value to be used in its place, and overrides `spark.cdm.schema.origin.column.writetime.names`.
+| spark.cdm.transform.custom.writetime 
+| 0
+| Default is 0 (disabled). Timestamp value in microseconds to use as the WRITETIME for the Target record. This is useful when the WRITETIME of the record in Origin cannot be determined (such as when the only non-key columns are collections). This parameter allows a crude constant value to be used in its place, and overrides spark.cdm.schema.origin.column.writetime.names.
 
-| `spark.cdm.transform.custom.writetime.incrementBy` 
-| `0`
-| Default is `0`. This is useful when you have a List that is not frozen, and you are updating this via the autocorrect feature. Lists are not idempotent, and subsequent UPSERTs would add duplicates to the list.
+| spark.cdm.transform.custom.writetime.incrementBy 
+| 0
+| Default is 0. This is useful when you have a List that is not frozen, and you are updating this via the autocorrect feature. Lists are not idempotent, and subsequent UPSERTs would add duplicates to the list.
 
-| `spark.cdm.transform.codecs` 
+| spark.cdm.transform.codecs 
 | 
 | Default is empty. A comma-separated list of additional codecs to enable. 
 
- * `INT_STRING` : int stored in a String.
- * `DOUBLE_STRING` : double stored in a String.
- * `BIGINT_STRING` : bigint stored in a String.
- * `DECIMAL_STRING` : decimal stored in a String.
- * `TIMESTAMP_STRING_MILLIS` : timestamp stored in a String, as Epoch milliseconds.
- * `TIMESTAMP_STRING_FORMAT` : timestamp stored in a String, with a custom format.
+ * INT_STRING : int stored in a String.
+ * DOUBLE_STRING : double stored in a String.
+ * BIGINT_STRING : bigint stored in a String.
+ * DECIMAL_STRING : decimal stored in a String.
+ * TIMESTAMP_STRING_MILLIS : timestamp stored in a String, as Epoch milliseconds.
+ * TIMESTAMP_STRING_FORMAT : timestamp stored in a String, with a custom format.
 
 [NOTE]
 ====
-Where there are multiple type pair options, such as with `TIMESTAMP_STRING_*`, only one can be configured at a time with the `spark.cdm.transform.codecs` parameter.
+Where there are multiple type pair options, such as with TIMESTAMP_STRING_*, only one can be configured at a time with the spark.cdm.transform.codecs parameter.
 ====
 
-| `spark.cdm.transform.codecs.timestamp.string.format` 
-| `yyyyMMddHHmmss`
-| Configuration for `CQL_TIMESTAMP_TO_STRING_FORMAT` codec. Default format is `yyyyMMddHHmmss`; `DateTimeFormatter.ofPattern(formatString)`
+| spark.cdm.transform.codecs.timestamp.string.format 
+| yyyyMMddHHmmss
+| Configuration for CQL_TIMESTAMP_TO_STRING_FORMAT codec. Default format is yyyyMMddHHmmss; DateTimeFormatter.ofPattern(formatString)
 
 
-| `spark.cdm.transform.codecs.timestamp.string.zone` 
-| `UTC`
-| Default is `UTC`. Must be in `ZoneRulesProvider.getAvailableZoneIds()`.
+| spark.cdm.transform.codecs.timestamp.string.zone 
+| UTC
+| Default is UTC. Must be in ZoneRulesProvider.getAvailableZoneIds().
 
 |===
 
@@ -468,26 +468,26 @@ By default, these parameters are commented out.
 |===
 |Property | Default | Notes
 
-| `spark.cdm.filter.java.token.percent`
-| `100`
+| spark.cdm.filter.java.token.percent
+| 100
 | Percent (between 1 and 100) of the token in each Split that will be migrated. 
 This property is used to do a wide and random sampling of the data. The percentage value is applied to each split. Invalid percentages will be treated as 100.
 
-| `spark.cdm.filter.java.writetime.min`
-| `0`
-| The lowest (inclusive) writetime values to be migrated. Using the `spark.cdm.filter.java.writetime.min` and `spark.cdm.filter.java.writetime.max` thresholds, {cstar-data-migrator} can filter records based on their writetimes. The maximum writetime of the columns configured at `spark.cdm.schema.origin.column.writetime.names` will be compared to the `.min` and `.max` thresholds, which must be in **microseconds since the epoch**. If the `spark.cdm..schema.origin.column.writetime.names` are not specified, or the thresholds are null or otherwise invalid, the filter will be ignored. Note that `spark.cdm.s.perfops.batchSize` will be ignored when this filter is in place; a value of 1 will be used instead. 
+| spark.cdm.filter.java.writetime.min
+| 0
+| The lowest (inclusive) writetime values to be migrated. Using the spark.cdm.filter.java.writetime.min and spark.cdm.filter.java.writetime.max thresholds, {cstar-data-migrator} can filter records based on their writetimes. The maximum writetime of the columns configured at spark.cdm.schema.origin.column.writetime.names will be compared to the .min and .max thresholds, which must be in microseconds since the epoch. If the spark.cdm.schema.origin.column.writetime.names are not specified, or the thresholds are null or otherwise invalid, the filter will be ignored. Note that spark.cdm.s.perfops.batchSize will be ignored when this filter is in place; a value of 1 will be used instead. 
 
-| `spark.cdm.filter.java.writetime.max`
-| `9223372036854775807`
-| The highest (inclusive) writetime values to be migrated. Maximum timestamp of the columns specified by `spark.cdm.schema.origin.column.writetime.names`; if that property is not specified, or is for some reason null, the filter is ignored.
+| spark.cdm.filter.java.writetime.max
+| 9223372036854775807
+| The highest (inclusive) writetime values to be migrated. Maximum timestamp of the columns specified by spark.cdm.schema.origin.column.writetime.names; if that property is not specified, or is for some reason null, the filter is ignored.
 
-| `spark.cdm.filter.java.column.name`
+| spark.cdm.filter.java.column.name
 | 
-| Filter rows based on matching a configured value. With `spark.cdm.filter.java.column.name`, specify the column name against which the `spark.cdm.filter.java.column.value` is compared. Must be on the column list specified at `spark.cdm.schema.origin.column.names`. The column value will be converted to a String, trimmed of whitespace on both ends, and compared.
+| Filter rows based on matching a configured value. With spark.cdm.filter.java.column.name, specify the column name against which the spark.cdm.filter.java.column.value is compared. Must be on the column list specified at spark.cdm.schema.origin.column.names. The column value will be converted to a String, trimmed of whitespace on both ends, and compared.
 
-| `spark.cdm.filter.java.column.value`
+| spark.cdm.filter.java.column.value
 | 
-| String value to use as comparison. Whitespace on the ends of `spark.cdm.filter.java.column.value` will be trimmed.
+| String value to use as comparison. Whitespace on the ends of spark.cdm.filter.java.column.value will be trimmed.
 
 
 |===
@@ -535,17 +535,17 @@ By default, these parameters are commented out.
 |===
 |Property | Default | Notes
 
-| `spark.cdm.feature.explodeMap.origin.name`
+| spark.cdm.feature.explodeMap.origin.name
 | 
-| The name of the map column, such as `my_map`. Must be defined on `spark.cdm.schema.origin.column.names`, and the corresponding type on `spark.cdm.schema.origin.column.types` must be a map.
+| The name of the map column, such as my_map. Must be defined on spark.cdm.schema.origin.column.names, and the corresponding type on spark.cdm.schema.origin.column.types must be a map.
 
-| `spark.cdm.feature.explodeMap.origin.name.key`
+| spark.cdm.feature.explodeMap.origin.name.key
 | 
-| The name of the column on the Target table that will hold the map key, such as `my_map_key`. This key must be present on the Target primary key `spark.cdm.schema.target.column.id.names`.
+| The name of the column on the Target table that will hold the map key, such as my_map_key. This key must be present on the Target primary key spark.cdm.schema.target.column.id.names.
 
-| `spark.cdm.feature.explodeMap.origin.value`
+| spark.cdm.feature.explodeMap.origin.value
 | 
-| The name of the column on the Target table that will hold the map value, such as `my_map_value`.
+| The name of the column on the Target table that will hold the map value, such as my_map_value.
 
 |===
 
@@ -581,60 +581,60 @@ By default, these parameters are commented out.
 |===
 |Property | Default | Notes
 
-| `spark.cdm.connect.origin.tls.enabled`
-| `false`
-| If TLS is used, set to `true`.
+| spark.cdm.connect.origin.tls.enabled
+| false
+| If TLS is used, set to true.
 
-| `spark.cdm.connect.origin.tls.trustStore.path`
+| spark.cdm.connect.origin.tls.trustStore.path
 | 
 | Path to the Java truststore file.
 
-| `spark.cdm.connect.origin.tls.trustStore.password`
+| spark.cdm.connect.origin.tls.trustStore.password
 | 
 | Password needed to open the truststore.
 
-| `spark.cdm.connect.origin.tls.trustStore.type `
-| `JKS`
+| spark.cdm.connect.origin.tls.trustStore.type 
+| JKS
 | 
 
-| `spark.cdm.connect.origin.tls.keyStore.path`
+| spark.cdm.connect.origin.tls.keyStore.path
 | 
 | Path to the Java keystore file.
 
-| `spark.cdm.connect.origin.tls.keyStore.password`
+| spark.cdm.connect.origin.tls.keyStore.password
 | 
 | Password needed to open the keystore.
 
-| `spark.cdm.connect.origin.tls.enabledAlgorithms`
-| `TLS_RSA_WITH_AES_128_CBC_SHA`,`TLS_RSA_WITH_AES_256_CBC_SHA`
+| spark.cdm.connect.origin.tls.enabledAlgorithms
+| TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA
 | 
 
-| `spark.cdm.connect.target.tls.enabled`
-| `false`
-| If TLS is used, set to `true`.
+| spark.cdm.connect.target.tls.enabled
+| false
+| If TLS is used, set to true.
 
-| `spark.cdm.connect.target.tls.trustStore.path`
+| spark.cdm.connect.target.tls.trustStore.path
 | 
 | Path to the Java truststore file.
 
-| `spark.cdm.connect.target.tls.trustStore.password`
+| spark.cdm.connect.target.tls.trustStore.password
 | 
 | Password needed to open the truststore.
 
-| `spark.cdm.connect.target.tls.trustStore.type `
-| `JKS`
+| spark.cdm.connect.target.tls.trustStore.type 
+| JKS
 | 
 
-| `spark.cdm.connect.target.tls.keyStore.path`
+| spark.cdm.connect.target.tls.keyStore.path
 | 
 | Path to the Java keystore file.
 
-| `spark.cdm.connect.target.tls.keyStore.password`
+| spark.cdm.connect.target.tls.keyStore.password
 | 
 | Password needed to open the keystore.
 
-| `spark.cdm.connect.target.tls.enabledAlgorithms`
-| `TLS_RSA_WITH_AES_128_CBC_SHA`,`TLS_RSA_WITH_AES_256_CBC_SHA`
+| spark.cdm.connect.target.tls.enabledAlgorithms
+| TLS_RSA_WITH_AES_128_CBC_SHA,TLS_RSA_WITH_AES_256_CBC_SHA
 | 
 
 |===
