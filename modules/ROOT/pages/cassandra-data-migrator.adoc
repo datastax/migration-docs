@@ -193,7 +193,7 @@ Use {cstar-data-migrator} to identify large fields from a table that may break y
 [[cdm-connection-params]]
 === Common connection parameters for Origin and Target
 
-[cols="3,1,3",width="75%"]
+[cols="3,1,3"]
 |===
 |Property | Default | Notes
 
@@ -243,7 +243,7 @@ Use {cstar-data-migrator} to identify large fields from a table that may break y
 [[cdm-origin-schema-params]]
 === Origin schema parameters
 
-[cols="3,1,3a",width="75%"]
+[cols="3,1,3a"]
 |===
 |Property | Default | Notes
 
@@ -286,7 +286,7 @@ For optimization reasons, {cstar-data-migrator} does not migrate TTL and writeti
 [[cdm-target-schema-params]]
 === Target schema parameter
 
-[cols="3,1,3",width=75%]
+[cols="3,1,3"]
 |===
 |Property | Default | Notes
 
@@ -304,7 +304,7 @@ Auto-correction parameters allow {cstar-data-migrator} to correct data differenc
 
 For information about invoking `DiffData` in a {cstar-data-migrator} command, see xref:#cdm-validation-steps[{cstar-data-migrator} steps in validation mode] in this topic.
 
-[cols="3,1,3a",width=75%]
+[cols="3,1,3a"]
 |===
 |Property | Default | Notes
 
@@ -336,7 +336,7 @@ The `TIMESTAMP` of records may have an effect. If the `WRITETIME` of the Origin 
 
 Performance and operations parameters that can affect migration throughput, error handling, and similar concerns.
 
-[cols="3,1,3",width=75%]
+[cols="3,1,3"]
 |===
 |Property | Default | Notes
 
@@ -386,7 +386,7 @@ Parameters to perform schema transformations between Origin and Target.
 
 By default, these parameters are commented out.
 
-[cols="3,1,3a",width=75%]
+[cols="3,1,3a"]
 |===
 |Property | Default | Notes
 
@@ -438,7 +438,7 @@ Cassandra filters are applied on the coordinator node. Note that, depending on t
 
 By default, these parameters are commented out.
 
-[cols="3,1,3",width=75%]
+[cols="3,1,3"]
 |===
 |Property | Default | Notes
 
@@ -464,7 +464,7 @@ Java filters are applied on the client node. Data must be pulled from the Origin
 
 By default, these parameters are commented out.
 
-[cols="3,1,3",width=75%]
+[cols="3,1,3"]
 |===
 |Property | Default | Notes
 
@@ -501,7 +501,7 @@ If used, the `spark.cdm.feature.constantColumns.names`, `spark.cdm.feature.const
 
 By default, these parameters are commented out.
 
-[cols="3,1,3",width=75%]
+[cols="3,1,3"]
 |===
 |Property | Default | Notes
 
@@ -531,7 +531,7 @@ The explode map feature allows you convert an Origin table Map into multiple Tar
 
 By default, these parameters are commented out.
 
-[cols="3,1,3",width=75%]
+[cols="3,1,3"]
 |===
 |Property | Default | Notes
 
@@ -558,7 +558,7 @@ The Guardrail job will generate a report; other jobs will skip records that exce
 
 By default, these parameters are commented out.
 
-[cols="3,1,3",width=75%]
+[cols="3,1,3"]
 |===
 |Property | Default | Notes
 
@@ -577,7 +577,7 @@ Note that a secure connect bundle (SCB) embeds these details.
 
 By default, these parameters are commented out.
 
-[cols="3,1,3",width=75%]
+[cols="3,1,3"]
 |===
 |Property | Default | Notes
 
