@@ -16,11 +16,11 @@ At this point in our migration phases, we've completed:
 
 Now we're ready to perform Phase 5, in which we will configure our client applications to connect directly to Target. The way you do this varies based on whether your Target is Astra DB or a regular Apache Cassandra&reg; or DataStax Enterprise cluster.
 
-include::partial$lightbox-tip.adoc[]
+//include::partial$lightbox-tip.adoc[]
 
 image::{imagesprefix}migration-phase5ra.png[Phase 5 diagram shows apps no longer using proxy and instead connected directly to Target.]
 
-For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
+//For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
 == Configuring your driver to connect to a generic CQL cluster
 

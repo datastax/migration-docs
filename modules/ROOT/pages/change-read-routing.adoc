@@ -5,7 +5,7 @@ ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 This topic explains how you can configure the {zdm-proxy} to route all reads to Target instead of Origin.
 
-include::partial$lightbox-tip.adoc[]
+//include::partial$lightbox-tip.adoc[]
 
 image::{imagesprefix}migration-phase4ra9.png["Phase 4 diagram shows read routing on ZDM Proxy was switched to Target."]
 
