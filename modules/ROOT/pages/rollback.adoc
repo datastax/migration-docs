@@ -8,7 +8,7 @@ At any point during the migration process until the very last phase, if you hit 
 
 The migration can be started from scratch once the issue has been addressed.
 
-include::partial$lightbox-tip-all-phases.adoc[]
+//include::partial$lightbox-tip-all-phases.adoc[]
 
 image::{imagesprefix}migration-all-phases.png[Migration phases from start to finish.]
 

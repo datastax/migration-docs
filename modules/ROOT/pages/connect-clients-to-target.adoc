@@ -32,7 +32,7 @@ To connect to your Astra DB cluster, you will need:
 
 * A valid set of credentials (ClientID and Client Secret) for the Astra DB organization to which your cluster belongs:
 ** Note: You will already have used these credentials when you configured the {zdm-proxy} to connect to your Astra DB cluster as Target.
-** For more information on creating credentials (tokens), see https://docs.datastax.com/en/astra-serverless/docs/manage/org/manage-tokens.html[here^].
+** For more information on creating credentials (tokens), see https://docs.datastax.com/en/astra/astra-db-vector/administration/manage-application-tokens.html[here^].
 * The Secure Connect Bundle (SCB) for your Astra DB cluster:
 ** This is a zip archive containing connection metadata and files to automatically enable Mutual TLS encryption between your client application and Astra DB.
 ** There is one SCB for each Astra DB cluster (or one for each region of an Astra DB Multi-region cluster).
@@ -113,7 +113,7 @@ It is possible to configure older or community-contributed drivers to connect to
 
 To do so, you will need to extract the files from the SCB and use them to enable Mutual TLS in the configuration of your driver. Please see https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/legacy-drivers.html[here^] for detailed instructions for each driver.
 
-Alternatively, you could also consider using https://docs.datastax.com/en/astra-serverless/docs/connect/connecting-to-astra-databases-using-datastax-drivers.html#_cql_proxy[CQL Proxy^], which is an open-source lightweight proxy that abstracts away all Astra-specific connection configuration from your client application.
+Alternatively, you could also consider using https://www.datastax.com/blog/easily-connect-apache-cassandra-workloads-to-datastaxs-serverless-dbaas-with-our-cql-proxy[CQL Proxy^], which is an open-source lightweight proxy that abstracts away all Astra-specific connection configuration from your client application.
 
 === A word on the cloud-native drivers
 

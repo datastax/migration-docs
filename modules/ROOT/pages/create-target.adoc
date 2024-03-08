@@ -84,7 +84,7 @@ To complete the preparation work, create the client application schema in your n
 
 In Astra Portal, create each corresponding keyspace and tables. The keyspace names, table names and structure must be identical to the schema on Origin, bearing in mind that:
 
-* In Astra DB, keyspaces must be created through Astra Portal. Keyspace creation through CQL is not supported. See https://docs.datastax.com/en/astra-serverless/docs/manage/db/manage-create.html[create your database^], and https://docs.datastax.com/en/astra-serverless/docs/manage/db/manage-keyspaces.html#_adding_a_new_keyspace[adding a new keyspace^].
+* In Astra DB, keyspaces must be created through Astra Portal. Keyspace creation through CQL is not supported. See https://docs.datastax.com/en/astra/astra-db-vector/databases/create-database.html[create your database^], and https://docs.datastax.com/en/astra/astra-db-vector/databases/manage-keyspaces.html#_adding_a_new_keyspace[adding a new keyspace^].
 
 * Tables can be defined as usual in regular CQL, but the only table property that can be optionally set in Astra DB is `default_time_to_live`. Please remove all other table properties (such as compaction strategy, `gc_grace_seconds` and so on).
 
