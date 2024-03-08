@@ -32,7 +32,6 @@ endif::[]
 // External URLs:
 :asciidoc-language: https://docs.asciidoctor.org/asciidoc/latest/
 
-
 This repository contains the source files for the {company} {product} documentation.
 
 toc::[]
@@ -89,12 +88,12 @@ For most people this means doing the following:
 ..  Create the file `$HOME/.git-credentials` and open it in your editor.
 .. Add the following line:
 +
-[source]
+[source,subs="verbatim,quotes"]
 ----
-https://TOKEN:@github.com
+https://**TOKEN**:@github.com
 ----
 +
-Replace `TOKEN` with the personal access token you copied from GitHub.
+Replace *`TOKEN`* with the personal access token you copied from GitHub.
 .. Save and close the file.
 
 . If you don't already have Node.js installed, do the following:
@@ -149,7 +148,7 @@ If the build was successful, you'll see the following output in your terminal:
 [source,console,subs="attributes"]
 ----
 Site generation complete!
-Open file:///Users/YOUR-NAME/repos/{repo-name}/build/site/index.html in a browser to view your site.
+Open file:///Users/USERNAME/repos/{repo-name}/build/site/index.html in a browser to view your site.
 ----
 +
 To view the site, paste the entire `\file:///` path into your browser's address bar and press kbd:[Return].
@@ -157,4 +156,4 @@ To view the site, paste the entire `\file:///` path into your browser's address 
 [#publish-docs]
 == Publish docs
 
-To learn how to publish documentation to {url-datastax-docs}, see the https://github.com/riptano/datastax-docs-site#deploy-production[datastax-docs-site README].
+To learn how to publish documentation to {url-datastax-docs}, see the {url-playbook-repo}#deploy-production[datastax-docs-site README].
