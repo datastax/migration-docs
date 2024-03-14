@@ -6,13 +6,13 @@ ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 In this topic, we'll see how to create and prepare a new cluster to be used as Target.
 
-This section covers in detail the steps to prepare a {company} Astra DB serverless database, and also outlines how to create and prepare a different cluster, which could be for example Cassandra 4.0.x or DSE 6.8.x.
+This section covers in detail the steps to prepare a {company} {astra-db-serverless} database, and also outlines how to create and prepare a different cluster, which could be for example Cassandra 4.0.x or DSE 6.8.x.
 
 == Overview
 
 If you intend to use Astra DB as Target for the migration, you will need to:
 
-* Create an Astra DB serverless cluster
+* Create an {astra-db-serverless} cluster
 * Retrieve its Secure Connect Bundle (SCB) and upload it to the application instances
 * Create Astra DB access credentials for the cluster
 * Create the client application schema
@@ -30,7 +30,7 @@ To use a generic Cassandra or DSE cluster, you will have to:
 
 * Access to https://astra.datastax.com[Astra Portal, window="_blank"] on astra.datastax.com.
 
-=== Create an Astra DB serverless cluster
+=== Create an {astra-db-serverless} cluster
 
 Log into the Astra Portal and create a serverless Astra DB database. You can start with a Free plan, but consider upgrading during your migration project to an Astra DB Pay As You Go (PAYG) or Enterprise plan, to take advantage of additional functionality -- such as Exporting Metrics to external third-party applications, Bring Your Own Keys, and other features.
 
