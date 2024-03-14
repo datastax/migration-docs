@@ -22,3 +22,4 @@ asciidoc:
     astra-cli: 'Astra CLI'
     url-astra: 'https://astra.datastax.com'
     link-astra-portal: '{url-astra}[{astra_ui}^]'
+    astra-db-serverless: 'Astra DB Serverless'

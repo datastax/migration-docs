@@ -12,20 +12,20 @@ Here are just a few examples of migration scenarios that are supported when movi
 
 * From an existing self-managed Cassandra or DSE cluster to cloud-native {astra_db}. For example:
 
-** Cassandra 2.1.6+, 3.11.x, 4.0.x, or 4.1.x to {astra_db}
+** Cassandra 2.1.6+, 3.11.x, 4.0.x, or 4.1.x to {astra_db}.
 
-** DSE 4.7.1+, 4.8.x, 5.1.x, 6.7.x or 6.8.x to {astra_db}
+** DSE 4.7.1+, 4.8.x, 5.1.x, 6.7.x or 6.8.x to {astra_db}.
 
 * From an existing Cassandra or DSE cluster to another Cassandra or DSE cluster. For example:
 
-** Cassandra 2.1.6+ or 3.11.x to Cassandra 4.0.x or 4.1.x
+** Cassandra 2.1.6+ or 3.11.x to Cassandra 4.0.x or 4.1.x.
 
-** DSE 4.7.1+, 4.8.x, 5.1.x or 6.7.x to DSE 6.8.x
+** DSE 4.7.1+, 4.8.x, 5.1.x or 6.7.x to DSE 6.8.x.
 
-** Cassandra 2.1.6+, 3.11.x, 4.0.x, or 4.1.x to DSE 6.8.x
+** Cassandra 2.1.6+, 3.11.x, 4.0.x, or 4.1.x to DSE 6.8.x.
 
-** DSE 4.7.1+ or 4.8.x to Cassandra 4.0.x or 4.1.x
+** DSE 4.7.1+ or 4.8.x to Cassandra 4.0.x or 4.1.x.
 
-* From https://docs.datastax.com/en/astra-classic/docs[{astra_db} Classic] to https://docs.datastax.com/en/astra-serverless/docs[{astra_db} Serverless]
+* From https://docs.datastax.com/en/astra-classic/docs[{astra_db} Classic] to https://docs.datastax.com/en/astra/astra-db-vector/[{astra-db-serverless}].
 
 * From any CQL-based database type/version to the equivalent CQL-based database type/version.

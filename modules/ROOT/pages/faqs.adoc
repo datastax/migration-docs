@@ -40,12 +40,15 @@ The interactive lab spans the pre-migration prerequisites and each of the five k
 {company} {zdm-product} includes the following:
 
 * xref:glossary.adoc#zdm-proxy[**{zdm-proxy}**] is a service that operates between xref:glossary.adoc#origin[**Origin**], which is your existing cluster, and xref:glossary.adoc#target[**Target**], which is the cluster to which you are migrating.
-* **{zdm-automation}** is an Ansible-based tool that allows you to deploy and manage the {zdm-proxy} instances and associated monitoring stack. To simplify its setup, the suite includes the {zdm-utility}. This interactive utility creates a Docker container acting as the Ansible Control Host. The Ansible playbooks constitute the {zdm-automation}.
+* **{zdm-automation}** is an Ansible-based tool that allows you to deploy and manage the {zdm-proxy} instances and associated monitoring stack.
+To simplify its setup, the suite includes the {zdm-utility}.
+This interactive utility creates a Docker container acting as the Ansible Control Host.
+The Ansible playbooks constitute the {zdm-automation}.
 * **{cstar-data-migrator}** is designed to:
-** Connect to your clusters and compare the data between Origin and Target
-** Report differences in a detailed log file
-** Reconcile any missing records and fix any data inconsistencies between Origin and Target, if you enable `autocorrect` in a configuration file
-* **{dsbulk-migrator}** is provided to migrate smaller amounts of data from Origin to Target
+** Connect to your clusters and compare the data between Origin and Target.
+** Report differences in a detailed log file.
+** Reconcile any missing records and fix any data inconsistencies between Origin and Target by enabling `autocorrect` in a configuration file.
+* **{dsbulk-migrator}** is provided to migrate smaller amounts of data from Origin to Target.
 * Well-defined steps in this migration documentation, organized as a sequence of phases.
 
 == What exactly is {zdm-proxy}?
@@ -71,7 +74,9 @@ include::partial$migration-scenarios.adoc[]
 
 == Does {zdm-shortproduct} migrate clusters?
 
-{zdm-shortproduct} does not migrate clusters. With {zdm-shortproduct}, we are migrating data and applications *between clusters*.  At the end of the migration, your application will be running on your new cluster, which will have been populated with all the relevant data.
+{zdm-shortproduct} does not migrate clusters.
+With {zdm-shortproduct}, we are migrating data and applications *between clusters*.
+At the end of the migration, your application will be running on your new cluster, which will have been populated with all the relevant data.
 
 == What challenges does {zdm-shortproduct} solve?
 
@@ -91,11 +96,16 @@ https://www.datastax.com/products/luna[Luna] is a subscription to the Apache Cas
 
 For any observed problems with the {zdm-proxy}, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^] in the {zdm-proxy} GitHub repo.
 
-Additional examples serve as templates, from which you can learn about migrations. {company} does not assume responsibility for making the templates work for specific use cases.
+Additional examples serve as templates, from which you can learn about migrations.
+{company} does not assume responsibility for making the templates work for specific use cases.
 
 == Where are the public GitHub repos?
 
-All the {company} {zdm-product} GitHub repos are public and open source. You are welcome to read the code and submit feedback via GitHub Issues per repo. In addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion. To submit PRs, you must for first agree to the https://cla.datastax.com/[DataStax Contribution License Agreement (CLA)].
+All the {company} {zdm-product} GitHub repos are public and open source.
+You are welcome to read the code and submit feedback via GitHub Issues per repo.
+In addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion.
+
+To submit PRs, you must for first agree to the https://cla.datastax.com/[DataStax Contribution License Agreement (CLA)].
 
 * https://github.com/datastax/zdm-proxy[{zdm-proxy}^] repo for ZDM Proxy.
 
@@ -112,15 +122,20 @@ All the {company} {zdm-product} GitHub repos are public and open source. You are
 
 Yes, and here's a summary:
 
-* For application-to-proxy TLS, the application is the TLS client and the {zdm-proxy} is the TLS server. One-way TLS and Mutual TLS are both supported.
-* For proxy-to-cluster TLS, the {zdm-proxy} acts as the TLS client and the cluster as the TLS server. One-way TLS and Mutual TLS are both supported.
-* When the {zdm-proxy} connects to {astra_db} clusters, it always implicitly uses Mutual TLS. This is done through the Secure Connect Bundle (SCB) and does not require any extra configuration.
+* For application-to-proxy TLS, the application is the TLS client and the {zdm-proxy} is the TLS server.
+One-way TLS and Mutual TLS are both supported.
+* For proxy-to-cluster TLS, the {zdm-proxy} acts as the TLS client and the cluster as the TLS server.
+One-way TLS and Mutual TLS are both supported.
+* When the {zdm-proxy} connects to {astra_db} clusters, it always implicitly uses Mutual TLS.
+This is done through the Secure Connect Bundle (SCB) and does not require any extra configuration.
 
 For TLS details, see xref:tls.adoc[].
 
 == How does {zdm-proxy} handle Lightweight Transactions (LWTs)?
 
-{zdm-proxy} handles LWTs as write operations. The proxy sends the LWT to Origin and Target clusters concurrently, and waits for a response from both. {zdm-proxy} will return a `success` status to the client if both Origin and Target send successful acknowledgements, or otherwise will return a `failure` status if one or both do not return an acknowledgement.
+{zdm-proxy} handles LWTs as write operations.
+The proxy sends the LWT to Origin and Target clusters concurrently, and waits for a response from both.
+{zdm-proxy} will return a `success` status to the client if both Origin and Target send successful acknowledgements, or otherwise will return a `failure` status if one or both do not return an acknowledgement.
 
 What sets LWTs apart from regular writes is that they are conditional. For important details, including the client context for a returned `applied` flag, see xref:feasibility-checklists.adoc#_lightweight_transactions_and_the_applied_flag[Lightweight Transactions and the `applied` flag].
 
@@ -128,20 +143,28 @@ What sets LWTs apart from regular writes is that they are conditional. For impor
 
 {zdm-proxy} should not be deployed as a sidecar.
 
-{zdm-proxy} was designed to mimic a Cassandra cluster. For this reason, we recommend deploying multiple {zdm-proxy} instances, each running on a dedicated machine, instance, or VM.
+{zdm-proxy} was designed to mimic a Cassandra cluster.
+For this reason, we recommend deploying multiple {zdm-proxy} instances, each running on a dedicated machine, instance, or VM.
 
-For best performance, this deployment should be close to the client applications (ideally on the same local network) but not co-deployed on the same machines as the client applications. This way, each client application instance can connect to all {zdm-proxy} instances, just as it would connect to all nodes in a Cassandra cluster (or datacenter).
+For best performance, this deployment should be close to the client applications (ideally on the same local network) but not co-deployed on the same machines as the client applications.
+
+This way, each client application instance can connect to all {zdm-proxy} instances, just as it would connect to all nodes in a Cassandra cluster (or datacenter).
 
 This deployment model gives maximum resilience and failure tolerance guarantees and allows the client application driver to continue using the same load balancing and retry mechanisms that it would normally use.
 
-Conversely, deploying a single {zdm-proxy} instance would undermine this resilience mechanism and create a single point of failure, which could affect the client applications if one or more nodes of the underlying clusters (Origin or Target) go offline. In a sidecar deployment, each client application instance would be connecting to a single {zdm-proxy} instance, and would therefore be exposed to this risk.
+Conversely, deploying a single {zdm-proxy} instance would undermine this resilience mechanism and create a single point of failure, which could affect the client applications if one or more nodes of the underlying clusters (Origin or Target) go offline.
+In a sidecar deployment, each client application instance would be connecting to a single {zdm-proxy} instance, and would therefore be exposed to this risk.
 
 For more information, see xref:deployment-infrastructure.adoc#_choosing_where_to_deploy_the_proxy[Choosing where to deploy the proxy].
 
 == What are the benefits of using a cloud-native database?
 
-When moving your client applications and data from on-premise Cassandra Query Language (CQL) based data stores (Cassandra or DSE) to a cloud-native database (CNDB) like {astra_db}, it's important to acknowledge the fundamental differences ahead. With on-premise infrastructure, of course, you have total control of the datacenter's physical infrastructure, software configurations, and your custom procedures. At the same time, with on-premise clusters you take on the cost of infrastructure resources, maintenance, operations, and personnel.
+When moving your client applications and data from on-premise Cassandra Query Language (CQL) based data stores (Cassandra or DSE) to a cloud-native database (CNDB) like {astra_db}, it's important to acknowledge the fundamental differences ahead.
+
+With on-premise infrastructure, you have total control of the datacenter's physical infrastructure, software configurations, and your custom procedures.
+At the same time, with on-premise clusters you take on the cost of infrastructure resources, maintenance, operations, and personnel.
 
 Ranging from large enterprises to small teams, IT managers, operators, and developers are realizing that the Total Cost of Ownership (TCO) with cloud solutions is much lower than continuing to run on-prem physical data centers.
 
-A CNDB like {astra_db} is a different environment. Running on proven cloud providers like AWS, Google Cloud, and Azure, {astra_db} greatly reduces complexity and increases convenience by surfacing a subset of configurable settings, providing a well-designed UI known as {astra_ui}, plus a set of APIs and commands to interact with your {astra_db} organizations and databases.
+A CNDB like {astra_db} is a different environment.
+Running on proven cloud providers like AWS, Google Cloud, and Azure, {astra_db} greatly reduces complexity and increases convenience by surfacing a subset of configurable settings, providing a well-designed UI known as {astra_ui}, plus a set of APIs and commands to interact with your {astra_db} organizations and databases.

@@ -35,7 +35,11 @@ include::partial$migration-scenarios.adoc[]
 
 [TIP]
 ====
-An important migration prerequisite is that you already have the matching schema on Target. A CQL statement that your client application sends to {zdm-proxy} must be able to succeed on both Origin and Target clusters. This means that any keyspace that your client application uses must exist on both Origin and Target with the same name. Table names must also match. For more, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
+An important migration prerequisite is that you already have the matching schema on Target.
+A CQL statement that your client application sends to {zdm-proxy} must be able to succeed on both Origin and Target clusters.
+This means that any keyspace that your client application uses must exist on both Origin and Target with the same name.
+Table names must also match.
+For more, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
 ====
 
 == Migration phases
@@ -48,7 +52,7 @@ First, a couple of key terms used throughout the ZDM documentation and software 
 
 For additional terms, see the xref:glossary.adoc[glossary].
 
-=== Migration interactive diagram
+=== Migration diagram
 
 Discover the migration concepts, software components, and sequence of operations.
 
@@ -56,37 +60,54 @@ Your migration project occurs through a sequence of phases, which matches the st
 
 The highlighted components in each phase emphasize how your client applications perform read and write operations on  your Origin and Target clusters.
 
+==== Pre-migration client application operations
+
 Let's look at a pre-migration from a high-level view.
 At this point, your client applications are performing read/write operations with an existing CQL-compatible database: Apache Cassandra, DSE, or Astra DB.
 
 image:pre-migration0ra9.png["Pre-migration environment."]
 
-.Phase 1: Deploy ZDM Proxy and connect client applications
+'''
+
+==== Phase 1: Deploy ZDM Proxy and connect client applications
+
 In this first phase, deploy the ZDM Proxy instances and connect client applications to the proxies.
 This phase activates the dual-write logic.
 Writes are bifurcated (sent to both Origin and Target), while reads are executed on Origin only.
 
 image:migration-phase1ra9.png["Migration Phase 1."]
 
-.Phase 2: Migrate data
+'''
+
+==== Phase 2: Migrate data
+
 In this phase, migrate existing data using Cassandra Data Migrator and/or DSBulk Migrator.
 Validate that the migrated data is correct, while continuing to perform dual writes.
 
 image:migration-phase2ra9.png["Migration Phase 2."]
 
-.Phase 3: Enable asynchronous dual reads
+'''
+
+==== Phase 3: Enable asynchronous dual reads
+
 In this phase, you can optionally enable asynchronous dual reads.
 The idea is to test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target.
 
 image:migration-phase3ra9.png["Migration Phase 3."]
 
-.Phase 4: Route reads to Target
+'''
+
+==== Phase 4: Route reads to Target
+
 In this phase, read routing on the ZDM Proxy is switched to Target so that all reads are executed on it, while writes are still sent to both clusters.
 In other words, Target becomes the primary cluster.
 
 image:migration-phase4ra9.png["Migration Phase 4."]
 
-.Phase 5: Connect directly to Target
+'''
+
+==== Phase 5: Connect directly to Target
+
 In this phase, move your client applications off the ZDM Proxy and connect the apps directly to Target.
 Once that happens, the migration is complete.
 
