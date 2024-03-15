@@ -47,7 +47,7 @@ In the Java 4.x driver logs, the following issues can manifest during session in
 
 === Cause
 
-https://datastax-oss.atlassian.net/browse/JAVA-2905[JAVA-2905^] is a driver bug that manifests itself in this way. It affects Java driver 4.x, and was fixed on the 4.10.0 release.
+https://datastax-oss.atlassian.net/browse/JAVA-2905[JAVA-2905] is a driver bug that manifests itself in this way. It affects Java driver 4.x, and was fixed on the 4.10.0 release.
 
 === Solution or Workaround
 

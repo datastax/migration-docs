@@ -56,7 +56,7 @@ For example, if your compound primary key is `PRIMARY KEY (A, B)` and you always
 == Considerations for Astra DB migrations
 
 {company} Astra DB implements guardrails and sets limits to ensure good practices, foster availability, and promote optimal configurations for your databases.
-Please check the list of https://docs.datastax.com/en/astra-serverless/docs/plan/planning.html#_astra_db_database_guardrails_and_limits[guardrails and limits^] and make sure your application workload can be successful within these limits.
+Please check the list of https://docs.datastax.com/en/astra-serverless/docs/plan/planning.html#_astra_db_database_guardrails_and_limits[guardrails and limits] and make sure your application workload can be successful within these limits.
 
 If you need to make changes to the application or data model to ensure that your workload can run successfully in {company} Astra DB, then you need to do these changes before you start the migration process.
 
@@ -222,17 +222,17 @@ In this section we outline the default behavior of some of these drivers and pro
 
 === {company} Java Driver 4.x
 
-The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically. See this Java 4.x https://docs.datastax.com/en/developer/java-driver/latest/manual/core/idempotence/[query idempotence documentation section^].
+The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically. See this Java 4.x https://docs.datastax.com/en/developer/java-driver/latest/manual/core/idempotence/[query idempotence documentation section].
 
 === {company} Java Driver 3.x
 
-The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically. See this Java 3.x https://docs.datastax.com/en/developer/java-driver/3.11/manual/idempotence/[query idempotence documentation section^].
+The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically. See this Java 3.x https://docs.datastax.com/en/developer/java-driver/3.11/manual/idempotence/[query idempotence documentation section].
 
 This behavior was introduced in version 3.1.0 so prior to this version the default retry policy retried all requests regardless of idempotence.
 
 === {company} Nodejs Driver 4.x
 
-The default retry policy takes idempotence in consideration. See this Nodejs 4.x https://docs.datastax.com/en/developer/nodejs-driver/latest/features/speculative-executions/#query-idempotence[query idempotence documentation section^].
+The default retry policy takes idempotence in consideration. See this Nodejs 4.x https://docs.datastax.com/en/developer/nodejs-driver/latest/features/speculative-executions/#query-idempotence[query idempotence documentation section].
 
 === {company} C# Driver 3.x and {company} Python Driver 3.x
 

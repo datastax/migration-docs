@@ -23,7 +23,7 @@ Starting in version 2.2.0 of the {zdm-automation}, we added the `zdm_proxy_clust
 This change is backward compatible. If you previously populated the variables in `zdm_proxy_core_config.yml`, these variables will be honored and take precedence over any variables in `zdm_proxy_cluster_config.yml`, if both files are present.
 ====
 
-We encourage existing 2.x ZDM users to upgrade to the 2.3.0 version of {zdm-automation}. To do so, simply `git pull` the `main` branch of https://github.com/datastax/zdm-proxy-automation from within the Ansible Control Host container. You can also check out a https://github.com/datastax/zdm-proxy-automation/releases/tag/v2.3.0[specific tag^], such as 2.3.0.
+We encourage existing 2.x ZDM users to upgrade to the 2.3.0 version of {zdm-automation}. To do so, simply `git pull` the `main` branch of https://github.com/datastax/zdm-proxy-automation from within the Ansible Control Host container. You can also check out a https://github.com/datastax/zdm-proxy-automation/releases/tag/v2.3.0[specific tag], such as 2.3.0.
 
 For more about the YML files used to configure access to your clusters, see xref:deploy-proxy-monitoring.adoc#_configure_the_zdm_proxy[this topic].
 
@@ -54,9 +54,9 @@ To find out how to upgrade an existing {zdm-proxy} deployment, see xref:manage-p
 
 For the latest information about {zdm-proxy} new features and other changes, please refer to these GitHub-hosted documents in the open-source {zdm-proxy} repo:
 
-* https://github.com/datastax/zdm-proxy/blob/main/RELEASE_NOTES.md[RELEASE_NOTES^]
+* https://github.com/datastax/zdm-proxy/blob/main/RELEASE_NOTES.md[RELEASE_NOTES]
 
-* https://github.com/datastax/zdm-proxy/blob/main/CHANGELOG/CHANGELOG-2.1.md[CHANGELOG 2.1^]
+* https://github.com/datastax/zdm-proxy/blob/main/CHANGELOG/CHANGELOG-2.1.md[CHANGELOG 2.1]
 
 === ZDM 2.1.0 documentation updates
 
@@ -81,17 +81,17 @@ This 2.0.0 version marks the public release of the self-service {company} {zdm-p
 
 The following GitHub repos are public. You are welcome to read the source and submit feedback via GitHub Issues per repo.
 
-* https://github.com/datastax/zdm-proxy[{zdm-proxy}^] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion, provided you accept the https://cla.datastax.com/[{company} Contributor License Agreement (CLA)^]. For more information, see xref:contributions.adoc[].
+* https://github.com/datastax/zdm-proxy[{zdm-proxy}] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion, provided you accept the https://cla.datastax.com/[{company} Contributor License Agreement (CLA)]. For more information, see xref:contributions.adoc[].
 
-* https://github.com/datastax/zdm-proxy-automation[{zdm-automation}^] repo for Ansible-based {zdm-proxy} automation.
+* https://github.com/datastax/zdm-proxy-automation[{zdm-automation}] repo for Ansible-based {zdm-proxy} automation.
 
-* https://github.com/datastax/dsbulk-migrator[DSBulk Migrator^] repo for migration of smaller data quantities.
+* https://github.com/datastax/dsbulk-migrator[DSBulk Migrator] repo for migration of smaller data quantities.
 
-* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator^] repo for migration of larger data quantities and where detailed verifications and reconciliation options are needed.
+* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator] repo for migration of larger data quantities and where detailed verifications and reconciliation options are needed.
 
 include::partial$note-downtime.adoc[]
 
-For the latest information about {zdm-proxy} new features and other changes, please refer to the GitHub-hosted https://github.com/datastax/zdm-proxy/blob/main/RELEASE_NOTES.md[RELEASE_NOTES^] in the open-source {zdm-proxy} repo. The document includes CHANGELOG links for each {zdm-proxy} `N.n` release.
+For the latest information about {zdm-proxy} new features and other changes, please refer to the GitHub-hosted https://github.com/datastax/zdm-proxy/blob/main/RELEASE_NOTES.md[RELEASE_NOTES] in the open-source {zdm-proxy} repo. The document includes CHANGELOG links for each {zdm-proxy} `N.n` release.
 
 ====
 [TIP]

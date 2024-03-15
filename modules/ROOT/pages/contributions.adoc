@@ -18,7 +18,7 @@ The code sources for additional {zdm-product} components -- including {zdm-utili
 Acceptance of the {company} https://cla.datastax.com/[Contributor License Agreement, window="_blank"] (CLA) is required before we can consider accepting your {zdm-proxy} code contribution. Refer to the https://cla.datastax.com/[CLA terms, window="_blank"] and, if you agree, indicate your acceptance on each Pull Request (PR) that you submit while using the https://github.com/datastax/zdm-proxy[{zdm-proxy} GitHub repository, window="_blank"]. 
 
 // You will see the CLA listed on the standard pull request checklist (TBS) 
-// for the https://github.com/datastax/zdm-proxy[{zdm-proxy}^] repository.
+// for the https://github.com/datastax/zdm-proxy[{zdm-proxy}] repository.
 
 == {zdm-proxy} code contributions
 
@@ -36,14 +36,14 @@ In addition to potential {zdm-proxy} OSS code contribution, we encourage you to 
 
 == Submitting GitHub Issues in related public repos
 
-The following {company} {zdm-product} GitHub repos are public. You are welcome to read the source and submit feedback and ideas via GitHub Issues per repo. In addition to the https://github.com/datastax/zdm-proxy[{zdm-proxy}^] open-source repo, refer to:
+The following {company} {zdm-product} GitHub repos are public. You are welcome to read the source and submit feedback and ideas via GitHub Issues per repo. In addition to the https://github.com/datastax/zdm-proxy[{zdm-proxy}] open-source repo, refer to:
 
-* https://github.com/datastax/zdm-proxy-automation/issues[{zdm-automation}^] repo for Ansible-based {zdm-automation} and {zdm-utility}.
+* https://github.com/datastax/zdm-proxy-automation/issues[{zdm-automation}] repo for Ansible-based {zdm-automation} and {zdm-utility}.
 
-* https://github.com/datastax/cassandra-data-migrator/issues[Cassandra Data Migrator^] repo. 
+* https://github.com/datastax/cassandra-data-migrator/issues[Cassandra Data Migrator] repo. 
 
-* https://github.com/datastax/dsbulk-migrator/issues[DSBulk Migrator^] repo.
+* https://github.com/datastax/dsbulk-migrator/issues[DSBulk Migrator] repo.
 
-// * https://github.com/datastax/migration-docs/issues[Migration documentation^] repo.
+// * https://github.com/datastax/migration-docs/issues[Migration documentation] repo.
 
 Again, add a label to help categorize each issue, such as the complexity level, component name, and other labels you'll find in the repo's Issues display.

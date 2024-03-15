@@ -17,7 +17,7 @@ Having visibility on all aspects of the {zdm-proxy}'s behavior is extremely impo
 
 {zdm-automation} can deploy Prometheus and Grafana, configuring them automatically, as explained xref:deploy-proxy-monitoring.adoc#_setting_up_the_monitoring_stack[here]. The Grafana dashboards are ready to go with metrics that are being scraped from the {zdm-proxy} instances.
 
-If you already have a Grafana deployment then you can import the dashboards from the two ZDM dashboard files from this https://github.com/datastax/zdm-proxy-automation/tree/main/grafana-dashboards[{zdm-automation} GitHub location^].
+If you already have a Grafana deployment then you can import the dashboards from the two ZDM dashboard files from this https://github.com/datastax/zdm-proxy-automation/tree/main/grafana-dashboards[{zdm-automation} GitHub location].
  
 == Grafana dashboard for {zdm-proxy} metrics
 

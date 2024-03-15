@@ -10,7 +10,7 @@ At {company}, we've developed a set of thoroughly-tested self-service tools, aut
 
 We call this product suite {company} {zdm-product} ({zdm-shortproduct}).
 
-{zdm-shortproduct} provides a simple and reliable way for you to migrate applications from any CQL-based cluster (https://cassandra.apache.org/_/index.html[Apache Cassandra&reg;^], https://www.datastax.com/products/datastax-enterprise[DataStax Enterprise (DSE)^], https://www.datastax.com/products/datastax-astra[{astra_db}^], or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
+{zdm-shortproduct} provides a simple and reliable way for you to migrate applications from any CQL-based cluster (https://cassandra.apache.org/_/index.html[Apache Cassandra&reg;], https://www.datastax.com/products/datastax-enterprise[DataStax Enterprise (DSE)], https://www.datastax.com/products/datastax-astra[{astra_db}], or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
 
 * You can move your application to {astra_db}, DSE, or Cassandra with no downtime and with minimal configuration changes.
 * Your clusters will be kept in sync at all times by a dual-write logic configuration.

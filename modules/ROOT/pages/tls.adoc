@@ -43,7 +43,7 @@ keytool -exportcert -keystore <path_to_jks_store> -alias <file_alias> -file <pat
 
 Please note the `-rfc` option, which extracts the files in non-binary PEM format.
 
-For more details, see the https://docs.oracle.com/javase/8/docs/technotes/tools/windows/keytool.html[keytool syntax documentation^].
+For more details, see the https://docs.oracle.com/javase/8/docs/technotes/tools/windows/keytool.html[keytool syntax documentation].
 
 == Proxy to self-managed cluster TLS
 

@@ -72,7 +72,7 @@ When you find a log message that looks like an error, the most important thing i
 
 * Log messages with `level=warn` are usually related to events that are not fatal to the overall running workload, but may cause issues with individual requests or connections.
 
-* In general, log messages with `level=error` or `level=warn` should be brought to the attention of DataStax, if the meaning is not clear.  In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^] to ask questions about log messages of type `error` or `warn` that are unclear.
+* In general, log messages with `level=error` or `level=warn` should be brought to the attention of DataStax, if the meaning is not clear.  In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue] to ask questions about log messages of type `error` or `warn` that are unclear.
 
 === Protocol log messages
 
@@ -119,7 +119,7 @@ See xref:metrics.adoc[].
 
 == Reporting an issue
 
-If you encounter a problem during your migration, please contact us. In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue^]. Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
+If you encounter a problem during your migration, please contact us. In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue]. Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
 
 * {zdm-proxy} version (see xref:_how_to_identify_the_zdm_proxy_version[here]).
 * {zdm-proxy} logs: ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change.

@@ -18,7 +18,7 @@ An optional testing phase in which reads are sent to both Origin and Target, ena
 
 == CQL
 
-Cassandra Query Language (CQL) is a query language for the Cassandra database. It includes DDL and DML statements. For details, see the https://docs.datastax.com/en/dse/6.8/cql/cql/cqlQuickReference.html[CQL quick reference^].
+Cassandra Query Language (CQL) is a query language for the Cassandra database. It includes DDL and DML statements. For details, see the https://docs.datastax.com/en/dse/6.8/cql/cql/cqlQuickReference.html[CQL quick reference].
 
 
 == Dual-write logic
@@ -62,7 +62,7 @@ For more, see <<primary-cluster,Primary cluster>>. Also see xref:enable-async-du
 
 == Secure Connect Bundle (SCB)
 
-A ZIP file generated in https://astra.datastax.com[Astra Portal^] that contains connection metadata and TLS encryption certificates (but not the database credentials) for your {astra_db} database. For details, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[Working with the Secure Connect Bundle^].
+A ZIP file generated in https://astra.datastax.com[Astra Portal] that contains connection metadata and TLS encryption certificates (but not the database credentials) for your {astra_db} database. For details, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[Working with the Secure Connect Bundle].
 
 [[target]]
 == Target

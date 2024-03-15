@@ -72,7 +72,7 @@ These two sections are very important and are always required. Populate the appr
 ... Copy it to the container. Open a new shell on the jumphost, run `docker cp <your_scb.zip> zdm-ansible-container:/home/ubuntu`
 ... Specify its path in `*_astra_secure_connect_bundle_path`.
 .. Otherwise, if you wish the automation to download the cluster's Secure Connect Bundle for you, just specify the two following variables:
-... `*_astra_db_id`: the cluster's https://docs.datastax.com/en/astra-serverless/docs/astra-faq.html#_where_do_i_find_the_database_id_and_organization_id[database id^].
+... `*_astra_db_id`: the cluster's https://docs.datastax.com/en/astra-serverless/docs/astra-faq.html#_where_do_i_find_the_database_id_and_organization_id[database id].
 ... `*_astra_token`: the token field from a valid set of credentials for a `R/W User` Astra role (this is the long string that starts with `AstraCS:`).
 
 Save the file and exit the editor.
