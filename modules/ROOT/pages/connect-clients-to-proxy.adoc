@@ -156,6 +156,7 @@ After updating connection information you can compile and run the application lo
 
 You can find the details of building and running ZDM Demo Client in the https://github.com/alicel/zdm-demo-client/blob/master/README.md[README].
 
+[[_themis_client]]
 === Themis client
 
 https://github.com/absurdfarce/themis[Themis] is a Java command-line client application that allows you to insert randomly-generated data into some combination of these three sources:

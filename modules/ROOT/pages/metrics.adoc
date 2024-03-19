@@ -91,6 +91,7 @@ Possible values for the `error` type label:
 ** `error=unavailable`
 ** `error=unprepared`
 
+[[_asynchronous_read_requests_metrics]]
 === Asynchronous read requests metrics
 
 These metrics are specific to asynchronous reads, so they are only populated if asynchronous dual reads are enabled.
