@@ -30,7 +30,7 @@ Cassandra Query Language (CQL) is a query language for the Cassandra database. I
 
 Your existing Cassandra-based cluster, whether it's open-source Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB.
 
-[[primary-cluster]]
+[[_primary_cluster]]
 == Primary cluster
 
 The cluster that is currently considered the "primary" source of truth. While writes are always sent to both clusters, the primary cluster is the one to which all synchronous reads are always sent, and their results are returned to the client application. During a migration, Origin is typically the primary cluster. Near the end of the migration, you'll shift the primary cluster to be Target.

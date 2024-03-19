@@ -171,6 +171,7 @@ ansible-playbook deploy_zdm_proxy.yml -i zdm_ansible_inventory
 
 That's it! A {zdm-proxy} container has been created on each proxy host.
 
+[[_indications_of_success_on_origin_and_target_clusters]]
 == Indications of success on Origin and Target clusters
 
 The playbook will create one {zdm-proxy} instance for each proxy host listed in the inventory file.
@@ -301,7 +302,7 @@ This playbook can be run as many times as necessary.
 Please note that running the `deploy_zdm_proxy.yml` playbook will result in a brief window of unavailability of the whole {zdm-proxy} deployment while all the {zdm-proxy} instances are torn down and recreated.
 ====
 
-
+[[_setting_up_the_monitoring_stack]]
 == Setting up the Monitoring stack
 
 The {zdm-automation} enables you to easily set up a self-contained monitoring stack that is preconfigured to collect metrics from your {zdm-proxy} instances and display them in ready-to-use Grafana dashboards.
