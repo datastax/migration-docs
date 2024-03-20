@@ -30,6 +30,7 @@ At DataStax, we've developed and maintain a set of drivers for client applicatio
 These drivers provide a native implementation of the messaging protocols used to communicate with a Cassandra or DSE cluster or Astra DB.
 They allow you to execute queries, iterate through results, access metadata about your cluster, and perform other related activities.
 
+[[_connecting_company_drivers_to_cassandra]]
 == Connecting {company} drivers to Cassandra
 
 Perhaps the simplest way to demonstrate how to use the {company} drivers to connect your client application to a Cassandra cluster is an example in the form of some sample code.
