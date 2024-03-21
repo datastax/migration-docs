@@ -7,7 +7,7 @@ git:
 
 site:
   title: DataStax Docs
-  start_page: data-migration::index.adoc
+  start_page: zero-downtime-migration::introduction.adoc
   robots: disallow
 
 content:
