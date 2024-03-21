@@ -62,6 +62,7 @@ If you need to make changes to the application or data model to ensure that your
 
 It is also highly recommended to perform tests and benchmarks when connected directly to Astra DB prior to the migration, so that you don't find unexpected issues during the migration process.
 
+[[_read_only_applications]]
 === Read-only applications
 
 Read-only applications require special handling only if you are using {zdm-proxy} versions older than 2.1.0.

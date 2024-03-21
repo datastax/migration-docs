@@ -24,6 +24,7 @@ image::{imagesprefix}zdm-during-migration3.png[Connectivity between client appli
 
 To deploy the {zdm-proxy} and its companion monitoring stack, you will have to provision infrastructure that meets the following requirements.
 
+[[_machines]]
 === Machines
 
 We will use the term "machine" to indicate a cloud instance (on any cloud provider), a VM, or a physical server.

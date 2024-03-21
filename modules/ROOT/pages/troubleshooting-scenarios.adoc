@@ -306,8 +306,6 @@ In the example above, the {zdm-proxy} doesn't have connectivity to 10.0.63.20, w
 
 Ensure that network connectivity exists and is stable between the {zdm-proxy} instances and all Cassandra / DSE nodes of the local datacenter.
 
-
-
 == Client application driver takes too long to reconnect to a proxy instance
 
 === Symptoms
@@ -376,6 +374,7 @@ If it is `Active` already, then it is likely an issue with permissions.
 We recommend starting with a token that has the Database Administrator role in Astra DB to confirm that it is a permissions issue.
 Refer to https://docs.datastax.com/en/astra/astra-db-vector/administration/manage-database-access.html[Manage user permissions, window="_blank"].
 
+[[_async_read_timeouts_stream_id_map_exhausted]]
 == Async read timeouts / stream id map exhausted
 
 === Symptoms

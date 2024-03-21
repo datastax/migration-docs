@@ -35,6 +35,7 @@ Now, `cd` into `zdm-proxy-automation/ansible` and `ls`. Example:
 
 image::{imagesprefix}zdm-ansible-container-ls3.png[Contents of the Ansible Control Host container]
 
+[[_configure_the_zdm_proxy]]
 == Configure the {zdm-proxy}
 
 The {zdm-proxy} configuration is composed of four files:

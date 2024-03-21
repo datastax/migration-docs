@@ -66,6 +66,7 @@ The label that contains data depends on which cluster is currently considered th
 
 To see error metrics by error type, see the node-level error metrics on the next section.
 
+[[_node_level_metrics]]
 === Node-level metrics
 
 * Latency: metrics on this bucket are not split by request type like the proxy level latency metrics so writes and reads are mixed together:
