@@ -6,14 +6,15 @@ Use {dsbulk-migrator} to perform simple migration of smaller data quantities, wh
 == {dsbulk-migrator} prerequisites
 
 * Install or switch to Java 11.
-* Install https://maven.apache.org/download.cgi[Maven^] 3.9.x.
+* Install https://maven.apache.org/download.cgi[Maven] 3.9.x.
 * Optionally install https://docs.datastax.com/en/dsbulk/docs/installing/install.html[DSBulk Loader, window="_blank"], if you elect to reference your own external installation of DSBulk, instead of the embedded DSBulk that's in {dsbulk-migrator}.
-* Install https://github.com/datastax/simulacron#prerequisites[Simulacron^] 0.12.x and its prerequisites, for integration tests.
+* Install https://github.com/datastax/simulacron#prerequisites[Simulacron] 0.12.x and its prerequisites, for integration tests.
 
 [[building-dsbulk-migrator]]
 == Building {dsbulk-migrator}
 
-Building {dsbulk-migrator} is accomplished with Maven. First, clone the git repo to your local machine. Example:
+Building {dsbulk-migrator} is accomplished with Maven. First, clone the git repo to your local machine.
+Example:
 
 [source,bash]
 ----
@@ -31,29 +32,25 @@ mvn clean package
 
 The build produces two distributable fat jars:
 
-* `dsbulk-migrator-<VERSION>-embedded-driver.jar` : contains an embedded Java driver; suitable for
-  live migrations using an external DSBulk, or for script generation. This jar is NOT suitable for
-  live migrations using an embedded DSBulk, since no DSBulk classes are present.
-
-* `dsbulk-migrator-<VERSION>-embedded-dsbulk.jar`: contains an embedded DSBulk and an embedded Java
-  driver; suitable for all operations. Note that this jar is much bigger than the previous one, due
-  to the presence of DSBulk classes.
-
+* `dsbulk-migrator-<VERSION>-embedded-driver.jar` : contains an embedded Java driver; suitable for live migrations using an external DSBulk, or for script generation.
+This jar is NOT suitable for live migrations using an embedded DSBulk, since no DSBulk classes are present.
+* `dsbulk-migrator-<VERSION>-embedded-dsbulk.jar`: contains an embedded DSBulk and an embedded Java driver; suitable for all operations.
+Note that this jar is much bigger than the previous one, due to the presence of DSBulk classes.
 
 [[testing-dsbulk-migrator]]
 == Testing {dsbulk-migrator}
 
-The project contains a few integration tests. Run them with:
+The project contains a few integration tests.
+Run them with:
 
 [source,bash]
 ----
 mvn clean verify
 ----
 
-The integration tests require https://github.com/datastax/simulacron[Simulacron^]. Be sure to meet
-all the https://github.com/datastax/simulacron#prerequisites[Simulacron prerequisites^] before running the
+The integration tests require https://github.com/datastax/simulacron[Simulacron].
+Be sure to meet all the https://github.com/datastax/simulacron#prerequisites[Simulacron prerequisites] before running the
 tests.
-
 
 [[running-dsbulk-migrator]]
 == Running {dsbulk-migrator}
@@ -72,11 +69,9 @@ When generating a migration script, most options serve as default values in the 
 Note however that, even when generating scripts, this tool still needs to access the Origin cluster
 in order to gather metadata about the tables to migrate.
 
-When generating a DDL file, only a few options are meaningful. Because standard DSBulk is not used, and the
-import cluster is never contacted, import options and DSBulk-related options are ignored. The tool
-still needs to access the Origin cluster in order to gather metadata about the keyspaces and tables
-for which to generate DDL statements.
-
+When generating a DDL file, only a few options are meaningful.
+Because standard DSBulk is not used, and the import cluster is never contacted, import options and DSBulk-related options are ignored.
+The tool still needs to access the Origin cluster in order to gather metadata about the keyspaces and tables for which to generate DDL statements.
 
 [[dsbulk-migrator-reference]]
 == {dsbulk-migrator} reference
@@ -84,97 +79,97 @@ for which to generate DDL statements.
 * xref:#dsbulk-live[Live migration command-line options]
 * xref:#dsbulk-script[Script generation command-line options]
 * xref:#dsbulk-ddl[DDL generation command-line options]
-* xref:#dsbulk-help[Getting {dsbulk-migrator} help]
+* xref:#getting-help-with-dsbulk-migrator[Getting {dsbulk-migrator} help]
 * xref:#dsbulk-examples[{dsbulk-migrator} examples]
 
 
 [[dsbulk-live]]
 === Live migration command-line options
 
-The following options are available for the `migrate-live` command. Most options have sensible default values and do not
-need to be specified, unless you want to override the default value.
+The following options are available for the `migrate-live` command.
+Most options have sensible default values and do not need to be specified, unless you want to override the default value.
 
 [cols="2,8,14"]
 |===
 
 | `-c`
 | `--dsbulk-cmd=CMD`
-| The external DSBulk command to use. 
-Ignored if the embedded DSBulk is being used. 
-The default is simply 'dsbulk', assuming that the command is available through the `PATH` variable contents.
+| The external DSBulk command to use.
+Ignored if the embedded DSBulk is being used.
+The default is simply `dsbulk`, assuming that the command is available through the `PATH` variable contents.
 
 | `-d`
 | `--data-dir=PATH`
-| The directory where data will be exported to and imported from. 
-The default is a 'data' subdirectory in the current working directory. 
-The data directory will be created if it does not exist. 
-Tables will be exported and imported in subdirectories of the data directory specified here. 
+| The directory where data will be exported to and imported from.
+The default is a `data` subdirectory in the current working directory.
+The data directory will be created if it does not exist.
+Tables will be exported and imported in subdirectories of the data directory specified here.
 There will be one subdirectory per keyspace in the data directory, then one subdirectory per table in each keyspace directory.
 
 | `-e`
 | `--dsbulk-use-embedded`
-| Use the embedded DSBulk version instead of an external one. 
+| Use the embedded DSBulk version instead of an external one.
 The default is to use an external DSBulk command.
 
 | 
 | `--export-bundle=PATH`
-| The path to a secure connect bundle to connect to the Origin cluster, if that cluster is a {company} {astra_db} cluster. 
+| The path to a secure connect bundle to connect to the Origin cluster, if that cluster is a {company} {astra_db} cluster.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
 
 | 
 | `--export-consistency=CONSISTENCY`
-| The consistency level to use when exporting data. 
+| The consistency level to use when exporting data.
 The default is `LOCAL_QUORUM`.
 
 | 
 | `--export-dsbulk-option=OPT=VALUE`
-| An extra DSBulk option to use when exporting. 
-Any valid DSBulk option can be specified here, and it will passed as is to the DSBulk process. 
-DSBulk options, including driver options, must be passed as `--long.option.name=<value>`. 
+| An extra DSBulk option to use when exporting.
+Any valid DSBulk option can be specified here, and it will passed as is to the DSBulk process.
+DSBulk options, including driver options, must be passed as `--long.option.name=<value>`.
 Short options are not supported.
 
 | 
 | `--export-host=HOST[:PORT]`
-| The host name or IP and, optionally, the port of a node from the Origin cluster. 
-If the port is not specified, it will default to `9042`. 
-This option can be specified multiple times. 
+| The host name or IP and, optionally, the port of a node from the Origin cluster.
+If the port is not specified, it will default to `9042`.
+This option can be specified multiple times.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
 
 | 
 | `--export-max-concurrent-files=NUM\|AUTO`
-| The maximum number of concurrent files to write to. 
-Must be a positive number or the special value `AUTO`. 
+| The maximum number of concurrent files to write to.
+Must be a positive number or the special value `AUTO`.
 The default is `AUTO`.
 
 | 
 | `--export-max-concurrent-queries=NUM\|AUTO`
-| The maximum number of concurrent queries to execute. 
-Must be a positive number or the special value `AUTO`. 
+| The maximum number of concurrent queries to execute.
+Must be a positive number or the special value `AUTO`.
 The default is `AUTO`.
 
 | 
 | `--export-max-records=NUM`
-| The maximum number of records to export for each table. 
-Must be a positive number or `-1`. 
+| The maximum number of records to export for each table.
+Must be a positive number or `-1`.
 The default is `-1` (export the entire table).
 
 | 
 | `--export-password`
-| The password to use to authenticate against the Origin cluster. 
-Options `--export-username` and `--export-password` must be provided together, or not at all. 
+| The password to use to authenticate against the Origin cluster.
+Options `--export-username` and `--export-password` must be provided together, or not at all.
 Omit the parameter value to be prompted for the password interactively.
 
 | 
 | `--export-splits=NUM\|NC`
-| The maximum number of token range queries to generate. 
-Use the `NC` syntax to specify a multiple of the number of available cores. 
-For example, `8C` = 8 times the number of available cores. 
-The default is `8C`. 
+| The maximum number of token range queries to generate.
+Use the `NC` syntax to specify a multiple of the number of available cores.
+For example, `8C` = 8 times the number of available cores.
+The default is `8C`.
 This is an advanced setting; you should rarely need to modify the default value.
 
 | 
 | `--export-username=STRING`
-| The username to use to authenticate against the Origin cluster. 
+| The username to use to authenticate against the Origin cluster.
 Options `--export-username` and `--export-password` must be provided together, or not at all.
 
 | `-h` 
@@ -183,56 +178,56 @@ Options `--export-username` and `--export-password` must be provided together, o
 
 | 
 | `--import-bundle=PATH`
-| The path to a secure connect bundle to connect to the Target cluster, if it's a {company} {astra_db} cluster. 
+| The path to a secure connect bundle to connect to the Target cluster, if it's a {company} {astra_db} cluster.
 Options `--import-host` and `--import-bundle` are mutually exclusive.
 
 | 
 | `--import-consistency=CONSISTENCY`
-| The consistency level to use when importing data. 
+| The consistency level to use when importing data.
 The default is `LOCAL_QUORUM`.
 
 | 
 | `--import-default-timestamp=<defaultTimestamp>`
-| The default timestamp to use when importing data. 
-Must be a valid instant in ISO-8601 syntax. 
+| The default timestamp to use when importing data.
+Must be a valid instant in ISO-8601 syntax.
 The default is `1970-01-01T00:00:00Z`.
 
 | 
 | `--import-dsbulk-option=OPT=VALUE`
-| An extra DSBulk option to use when importing. 
-Any valid DSBulk option can be specified here, and it will passed as is to the DSBulk process. 
-DSBulk options, including driver options, must be passed as `--long.option.name=<value>`. 
+| An extra DSBulk option to use when importing.
+Any valid DSBulk option can be specified here, and it will passed as is to the DSBulk process.
+DSBulk options, including driver options, must be passed as `--long.option.name=<value>`.
 Short options are not supported.
 
 | 
 | `--import-host=HOST[:PORT]`
-| The host name or IP and, optionally, the port of a node from the Target cluster. 
-If the port is not specified, it will default to `9042`. 
-This option can be specified multiple times. 
-Options `--import-host` and `--import-bundle` are mutually exclusive. 
+| The host name or IP and, optionally, the port of a node from the Target cluster.
+If the port is not specified, it will default to `9042`.
+This option can be specified multiple times.
+Options `--import-host` and `--import-bundle` are mutually exclusive.
 
 | 
-| `--import-max-concurrent-files=NUM\|AUTO` 
-| The maximum number of concurrent files to read from. 
-Must be a positive number or the special value `AUTO`. 
+| `--import-max-concurrent-files=NUM\|AUTO`
+| The maximum number of concurrent files to read from.
+Must be a positive number or the special value `AUTO`.
 The default is `AUTO`.
 
 | 
 | `--import-max-concurrent-queries=NUM\|AUTO`
-| The maximum number of concurrent queries to execute. 
-Must be a positive number or the special value `AUTO`. 
+| The maximum number of concurrent queries to execute.
+Must be a positive number or the special value `AUTO`.
 The default is `AUTO`.
 
 | 
 | `--import-max-errors=NUM`
-| The maximum number of failed records to tolerate when importing data. 
-The default is `1000`. 
+| The maximum number of failed records to tolerate when importing data.
+The default is `1000`.
 Failed records will appear in a `load.bad` file in the DSBulk operation directory.
 
 | 
 | `--import-password`
-| The password to use to authenticate against the Target cluster. 
-Options `--import-username` and `--import-password` must be provided together, or not at all. 
+| The password to use to authenticate against the Target cluster.
+Options `--import-username` and `--import-password` must be provided together, or not at all.
 Omit the parameter value to be prompted for the password interactively.
 
 | 
@@ -241,50 +236,50 @@ Omit the parameter value to be prompted for the password interactively.
 
 | `-k`
 | `--keyspaces=REGEX`
-| A regular expression to select keyspaces to migrate. 
-The default is to migrate all keyspaces except system keyspaces, DSE-specific keyspaces, and the OpsCenter keyspace. 
+| A regular expression to select keyspaces to migrate.
+The default is to migrate all keyspaces except system keyspaces, DSE-specific keyspaces, and the OpsCenter keyspace.
 Case-sensitive keyspace names must be entered in their exact case.
 
 | `-l`
 | `--dsbulk-log-dir=PATH`
-| The directory where DSBulk should store its logs. 
-The default is a 'logs' subdirectory in the current working directory. 
-This subdirectory will be created if it does not exist. 
+| The directory where DSBulk should store its logs.
+The default is a `logs` subdirectory in the current working directory.
+This subdirectory will be created if it does not exist.
 Each DSBulk operation will create a subdirectory in the log directory specified here.
 
 | 
 | `--max-concurrent-ops=NUM`
-| The maximum number of concurrent operations (exports and imports) to carry. 
-The default is `1`. 
-Set this to higher values to allow exports and imports to occur concurrently. 
+| The maximum number of concurrent operations (exports and imports) to carry.
+The default is `1`.
+Set this to higher values to allow exports and imports to occur concurrently.
 For example, with a value of `2`, each table will be imported as soon as it is exported, while the next table is being exported.
 
 | 
 | `--skip-truncate-confirmation`
-| Skip truncate confirmation before actually truncating tables. 
+| Skip truncate confirmation before actually truncating tables.
 Only applicable when migrating counter tables, ignored otherwise.
 
 | `-t`
-| `--tables=REGEX` 
-| A regular expression to select tables to migrate. 
-The default is to migrate all tables in the keyspaces that were selected for migration with `--keyspaces`. 
+| `--tables=REGEX`
+| A regular expression to select tables to migrate.
+The default is to migrate all tables in the keyspaces that were selected for migration with `--keyspaces`.
 Case-sensitive table names must be entered in their exact case.
 
 | 
 | `--table-types=regular\|counter\|all`
-| The table types to migrate. 
+| The table types to migrate.
 The default is `all`.
 
 | 
 | `--truncate-before-export`
-| Truncate tables before the export instead of after. 
-The default is to truncate after the export. 
+| Truncate tables before the export instead of after.
+The default is to truncate after the export.
 Only applicable when migrating counter tables, ignored otherwise.
 
 | `-w`
 | `--dsbulk-working-dir=PATH`
-| The directory where DSBulk should be executed. 
-Ignored if the embedded DSBulk is being used. 
+| The directory where DSBulk should be executed.
+Ignored if the embedded DSBulk is being used.
 If unspecified, it defaults to the current working directory.
 
 |===
@@ -293,166 +288,166 @@ If unspecified, it defaults to the current working directory.
 [[dsbulk-script]]
 === Script generation command-line options
 
-The following options are available for the `generate-script` command. 
+The following options are available for the `generate-script` command.
 Most options have sensible default values and do not need to be specified, unless you want to override the default value.
 
 
 [cols="2,8,14"]
 |===
 
-| `-c` 
+| `-c`
 | `--dsbulk-cmd=CMD`
-| The DSBulk command to use. 
-The default is simply 'dsbulk', assuming that the command is available through the `PATH` variable contents.
+| The DSBulk command to use.
+The default is simply `dsbulk`, assuming that the command is available through the `PATH` variable contents.
 
 | `-d`
 | `--data-dir=PATH`
 | The directory where data will be exported to and imported from. 
-The default is a 'data' subdirectory in the current working directory. 
+The default is a `data` subdirectory in the current working directory. 
 The data directory will be created if it does not exist. 
 
-| 
+|
 | `--export-bundle=PATH`
-| The path to a secure connect bundle to connect to the Origin cluster, if that cluster is a {company} {astra_db} cluster. 
+| The path to a secure connect bundle to connect to the Origin cluster, if that cluster is a {company} {astra_db} cluster.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
 
-| 
+|
 | `--export-consistency=CONSISTENCY`
-| The consistency level to use when exporting data. 
+| The consistency level to use when exporting data.
 The default is `LOCAL_QUORUM`.
 
-| 
+|
 | `--export-dsbulk-option=OPT=VALUE`
-| An extra DSBulk option to use when exporting. 
-Any valid DSBulk option can be specified here, and it will passed as is to the DSBulk process. 
-DSBulk options, including driver options, must be passed as `--long.option.name=<value>`. 
+| An extra DSBulk option to use when exporting.
+Any valid DSBulk option can be specified here, and it will passed as is to the DSBulk process.
+DSBulk options, including driver options, must be passed as `--long.option.name=<value>`.
 Short options are not supported.
 
-| 
+|
 | `--export-host=HOST[:PORT]`
-| The host name or IP and, optionally, the port of a node from the Origin cluster. 
-If the port is not specified, it will default to `9042`. 
-This option can be specified multiple times. 
+| The host name or IP and, optionally, the port of a node from the Origin cluster.
+If the port is not specified, it will default to `9042`.
+This option can be specified multiple times.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
 
-| 
+|
 | `--export-max-concurrent-files=NUM\|AUTO`
-| The maximum number of concurrent files to write to. 
-Must be a positive number or the special value `AUTO`. 
+| The maximum number of concurrent files to write to.
+Must be a positive number or the special value `AUTO`.
 The default is `AUTO`.
 
-| 
+|
 | `--export-max-concurrent-queries=NUM\|AUTO`
-| The maximum number of concurrent queries to execute. 
-Must be a positive number or the special value `AUTO`. 
+| The maximum number of concurrent queries to execute.
+Must be a positive number or the special value `AUTO`.
 The default is `AUTO`.
 
-| 
+|
 | `--export-max-records=NUM`
-| The maximum number of records to export for each table. 
-Must be a positive number or `-1`. 
+| The maximum number of records to export for each table.
+Must be a positive number or `-1`.
 The default is `-1` (export the entire table).
 
-| 
+|
 | `--export-password`
-| The password to use to authenticate against the Origin cluster. 
-Options `--export-username` and `--export-password` must be provided together, or not at all. 
+| The password to use to authenticate against the Origin cluster.
+Options `--export-username` and `--export-password` must be provided together, or not at all.
 Omit the parameter value to be prompted for the password interactively.
 
-| 
+|
 | `--export-splits=NUM\|NC`
-| The maximum number of token range queries to generate. 
-Use the `NC` syntax to specify a multiple of the number of available cores. 
-For example, `8C` = 8 times the number of available cores. 
-The default is `8C`. 
-This is an advanced setting. You should rarely need to modify the default value.
+| The maximum number of token range queries to generate.
+Use the `NC` syntax to specify a multiple of the number of available cores.
+For example, `8C` = 8 times the number of available cores.
+The default is `8C`.
+This is an advanced setting.
+You should rarely need to modify the default value.
 
-| 
+|
 | `--export-username=STRING`
-| The username to use to authenticate against the Origin cluster. 
+| The username to use to authenticate against the Origin cluster.
 Options `--export-username` and `--export-password` must be provided together, or not at all.
 
-| `-h` 
+| `-h`
 | `--help`
 | Displays this help text.
 
-| 
+|
 | `--import-bundle=PATH`
-| The path to a secure connect bundle to connect to the Target cluster, if it's a {company} {astra_db} cluster. 
+| The path to a secure connect bundle to connect to the Target cluster, if it's a {company} {astra_db} cluster.
 Options `--import-host` and `--import-bundle` are mutually exclusive.
 
-| 
+|
 | `--import-consistency=CONSISTENCY`
-| The consistency level to use when importing data. 
+| The consistency level to use when importing data.
 The default is `LOCAL_QUORUM`.
 
-| 
+|
 | `--import-default-timestamp=<defaultTimestamp>`
-| The default timestamp to use when importing data. 
-Must be a valid instant in ISO-8601 syntax. 
+| The default timestamp to use when importing data.
+Must be a valid instant in ISO-8601 syntax.
 The default is `1970-01-01T00:00:00Z`.
 
-| 
+|
 | `--import-dsbulk-option=OPT=VALUE`
-| An extra DSBulk option to use when importing. 
-Any valid DSBulk option can be specified here, and it will passed as is to the DSBulk process. 
-DSBulk options, including driver options, must be passed as `--long.option.name=<value>`. 
+| An extra DSBulk option to use when importing.
+Any valid DSBulk option can be specified here, and it will passed as is to the DSBulk process.
+DSBulk options, including driver options, must be passed as `--long.option.name=<value>`.
 Short options are not supported.
 
-| 
+|
 | `--import-host=HOST[:PORT]`
-| The host name or IP and, optionally, the port of a node from the Target cluster. 
-If the port is not specified, it will default to `9042`. 
-This option can be specified multiple times. 
-Options `--import-host` and `--import-bundle` are mutually exclusive. 
+| The host name or IP and, optionally, the port of a node from the Target cluster.
+If the port is not specified, it will default to `9042`.
+This option can be specified multiple times.
+Options `--import-host` and `--import-bundle` are mutually exclusive.
 
-| 
+|
 | `--import-max-concurrent-files=NUM\|AUTO`
-| The maximum number of concurrent files to read from. 
-Must be a positive number or the special value `AUTO`. 
+| The maximum number of concurrent files to read from.
+Must be a positive number or the special value `AUTO`.
 The default is `AUTO`.
 
-| 
+|
 | `--import-max-concurrent-queries=NUM\|AUTO`
-| The maximum number of concurrent queries to execute. 
-Must be a positive number or the special value `AUTO`. 
+| The maximum number of concurrent queries to execute.
+Must be a positive number or the special value `AUTO`.
 The default is `AUTO`.
 
-| 
+|
 | `--import-max-errors=NUM`
-| The maximum number of failed records to tolerate when importing data. 
-The default is `1000`. 
+| The maximum number of failed records to tolerate when importing data.
+The default is `1000`.
 Failed records will appear in a `load.bad` file in the DSBulk operation directory.
 
-| 
+|
 | `--import-password`
-| The password to use to authenticate against the Target cluster. 
-Options `--import-username` and `--import-password` must be provided together, or not at all. 
+| The password to use to authenticate against the Target cluster.
+Options `--import-username` and `--import-password` must be provided together, or not at all.
 Omit the parameter value to be prompted for the password interactively.
 
-| 
+|
 | `--import-username=STRING`
 | The username to use to authenticate against the Target cluster.
 Options `--import-username` and `--import-password` must be provided together, or not at all.
 
 | `-k`
 | `--keyspaces=REGEX`
-| A regular expression to select keyspaces to migrate. 
-The default is to migrate all keyspaces except system keyspaces, DSE-specific keyspaces, and the OpsCenter keyspace. 
+| A regular expression to select keyspaces to migrate.
+The default is to migrate all keyspaces except system keyspaces, DSE-specific keyspaces, and the OpsCenter keyspace.
 Case-sensitive keyspace names must be entered in their exact case.
 
 | `-l`
 | `--dsbulk-log-dir=PATH`
-| The directory where DSBulk should store its logs. 
-The default is a 'logs' subdirectory in the current working directory. 
-This subdirectory will be created if it does not exist. 
+| The directory where DSBulk should store its logs.
+The default is a `logs` subdirectory in the current working directory.
+This subdirectory will be created if it does not exist.
 Each DSBulk operation will create a subdirectory in the log directory specified here.
 
-
 | `-t`
-| `--tables=REGEX` 
-| A regular expression to select tables to migrate. 
-The default is to migrate all tables in the keyspaces that were selected for migration with `--keyspaces`. 
+| `--tables=REGEX`
+| A regular expression to select tables to migrate.
+The default is to migrate all tables in the keyspaces that were selected for migration with `--keyspaces`.
 Case-sensitive table names must be entered in their exact case.
 
 | 
@@ -474,58 +469,58 @@ Most options have sensible default values and do not need to be specified, unles
 
 | `-a`
 | `--optimize-for-astra`
-| Produce CQL scripts optimized for {company} {astra_db}. 
-{astra_db} does not allow some options in DDL statements. 
+| Produce CQL scripts optimized for {company} {astra_db}.
+{astra_db} does not allow some options in DDL statements.
 Using this {dsbulk-migrator} command option, forbidden {astra_db} options will be omitted from the generated CQL files.
 
 | `-d`
 | `--data-dir=PATH`
-| The directory where data will be exported to and imported from. 
-The default is a 'data' subdirectory in the current working directory.
-The data directory will be created if it does not exist. 
+| The directory where data will be exported to and imported from.
+The default is a `data` subdirectory in the current working directory.
+The data directory will be created if it does not exist.
 
-| 
+|
 | `--export-bundle=PATH`
-| The path to a secure connect bundle to connect to the Origin cluster, if that cluster is a {company} {astra_db} cluster. 
+| The path to a secure connect bundle to connect to the Origin cluster, if that cluster is a {company} {astra_db} cluster.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
 
-| 
+|
 | `--export-host=HOST[:PORT]`
-| The host name or IP and, optionally, the port of a node from the Origin cluster. 
-If the port is not specified, it will default to `9042`. 
-This option can be specified multiple times. 
+| The host name or IP and, optionally, the port of a node from the Origin cluster.
+If the port is not specified, it will default to `9042`.
+This option can be specified multiple times.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
 
-| 
+|
 | `--export-password`
-| The password to use to authenticate against the Origin cluster. 
-Options `--export-username` and `--export-password` must be provided together, or not at all. 
+| The password to use to authenticate against the Origin cluster.
+Options `--export-username` and `--export-password` must be provided together, or not at all.
 Omit the parameter value to be prompted for the password interactively.
 
-| 
+|
 | `--export-username=STRING`
-| The username to use to authenticate against the Origin cluster. 
+| The username to use to authenticate against the Origin cluster.
 Options `--export-username` and `--export-password` must be provided together, or not at all.
 
-| `-h` 
+| `-h`
 | `--help`
 | Displays this help text.
 
 | `-k`
 | `--keyspaces=REGEX`
-| A regular expression to select keyspaces to migrate. 
-The default is to migrate all keyspaces except system keyspaces, DSE-specific keyspaces, and the OpsCenter keyspace. 
+| A regular expression to select keyspaces to migrate.
+The default is to migrate all keyspaces except system keyspaces, DSE-specific keyspaces, and the OpsCenter keyspace.
 Case-sensitive keyspace names must be entered in their exact case.
 
 | `-t`
-| `--tables=REGEX` 
-| A regular expression to select tables to migrate. 
-The default is to migrate all tables in the keyspaces that were selected for migration with `--keyspaces`. 
+| `--tables=REGEX`
+| A regular expression to select tables to migrate.
+The default is to migrate all tables in the keyspaces that were selected for migration with `--keyspaces`.
 Case-sensitive table names must be entered in their exact case.
 
-| 
+|
 | `--table-types=regular\|counter\|all`
-| The table types to migrate. 
+| The table types to migrate.
 The default is `all`.
 
 |===
@@ -547,8 +542,6 @@ For individual command help and each one's options:
 ----
 java -jar /path/to/dsbulk-migrator-embedded-dsbulk.jar COMMAND --help
 ----
-
-
 
 [[dsbulk-examples]]
 == {dsbulk-migrator} examples
