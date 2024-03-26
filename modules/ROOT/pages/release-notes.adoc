@@ -1,0 +1,127 @@
+= {company} {zdm-product} Release Notes
+:navtitle: Release notes
+:page-tag: migration,zdm,zero-downtime,release-notes
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+== {zdm-automation} 2.3.0 update
+
+**03 February 2023**
+
+Released {zdm-automation} 2.3.0, which enables ansible scripts and terraform to work with both Ubuntu and RedHat-family Linux distributions.
+Documentation updates included the following in the xref:deployment-infrastructure.adoc#_machines[Machines] section of the Deployment and infrastructure considerations topic:
+
+"Ubuntu Linux 20.04 or newer, RedHat Family Linux 7 or newer"
+
+== {zdm-automation} 2.2.0 update
+
+**31 January 2023**
+
+Starting in version 2.2.0 of the {zdm-automation}, we added the `zdm_proxy_cluster_config.yml` file to contain all the configuration variables for Origin and Target.
+Prior to version 2.2.0, the variables were in the `zdm_proxy_core_config.yml` file.
+
+[TIP]
+====
+This change is backward compatible.
+If you previously populated the variables in `zdm_proxy_core_config.yml`, these variables will be honored and take precedence over any variables in `zdm_proxy_cluster_config.yml`, if both files are present.
+====
+
+We encourage existing 2.x ZDM users to upgrade to the 2.3.0 version of {zdm-automation}.
+To do so, simply `git pull` the `main` branch of https://github.com/datastax/zdm-proxy-automation from within the Ansible Control Host container.
+You can also check out a https://github.com/datastax/zdm-proxy-automation/releases/tag/v2.3.0[specific tag], such as 2.3.0.
+
+For more about the YML files used to configure access to your clusters, see xref:deploy-proxy-monitoring.adoc#_configure_the_zdm_proxy[this topic].
+
+[NOTE]
+====
+The latest {zdm-proxy} version is 2.1.0.
+The latest {zdm-automation} version is 2.3.1.
+====
+
+If you are using a {zdm-automation} version up to and including 2.1.0, please use `zdm_proxy_core_config.yml` to configure access to your clusters.
+
+== ZDM 2.1.0 release
+
+**13 January 2023**
+
+The ZDM 2.1.0 release adds {zdm-proxy} heartbeat functionality and provides several bug fixes.
+
+The periodic heartbeat feature in 2.1.0 has been implemented to keep alive idle cluster connections.
+
+By default, {zdm-proxy} now sends heartbeats after 30 seconds of inactivity on a cluster connection.
+You can tune the heartbeat interval with the Ansible configuration variable `heartbeat_insterval_ms`, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you do not use the {zdm-automation}.
+
+DataStax strongly recommends that you use version 2.1.0 (or newer) to benefit from this improvement, especially if you have a read-only workload.
+
+To verify which {zdm-proxy} version you're running, see this xref:troubleshooting-tips.adoc#_how_to_identify_the_zdm_proxy_version[topic, window="_blank"].
+
+To find out how to upgrade an existing {zdm-proxy} deployment, see xref:manage-proxy-instances.adoc#_upgrade_the_proxy_version[Upgrade the proxy version, window="_blank"].
+
+=== {zdm-proxy} 2.1.0 changes
+
+For the latest information about {zdm-proxy} new features and other changes, please refer to these GitHub-hosted documents in the open-source {zdm-proxy} repo:
+
+* https://github.com/datastax/zdm-proxy/blob/main/RELEASE_NOTES.md[RELEASE_NOTES]
+
+* https://github.com/datastax/zdm-proxy/blob/main/CHANGELOG/CHANGELOG-2.1.md[CHANGELOG 2.1]
+
+=== ZDM 2.1.0 documentation updates
+
+The following topics have been updated for the 2.1.0 release:
+
+* xref:feasibility-checklists.adoc#_read_only_applications[Feasibility checks for read-only applications, window="_blank"].
+See the notes indicating that this issue is solved by the {zdm-proxy} 2.1.0 release.
+
+* xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable, window="_blank"].
+See the `heartbeat_interval_ms` and `zdm-proxy_max_stream_ids` information.
+
+* xref:troubleshooting-scenarios.adoc#_async_read_timeouts_stream_id_map_exhausted[Async read timeouts, window="_blank"].
+See the clarification in the *Workaround* section indicating that this issue is solved by the {zdm-proxy} 2.1.0 release.
+
+* xref:metrics.adoc#_node_level_metrics[Node-level metrics, window="_blank"].
+See the "Number of Used Stream Ids" section.
+
+
+== ZDM 2.0.0 release
+
+**18 October 2022**
+
+=== {zdm-proxy} 2.0.0 changes
+
+This 2.0.0 version marks the public release of the self-service {company} {zdm-product} product suite.
+
+The following GitHub repos are public.
+You are welcome to read the source and submit feedback via GitHub Issues per repo.
+
+* https://github.com/datastax/zdm-proxy[{zdm-proxy}] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion, provided you accept the https://cla.datastax.com/[{company} Contributor License Agreement (CLA)].
+For more information, see xref:contributions.adoc[].
+
+* https://github.com/datastax/zdm-proxy-automation[{zdm-automation}] repo for Ansible-based {zdm-proxy} automation.
+
+* https://github.com/datastax/dsbulk-migrator[DSBulk Migrator] repo for migration of smaller data quantities.
+
+* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator] repo for migration of larger data quantities and where detailed verifications and reconciliation options are needed.
+
+include::partial$note-downtime.adoc[]
+
+For the latest information about {zdm-proxy} new features and other changes, please refer to the GitHub-hosted https://github.com/datastax/zdm-proxy/blob/main/RELEASE_NOTES.md[RELEASE_NOTES] in the open-source {zdm-proxy} repo.
+The document includes CHANGELOG links for each {zdm-proxy} `N.n` release.
+
+[TIP]
+====
+The {zdm-product} process requires you to be able to perform rolling restarts of your client applications during the migration.
+This is standard practice for client applications that are deployed over multiple instances and is a widely used approach to roll out releases and configuration changes.
+====
+
+
+=== ZDM 2.0.0 documentation updates
+
+Starting with the 2.0.0 version on 18-Oct-2022, the {zdm-product} documentation set is available online, starting xref:introduction.adoc[here].
+
+== Supported releases
+
+include::partial$supported-releases.adoc[]
+
+== Migration scenarios
+
+include::partial$migration-scenarios.adoc[]

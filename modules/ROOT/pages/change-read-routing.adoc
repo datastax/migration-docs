@@ -1,0 +1,103 @@
+= Phase 4: Change read routing to Target
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,read-routing
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+This topic explains how you can configure the {zdm-proxy} to route all reads to Target instead of Origin.
+
+//include::partial$lightbox-tip.adoc[]
+
+image::{imagesprefix}migration-phase4ra9.png["Phase 4 diagram shows read routing on ZDM Proxy was switched to Target."]
+
+For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
+
+== Steps
+
+You would typically perform these steps once you have migrated all the existing data from Origin, and completed all validation checks and reconciliation if necessary.
+
+This operation is a configuration change that can be carried out as explained xref:manage-proxy-instances.adoc#change-mutable-config-variable[here].
+
+[TIP]
+====
+If you performed the optional steps described in the prior topic, xref:enable-async-dual-reads.adoc[] -- to verify that your Target cluster was ready and tuned appropriately to handle the production read load -- be sure to disable async dual reads when you're done testing.
+If you haven't already, revert `read_mode` in `vars/zdm_proxy_core_config.yml` to `PRIMARY_ONLY` when switching sync reads to Target.
+Example:
+
+[source,yml]
+----
+read_mode: PRIMARY_ONLY
+----
+
+Otherwise, if you don't disable async dual reads, {zdm-proxy} instances would continue to send async reads to Origin, which, although harmless, is unnecessary.
+====
+
+== Changing the read routing configuration
+
+If you're not there already, `ssh` back into the jumphost:
+
+[source,bash]
+----
+ssh -F ~/.ssh/zdm_ssh_config jumphost
+----
+
+On the jumphost, connect to the Ansible Control Host container:
+[source,bash]
+----
+docker exec -it zdm-ansible-container bash
+----
+
+You will see a prompt like:
+[source,bash]
+----
+ubuntu@52772568517c:~$
+----
+
+Now open the configuration file `vars/zdm_proxy_core_config.yml` for editing.
+
+Change the variable `primary_cluster` to `TARGET`.
+
+Run the playbook that changes the configuration of the existing {zdm-proxy} deployment:
+
+[source,bash]
+----
+ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
+----
+
+Wait for the {zdm-proxy} instances to be restarted by Ansible, one by one.
+All instances will now send all reads to Target instead of Origin.
+In other words, Target is now the primary cluster, but the {zdm-proxy} is still keeping Origin up-to-date via dual writes.
+
+== Verifying the read routing change
+
+Once the read routing configuration change has been rolled out, you may want to verify that reads are correctly sent to Target as expected.
+This is not a required step, but you may wish to do it for peace of mind.
+
+[TIP]
+====
+Issuing a `DESCRIBE` or a read to any system table through the {zdm-proxy} is *not* a valid verification.
+
+The {zdm-proxy} handles reads to system tables differently, by intercepting them and always routing them to Origin, in some cases partly populating them at proxy level.
+
+This means that system reads are *not representative* of how the {zdm-proxy} routes regular user reads: even after you switched the configuration to read from Target as the primary cluster, all system reads will still go to Origin.
+
+Although `DESCRIBE` requests are not system requests, they are also generally resolved in a different way to regular requests, and should not be used as a means to verify the read routing behavior.
+
+====
+
+Verifying that the correct routing is taking place is a slightly cumbersome operation, due to the fact that the purpose of the ZDM process is to align the clusters and therefore, by definition, the data will be identical on both sides.
+
+For this reason, the only way to do a manual verification test is to force a discrepancy of some test data between the clusters.
+To do this, you could consider using the xref:connect-clients-to-proxy.adoc#_themis_client[Themis sample client application].
+This client application connects directly to Origin, Target and the {zdm-proxy}, inserts some test data in its own table and allows you to view the results of reads from each source.
+Please refer to its README for more information.
+
+Alternatively, you could follow this manual procedure:
+
+* Create a small test table on both clusters, for example a simple key/value table (it could be in an existing keyspace, or in one that you create specifically for this test).
+For example `CREATE TABLE test_keyspace.test_table(k TEXT PRIMARY KEY, v TEXT);`.
+* Use `cqlsh` to connect *directly to Origin*.
+Insert a row with any key, and with a value specific to Origin, for example `INSERT INTO test_keyspace.test_table(k, v) VALUES ('1', 'Hello from Origin!');`.
+* Now, use `cqlsh` to connect *directly to Target*.
+Insert a row with the same key as above, but with a value specific to Target, for example `INSERT INTO test_keyspace.test_table(k, v) VALUES ('1', 'Hello from Target!');`.
+* Now, use `cqlsh` to connect to the {zdm-proxy} (see xref:connect-clients-to-proxy.adoc#_connecting_cqlsh_to_the_zdm_proxy[here] for how to do this) and issue a read request for this test table: `SELECT * FROM test_keyspace.test_table WHERE k = '1';`.
+The result will clearly show you where the read actually comes from.

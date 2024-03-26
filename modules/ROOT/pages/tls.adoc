@@ -1,0 +1,154 @@
+= Configure Transport Layer Security (TLS)
+:navtitle: Configure Transport Layer Security
+:page-tag: migration,zdm,zero-downtime,tls,transport-layer,zdm-proxy
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+{zdm-proxy} supports proxy-to-cluster and application-to-proxy TLS encryption.
+
+The TLS configuration is an optional part of the initial {zdm-proxy} configuration.
+See the information here in this topic, and then refer to the {zdm-automation} topics that cover:
+
+* xref:setup-ansible-playbooks.adoc[]
+* xref:deploy-proxy-monitoring.adoc[]
+
+== Introduction
+
+* All TLS configuration is optional. Enable TLS between the {zdm-proxy} and any cluster that requires it, and/or between your client application and the {zdm-proxy} if required.
+
+* Proxy-to-cluster TLS can be configured between the {zdm-proxy} and Origin/Target (either or both) as desired.
+Each set of configurations is independent of the other. When using proxy-to-cluster TLS, the {zdm-proxy} acts as the TLS client and the cluster as the TLS server.
+One-way TLS and Mutual TLS are both supported and can be enabled depending on each cluster's requirements.
+
+* When using application-to-proxy TLS, your client application is the TLS client and the {zdm-proxy} is the TLS server.
+One-way TLS and Mutual TLS are both supported.
+
+* When the {zdm-proxy} connects to Astra DB clusters, it always implicitly uses Mutual TLS.
+This is done through the Secure Connect Bundle (SCB) and does not require any extra configuration.
+
+[[_retrieving_files_from_a_jks_keystore]]
+== Retrieving files from a JKS keystore
+
+If you are already using TLS between your client application and Origin, the files needed to configure TLS will already be used in the client application's configuration (TLS client files) and Origin's configuration (TLS Server files).
+In some cases, these files may be contained in a JKS keystore.
+
+The {zdm-proxy} does not accept a JKS keystore, requiring the raw files instead.
+
+To view the files contained in a JKS keystore and their aliases:
+
+[source,bash]
+----
+keytool -list -keystore <path_to_keystore.jks>
+----
+
+To extract a file from a JKS keystore:
+
+----
+keytool -exportcert -keystore <path_to_jks_store> -alias <file_alias> -file <path_to_destination_file> -rfc
+----
+
+Please note the `-rfc` option, which extracts the files in non-binary PEM format.
+
+For more details, see the https://docs.oracle.com/javase/8/docs/technotes/tools/windows/keytool.html[keytool syntax documentation].
+
+== Proxy to self-managed cluster TLS
+
+Here's how to configure TLS between the {zdm-proxy} and a self-managed (non-Astra DB) cluster.
+In this case the {zdm-proxy} acts as the TLS client and the cluster acts as the TLS server.
+
+The files required to configure proxy-to-cluster TLS are:
+
+* Server CA: needed for one-way and Mutual TLS
+* Client certificate: only needed for Mutual TLS
+* Client key: only needed for Mutual TLS
+
+[TIP]
+====
+If your Origin cluster requires TLS, your client application will already be using these files in its configuration to connect to it.
+====
+
+[NOTE]
+====
+All files must be in plain-text, non-binary format.
+====
+
+=== Prepare the TLS files and copy them to the Ansible Control Host container
+
+For each self-managed cluster requiring TLS (Origin and/or Target), execute the following steps:
+
+* If your TLS files are in a JKS keystore, extract them as plain text (see xref:tls.adoc#_retrieving_files_from_a_jks_keystore[]).
+* Upload the following files to the jumphost:
+** For one-way TLS, only the server CA.
+** For Mutual TLS, the server CA, the client cert and the client key.
+* From a shell on the jumphost, copy the files to the relevant TLS directory into the Ansible Control Host container:
+** For Origin: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/origin_tls_files`
+** For Target: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/target_tls_files`
+
+There is a set of TLS configuration variables for Origin and a separate set for Target, so that they can be configured independently as desired.
+
+=== Configure TLS
+
+Here is how to do it:
+
+* Ensure that you have a shell open to the container.
+If you do not, you can open it with `docker exec -it zdm-ansible-container bash`.
+* From this shell, uncomment the relevant variables and edit their values in the configuration file `zdm-proxy-automation/ansible/vars/zdm_proxy_custom_tls_config.yml` as follows.
+** For proxy-to-Origin TLS configuration:
+ *** `origin_tls_user_dir_path`: uncomment and leave to its preset value of `/home/ubuntu/origin_tls_files`.
+ *** `origin_tls_server_ca_filename`: filename (without path) of the Server CA.
+ *** `origin_tls_client_cert_filename`: filename (without path) of the Client cert. This is for Mutual TLS only, leave unset otherwise.
+ *** `origin_tls_client_key_filename`: filename (without path) of the Client key.
+ For Mutual TLS only, leave unset otherwise.
+** The configuration for proxy-to-Target TLS is done in the same way but using the Target-specific configuration variables (`target_tls_*`).
+
+== Application-to-proxy TLS
+
+Here are the steps to enable TLS between your client application and the {zdm-proxy} if required.
+Please bear in mind that in this case your client application is the TLS client and the {zdm-proxy} is the TLS server.
+
+The files required by the proxy to configure application-to-proxy TLS are:
+
+* Server CA
+* Server certificate
+* Server key
+
+All these files are required for one-way and Mutual TLS.
+
+[TIP]
+====
+If your Origin cluster currently requires TLS, it will already be using these files for its own TLS configuration.
+====
+
+[TIP]
+====
+All files must be in plain-text, non-binary format.
+====
+
+Here are the steps to configure application-to-proxy TLS:
+
+* If your TLS files are in a JKS keystore, extract them as plain text (see xref:tls.adoc#_retrieving_files_from_a_jks_keystore[]).
+* Upload the required files to the jumphost: Server CA, Server certificate and Server key.
+* From a shell on the jumphost, copy the files to the `zdm_proxy_tls_files` TLS directory into the Ansible Control Host container: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/zdm_proxy_tls_files`.
+* Ensure that you have a shell open to the container.
+If you do not, you can open it with `docker exec -it zdm-ansible-container bash`.
+* From this shell, edit the file `zdm-proxy-automation/ansible/vars/zdm_proxy_custom_tls_config.yml`, uncommenting and populating the relevant configuration variables.
+These are in the bottom section of `vars/proxy_custom_tls_config_input.yml` and are all prefixed with `zdm_proxy`:
+** `zdm_proxy_tls_user_dir_path_name`: uncomment and leave to its preset value of `/home/ubuntu/zdm_proxy_tls_files`.
+** `zdm_proxy_tls_server_ca_filename`:  filename (without path) of the server CA that the proxy must use.
+Always required.
+** `zdm_proxy_tls_server_cert_filename` and `zdm_proxy_tls_server_key_filename` : filenames (without path) of the server certificate and server key that the proxy must use.
+Both always required.
+** `zdm_proxy_tls_require_client_auth`: whether you want to enable Mutual TLS between the application and the proxy.
+Optional: defaults to `false` ( = one-way TLS ), can be set to `true` to enable Mutual TLS.
+
+[TIP]
+====
+Remember that in this case, the {zdm-proxy} is the TLS server; thus the word `server` in these variable names.
+====
+
+== Apply the configuration
+
+This is all that is needed at this point.
+As part of its normal execution, the proxy deployment playbook will automatically distribute all TLS files and apply the TLS configuration to all {zdm-proxy} instances.
+
+Just go back to xref:deploy-proxy-monitoring.adoc#_advanced_configuration_optional[Optional advanced configuration] to finalize the {zdm-proxy} configuration and then execute the deployment playbook.

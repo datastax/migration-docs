@@ -1,0 +1,11 @@
+[TIP]
+--
+The SCB can be downloaded from the Astra Portal as follows:
+
+. In the Astra Portal, go to the Dashboard and select the serverless database that you created in the prior step. Ensure it is in `Active` state.
+. Click on **Connect**.
+. Select the **Java driver**, choosing the driver based on the CQL APIs.
+. Click on **Download bundle** (choosing a region if prompted to do so).
+
+For more information on the SCB and how to retrieve it, see https://docs.datastax.com/en/astra/astra-db-vector/drivers/secure-connect-bundle.html[the {astra-db-serverless} documentation].
+--

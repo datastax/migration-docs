@@ -1,0 +1,4 @@
+Overall, you can use {zdm-proxy} to migrate:
+
+* **From:** Any Cassandra 2.1.6 or higher release, or from any DSE 4.7.1 or higher release.
+* **To:** Any equivalent or higher release of Cassandra, or to any equivalent or higher release of DSE, or to {astra_db}.

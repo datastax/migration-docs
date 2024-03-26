@@ -1,0 +1,201 @@
+= Connect your client applications to {zdm-proxy}
+:navtitle: Connect client applications to ZDM Proxy
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+The {zdm-proxy} is designed to look and feel very much like a conventional Cassandra&reg; cluster.
+You communicate with it using the CQL query language used in your existing client applications.
+It understands the same messaging protocols used by Cassandra, DataStax Enterprise (DSE) server and {company} Astra DB.
+As a result, most of your client applications won't be able to distinguish between connecting to {zdm-proxy} and connecting directly to your Cassandra cluster.
+
+On this page, we explain how to connect your client applications to a Cassandra cluster.
+We then move on to discuss how this process changes when connecting to a {zdm-proxy}.
+We conclude by describing two sample client applications that serve as real-world examples of how to build a client application that works effectively with {zdm-proxy}.
+
+You can use the provided sample client applications, in addition to your own, as a quick way to validate that the deployed {zdm-proxy} is reading and writing data from the expected Origin and Target clusters.
+
+Finally, we will explain how to connect the `cqlsh` command-line client to the {zdm-proxy}.
+
+== {company} drivers
+
+At DataStax, we've developed and maintain a set of drivers for client applications to use when connecting to Cassandra, DSE, or Astra DB:
+
+* https://github.com/datastax/java-driver[{company} Java driver for Apache Cassandra]
+* https://github.com/datastax/python-driver[{company} Python driver for Apache Cassandra]
+* https://github.com/datastax/csharp-driver[{company} C# driver for Apache Cassandra]
+* https://github.com/datastax/cpp-driver[{company} C/C++ driver for Apache Cassandra]
+* https://github.com/datastax/nodejs-driver[{company} Node.js driver for Apache Cassandra]
+
+These drivers provide a native implementation of the messaging protocols used to communicate with a Cassandra or DSE cluster or Astra DB.
+They allow you to execute queries, iterate through results, access metadata about your cluster, and perform other related activities.
+
+[[_connecting_company_drivers_to_cassandra]]
+== Connecting {company} drivers to Cassandra
+
+Perhaps the simplest way to demonstrate how to use the {company} drivers to connect your client application to a Cassandra cluster is an example in the form of some sample code.
+But there's a bit of a problem: the {company} drivers are independent projects implemented natively in the relevant programming language.
+
+This approach offers the benefit of allowing each project to provide an API that makes the most sense for the language or platform on which it's implemented.
+Unfortunately it also means there is some variation between languages.
+With that in mind, the following pseudocode provides reasonable guidance for understanding how a client application might use one of the drivers.
+
+[source]
+----
+// Create an object to represent a Cassandra cluster listening for connections at
+// 10.20.30.40 on the default port (9042).  The username and password are necessary
+// only if your Cassandra cluster has authentication enabled.
+Cluster my_cluster = Cluster.build_new_cluster(contact_points = "10.20.30.40", username="myusername", password="mypassword")
+
+// Connect our Cluster object to our Cassandra cluster, returning a Session
+Session my_session = my_cluster.connect()
+
+// Execute a query, returning a ResultSet
+ResultSet my_result_set = my_session.execute("select release_version from system.local")
+
+// Retrieve the "release_version" column from the first row of our result set
+String release_version = my_result_set.first_row().get_column("release_version")
+
+// Close our Session and Cluster
+my_session.close()
+my_cluster.close()
+
+// Display the release version to the user
+print(release_version)
+----
+
+As noted, you'll see some differences in individual drivers:
+
+* New versions of the Java driver no longer define a Cluster object.
+Client programs create a Session directly.
+* The Node.js driver has no notion of a Cluster or Session at all, instead using a Client object to represent this functionality.
+
+The details may vary but you'll still see the same general pattern described in the pseudocode in each of the drivers.
+
+This topic does not describe details or APIs for any of the {company} drivers mentioned above.
+All the drivers come with a complete set of documentation for exactly this task.
+The following links provide some good starting points for learning about the interfaces for each specific driver:
+
+* The https://docs.datastax.com/en/developer/java-driver/latest/manual/core/[core driver section] of the Java driver manual.
+* The https://docs.datastax.com/en/developer/python-driver/latest/getting_started/[getting started guide] for the Python driver.
+* The https://docs.datastax.com/en/developer/csharp-driver/latest/index.html#basic-usage[basic usage section] of the C# driver documentation.
+* The https://docs.datastax.com/en/developer/cpp-driver/latest/topics/[getting started section] of the C/C++ driver documentation.
+* The https://docs.datastax.com/en/developer/nodejs-driver/latest/#basic-usage[basic usage section] of the Node.js driver documentation.
+
+[TIP]
+====
+The links above lead to the documentation for the most recent version of each driver.
+You can find the documentation for earlier versions by selecting the appropriate version number from the drop-down menu in the upper right.
+====
+
+== Connecting {company} drivers to {zdm-proxy}
+
+We mentioned above that connecting to a {zdm-proxy} should be almost indistinguishable from connecting directly to your Cassandra cluster.
+This design decision means there isn't much to say here; everything we discussed in the section above also applies when connecting your {company} driver to a {zdm-proxy}.
+There are a few extra considerations to keep in mind, though, when using the proxy.
+
+=== Client-side compression
+Client applications must not enable client-side compression when connecting through the {zdm-proxy}, as this is not currently supported.
+This is disabled by default in all drivers, but if it was enabled in your client application configuration it will have to be temporarily disabled when connecting to the {zdm-proxy}.
+
+[[_client_application_credentials]]
+=== Client application credentials
+
+The credentials provided by the client application are used when forwarding its requests.
+However, the client application has no notion that there are two clusters involved: from its point of view, it talks to just one cluster as usual.
+For this reason, the {zdm-proxy} will only use the client application credentials when forwarding requests to one cluster (typically Target), and it will resort to using the credentials in its own configuration to forward requests to the other cluster (typically Origin).
+
+This means that, if your {zdm-proxy} is configured with an Origin or Target cluster with **user authentication enabled**, your client application has to provide credentials when connecting to the proxy:
+
+* If both clusters require authentication, your client application must pass the credentials for Target.
+This is also the case if only Target requires authentication but Origin does not.
+* If Origin requires authentication but Target does not, your client application must supply credentials for Origin.
+* If neither cluster requires authentication, no credentials are needed.
+
+[cols="1,1,1"]
+|===
+|Auth enabled on Origin
+|Auth enabled on Target
+|Client application credentials
+
+|Yes
+|Yes
+|Target
+
+|No
+|Yes
+|Target
+
+|Yes
+|No
+|Origin
+
+|No
+|No
+|No credentials
+
+|===
+
+.How different sets of credentials are used by the ZDM Proxy when authentication is enabled on both clusters
+image::zdm-proxy-credential-usage.png[ZDM proxy credentials usage, 550]
+
+=== A note on the Astra Secure Connect Bundle
+
+If your {zdm-proxy} is configured to use Astra DB as an Origin or Target, your client application **does not need** to provide an Astra Secure Connect Bundle (SCB) when connecting to the proxy.
+It will, however, have to supply the Astra client ID and client secret as a username and password (respectively).
+
+
+== Sample client applications
+
+The documentation for the {company} drivers provides information about how to connect these drivers to your Cassandra cluster or {zdm-proxy} and how to use them to issue queries, update data and perform other actions.
+In addition to the smaller code samples provided in the documentation, we also provide a few sample client applications which demonstrate the use of the {company} Java driver to interact with {zdm-proxy} as well as Origin and Target for that proxy.
+
+=== ZDM Demo Client
+
+https://github.com/alicel/zdm-demo-client/[ZDM Demo Client] is a minimal Java web application which provides a simple, stripped-down example of an application built to work with {zdm-proxy}.
+After updating connection information you can compile and run the application locally and interact with it using HTTP clients such as `curl` or `wget`.
+
+You can find the details of building and running ZDM Demo Client in the https://github.com/alicel/zdm-demo-client/blob/master/README.md[README].
+
+[[_themis_client]]
+=== Themis client
+
+https://github.com/absurdfarce/themis[Themis] is a Java command-line client application that allows you to insert randomly-generated data into some combination of these three sources:
+
+* Directly into Origin
+* Directly into Target
+* Into the {zdm-proxy}, and subsequently on to Origin and Target
+
+The client application can then be used to query the inserted data.
+This allows you to validate that the {zdm-proxy} is reading and writing data from the expected sources.
+Configuration details for the clusters and/or {zdm-proxy} are defined in a YAML file.
+Details are in the https://github.com/absurdfarce/themis/blob/main/README.md[README].
+
+In addition to any utility as a validation tool, Themis also serves as an example of a larger client application which uses the Java driver to connect to a {zdm-proxy} -- as well as directly to Cassandra or Astra DB clusters -- and perform operations.
+The configuration logic as well as the cluster and session management code have been cleanly separated into distinct packages to make them easy to understand.
+
+== Connecting CQLSH to the {zdm-proxy}
+
+https://downloads.datastax.com/#cqlsh[CQLSH] is a simple, command-line client that is able to connect to any CQL cluster, enabling you to interactively send CQL requests to it.
+CQLSH comes pre-installed on any Cassandra or DSE node, or it can be downloaded and run as a standalone client on any machine able to connect to the desired cluster.
+
+Using CQLSH to connect to a {zdm-proxy} instance is very easy:
+
+* Download CQLSH for free from https://downloads.datastax.com/#cqlsh[here] on a machine that has connectivity to the {zdm-proxy} instances:
+** To connect to the {zdm-proxy}, any version is fine.
+** The Astra-ready version additionally supports connecting directly to an Astra DB cluster by passing the cluster's Secure Connect Bundle and valid credentials.
+* Install it by uncompressing the archive: `tar -xvf cqlsh-<...>.tar.gz`.
+* Navigate to the `cqlsh-<...>/bin` directory, for example `cd cqlsh-astra/bin`.
+* Launch CQLSH:
+** Specify the IP of a {zdm-proxy} instance.
+** Specify the port on which the {zdm-proxy} listens for client connections, if different to `9042`.
+** Use the appropriate credentials for the {zdm-proxy}, as explained xref:_client_application_credentials[above].
+
+For example, if one of your {zdm-proxy} instances has IP Address `172.18.10.34` and listens on port `14002`, the command would look like:
+[source,bash]
+----
+./cqlsh 172.18.10.34 14002 -u <my_creds_user> -p <my_creds_password>
+----
+
+If the {zdm-proxy} listens on port `9042`, you can omit the port from the command above.
+If credentials are not required, just omit the `-u` and `-p` options.

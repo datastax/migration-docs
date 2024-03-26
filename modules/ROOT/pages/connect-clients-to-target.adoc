@@ -1,0 +1,139 @@
+= Step 5: Connect your client applications directly to Target
+:navtitle: Phase 5: Connect client applications directly to Target
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps,target
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+At this point in our migration phases, we've completed:
+
+* Phase 1: Connected client applications to {zdm-proxy}, which included setting up Ansible playbooks with the {zdm-utility}, and deploying the {zdm-proxy} instances via the Docker container with {zdm-automation}.
+
+* Phase 2: Migrated and validated our data with {cstar-data-migrator} and/or {dsbulk-migrator}.
+
+* Phase 3: Enabled async data reads (an optional step) to check that Target can handle the read/write traffic.
+
+* Phase 4: Changed read routing to Target.
+
+Now we're ready to perform Phase 5, in which we will configure our client applications to connect directly to Target.
+The way you do this varies based on whether your Target is Astra DB or a regular Apache Cassandra&reg; or DataStax Enterprise cluster.
+
+//include::partial$lightbox-tip.adoc[]
+
+image::{imagesprefix}migration-phase5ra.png[Phase 5 diagram shows apps no longer using proxy and instead connected directly to Target.]
+
+//For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
+
+== Configuring your driver to connect to a generic CQL cluster
+
+If your Target is a generic CQL cluster (such as Apache Cassandra or DataStax Enterprise), you can connect your client application to it in a similar way as you previously connected it to Origin, but with the appropriate contact points and any additional configuration that your Target may require.
+For further information, please refer to the documentation of the driver language and version that you are using.
+
+== Configuring your driver to connect to Astra DB
+
+To connect to your Astra DB cluster, you will need:
+
+* A valid set of credentials (ClientID and Client Secret) for the Astra DB organization to which your cluster belongs:
+** Note: You will already have used these credentials when you configured the {zdm-proxy} to connect to your Astra DB cluster as Target.
+** For more information on creating credentials (tokens), see https://docs.datastax.com/en/astra/astra-db-vector/administration/manage-application-tokens.html[here].
+* The Secure Connect Bundle (SCB) for your Astra DB cluster:
+** This is a zip archive containing connection metadata and files to automatically enable Mutual TLS encryption between your client application and Astra DB.
+** There is one SCB for each Astra DB cluster (or one for each region of an Astra DB Multi-region cluster).
+** The SCB **does not contain** your DB credentials.
+
+include::partial$tip-scb.adoc[]
+
+You will also need to check whether the driver used by your client application has native support for the xref:glossary.adoc#_secure_connect_bundle_scb[Astra DB Secure Connect Bundle].
+To do so, please refer to the documentation for your driver language and version,
+and check the per-language https://docs.datastax.com/en/driver-matrix/docs/version-compatibility.html[driver compatibility matrix] for details (look for the support status in the **Astra / Cloud** column for your driver version).
+
+// The SCB support was made available beginning the following versions in the drivers:
+//
+// * https://docs.datastax.com/en/developer/cpp-driver/latest/changelog/#2-14-0[Beginning `2.14.0` of {company} C++ Driver].
+//
+// * https://docs.datastax.com/en/developer/csharp-driver/latest/changelog/\#3-12-0[Beginning `3.12.0` of {company} C# Driver]
+//
+// * https://docs.datastax.com/en/developer/java-driver/latest/changelog/#3-8-0[Beginning `3.8.0` & `4.3.0` of {company} Java Driver].
+//
+// * https://github.com/datastax/nodejs-driver/blob/master/CHANGELOG.md#440[Beginning `4.4.0` of {company} Nodejs Driver].
+//
+// * https://docs.datastax.com/en/developer/python-dse-driver/latest/CHANGELOG/#id24[Beginning `2.11.0` & `3.20.0` of {company} Python Driver].
+//
+// Based on this, follow the instructions in the relevant section below.
+
+[TIP]
+====
+You **do not need to upgrade your client application driver** to enable it to connect to Astra DB.
+
+If your client application uses an old version of the driver without built-in SCB support, upgrading it would make the configuration easier, but it is not required and can be also done at a later time if desired.
+====
+
+=== Drivers with built-in support for the Secure Connect Bundle
+
+The great news is that, if your driver has built-in support for the Astra DB Secure Connect Bundle (SCB), the changes to enable your application to connect to Astra DB are minimal.
+
+Recalling the xref:connect-clients-to-proxy.adoc#_connecting_company_drivers_to_cassandra[pseudocode] to enable your client application to connect to the proxy, here it is how it needs to change to connect directly to Astra DB:
+
+[source]
+----
+// Create an object to represent a Cassandra cluster
+// Note: there is no need to specify contact points when connecting to Astra DB.
+// All connection information is implicitly passed in the SCB
+Cluster my_cluster = Cluster.build_new_cluster(username="my_AstraDB_client_ID", password="my_AstraDB_client_secret", secure_connect_bundle="/path/to/scb.zip")
+
+// Connect our Cluster object to our Cassandra cluster, returning a Session
+Session my_session = my_cluster.connect()
+
+// Execute a query, returning a ResultSet
+ResultSet my_result_set = my_session.execute("select release_version from system.local")
+
+// Retrieve the "release_version" column from the first row of our result set
+String release_version = my_result_set.first_row().get_column("release_version")
+
+// Close our Session and Cluster
+my_session.close()
+my_cluster.close()
+
+// Display the release version to the user
+print(release_version)
+----
+
+As noted before, this pseudocode is just a guideline to illustrate the changes that are needed.
+For the specific syntax that applies to your driver, please refer to the documentation for your driver language and version:
+
+* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-cplusplus.html[C++ driver].
+
+* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-csharp.html[C# driver].
+
+* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-java.html[Java driver].
+
+* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-nodejs.html[Node.js driver].
+
+* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-python.html[Python driver].
+
+That's it!
+Your client application is now able to connect directly to your Astra DB cluster.
+
+=== Drivers without support for the Secure Connect Bundle
+
+It is possible to configure older or community-contributed drivers to connect to Astra DB even if they lack built-in SCB support.
+
+To do so, you will need to extract the files from the SCB and use them to enable Mutual TLS in the configuration of your driver.
+Please see https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/legacy-drivers.html[here] for detailed instructions for each driver.
+
+Alternatively, you could also consider using https://www.datastax.com/blog/easily-connect-apache-cassandra-workloads-to-datastaxs-serverless-dbaas-with-our-cql-proxy[CQL Proxy], which is an open-source lightweight proxy that abstracts away all Astra-specific connection configuration from your client application.
+
+=== A word on the cloud-native drivers
+
+Now that your client application is running on Astra DB, you can take advantage of many additional features and APIs that Astra DB offers such as gRPC, GraphQL, Document REST APIs and many more.
+To access these features, you may wish to consider moving to a cloud-native driver.
+This can be done at any time, as part of the future development and evolution of your client application.
+
+Here are the cloud-native drivers currently available:
+
+* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-java.html#_connecting_with_java_cloud_native_driver[Java cloud-native driver].
+* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-nodejs.html#_connecting_with_node_js_cloud_native_driver[Node.js cloud-native driver].
+
+== Phase 5 of migration completed
+
+Until this point, in case of any issues, you could have abandoned the migration and rolled back to connect directly to Origin at any time.
+From this point onward, the clusters will diverge, and Target is the source of truth for your client applications and data.

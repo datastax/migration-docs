@@ -1,0 +1,371 @@
+= Deploy the {zdm-proxy} and monitoring
+:page-tag: migration,zdm,zero-downtime,deploy,zdm-proxy,monitoring
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+This topic explains how to use the Ansible automation playbooks that you set up in the xref:setup-ansible-playbooks.adoc[prior topic] to deploy the {zdm-proxy} and its monitoring stack.
+
+Once completed, you will have a working and fully monitored {zdm-proxy} deployment.
+
+== Prerequisites
+
+You must have completed the Ansible setup as described in the xref:setup-ansible-playbooks.adoc[prior topic].
+
+No other prerequisites or dependencies are needed. The playbooks will automatically install all the required software packages as part of their operation.
+
+== Access the Ansible Control Host Docker container
+
+You can connect to the Ansible Control Host Docker container by opening a shell on it:
+
+[source,bash]
+----
+docker exec -it zdm-ansible-container bash
+----
+
+You're now connected to the container, at a prompt such as this:
+
+[source,bash]
+----
+ubuntu@52772568517c:~$
+----
+
+You can `ls` to see the resources in the Ansible Control Host Docker container. The most important resource is the `zdm-proxy-automation`.
+
+Now, `cd` into `zdm-proxy-automation/ansible` and `ls`. Example:
+
+image::{imagesprefix}zdm-ansible-container-ls3.png[Contents of the Ansible Control Host container]
+
+[[_configure_the_zdm_proxy]]
+== Configure the {zdm-proxy}
+
+The {zdm-proxy} configuration is composed of four files:
+
+* `zdm_proxy_cluster_config.yml`, containing all the configuration that allows the proxy to connect to Origin and Target. This is always required.
+* `zdm_proxy_core_config.yml`, containing important configuration that is commonly used and changed during the migration.
+* `zdm_proxy_advanced_config.yml`, containing advanced configuration that may be required in some scenarios but can be usually left to its default values.
+* `zdm_proxy_custom_tls_config.yml`, to configure TLS encryption if desired.
+
+=== Cluster and core configuration
+
+The next step is to edit the `zdm_proxy_cluster_config.yml` file in the Docker container.
+You'll want to enter your Cassandra/DSE username, password, and other variables.
+
+In the container shell, `cd` to `~/zdm-proxy-automation/ansible/vars` and edit `zdm_proxy_cluster_config.yml`.
+The `vi` and `nano` text editors are available in the container.
+
+[NOTE]
+====
+Starting in version 2.2.0 of the {zdm-automation}, we added the `zdm_proxy_cluster_config.yml` file to contain all the configuration variables for Origin and Target.
+Prior to version 2.2.0, the variables were in the `zdm_proxy_core_config.yml` file.
+
+If you are using an automation version up to and including 2.1.0, please use `zdm_proxy_core_config.yml` to configure access to your clusters.
+====
+
+There are two identical sets of variables to configure the {zdm-proxy} to connect to the cluster.
+One set is for Origin and its variables are prefixed with `origin`, while the set of variables for Target uses the `target` prefix.
+In the explanation below, `*` indicates any of these two prefixes as appropriate.
+
+These two sections are very important and are always required.
+Populate the appropriate variables in each section for the respective cluster, by uncommenting the variables and specifying their values as follows:
+
+. Cluster credentials:
+.. If it is a self-managed cluster, `*_username` and `*_password` must be valid credentials for it.
+Leave blank if authentication is not enabled on the cluster.
+.. If it is an Astra DB cluster, authentication is always enabled: `*_username` must be the Client ID and `*_password` the Client Secret of a valid Astra DB set of credentials with the `R/W User` role.
+. Contact points and port (only relevant for self-managed clusters, leave unset for Astra clusters)
+.. `*_contact points`: comma-separated list of IP addresses of the cluster's seed nodes.
+.. `*_port`: port on which the cluster listens for client connections. Defaults to 9042.
+. For Astra DB clusters, choose one of the following options and leave unset the other (leave both unset for self-managed clusters):
+.. If you wish to manually provide the cluster's Secure Connect Bundle:
+... Download it from the Astra Portal and place it on the jumphost
+... Copy it to the container. Open a new shell on the jumphost, run `docker cp <your_scb.zip> zdm-ansible-container:/home/ubuntu`
+... Specify its path in `*_astra_secure_connect_bundle_path`.
+.. Otherwise, if you wish the automation to download the cluster's Secure Connect Bundle for you, just specify the two following variables:
+... `*_astra_db_id`: the cluster's https://docs.datastax.com/en/astra/astra-db-vector/faqs.html#where-do-i-find-the-organization-id-database-id-or-region-id[database id].
+... `*_astra_token`: the token field from a valid set of credentials for a `R/W User` Astra role (this is the long string that starts with `AstraCS:`).
+
+Save the file and exit the editor.
+
+Example of a completed `zdm_proxy_cluster_config.yml` file for a migration from a self-managed Origin to an Astra DB Target:
+
+[source,yml]
+----
+##############################
+#### ORIGIN CONFIGURATION ####
+##############################
+
+## Origin credentials
+origin_username: "my_user"
+origin_password: "my_password"
+
+## Set the following two parameters only if Origin is a self-managed, non-Astra cluster
+origin_contact_points: "191.100.20.135,191.100.21.43,191.100.22.18"
+origin_port: 9042
+
+##############################
+#### TARGET CONFIGURATION ####
+##############################
+
+## Target credentials (partially redacted)
+target_username: "dqhg...NndY"
+target_password: "Yc+U_2.gu,9woy0w...9JpAZGt+CCn5"
+
+## Set the following two parameters only if Target is an Astra cluster and you would like the automation to download the Secure Connect Bundle automatically
+target_astra_db_id: "d425vx9e-f2...c871k"
+target_astra_token: "AstraCS:dUTGnRs...jeiKoIqyw:01...29dfb7"
+
+----
+
+The other file you need to be aware of is `zdm_proxy_core_config.yml`.
+This file contains some global variables that will be used in subsequent steps during the migration.
+It is good to familiarize yourself with this file, although these configuration variables do not need changing at this time:
+
+. `primary_cluster`: which cluster is going to be the primary source of truth.
+This should be left set to its default value of `ORIGIN` at the start of the migration, and will be changed to `TARGET` after migrating all existing data.
+. `read_mode`: leave to its default value of `PRIMARY_ONLY`.
+See xref:enable-async-dual-reads.adoc[] for more information on this variable.
+. `log_level`: leave to its default of `INFO`.
+
+Leave all these variables to their defaults for now.
+
+=== Enable TLS encryption (optional)
+
+If you wish to enable TLS encryption between the client application and the {zdm-proxy}, or between the {zdm-proxy} and one (or both) self-managed clusters, you will need to specify some additional configuration.
+To do so, please follow the steps on xref:tls.adoc[this page].
+
+[[_advanced_configuration_optional]]
+=== Advanced configuration (optional)
+
+Here are some additional configuration variables that you may wish to review and change *at deployment time* in specific cases.
+All these variables are located in `vars/zdm_proxy_advanced_config.yml`.
+
+All advanced configuration variables not listed here are considered mutable and can be changed later if needed (changes can be easily applied to existing deployments in a rolling fashion using the relevant Ansible playbook, as explained later, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable]).
+
+==== *Multi-datacenter clusters*
+
+If Origin is a multi-datacenter cluster, you will need to specify the name of the datacenter that the {zdm-proxy} should consider local. To do this, set the property `origin_local_datacenter` to the datacenter name.
+Likewise, for multi-datacenter Target clusters you will need to set `target_local_datacenter` appropriately.
+
+These two variables are located in `vars/zdm_proxy_advanced_config.yml`.
+Note that this is not relevant for multi-region Astra DB clusters, where this is handled through region-specific Secure Connect Bundles.
+
+[[_ports]]
+==== *Ports*
+
+Each {zdm-proxy} instance listens on port 9042 by default, like a regular Cassandra cluster.
+This can be overridden by setting `zdm_proxy_listen_port` to a different value.
+This can be useful if the Origin nodes listen on a port that is not 9042 and you want to configure the {zdm-proxy} to listen on that same port to avoid changing the port in your client application configuration.
+
+The {zdm-proxy} exposes metrics on port 14001 by default.
+This port is used by Prometheus to scrape the application-level proxy metrics.
+This can be changed by setting `metrics_port` to a different value if desired.
+
+== Use Ansible to deploy the {zdm-proxy}
+
+Now you can run the playbook that you've configured above.
+From the shell connected to the container, ensure that you are in `/home/ubuntu/zdm-proxy-automation/ansible` and run:
+
+[source,bash]
+----
+ansible-playbook deploy_zdm_proxy.yml -i zdm_ansible_inventory
+----
+
+That's it! A {zdm-proxy} container has been created on each proxy host.
+
+[[_indications_of_success_on_origin_and_target_clusters]]
+== Indications of success on Origin and Target clusters
+
+The playbook will create one {zdm-proxy} instance for each proxy host listed in the inventory file.
+It will indicate the operations that it is performing and print out any errors, or a success confirmation message at the end.
+
+Confirm that the ZDM proxies are up and running by using one of the following options:
+
+* Call the `liveness` and `readiness` HTTP endpoints for {zdm-proxy} instances.
+* Check {zdm-proxy} instances via docker logs.
+
+=== Call the `liveness` and `readiness` HTTP endpoints
+
+ZDM metrics provide `/health/liveness` and `/health/readiness` HTTP endpoints, which you can call to determine the state of {zdm-proxy} instances.
+It's often fine to simply submit the `readiness` check to return the proxy's state.
+
+The format:
+
+[source,bash]
+----
+http://<zdm proxy private ip>:<metrics port>/health/liveness
+http://<zdm proxy private ip>:<metrics port>/health/readiness
+----
+
+Readiness expanded GET format:
+
+[source,bash]
+----
+curl -G "http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:{{ metrics_port }}/health/readiness"
+----
+
+The default port for metrics collection is `14001`. 
+Optionally, you may have overridden this port when you deployed the {zdm-proxy} specifying a custom, non-default port that was set by changing the value of the configuration variable `metrics_port`. 
+See xref:deploy-proxy-monitoring.adoc#_ports[this section] for more information.
+
+
+[tabs]
+====
+Readiness example::
++
+--
+[source,bash]
+----
+curl -G "http://172.18.10.40:14001/health/readiness"
+----
+--
++
+Result::
++
+--
+[source,bash]
+----
+{
+   "OriginStatus":{
+      "Addr":"<origin_node_addr>",
+      "CurrentFailureCount":0,
+      "FailureCountThreshold":1,
+      "Status":"UP"
+   },
+   "TargetStatus":{
+      "Addr":"<target_node_addr>",
+      "CurrentFailureCount":0,
+      "FailureCountThreshold":1,
+      "Status":"UP"
+   },
+   "Status":"UP"
+}
+----
+--
+====
+
+=== Check {zdm-proxy} instances via docker logs
+
+After running the playbook, you can `ssh` into one of the servers where one of the deployed {zdm-proxy} instances is running.
+You can do so from within the Ansible container, or directly from the jumphost machine:
+
+[source,bash]
+----
+ssh <linux user>@<zdm proxy ip address>
+----
+
+Then, use the `docker logs` command to view the logs of this ZDM proxy instance.
+
+[source,bash]
+----
+   .
+   .
+   .
+ubuntu@ip-172-18-10-111:~$ docker logs zdm-proxy-container
+   .
+   .
+   .
+time="2023-01-13T22:21:42Z" level=info msg="Initialized origin control connection. Cluster Name: OriginCluster, Hosts: map[3025c4ad-7d6a-4398-b56e-87d33509581d:Host{addr: 191.100.20.61,
+port: 9042, host_id: 3025c4ad7d6a4398b56e87d33509581d} 7a6293f7-5cc6-4b37-9952-88a4b15d59f8:Host{addr: 191.100.20.85, port: 9042, host_id: 7a6293f75cc64b37995288a4b15d59f8} 997856cd-0406-45d1-8127-4598508487ed:Host{addr: 191.100.20.93, port: 9042, host_id: 997856cd040645d181274598508487ed}], Assigned Hosts: [Host{addr: 191.100.20.61, port: 9042, host_id: 3025c4ad7d6a4398b56e87d33509581d}]."
+
+time="2023-01-13T22:21:42Z" level=info msg="Initialized target control connection. Cluster Name: cndb, Hosts: map[69732713-3945-4cfe-a5ee-0a84c7377eaa:Host{addr: 10.0.79.213,
+port: 9042, host_id: 6973271339454cfea5ee0a84c7377eaa} 6ec35bc3-4ff4-4740-a16c-03496b74f822:Host{addr: 10.0.86.211, port: 9042, host_id: 6ec35bc34ff44740a16c03496b74f822} 93ded666-501a-4f2c-b77c-179c02a89b5e:Host{addr: 10.0.52.85, port: 9042, host_id: 93ded666501a4f2cb77c179c02a89b5e}], Assigned Hosts: [Host{addr: 10.0.52.85, port: 9042, host_id: 93ded666501a4f2cb77c179c02a89b5e}]."
+time="2023-01-13T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
+time="2023-01-13T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
+----
+
+In the logs, the important information to notice is:
+
+[source,bash]
+----
+time="2023-01-13T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
+time="2023-01-13T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
+----
+
+Also, you can check the status of the running Docker image.
+Here's an example with {zdm-proxy} 2.1.0:
+
+[source,bash]
+----
+ubuntu@ip-172-18-10-111:~$ docker ps
+CONTAINER ID  IMAGE                     COMMAND  CREATED      STATUS     PORTS   NAMES
+02470bbc1338  datastax/zdm-proxy:2.1.x  "/main"  2 hours ago  Up 2 hours         zdm-proxy-container
+----
+
+If the {zdm-proxy} instances fail to start up due to mistakes in the configuration, you can simply rectify the incorrect configuration values and run the deployment playbook again.
+
+[NOTE]
+====
+With the exception of the Origin and Target credentials and the `primary_cluster` variable, which can all be changed for existing deployments in a rolling fashion, all cluster connection configuration variables are considered immutable and can only be changed by recreating the deployment.
+
+If you wish to change any of the cluster connection configuration variables (other than credentials and `primary_cluster`) on an existing deployment, you will need to re-run the `deploy_zdm_proxy.yml` playbook.
+This playbook can be run as many times as necessary.
+
+Please note that running the `deploy_zdm_proxy.yml` playbook will result in a brief window of unavailability of the whole {zdm-proxy} deployment while all the {zdm-proxy} instances are torn down and recreated.
+====
+
+[[_setting_up_the_monitoring_stack]]
+== Setting up the Monitoring stack
+
+The {zdm-automation} enables you to easily set up a self-contained monitoring stack that is preconfigured to collect metrics from your {zdm-proxy} instances and display them in ready-to-use Grafana dashboards.
+
+The monitoring stack is deployed entirely on Docker.
+It includes the following components, all deployed as Docker containers:
+
+* Prometheus node exporter, which runs on each {zdm-proxy} host and makes OS- and host-level metrics available to Prometheus.
+* Prometheus server, to collect metrics from the {zdm-proxy} process, its Golang runtime and the Prometheus node exporter.
+* Grafana, to visualize all these metrics in three preconfigured dashboards (see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips for details).
+
+After running the playbook described here, you will have a fully configured monitoring stack connected to your {zdm-proxy} deployment.
+
+[NOTE]
+====
+There are no additional prerequisites or dependencies for this playbook to execute.
+If it is not already present, Docker will automatically be installed by the playbook on your chosen monitoring server.
+====
+
+=== Connect to the Ansible Control Host
+
+Make sure you are connected to the Ansible Control Host docker container.
+As above, you can do so from the jumphost machine by running:
+
+[source,bash]
+----
+docker exec -it zdm-ansible-container bash
+----
+
+You will see a prompt like:
+
+[source,bash]
+----
+ubuntu@52772568517c:~$
+----
+
+=== Configure the Grafana credentials
+
+Edit the file `zdm_monitoring_config.yml`, located in `zdm-proxy-automation/ansible/vars`:
+
+* `grafana_admin_user`: leave unchanged (defaults to `admin`)
+* `grafana_admin_password`: set to the password of your choice
+
+=== Run the monitoring playbook
+
+Ensure that you are in `/home/ubuntu/zdm-proxy-automation/ansible` and then run the following command:
+
+[source,bash]
+----
+ansible-playbook deploy_zdm_monitoring.yml -i zdm_ansible_inventory
+----
+
+=== Check the Grafana dashboard
+
+In a browser, open \http://<jumphost_public_ip>:3000
+
+Login with:
+
+* *username*: admin
+* *password*: the password you configured
+
+[TIP]
+====
+Details about the metrics you can observe are available in xref:troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips.
+====

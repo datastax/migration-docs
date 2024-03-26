@@ -1,0 +1,102 @@
+= Glossary
+:page-tag: migration,zdm,zero-downtime,glossary
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+Here are a few terms used throughout the {company} {zdm-product} documentation and code.
+
+[[_ansible_playbooks]]
+== Ansible playbooks
+
+A repeatable, re-usable, simple configuration management and multi-machine deployment system, one that is well suited to deploying complex applications.
+For details about the playbooks available in {zdm-automation}, see:
+
+* xref:setup-ansible-playbooks.adoc[].
+* xref:deploy-proxy-monitoring.adoc[].
+
+[[_asynchronous_dual_reads]]
+== Asynchronous dual reads
+
+An optional testing phase in which reads are sent to both Origin and Target, enabling you to check that the intended Target of your migration can handle the full workload of reads and writes before finalizing the migration and moving off the {zdm-proxy} instances.
+For details, see xref:enable-async-dual-reads.adoc[].
+
+== CQL
+
+Cassandra Query Language (CQL) is a query language for the Cassandra database.
+It includes DDL and DML statements.
+For details, see https://docs.datastax.com/en/astra/astra-db-vector/cql/develop-with-cql.html[Develop with the Cassandra Query Language].
+
+== Dual-write logic
+
+{zdm-proxy} handles your client application's real-time write requests and forwards them to two Cassandra-based clusters (Origin and Target) simultaneously.
+The dual-write logic in {zdm-proxy} means that you do not need to modify your client application to perform dual writes manually during a migration: {zdm-proxy} takes care of it for you.
+See the diagram in the xref:introduction.adoc#migration-workflow[workflow introduction].
+
+[[origin]]
+== Origin
+
+Your existing Cassandra-based cluster, whether it's open-source Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB.
+
+[[_primary_cluster]]
+== Primary cluster
+
+The cluster that is currently considered the "primary" source of truth.
+While writes are always sent to both clusters, the primary cluster is the one to which all synchronous reads are always sent, and their results are returned to the client application.
+During a migration, Origin is typically the primary cluster.
+Near the end of the migration, you'll shift the primary cluster to be Target.
+
+For more, see <<secondary-cluster,Secondary cluster>>.
+
+== Playbooks
+
+See xref:glossary.adoc#_ansible_playbooks[Ansible playbooks].
+
+== Proxy
+
+Generally speaking, a proxy is a software class functioning as an interface to something else.
+The proxy could interface to anything: a network connection, a large object in memory, a file, or some other resource.
+A proxy is a wrapper or agent object that is being called by the client to access the real serving object behind the scenes.
+In our context here, see <<zdm-proxy,ZDM Proxy>>.
+
+== Read mirroring
+
+See xref:glossary.adoc#_asynchronous_dual_reads[Asynchronous dual reads].
+
+[[secondary-cluster]]
+== Secondary cluster
+
+During a migration, the secondary cluster is the one that is currently **not** the source of truth. 
+
+When using the {zdm-proxy}, all writes are synchronously sent to both Origin and Target.
+Reads operate differently: with the default read mode, reads are only sent to the primary cluster (Origin by default).
+In Phase 3 of a migration, you may (optionally) want to temporarily send the reads to both clusters, to make sure that Target can handle the full workload of reads and writes. 
+
+If you set the proxy's read mode configuration variable (`read_mode`) to `DUAL_ASYNC_ON_SECONDARY`, then asynchronous dual reads are enabled.
+That change results in reads being additionally sent to the secondary cluster.
+
+For more, see xref:glossary.adoc#_primary_cluster[Primary cluster].
+Also see xref:enable-async-dual-reads.adoc[].
+
+[[_secure_connect_bundle_scb]]
+== Secure Connect Bundle (SCB)
+
+A ZIP file generated in https://astra.datastax.com[Astra Portal] that contains connection metadata and TLS encryption certificates (but not the database credentials) for your {astra_db} database.
+For details, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[Working with the Secure Connect Bundle].
+
+[[target]]
+== Target
+
+The new cluster to which you want to migrate client applications and data with zero downtime.
+
+[[zdm-automation]]
+== {zdm-automation}
+
+An Ansible-based tool that allows you to deploy and manage the {zdm-proxy} instances and associated monitoring stack.
+To simplify its setup, the suite includes the {zdm-utility}.
+This interactive utility creates a Docker container acting as the Ansible Control Host.
+The Ansible playbooks constitute the {zdm-automation}.
+
+[[zdm-proxy]]
+== ZDM Proxy
+
+An open-source component designed to seamlessly handle the real-time client application activity while a migration is in progress.
