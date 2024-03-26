@@ -1,7 +1,6 @@
 .{product}
 * xref:introduction.adoc[]
 * xref:components.adoc[]
-* xref:faqs.adoc[]
 * xref:preliminary-steps.adoc[]
 ** xref:feasibility-checklists.adoc[]
 ** xref:deployment-infrastructure.adoc[]
@@ -29,6 +28,7 @@
 ** xref:troubleshooting.adoc[]
 ** xref:troubleshooting-tips.adoc[]
 ** xref:troubleshooting-scenarios.adoc[]
+* xref:faqs.adoc[]
 * xref:glossary.adoc[]
 * xref:contributions.adoc[]
 * xref:release-notes.adoc[]
