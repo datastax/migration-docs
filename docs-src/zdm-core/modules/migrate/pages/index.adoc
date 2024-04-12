@@ -44,7 +44,7 @@ image::{imagesprefix}zdm-migration-before-starting.png[Diagram shows existing CQ
 Before any migration begins, complete prerequisites, prepare your environment, and set up the recommended infrastructure.
 ////
 
-== With and without zero downtime migration examples
+== Migrations with and without zero downtime examples
 
 Data migrations with downtime are those where the data being migrated is critical for ongoing operations, and the migration process itself requires systems to be taken offline temporarily. Downtime may be required for:
 
