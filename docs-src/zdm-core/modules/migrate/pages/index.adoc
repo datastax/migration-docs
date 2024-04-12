@@ -47,6 +47,7 @@ Before any migration begins, complete prerequisites, prepare your environment, a
 == With and without zero downtime migration examples
 
 Data migrations with downtime are those where the data being migrated is critical for ongoing operations, and the migration process itself requires systems to be taken offline temporarily. Downtime may be required for:
+
 * Migration for large-scale systems: these systems may require downtime for completely smooth transition.
 * Database migration: large database migrations or database software upgrades may need downtime for data consistency and integrity.
 * Storage system migration: migrating from on-prem to cloud may need downtime to reconfigure systems.
@@ -54,6 +55,7 @@ Data migrations with downtime are those where the data being migrated is critica
 
 A migration with no downtime is seamless and ideal, but doesn't always happen or a viable option. 
 Downtime may not be required for:
+
 * Continuous data replication: When real-time data replication is implemented, changes made to the source data are continuously mirrored to the target system. 
 This means both systems remain synchronized without the need for downtime. 
 * Online database migration: Some database migration allows for the migration to happen while the database remains online and accessible. Technologies like database replication and synchronization tools can also facilitate seamless migration with minimal disruption.
@@ -65,6 +67,7 @@ This option can be used for large-scale migrations where downtime is not feasibl
 == Data migration tools
 
 For modest data volumes where temporary downtime is tolerable, Datastax recommends two open-source data migration tools to help with brief outages:
+
 * Cassandra Data Migrator: The best choice to migrate large data quantities, and where detailed logging, data verifications, table column renaming (if needed), and reconciliation options are provided.
 * DSBulk Migrator: This leverages DataStax Bulk Loader (DSBulk) to perform the data migration, and provides new commands specific to migrations. DSBulk Migrator is ideal for simple migration of smaller data quantities, and where data validation (other than post-migration row counts) is not necessary.
 
