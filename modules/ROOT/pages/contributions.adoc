@@ -1,0 +1,56 @@
+= Contribution guidelines
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,contributions
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+{company} {zdm-product} (ZDM) provides a simple and reliable way for users to migrate an existing Apache Cassandra&reg; or DataStax Enterprise cluster to Astra DB, or to any Cassandra/DSE cluster, without any interruption of service to the client applications and data.
+
+The {zdm-proxy} is open source software (OSS). We welcome contributions from the developer community via Pull Requests on a fork, for evaluation by the ZDM team.
+
+The code sources for additional {zdm-product} components -- including {zdm-utility}, {zdm-automation}, {cstar-data-migrator}, and {dsbulk-migrator} -- are available in public GitHub repos, where you may submit feedback and ideas via GitHub Issues.
+Code contributions for those additional components are not open for PRs at this time.
+
+== {zdm-proxy} License
+
+{zdm-proxy} is licensed under the open-source https://github.com/datastax/zdm-proxy/blob/main/LICENSE[**Apache-2.0 license agreement**, window="_blank"].  
+
+== Contributor License Agreement
+
+Acceptance of the {company} https://cla.datastax.com/[Contributor License Agreement, window="_blank"] (CLA) is required before we can consider accepting your {zdm-proxy} code contribution.
+Refer to the https://cla.datastax.com/[CLA terms, window="_blank"] and, if you agree, indicate your acceptance on each Pull Request (PR) that you submit while using the https://github.com/datastax/zdm-proxy[{zdm-proxy} GitHub repository, window="_blank"]. 
+
+// You will see the CLA listed on the standard pull request checklist (TBS) 
+// for the https://github.com/datastax/zdm-proxy[{zdm-proxy}] repository.
+
+== {zdm-proxy} code contributions
+
+The overall procedure:
+
+. Start on the open-source public repo, https://github.com/datastax/zdm-proxy/.
+. Fork the repo by clicking the Fork button in the GitHub UI.
+. Make your changes locally on your fork. Git commit and push only to your fork.
+. Wait for CI to run successfully in GitHub Actions before submitting a PR.
+. Submit a Pull Request (PR) with your forked updates.
+As noted above, be sure to indicate in the PR's Comments your acceptance (if you agree) with the {company} https://cla.datastax.com/[Contributor License Agreement] (CLA).
+. If you're not yet ready for a review, add "WIP" to the PR name to indicate it's a work in progress.
+. Wait for the automated PR workflow to do some checks.
+Members of the {zdm-proxy} community will review your PR and decide whether to approve and merge it.
+
+In addition to potential {zdm-proxy} OSS code contribution, we encourage you to submit feedback and ideas via GitHub Issues in the repo, starting from https://github.com/datastax/zdm-proxy/issues.
+Add a label to help categorize the issue, such as the complexity level, component name, and other labels you'll find in the repo's Issues display.
+
+== Submitting GitHub Issues in related public repos
+
+The following {company} {zdm-product} GitHub repos are public.
+You are welcome to read the source and submit feedback and ideas via GitHub Issues per repo.
+In addition to the https://github.com/datastax/zdm-proxy[{zdm-proxy}] open-source repo, refer to:
+
+* https://github.com/datastax/zdm-proxy-automation/issues[{zdm-automation}] repo for Ansible-based {zdm-automation} and {zdm-utility}.
+
+* https://github.com/datastax/cassandra-data-migrator/issues[Cassandra Data Migrator] repo. 
+
+* https://github.com/datastax/dsbulk-migrator/issues[DSBulk Migrator] repo.
+
+// * https://github.com/datastax/migration-docs/issues[Migration documentation] repo.
+
+Again, add a label to help categorize each issue, such as the complexity level, component name, and other labels you'll find in the repo's Issues display.

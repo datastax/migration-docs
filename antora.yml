@@ -1,0 +1,25 @@
+name: data-migration
+title: Data Migration
+version: ~
+start_page: introduction.adoc
+
+nav:
+- modules/ROOT/nav.adoc
+
+asciidoc:
+  attributes:
+    product: 'Zero Downtime Migration'
+    zdm-product: 'Zero Downtime Migration'
+    zdm-shortproduct: 'ZDM'
+    zdm-proxy: 'ZDM Proxy'
+    zdm-utility: 'ZDM Utility'
+    zdm-automation: 'ZDM Proxy Automation'
+    cstar-data-migrator: 'Cassandra Data Migrator'
+    dsbulk-migrator: 'DSBulk Migrator'
+    db-serverless: 'Serverless (Non-Vector)'
+    db-serverless-vector: 'Serverless (Vector)'
+    db-classic: 'Classic'
+    astra-cli: 'Astra CLI'
+    url-astra: 'https://astra.datastax.com'
+    link-astra-portal: '{url-astra}[{astra_ui}]'
+    astra-db-serverless: 'Astra DB Serverless'

@@ -1,0 +1,145 @@
+= Create the target environment for your migration
+:navtitle: Create target environment for migration
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,target
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+In this topic, we'll see how to create and prepare a new cluster to be used as Target.
+
+This section covers in detail the steps to prepare a {company} {astra-db-serverless} database, and also outlines how to create and prepare a different cluster, which could be for example Cassandra 4.0.x or DSE 6.8.x.
+
+== Overview
+
+If you intend to use Astra DB as Target for the migration, you will need to:
+
+* Create an {astra-db-serverless} cluster.
+* Retrieve its Secure Connect Bundle (SCB) and upload it to the application instances.
+* Create Astra DB access credentials for the cluster.
+* Create the client application schema.
+
+To use a generic Cassandra or DSE cluster, you will have to:
+
+* Provision the infrastructure for your new cluster.
+* Create the cluster with the desired version of Cassandra or DSE.
+* Configure the cluster according to your requirements.
+* Create the client application schema.
+
+== Using an Astra DB database as Target
+
+=== Prerequisites
+
+* Access to https://astra.datastax.com[Astra Portal, window="_blank"] on astra.datastax.com.
+
+=== Create an {astra-db-serverless} cluster
+
+Log into the Astra Portal and create a serverless Astra DB database.
+You can start with a Free plan, but consider upgrading during your migration project to an Astra DB Pay As You Go (PAYG) or Enterprise plan, to take advantage of additional functionality -- such as Exporting Metrics to external third-party applications, Bring Your Own Keys, and other features.
+
+The PAYG and Enterprise plans have many benefits over the Free plan, such as the ability to lift rate limiting, and avoiding hibernation timeouts.
+
+Assign your preferred values for the serverless database:
+
+* **Name**.
+* **Keyspace**: this is a handle that establishes the database's context in subsequent DDL and DML statements.
+* **Cloud provider**: You can choose your preferred cloud provider among AWS, GCP and Azure (only GCP is available to Free Tier accounts).
+* **Region**: choose your geographically preferred region - you can subsequently add more regions.
+
+When the Astra DB reaches **Active** status, perform the following steps in an Astra DB user account.
+Create an IAM token with the "Read/Write User" role.
+This role will be used by the client application, the {zdm-proxy}, and the {zdm-automation}.
+
+In Astra Portal, choose **Organization Settings** (upper left) from the drop-down menu, and then **Token Management**.
+Select the **Read/Write User** role:
+
+image::{imagesprefix}zdm-token-management1.png[]
+
+Then, click **Generate Token**.
+Astra console displays the generated values.
+Example:
+
+image::{imagesprefix}zdm-tokens-generated.png[]
+
+Save all credentials (Client ID, Client Secret, and Token) in a clearly named file.
+For example, you can save all three parts of the new credentials to a file called `my_app_readwrite_user` and store it safely.
+
+For more information about role permissions, see link:https://docs.datastax.com/en/astra/docs/manage/org/user-permissions.html[User permissions] in the Astra DB documentation.
+
+=== Get the Secure Connect Bundle and upload to client instances
+
+Your cluster's https://docs.datastax.com/en/astra/astra-db-vector/drivers/secure-connect-bundle.html#download-the-secure-connect-bundle[Secure Connect Bundle] (SCB) is a zip file that contains the TLS encryption certificates and other metadata to connect to your database.
+It will be needed by:
+
+* Your client application, to connect directly to Astra DB near the end of the migration;
+* Cassandra Data Migrator or DSBulk Migrator, to migrate and validate data into Astra DB.
+
+Note that the credentials are **not contained** in the SCB.
+
+// * The {company} Bulk Migrator to import the existing data into Astra
+
+include::partial$tip-scb.adoc[]
+
+To copy the SCB to your client application instance, use `scp`:
+
+[source,bash]
+----
+scp -i <your_ssh_key> secure-connect-<target cluster name>.zip <linux user>@<public IP of client application instance>:
+----
+
+=== Create the client application schema on your Astra DB cluster
+
+To complete the preparation work, create the client application schema in your newly created Astra DB database.
+
+In Astra Portal, create each corresponding keyspace and tables.
+The keyspace names, table names and structure must be identical to the schema on Origin, bearing in mind that:
+
+* In Astra DB, keyspaces must be created through Astra Portal.
+Keyspace creation through CQL is not supported.
+See https://docs.datastax.com/en/astra/astra-db-vector/databases/create-database.html[create your database], and https://docs.datastax.com/en/astra/astra-db-vector/databases/manage-keyspaces.html#add-keyspace[adding a new keyspace].
+
+* Tables can be defined as usual in regular CQL, but the only table property that can be optionally set in Astra DB is `default_time_to_live`.
+Please remove all other table properties (such as compaction strategy, `gc_grace_seconds` and so on).
+
+* Materialized Views (MVs) and certain types of indexes are not supported in Astra DB, and should be replaced with supported indexes. See https://docs.datastax.com/en/astra/astra-db-vector/databases/database-limits.html#fields[Serverless database limits] for more details.
+
+To aid you in preparing the schema from the DDL used in a non-Astra cluster, you may wish to consider the `generate-ddl` functionality in the link:https://github.com/datastax/dsbulk-migrator[DSBulk Migrator]. Note that Materialized Views and indexes are not automatically converted by this tool.
+
+Note that CQL statements, such as those used to reproduce the schema on the target database, can be executed in Astra DB using two methods:
+
+. A CQL Console located directly https://docs.datastax.com/en/astra/astra-db-vector/cql/connect-cql-shell.html#embedded-cql-shell[in the Astra DB portal].
+. Any machine connected remotely using an Astra DB-compatible https://docs.datastax.com/en/astra/astra-db-vector/cql/connect-cql-shell.html#standalone-cql-shell[standalone `cqlsh` client] (and provide the necessary connection secrets).
+
+== Using a generic CQL cluster as Target
+
+=== Create and configure the cluster
+
+{zdm-shortproduct} can be used to migrate to any type of CQL cluster, running in any cloud or even on-premise.
+
+Here are the steps that you'll need to follow:
+
+* Determine the correct topology and specifications for your new cluster, then provision infrastructure that meets these requirements.
+This can be in your cloud provider of choice, in your own private cloud or on bare metal machines.
+* Create your cluster using your chosen version of Apache Cassandra&reg; or DataStax Enterprise.
+Refer to the documentation specific to the version that you are installing for detailed information, and pay particular attention at configuration that must be done at installation time.
+* Configure your new cluster as desired: for example, you may decide to enable internal authentication or configure TLS encryption.
+You should also consider testing your new cluster to ensure it meets your performance requirements and tune it as necessary.
++
+[NOTE]
+====
+Your new cluster can be configured as you wish, independently of how Origin is configured.
+{zdm-proxy} allows you to specify a separate set of configuration to connect to each cluster.
+====
+
+* If you enabled authentication, create a user with the required permissions to be used for your client application.
+
+=== Create the client application schema on the cluster
+
+At this point, the only thing that is left to do is creating the schema for your client application on the new cluster.
+
+[IMPORTANT]
+====
+Make sure that all keyspaces and tables being migrated are identical to the corresponding ones on Origin (including keyspace, table and column names).
+====
+
+* To copy the schema, you can simply run CQL `describe` on Origin for the schema that is being migrated, and then run the output on your new cluster.
+Bear in mind that, if you are migrating from an old version, you may need to adapt some CQL clauses that are no longer supported in newer versions (e.g. `COMPACT STORAGE`).
+Please refer to the documentation of the relevant versions for more information.

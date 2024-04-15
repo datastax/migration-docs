@@ -1,0 +1,14 @@
+Now that you've seen a conceptual overview of the process, let's put what you learned into practice.
+
+We've built a complementary learning resource that is a companion to this comprehensive ZDM documentation. It's the https://www.datastax.com/dev/zdm[{zdm-product} Interactive Lab].
+
+* All you need is a browser and a GitHub account. 
+* There's nothing to install for the lab, which opens in a pre-configured GitPod environment. 
+* You'll learn about a full migration without leaving your browser!
+
+[NOTE]
+====
+To run the lab, all major browsers are supported, except Safari. For more, see the lab's https://www.datastax.com/dev/zdm[start page, window="_blank"].
+====
+
+We encourage you to explore this free hands-on interactive lab from {company} Academy. It's an excellent, detailed view of the migration process. The lab describes and demonstrates all the steps and automation performed to prepare for, and complete, a migration from any Cassandra/DSE/{astra_db} database to another Cassandra/DSE/{astra_db} database across clusters. 

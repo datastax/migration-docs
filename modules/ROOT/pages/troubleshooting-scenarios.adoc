@@ -1,0 +1,502 @@
+= Troubleshooting scenarios
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,troubleshooting
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+Refer the following troubleshooting scenarios for information about resolving common migration issues.
+Each section presents:
+
+* Symptoms
+* Cause
+* Solution or Workaround
+
+== Configuration changes are not being applied by the automation
+
+=== Symptoms
+
+You changed the values of some configuration variables in the automation and then rolled them out using the `rolling_update_zdm_proxy.yml` playbook, but these changes are not taking effect on your {zdm-proxy} instances.
+
+=== Cause
+
+The {zdm-proxy} configuration comprises a number of variables, but only a subset of these can be changed on an existing deployment in a rolling fashion.
+The variables that can be changed with a rolling update are listed xref:manage-proxy-instances.adoc#change-mutable-config-variable[here].
+
+All other configuration variables excluded from the list above are considered immutable and can only be changed by a redeployment.
+This is by design: immutable configuration variables should not be changed after finalizing the deployment prior to starting the migration, so allowing them to be changed through a rolling update would risk accidentally propagating some misconfiguration that could compromise the deployment's integrity.
+
+=== Solution or Workaround
+
+To change the value of configuration variables that are considered immutable, simply run the `deploy_zdm_proxy.yml` playbook again.
+This playbook can be run as many times as necessary and will just recreate the entire {zdm-proxy} deployment from scratch with the provided configuration.
+Please note that this does not happen in a rolling fashion: the existing {zdm-proxy} instances will be torn down all at the same time prior to being recreated, resulting in a brief window in which the whole {zdm-proxy} deployment will become unavailable.
+
+
+== Unsupported protocol version error on the client application
+
+=== Symptoms
+
+In the Java 4.x driver logs, the following issues can manifest during session initialization, or after initialization.
+
+[source,log]
+----
+[s0|/10.169.241.224:9042] Fatal error while initializing pool, forcing the node down (UnsupportedProtocolVersionException: [/10.169.241.224:9042] Host does not support protocol version DSE_V2)
+
+[s0|/10.169.241.24:9042] Fatal error while initializing pool, forcing the node down (UnsupportedProtocolVersionException: [/10.169.241.24:9042] Host does not support protocol version DSE_V2)
+
+[s0|/10.169.241.251:9042] Fatal error while initializing pool, forcing the node down (UnsupportedProtocolVersionException: [/10.169.241.251:9042] Host does not support protocol version DSE_V2)
+
+[s0] Failed to connect with protocol DSE_V1, retrying with V4
+
+[s0] Failed to connect with protocol DSE_V2, retrying with DSE_V1
+----
+
+=== Cause
+
+https://datastax-oss.atlassian.net/browse/JAVA-2905[JAVA-2905] is a driver bug that manifests itself in this way. It affects Java driver 4.x, and was fixed on the 4.10.0 release.
+
+=== Solution or Workaround
+
+If you are using spring boot and/or spring-data-cassandra then an upgrade of these dependencies will be necessary to a version that has the java driver fix.
+
+Alternatively, you can force the protocol version on the driver to the max supported version by both clusters.
+V4 is a good recommendation that usually fits all but if the user is migrating from DSE to DSE then DSE_V1 should be used for DSE 5.x and DSE_V2 should be used for DSE 6.x.
+
+To force the protocol version on the Java driver, check this section of the https://docs.datastax.com/en/developer/java-driver/3.11/manual/native_protocol/#controlling-the-protocol-version[driver manual, window="_blank"].
+We don't believe this issue affects Java driver 3.x, but here are the https://docs.datastax.com/en/developer/java-driver/3.11/manual/native_protocol/#controlling-the-protocol-version[instructions, window="_blank"] on how to force the version on 3.x, if necessary.
+
+== Protocol errors in the proxy logs but clients can connect successfully
+
+=== Symptoms
+
+{zdm-proxy} logs contain:
+
+[source,log]
+----
+{"log":"time=\"2022-10-01T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR] Protocol v5 detected while decoding a frame.
+Returning a protocol error to the client to force a downgrade: ERROR PROTOCOL ERROR (code=ErrorCode ProtocolError [0x0000000A],
+msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":"2022-07-20T12:02:12.379287735Z"}
+----
+
+=== Cause
+
+Protocol errors like these are a normal part of the handshake process where the protocol version is being negotiated.
+These protocol version downgrades happen when either the {zdm-proxy} or at least one of the clusters doesn't support the version requested by the client.
+
+V5 downgrades are enforced by the {zdm-proxy} but any other downgrade is requested by one of the clusters when they don't support the version that the client requested.
+The proxy supports V3, V4, DSE_V1 and DSE_V2.
+
+////
+ZDM-71 tracks a request to support v2.
+////
+
+=== Solution or Workaround
+
+These log messages are informative only (log level `DEBUG`).
+
+If you find one of these messages with a higher log level (especially `level=error`) then there might be a bug.
+At that point the issue will need to be investigated by the ZDM team.
+This log message with a log level of `ERROR` means that the protocol error occurred after the handshake, and this is a fatal unexpected error that results in a disconnect for that particular connection.
+
+== Error during proxy startup: `Invalid or unsupported protocol version: 3`
+
+=== Symptoms
+
+{zdm-proxy} logs contain:
+
+[source,log]
+----
+time="2022-10-01T19:58:15+01:00" level=info msg="Starting proxy..."
+time="2022-10-01T19:58:15+01:00" level=info msg="Parsed Topology Config: TopologyConfig{VirtualizationEnabled=false, Addresses=[127.0.0.1], Count=1, Index=0, NumTokens=8}"
+time="2022-10-01T19:58:15+01:00" level=info msg="Parsed Origin contact points: [127.0.0.1]"
+time="2022-10-01T19:58:15+01:00" level=info msg="Parsed Target contact points: [127.0.0.1]"
+time="2022-10-01T19:58:15+01:00" level=info msg="TLS was not configured for Origin"
+time="2022-10-01T19:58:15+01:00" level=info msg="TLS was not configured for Target"
+time="2022-10-01T19:58:15+01:00" level=info msg="[openTCPConnection] Opening connection to 127.0.0.1:9042"
+time="2022-10-01T19:58:15+01:00" level=info msg="[openTCPConnection] Successfully established connection with 127.0.0.1:9042"
+time="2022-10-01T19:58:15+01:00" level=debug msg="performing handshake"
+time="2022-10-01T19:58:15+01:00" level=error msg="cqlConn{conn: 127.0.0.1:9042}: handshake failed: expected AUTHENTICATE or READY, got ERROR PROTOCOL ERROR (code=ErrorCode ProtocolError [0x0000000A], msg=Invalid or unsupported protocol version: 3)"
+time="2022-10-01T19:58:15+01:00" level=warning msg="Error while initializing a new cql connection for the control connection of ORIGIN: failed to perform handshake: expected AUTHENTICATE or READY, got ERROR PROTOCOL ERROR (code=ErrorCode ProtocolError [0x0000000A], msg=Invalid or unsupported protocol version: 3)"
+time="2022-10-01T19:58:15+01:00" level=debug msg="Shutting down request loop on cqlConn{conn: 127.0.0.1:9042}"
+time="2022-10-01T19:58:15+01:00" level=debug msg="Shutting down response loop on cqlConn{conn: 127.0.0.1:9042}."
+time="2022-10-01T19:58:15+01:00" level=debug msg="Shutting down event loop on cqlConn{conn: 127.0.0.1:9042}."
+time="2022-10-01T19:58:15+01:00" level=error msg="Couldn't start proxy: failed to initialize origin control connection: could not open control connection to ORIGIN, tried endpoints: [127.0.0.1:9042]."
+time="2022-10-01T19:58:15+01:00" level=info msg="Initiating proxy shutdown..."
+time="2022-10-01T19:58:15+01:00" level=debug msg="Requesting shutdown of the client listener..."
+time="2022-10-01T19:58:15+01:00" level=debug msg="Requesting shutdown of the client handlers..."
+time="2022-10-01T19:58:15+01:00" level=debug msg="Waiting until all client handlers are done..."
+time="2022-10-01T19:58:15+01:00" level=debug msg="Requesting shutdown of the control connections..."
+time="2022-10-01T19:58:15+01:00" level=debug msg="Waiting until control connections done..."
+time="2022-10-01T19:58:15+01:00" level=debug msg="Shutting down the schedulers and metrics handler..."
+time="2022-10-01T19:58:15+01:00" level=info msg="Proxy shutdown complete."
+time="2022-10-01T19:58:15+01:00" level=error msg="Couldn't start proxy, retrying in 2.229151525s: failed to initialize origin control connection: could not open control connection to ORIGIN, tried endpoints: [127.0.0.1:9042]."
+----
+
+=== Cause
+
+The control connections of the {zdm-proxy} don't perform protocol version negotiation, they only attempt to use protocol version 3.
+If one of the origin clusters doesn't support at least V3 (e.g. Cassandra 2.0, DSE 4.6), then ZDM cannot be used for that migration at the moment.
+We plan to introduce support for Cassandra 2.0 and DSE 4.6 very soon.
+
+=== Solution or Workaround
+
+None.
+
+== Authentication errors
+
+=== Symptoms
+
+[source,log]
+----
+{"log":"\u001b[33mWARN\u001b[0m[0110] Secondary (TARGET) handshake failed with an auth error, returning ERROR AUTHENTICATION ERROR (code=ErrorCode AuthenticationError [0x00000100], msg=We recently improved your database security. To find out more and reconnect, see https://docs.datastax.com/en/astra/docs/manage-application-tokens.html) to client. \r\n","stream":"stdout","time":"2022-09-06T18:31:31.348472345Z"}
+----
+
+=== Cause
+
+Credentials are incorrect or have insufficient permissions.
+
+There are three sets of credentials in play with ZDM:
+
+* Target: credentials that you set in the proxy configuration through the `ZDM_TARGET_USERNAME` and `ZDM_TARGET_PASSWORD` settings.
+
+* Origin: credentials that you set in the proxy configuration through the `ZDM_ORIGIN_USERNAME` and `ZDM_ORIGIN_PASSWORD` settings.
+
+* Client: credentials that the client application sends to the proxy during the connection handshake, these are set in the application configuration, not the proxy configuration.
+
+This error means that at least one of these three sets of credentials is incorrect or has insufficient permissions.
+
+=== Solution or Workaround
+
+If the authentication error is preventing the proxy from starting then it's either the Origin or Target credentials that are incorrect or have insufficient permissions.
+The log message shows whether it is the Target or Origin handshake that is failing.
+
+If the proxy is able to start up -- that is, this message can be seen in the logs:
+
+`Proxy started. Waiting for SIGINT/SIGTERM to shutdown.`
+
+then the authentication error is happening when a client application tries to open a connection to the proxy.
+In this case, the issue is with the Client credentials so the application itself is using invalid credentials (incorrect username/password or insufficient permissions).
+
+Note that the proxy startup message has log level `INFO` so if the configured log level on the proxy is `warning` or `error`,  you will have to rely on other ways to know whether the {zdm-proxy} started correctly.
+You can check if the docker container is running (or process if docker isn't being used) or if there is a log message similar to `Error launching proxy`.
+
+
+== The {zdm-proxy} listens on a custom port, and all applications are able to connect to one proxy instance only
+
+=== Symptoms
+
+The {zdm-proxy} is listening on a custom port (not 9042) and:
+
+* The Grafana dashboard shows only one proxy instance receiving all the connections from the application.
+* Only one proxy instance has log messages such as `level=info msg="Accepted connection from 10.4.77.210:39458"`.
+
+=== Cause
+
+The application is specifying the custom port as part of the contact points using the format
+`<proxy_ip_address>:<proxy_custom_port>`.
+
+For example, using the Java driver, if the {zdm-proxy} instances were listening on port 14035, this would look like:
+
+`.addContactPoints("172.18.10.36:14035", "172.18.11.48:14035", "172.18.12.61:14035")`
+
+The contact point is used as the first point of contact to the cluster, but the driver discovers the rest of the nodes via CQL queries.
+However, this discovery process doesn't discover the ports, just the addresses so the driver uses the addresses it discovers with the port that is configured at startup.
+
+As a result, port 14035 will only be used for the contact point initially discovered, while for all other nodes the driver will attempt to use the default 9042 port.
+
+=== Solution or Workaround
+
+In the application, ensure that the custom port is explicitly indicated using the `.withPort(<customPort>)` API. In the above example:
+
+[source,java]
+----
+.addContactPoints("172.18.10.36", "172.18.11.48", "172.18.12.61")
+.withPort(14035)
+----
+
+
+== Syntax error "no viable alternative at input 'CALL'" in proxy logs
+
+=== Symptoms
+
+{zdm-proxy} logs contain:
+
+[source,log]
+----
+{"log":"time=\"2022-10-01T13:10:47Z\" level=debug msg=\"Recording TARGET-CONNECTOR other error:
+ERROR SYNTAX ERROR (code=ErrorCode SyntaxError [0x00002000], msg=line 1:0 no viable alternative
+at input 'CALL' ([CALL]...))\"\n","stream":"stderr","time":"2022-07-20T13:10:47.322882877Z"}
+----
+
+=== Cause
+
+The log message indicates that the server doesn't recognize the word “CALL” in the query string which most likely means that it is an RPC (remote procedure call).
+From the proxy logs alone, it is not possible to see what method is being called by the query but it's very likely the RPC that the drivers use to send DSE Insights data to the server.
+
+Most {company} drivers have DSE Insights reporting enabled by default when they detect a server version that supports it (regardless of whether the feature is enabled on the server side or not).
+The driver might also have it enabled for Astra DB depending on what server version Astra DB is returning for queries involving the `system.local` and `system.peers` tables.
+
+=== Solution or Workaround
+
+These log messages are harmless but if your need to get rid of them, you can disable the DSE Insights driver feature through the driver configuration.
+Refer to https://github.com/datastax/java-driver/blob/65d2c19c401175dcc6c370560dd5f783d05b05b9/core/src/main/resources/reference.conf#L1328[this property, window="_blank"] for Java driver 4.x.
+
+
+
+== Default Grafana credentials don't work
+
+=== Symptoms
+
+Consider a case where you deploy the metrics component of our {zdm-automation}, a Grafana instance is deployed but you cannot login using the usual default `admin/admin` credentials.
+
+=== Cause
+
+The {zdm-automation} specifies a custom set of credentials instead of relying on the `admin/admin` ones that are typically the default for Grafana deployments.
+
+=== Solution or Workaround
+
+Check the credentials that are being used by looking up the `vars/zdm_monitoring_config.yml` file on the {zdm-automation} directory.
+These credentials can also be modified before deploying the metrics stack.
+
+== Proxy starts but client cannot connect (connection timeout/closed)
+
+=== Symptoms
+
+{zdm-proxy} log contains:
+
+[source]
+----
+INFO[0000] [openTCPConnection] Opening connection to 10.0.63.163:9042
+INFO[0000] [openTCPConnection] Successfully established connection with 10.0.63.163:9042
+INFO[0000] [openTLSConnection] Opening TLS connection to 10.0.63.163:9042 using underlying TCP connection
+INFO[0000] [openTLSConnection] Successfully established connection with 10.0.63.163:9042
+INFO[0000] Successfully opened control connection to ORIGIN using endpoint 10.0.63.163:9042.
+INFO[0000] [openTCPConnection] Opening connection to 5bc479c2-c3d0-45be-bfba-25388f2caff7-us-east-1.db.astra.datastax.com:29042
+INFO[0000] [openTCPConnection] Successfully established connection with 54.84.75.118:29042
+INFO[0000] [openTLSConnection] Opening TLS connection to 211d66bf-de8d-48ac-a25b-bd57d504bd7c using underlying TCP connection
+INFO[0000] [openTLSConnection] Successfully established connection with 211d66bf-de8d-48ac-a25b-bd57d504bd7
+INFO[0000] Successfully opened control connection to TARGET using endpoint 5bc479c2-c3d0-45be-bfba-25388f2caff7-us-east-1.db.astra.datastax.com:29042-211d66bf-de8d-48ac-a25b-bd57d504bd7c.
+INFO[0000] Proxy connected and ready to accept queries on 0.0.0.0:9042
+INFO[0000] Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
+INFO[0043] Accepted connection from 10.0.62.255:33808
+INFO[0043] [ORIGIN-CONNECTOR] Opening request connection to ORIGIN (10.0.63.20:9042).
+ERRO[0043] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, retrying in 100ms...
+ERRO[0043] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, retrying in 200ms...
+ERRO[0043] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, retrying in 400ms...
+ERRO[0043] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, retrying in 800ms...
+ERRO[0044] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, retrying in 1.6s...
+ERRO[0046] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, retrying in 3.2s...
+ERRO[0049] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, retrying in 6.4s...
+ERRO[0056] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, retrying in 10s...
+ERRO[0066] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, retrying in 10s...
+ERRO[0076] Client Handler could not be created: ORIGIN-CONNECTOR context timed out or cancelled while opening connection to ORIGIN: context deadline exceeded
+----
+
+=== Cause
+
+{zdm-proxy} has connectivity only to a subset of the nodes.
+
+The control connection (during {zdm-proxy} startup) cycles through the nodes until it finds one that can be connected to.
+For client connections, each proxy instance cycles through its "assigned nodes" only.
+_(The "assigned nodes" are a different subset of the cluster nodes for each proxy instance, generally non-overlapping between proxy instances so as to avoid any interference with the load balancing already in place at client-side driver level.
+The assigned nodes are not necessarily contact points: even discovered nodes undergo assignment to proxy instances.)_
+
+In the example above, the {zdm-proxy} doesn't have connectivity to 10.0.63.20, which was chosen as the origin node for the incoming client connection, but it was able to connect to 10.0.63.163 during startup.
+
+=== Solution or Workaround
+
+Ensure that network connectivity exists and is stable between the {zdm-proxy} instances and all Cassandra / DSE nodes of the local datacenter.
+
+== Client application driver takes too long to reconnect to a proxy instance
+
+=== Symptoms
+
+After a {zdm-proxy} has been unavailable for some time and it gets back up, the client application takes too long to reconnect.
+
+There should never be a reason to stop a {zdm-proxy} instance other than a configuration change but maybe the proxy crashed or the user tried to do a configuration change and took a long time to get the {zdm-proxy} back up.
+
+=== Cause
+
+The {zdm-proxy} does not send topology events to the client applications so the time it takes for the driver to reconnect to a {zdm-proxy} instance is determined by the reconnection policy.
+
+=== Solution or Workaround
+
+Restart the client application to force an immediate reconnect.
+
+If you expect {zdm-proxy} instances to go down frequently, change the reconnection policy on the driver so that the interval between reconnection attempts has a shorter limit.
+
+== Error with Astra DevOps API when using the {zdm-automation}
+
+=== Symptoms
+
+{zdm-automation}'s logs:
+
+[source,log]
+----
+fatal: [10.255.13.6]: FAILED! => {"changed": false, "elapsed": 0, "msg": "Status code was -1 and not [200]:
+Connection failure: Remote end closed connection without response", "redirected": false, "status": -1, "url":
+"https://api.astra.datastax.com/v2/databases/REDACTED/secureBundleURL"}
+----
+
+=== Cause
+
+The Astra DevOps API is likely temporarily unavailable.
+
+=== Solution or Workaround
+
+Download the Astra DB Secure Connect Bundle (SCB) manually and provide its path to the {zdm-automation} as explained xref:deploy-proxy-monitoring.adoc#_core_configuration[here].
+For information about the SCB, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[working with Secure Connect Bundle, window="_blank"].
+
+== Metadata service (Astra) returned not successful status code 4xx or 5xx
+
+=== Symptoms
+
+The {zdm-proxy} doesn't start and the following appears on the proxy logs:
+
+[source,log]
+----
+Couldn't start proxy: error initializing the connection configuration or control connection for Target:
+metadata service (Astra) returned not successful status code
+----
+
+=== Cause
+
+There are two possible causes for this:
+
+1. The credentials that the {zdm-proxy} is using for Astra DB don't have sufficient permissions.
+2. The Astra database is hibernated.
+
+=== Solution or Workaround
+
+Start by opening Astra Portal and checking the `Status` of your database.
+If it is `Hibernated`, click the “Resume” button and wait for it to become `Active`.
+If it is `Active` already, then it is likely an issue with permissions.
+
+We recommend starting with a token that has the Database Administrator role in Astra DB to confirm that it is a permissions issue.
+Refer to https://docs.datastax.com/en/astra/astra-db-vector/administration/manage-database-access.html[Manage user permissions, window="_blank"].
+
+[[_async_read_timeouts_stream_id_map_exhausted]]
+== Async read timeouts / stream id map exhausted
+
+=== Symptoms
+
+Dual reads are enabled and the following messages are found in the {zdm-proxy} logs:
+
+[source,log]
+----
+{"log":"\u001b[33mWARN\u001b[0m[430352] Async Request (OpCode EXECUTE [0x0A]) timed out after 10000 ms. \r\n","stream":"stdout","time":"2022-10-03T17:29:42.548941854Z"}
+
+{"log":"\u001b[33mWARN\u001b[0m[430368] Could not find async request context for stream id 331 received from async connector. It either timed out or a protocol error occurred. \r\n","stream":"stdout","time":"2022-10-03T17:29:58.378080933Z"}
+
+{"log":"\u001b[33mWARN\u001b[0m[431533] Could not send async request due to an error while storing the request state: stream id map ran out of stream ids: channel was empty. \r\n","stream":"stdout","time":"2022-10-03T17:49:23.786335428Z"}
+----
+
+=== Cause
+
+The last log message is logged when the async connection runs out of stream ids.
+The async connection is a connection dedicated to the async reads (asynchronous dual reads feature).
+This can be caused by timeouts (first log message) or the connection not being able to keep up with the load.
+
+If the log files are being spammed with these messages then it is likely that an outage occurred which caused all responses to arrive after requests timed out (second log message).
+In this case the async connection might not be able to recover.
+
+=== Solution or Workaround
+
+Keep in mind that any errors in the async request path (dual reads) will not affect the client application so these log messages might be useful to predict what may happen when the reads are switched over to the TARGET cluster but async read errors/warnings by themselves do not cause any impact to the client.
+
+Starting in version 2.1.0, you can now tune the maximum number of stream ids available per connection, which by default is 2048.
+You can increase it to match your driver configuration through the xref:manage-proxy-instances.adoc#zdm_proxy_max_stream_ids[zdm_proxy_max_stream_ids] property.
+
+If these errors are being constantly written to the log files (for minutes or even hours) then it is likely that only an application OR {zdm-proxy} restart will fix it.
+If you find an issue like this please submit an https://github.com/datastax/zdm-proxy/issues[Issue, window="_blank"] in our GitHub repo.
+
+== Client application closed connection errors every 10 minutes when migrating to Astra DB
+
+[NOTE]
+====
+This issue is fixed in {zdm-proxy} 2.1.0. See the Fix section below.
+====
+
+=== Symptoms
+
+Every 10 minutes a message is logged in the {zdm-proxy} logs showing a disconnect that was caused by Astra DB.
+
+[source,log]
+----
+{"log":"\u001b[36mINFO\u001b[0m[426871] [TARGET-CONNECTOR] REDACTED disconnected \r\n","stream":"stdout","time":"2022-10-01T16:31:41.48598498Z"}
+----
+
+=== Cause
+
+Astra DB terminates idle connections after 10 minutes of inactivity.
+If a client application is only sending reads through a connection then the Target (i.e. Astra in this case) connection will not get any traffic because ZDM forwards all reads to the Origin connection.
+
+=== Solution or Workaround
+
+This issue has been fixed in {zdm-proxy} 2.1.0. 
+We encourage you to upgrade to that version or greater. 
+By default, {zdm-proxy} now sends heartbeats after 30 seconds of inactivity on a cluster connection, to keep it alive. 
+You can tune the heartbeat interval with the Ansible configuration variable `heartbeat_insterval_ms`, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you do not use the {zdm-automation}.
+
+== Performance degradation with ZDM
+
+=== Symptoms
+
+Consider a case where a user runs separate benchmarks against:
+
+* Astra DB directly
+* Origin directly
+* ZDM (with Astra DB and Origin)
+
+The results of these tests show latency/throughput values are worse with ZDM than when connecting to Astra DB or Origin directly.
+
+=== Cause
+
+ZDM will always add additional latency which, depending on the nature of the test, will also result in a lower throughput.
+Whether this performance hit is expected or not depends on the difference between the ZDM test results and the test results with the cluster that performed the worst.
+
+Writes in ZDM require an `ACK` from both clusters while reads only require the result from the Origin cluster (or target if the proxy is set up to route reads to the target cluster).
+This means that if Origin has better performance than Target then ZDM will inevitably have a worse performance for writes.
+
+From our testing benchmarks, a performance degradation of up to 2x latency is not unheard of even without external factors adding more latency, but it is still worth checking some things that might add additional latency like whether the proxy is deployed on the same Availability Zone (AZ) as the Origin cluster or application instances.
+
+Simple statements and batch statements are things that will make the proxy add additional latency compared to normal prepared statements.
+Simple statements should be discouraged especially with the {zdm-proxy} because currently the proxy takes a considerable amount of time just parsing the queries and with prepared statements the proxy only has to parse them once.
+
+=== Solution or Workaround
+
+If you are using simple statements, consider using prepared statements as the best first step.
+
+Increasing the number of proxies might help, but only if the VMs resources (CPU, RAM or network IO) are near capacity.
+The {zdm-proxy} doesn't use a lot of RAM, but it uses a lot of CPU and network IO.
+
+Deploying the proxy instances on VMs with faster CPUs and faster network IO might help, but only your own tests will reveal  whether it helps, because it depends on the workload type and details about your environment such as network/VPC configurations, hardware, and so on.
+
+== `InsightsRpc` related permissions errors
+
+=== Symptoms
+
+{zdm-proxy} logs contain:
+
+[source,log]
+----
+time="2023-05-05T19:14:31Z" level=debug msg="Recording ORIGIN-CONNECTOR other error: ERROR UNAUTHORIZED (code=ErrorCode Unauthorized [0x00002100], msg=User my_user has no EXECUTE permission on <rpc method InsightsRpc.reportInsight> or any of its parents)"
+time="2023-05-05T19:14:31Z" level=debug msg="Recording TARGET-CONNECTOR other error: ERROR SERVER ERROR (code=ErrorCode ServerError [0x00000000], msg=Unexpected persistence error: Unable to authorize statement com.datastax.bdp.cassandra.cql3.RpcCallStatement)"
+----
+
+=== Cause
+
+This could be the case if the origin (DSE) cluster has Metrics Collector enabled to report metrics for {company} drivers and `my_user` does not have the required permissions.
+{zdm-proxy} simply passes through these.
+
+=== Solution or Workaround
+
+There are two options to get this fixed.
+
+==== Option 1: Disable DSE Metrics Collector
+
+* On the origin DSE cluster, run `dsetool insights_config --mode DISABLED`
+* Run `dsetool insights_config --show_config` and ensure the `mode` has a value of `DISABLED`
+
+==== Option 2: Use this option if disabling metrics collector is not an option
+
+* Using a superuser role, grant the appropriate permissions to `my_user` role by running `GRANT EXECUTE ON REMOTE OBJECT InsightsRpc TO my_user;`

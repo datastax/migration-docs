@@ -1,0 +1,186 @@
+= Introduction to {zdm-product}
+:navtitle: Introduction
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,introduction
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+Enterprises today depend on the ability to reliably migrate mission-critical client applications and data to cloud environments with zero downtime during the migration.
+
+At {company}, we've developed a set of thoroughly-tested self-service tools, automation scripts, examples, and documented procedures that walk you through well-defined migration phases.
+
+We call this product suite {company} {zdm-product} ({zdm-shortproduct}).
+
+{zdm-shortproduct} provides a simple and reliable way for you to migrate applications from any CQL-based cluster (https://cassandra.apache.org/_/index.html[Apache Cassandra&reg;], https://www.datastax.com/products/datastax-enterprise[DataStax Enterprise (DSE)], https://www.datastax.com/products/datastax-astra[{astra_db}], or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
+
+* You can move your application to {astra_db}, DSE, or Cassandra with no downtime and with minimal configuration changes.
+* Your clusters will be kept in sync at all times by a dual-write logic configuration.
+* You can xref:rollback.adoc[rollback] at any point, for complete peace of mind.
+
+include::partial$note-downtime.adoc[]
+
+[TIP]
+====
+The {zdm-product} process requires you to be able to perform rolling restarts of your client applications during the migration.
+
+This is standard practice for client applications that are deployed over multiple instances and is a widely used approach to roll out releases and configuration changes.
+====
+
+== Supported releases
+
+include::partial$supported-releases.adoc[]
+
+== Migration scenarios
+
+include::partial$migration-scenarios.adoc[]
+
+[TIP]
+====
+An important migration prerequisite is that you already have the matching schema on Target.
+A CQL statement that your client application sends to {zdm-proxy} must be able to succeed on both Origin and Target clusters.
+This means that any keyspace that your client application uses must exist on both Origin and Target with the same name.
+Table names must also match.
+For more, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
+====
+
+== Migration phases
+
+First, a couple of key terms used throughout the ZDM documentation and software components:
+
+* **Origin:** This cluster is your existing Cassandra-based environment, whether it's open-source Apache Cassandra, DSE, or {astra_db} Classic.
+
+* **Target:** This cluster is the new environment to which you want to migrate client applications and data.
+
+For additional terms, see the xref:glossary.adoc[glossary].
+
+=== Migration diagram
+
+Discover the migration concepts, software components, and sequence of operations.
+
+Your migration project occurs through a sequence of phases, which matches the structure of the {product} documentation.
+
+The highlighted components in each phase emphasize how your client applications perform read and write operations on  your Origin and Target clusters.
+
+==== Pre-migration client application operations
+
+Let's look at a pre-migration from a high-level view.
+At this point, your client applications are performing read/write operations with an existing CQL-compatible database: Apache Cassandra, DSE, or Astra DB.
+
+image:pre-migration0ra9.png["Pre-migration environment."]
+
+'''
+
+==== Phase 1: Deploy ZDM Proxy and connect client applications
+
+In this first phase, deploy the ZDM Proxy instances and connect client applications to the proxies.
+This phase activates the dual-write logic.
+Writes are bifurcated (sent to both Origin and Target), while reads are executed on Origin only.
+
+image:migration-phase1ra9.png["Migration Phase 1."]
+
+'''
+
+==== Phase 2: Migrate data
+
+In this phase, migrate existing data using Cassandra Data Migrator and/or DSBulk Migrator.
+Validate that the migrated data is correct, while continuing to perform dual writes.
+
+image:migration-phase2ra9.png["Migration Phase 2."]
+
+'''
+
+==== Phase 3: Enable asynchronous dual reads
+
+In this phase, you can optionally enable asynchronous dual reads.
+The idea is to test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target.
+
+image:migration-phase3ra9.png["Migration Phase 3."]
+
+'''
+
+==== Phase 4: Route reads to Target
+
+In this phase, read routing on the ZDM Proxy is switched to Target so that all reads are executed on it, while writes are still sent to both clusters.
+In other words, Target becomes the primary cluster.
+
+image:migration-phase4ra9.png["Migration Phase 4."]
+
+'''
+
+==== Phase 5: Connect directly to Target
+
+In this phase, move your client applications off the ZDM Proxy and connect the apps directly to Target.
+Once that happens, the migration is complete.
+
+image:migration-phase5ra9.png["Migration Phase 5."]
+
+////
+=== Migration interactive diagram
+
+Click the *Start* button on the interactive diagram below to begin a walkthrough of the migration phases.
+Click the components to open a larger view.
+
+[.swiper]
+====
+[.slide]
+--
+.Walk through the illustrated migration phases
+Discover the migration concepts, software components, and sequence of operations.
+
+image:migration-introduction9.png["Introductory page prompts you to click the Start button to begin the graphical presentation."]
+--
+
+[.slide]
+--
+.Phase 0: Before your migration starts
+Let's look at a pre-migration, high-level view. At this point, your client applications are performing read/write operations with an existing CQL-compatible database. That is, Apache Cassandra, DSE, or Astra DB.
+
+image:pre-migration0ra9.png["Illustrates a pre-migration environment, as summarized in the text. Back and Next buttons are available for navigation within the graphic."]
+--
+
+[.slide]
+--
+.Phase 1: Deploy ZDM Proxy and connect client applications
+In this first phase, deploy the ZDM Proxy instances and connect client applications to the proxies. This phase activates the dual-write logic. Writes are bifurcated (sent to both Origin and Target), while reads are executed on Origin only.
+
+image:migration-phase1ra9.png["Illustrates migration Phase 1, as summarized in the text. Back and Next buttons are available for navigation within the graphic."]
+--
+
+[.slide]
+--
+.Phase 2: Migrate data
+In this phase, migrate existing data using Cassandra Data Migrator and/or DSBulk Migrator. Validate that the migrated data is correct, while continuing to perform dual writes.
+
+image:migration-phase2ra9.png["Illustrates migration Phase 2, as summarized in the text. Back and Next buttons are available for navigation within the graphic."]
+--
+
+[.slide]
+--
+.Phase 3: Enable asynchronous dual reads
+In this phase, you can optionally enable asynchronous dual reads. The idea is to test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target.
+
+image:migration-phase3ra9.png["Illustrates migration Phase 3, as summarized in the text. Back and Next buttons are available for navigation within the graphic."]
+--
+
+[.slide]
+--
+.Phase 4: Route reads to Target
+In this phase, read routing on the ZDM Proxy is switched to Target so that all reads are executed on it, while writes are still sent to both clusters. In other words, Target becomes the primary cluster.
+
+image:migration-phase4ra9.png["Illustrates migration Phase 4, as summarized in the text. Back and Next buttons are available for navigation within the graphic."]
+--
+
+[.slide]
+--
+.Phase 5: Connect directly to Target
+In this phase, move your client applications off the ZDM Proxy and connect the apps directly to Target. Once that happens, the migration is complete.
+
+image:migration-phase5ra9.png["Illustrates migration Phase 5, as summarized in the text. Back and Restart buttons are available for navigation within the graphic."]
+--
+====
+////
+
+== A fun way to learn: {zdm-product} Interactive Lab
+
+include::partial$interactive-lab.adoc[]
+
+The interactive lab spans the pre-migration prerequisites and each of the five key migration phases illustrated above.

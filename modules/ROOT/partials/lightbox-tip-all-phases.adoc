@@ -1,0 +1,7 @@
+ 
+[TIP]
+====
+Here's an illustrated view of all the migration phases. 
+Click the components to open a larger view. 
+Click again to return to the original view. 
+====
