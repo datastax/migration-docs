@@ -14,9 +14,13 @@
 ** xref:connect-clients-to-proxy.adoc[]
 ** xref:metrics.adoc[]
 ** xref:manage-proxy-instances.adoc[]
+.{cstar-data-migrator}
 //phase 2
 * xref:migrate-and-validate-data.adoc[]
 ** xref:cassandra-data-migrator.adoc[]
+* xref:cdm-steps.adoc[]
+* xref:cdm-parameteres.adoc[]
+.{dsbulk-migrator}
 ** xref:dsbulk-migrator.adoc[]
 //phase 3
 * xref:enable-async-dual-reads.adoc[]
