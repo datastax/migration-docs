@@ -3,7 +3,7 @@
 Each parameter below offers a different connection. Review each option to determine what is best for your organization. 
 
 [[cdm-origin-schema-params]]
-=== Origin schema parameters
+== Origin schema parameters
 
 [cols="3,1,5a"]
 |===
@@ -58,7 +58,7 @@ Instead, {cstar-data-migrator} finds the field with the highest TTL, and the fie
 ====
 
 [[cdm-target-schema-params]]
-=== Target schema parameter
+== Target schema parameter
 
 [cols="3,1,2"]
 |===
@@ -74,7 +74,7 @@ Table must exist in Target.
 
 
 [[cdm-auto-correction-params]]
-=== Auto-correction parameters
+== Auto-correction parameters
 
 Auto-correction parameters allow {cstar-data-migrator} to correct data differences found between Origin and Target when you run the `DiffData` program.
 Typically, these are run disabled (for "what if" migration testing), which will generate a list of data discrepancies.
@@ -116,7 +116,7 @@ Similarly, if exceptions occur while migrating or validating, partition ranges w
 
 
 [[cdm-performance-operations-params]]
-=== Performance and operations parameters
+== Performance and operations parameters
 
 Performance and operations parameters that can affect migration throughput, error handling, and similar concerns.
 
@@ -180,7 +180,7 @@ Recommendation: set this parameter to a non-zero value **only when not doing** a
 
 
 [[cdm-transformation-params]]
-=== Transformation parameters
+== Transformation parameters
 
 Parameters to perform schema transformations between Origin and Target.
 
@@ -242,7 +242,7 @@ Must be in `ZoneRulesProvider.getAvailableZoneIds()`.
 
 
 [[cdm-cassandra-filter-params]]
-=== Cassandra filter parameters
+== Cassandra filter parameters
 
 Cassandra filters are applied on the coordinator node.
 Note that, depending on the filter, the coordinator node may need to do a lot more work than is normal, notably because {cstar-data-migrator} specifies `ALLOW FILTERING`.
@@ -271,7 +271,7 @@ Upper partition bound (inclusive).
 
 
 [[cdm-java-filter-params]]
-=== Java filter parameters
+== Java filter parameters
 
 Java filters are applied on the client node.
 Data must be pulled from the Origin cluster and then filtered.
@@ -320,7 +320,7 @@ Whitespace on the ends of `spark.cdm.filter.java.column.value` will be trimmed.
 
 
 [[cdm-constant-column-feature-params]]
-=== Constant column feature parameters
+== Constant column feature parameters
 
 The constant columns feature allows you to add constant columns to the target table. 
 If used, the `spark.cdm.feature.constantColumns.names`, `spark.cdm.feature.constantColumns.types`, and `spark.cdm.feature.constantColumns.values` lists must all be the same length. 
@@ -353,7 +353,7 @@ Examples: `'abcd'` for a string; `1234` for an int, and so on.
 
 
 [[cdm-explode-map-feature-params]]
-=== Explode map feature parameters
+== Explode map feature parameters
 
 The explode map feature allows you convert an Origin table Map into multiple Target table records. 
 
@@ -377,7 +377,7 @@ This key must be present on the Target primary key `spark.cdm.schema.target.colu
 
 
 [[cdm-guardrail-feature-params]]
-=== Guardrail feature parameter
+== Guardrail feature parameter
 
 The guardrail feature manages records that exceed guardrail checks. 
 The Guardrail job will generate a report; other jobs will skip records that exceed the guardrail limit.
@@ -398,7 +398,7 @@ Note this is kB (base 10), not kiB (base 2).
 
 
 [[cdm-tls-ssl-connection-params]]
-=== TLS (SSL) connection parameters
+== TLS (SSL) connection parameters
 
 TLS (SSL) connection parameters, if configured, for Origin and Target. 
 Note that a secure connect bundle (SCB) embeds these details. 
