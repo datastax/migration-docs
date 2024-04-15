@@ -1,4 +1,4 @@
-= Introduction to {zdm-product}
+= Introduction to data migration
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,introduction
 //ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 //ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
