@@ -1,0 +1,87 @@
+= Phase 3: Enable asynchronous dual reads
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,async-reads
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+In this phase, you can optionally enable asynchronous dual reads.
+The idea is to test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target.
+
+//include::partial$lightbox-tip.adoc[]
+
+image::{imagesprefix}migration-phase3ra.png[Phase 3 diagram shows optional step enabling async dual reads to test performance of Target.]
+
+//For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
+
+[TIP]
+====
+As you test the performance on Target, be sure to examine the async read metrics.
+As noted in the xref:#_validating_performance_and_error_rate[section] below, you can learn more in xref:metrics.adoc#_asynchronous_read_requests_metrics[Asynchronous read requests metrics].
+====
+
+== Steps
+
+The steps consist of changing the `read_mode` configuration variable in `vars/zdm_proxy_core_config.yml` from `PRIMARY_ONLY` (the default) to `DUAL_ASYNC_ON_SECONDARY`. 
+
+Example:
+
+[source,yml]
+----
+read_mode: DUAL_ASYNC_ON_SECONDARY
+----
+
+Before making the change, you should still have Origin as the primary cluster, which is the default:
+
+[source,yml]
+----
+primary_cluster: ORIGIN # or empty
+----
+
+To apply this change, run the `rolling_update_zdm_proxy.yml` playbook as explained xref:manage-proxy-instances.adoc#change-mutable-config-variable[here].
+
+[NOTE]
+====
+This optional phase introduces an additional check to make sure that Target can handle the load without timeouts or unacceptable latencies.
+You would typically perform this step once you have migrated all the existing data from Origin and completed all validation checks and reconciliation, if necessary.
+====
+
+== Asynchronous Dual Reads mode
+
+When using the {zdm-proxy}, all writes are synchronously sent to both Origin and Target.
+Reads operate differently: with the default read mode, reads are only sent to the primary cluster (Origin by default).
+
+Before changing the read routing so that reads are routed to Target (phase 4), you may want to temporarily send the reads to both clusters, to make sure that Target can handle the full workload of reads and writes.
+
+If you set the proxy's read mode configuration variable (`read_mode`) to `DUAL_ASYNC_ON_SECONDARY`, then asynchronous dual reads will be enabled.
+That change will result in reads being additionally sent to the secondary cluster.
+The proxy will return the read response to the client application as soon as the primary cluster's response arrives.
+
+The secondary cluster's response will only be used to track metrics.
+There will be no impact to the client application if the read fails on the secondary cluster, or if the read performance on the secondary cluster is degraded.
+Therefore, this feature can be used as a safer way to test the full workload on Target before making the switch to set Target as the primary cluster (phase 4).
+
+[NOTE]
+====
+In some cases the additional read requests can cause the write requests to fail or timeout on that cluster.
+This means that, while this feature provides a way to route read requests to Target with a lower chance of having impact on the client application, it doesn't completely eliminate that chance.
+====
+
+[[_validating_performance_and_error_rate]]
+== Validating performance and error rate
+
+Because the client application is not impacted by these asynchronous reads, the only way to measure the performance and error rate of these asynchronous reads are:
+
+* Check the metrics of the cluster itself
+* Check the asynchronous reads section of the {zdm-proxy} metrics
+
+In the {zdm-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads where you can see latency percentiles, error rates, and some other metrics specific to these requests. 
+
+For more, see xref:metrics.adoc#_asynchronous_read_requests_metrics[Asynchronous read requests metrics].
+
+== Reminder to switch off async dual reads
+
+[TIP]
+====
+Once you are satisfied that your Target cluster is ready and tuned appropriately to handle the production read load, you can decide to switch your sync reads to Target.
+At this point, be sure to also disable async dual reads by reverting `read_mode` in `vars/zdm_proxy_core_config.yml` to `PRIMARY_ONLY`.
+This step is  explained in more detail in the xref:change-read-routing.adoc[next topic].
+====

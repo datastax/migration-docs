@@ -1,0 +1,31 @@
+There are many reasons why you may decide to migrate your data and client applications from one cluster to another, for example:
+
+* Moving to a different type of CQL database, for example an on-demand cloud-based proposition such as {astra_db}.
+
+* Upgrading a cluster to a newer version, or newer infrastructure, in as little as one step while leaving your existing cluster untouched throughout the process.
+
+* Moving one or more client applications out of a shared cluster and onto a dedicated one, in order to manage and configure each cluster independently.
+
+* Consolidating client applications, which may be currently running on separate clusters, onto a shared one in order to reduce overall database footprint and maintenance overhead.
+
+Here are just a few examples of migration scenarios that are supported when moving from one type of CQL-based database to another:
+
+* From an existing self-managed Cassandra or DSE cluster to cloud-native {astra_db}. For example:
+
+** Cassandra 2.1.6+, 3.11.x, 4.0.x, or 4.1.x to {astra_db}.
+
+** DSE 4.7.1+, 4.8.x, 5.1.x, 6.7.x or 6.8.x to {astra_db}.
+
+* From an existing Cassandra or DSE cluster to another Cassandra or DSE cluster. For example:
+
+** Cassandra 2.1.6+ or 3.11.x to Cassandra 4.0.x or 4.1.x.
+
+** DSE 4.7.1+, 4.8.x, 5.1.x or 6.7.x to DSE 6.8.x.
+
+** Cassandra 2.1.6+, 3.11.x, 4.0.x, or 4.1.x to DSE 6.8.x.
+
+** DSE 4.7.1+ or 4.8.x to Cassandra 4.0.x or 4.1.x.
+
+* From https://docs.datastax.com/en/astra-classic/docs[{astra_db} Classic] to https://docs.datastax.com/en/astra/astra-db-vector/[{astra-db-serverless}].
+
+* From any CQL-based database type/version to the equivalent CQL-based database type/version.

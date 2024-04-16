@@ -1,0 +1,22 @@
+= Troubleshooting
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,troubleshooting
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+The troubleshooting information for {zdm-product} is organized as follows:
+
+* xref:troubleshooting-tips.adoc[] - general advice and some common issues you may encounter.
+* xref:troubleshooting-scenarios.adoc[] - specific descriptions of error conditions, and advice on how to solve the issues.
+
+[TIP]
+====
+If you still have questions, please submit a GitHub Issue in the relevant public repo:
+
+* https://github.com/datastax/zdm-proxy/issues[{zdm-proxy}].
+* https://github.com/datastax/zdm-proxy-automation/issues[{zdm-automation}], which includes the {zdm-utility}.
+* https://github.com/datastax/cassandra-data-migrator/issues[{cstar-data-migrator}].
+* https://github.com/datastax/dsbulk-migrator/issues[{dsbulk-migrator}].
+
+You may also contact your {company} account representative, or our https://support.datastax.com/s/[Support team] if you have a DataStax Luna service contract.
+https://www.datastax.com/products/luna[Luna] is a subscription to the Apache Cassandra support and expertise at DataStax. 
+====

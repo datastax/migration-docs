@@ -1,0 +1,246 @@
+= Feasibility checks
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,feasibility
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+Before starting your migration, refer to the following considerations to ensure that your client application workload and xref:glossary.adoc#origin[**Origin**] are suitable for this {zdm-product} process.
+
+== Cassandra Native Protocol version and cluster version support
+
+{zdm-proxy} supports protocol versions `v3`, `v4`, `DSE_V1`, and `DSE_V2`.
+
+[NOTE]
+====
+include::partial$supported-releases.adoc[]
+====
+
+{zdm-proxy} technically doesn't support `v5`.
+If `v5` is requested, the proxy handles protocol negotiation so that the client application properly downgrades the protocol version to `v4`.
+This means that any client application using a recent driver that supports protocol version `v5` can be migrated using the {zdm-proxy} (as long as it does not use v5-specific functionality).
+
+[IMPORTANT]
+====
+*Thrift is not supported by {zdm-proxy}.*
+
+If you are using a very old driver or cluster version that only supports Thrift, you need to change your client application to use CQL and potentially upgrade your cluster before starting the migration process.
+====
+
+This means that {zdm-proxy} supports migrations of the following cluster versions (Origin/Target):
+
+* Apache Cassandra&reg; 2.1 and higher versions, up to (and including) Apache Cassandra 4.x. 
+Apache Cassandra 2.0 migration support may be introduced when protocol version v2 is supported.
+* DataStax Enterprise 4.7.1+ and higher versions. 
+DataStax Enterprise 4.6 migration support may be introduced when protocol version v2 is supported.
+* {company} {astra_db} (Serverless and Classic).
+
+[TIP]
+====
+Ensure that you test your client application with Target (connected directly without the {zdm-proxy}) before the migration process begins.
+====
+
+== Schema/keyspace compatibility
+
+{zdm-proxy} does not modify or transform CQL statements besides the optional feature that replaces `now()` functions with timestamp literals. 
+See <<cql-function-replacement,this section>> for more information about this feature.
+
+A CQL statement that your client application sends to {zdm-proxy} must be able to succeed on both clusters.
+This means that any keyspace that your client application uses must exist on both Origin and Target with the same name (although they can have different replication strategies and durable writes settings).
+Table names must also match.
+
+The schema doesn't have to be an exact match as long as the CQL statements can be executed successfully on both clusters.
+For example, if a table has 10 columns but your client application only uses 5 of those columns then you could create that table on Target with just those 5 columns.
+
+You can also change the primary key in some cases.
+For example, if your compound primary key is `PRIMARY KEY (A, B)` and you always provide parameters for the `A` and `B` columns in your CQL statements then you could change the key to `PRIMARY KEY (B, A)` when creating the schema on Target because your CQL statements will still run successfully.
+
+== Considerations for Astra DB migrations
+
+{company} Astra DB implements guardrails and sets limits to ensure good practices, foster availability, and promote optimal configurations for your databases.
+Please check the list of https://docs.datastax.com/en/astra-serverless/docs/plan/planning.html#_astra_db_database_guardrails_and_limits[guardrails and limits] and make sure your application workload can be successful within these limits.
+
+If you need to make changes to the application or data model to ensure that your workload can run successfully in {company} Astra DB, then you need to do these changes before you start the migration process.
+
+It is also highly recommended to perform tests and benchmarks when connected directly to Astra DB prior to the migration, so that you don't find unexpected issues during the migration process.
+
+[[_read_only_applications]]
+=== Read-only applications
+
+Read-only applications require special handling only if you are using {zdm-proxy} versions older than 2.1.0.
+
+[TIP]
+====
+If you have an existing {zdm-proxy} deployment, you can check which version you are running as explained xref:troubleshooting-tips.adoc#_how_to_identify_the_zdm_proxy_version[here]. To find out how to upgrade an existing {zdm-proxy} deployment, please see xref:manage-proxy-instances.adoc#_upgrade_the_proxy_version[here].
+====
+
+==== *Versions older than 2.1.0*
+
+If a client application only sends `SELECT` statements to a database connection then you may find that {zdm-proxy} terminates these read-only connections periodically, which may result in request errors if the driver is not configured to retry these requests in these conditions.
+
+This happens because {company} Astra DB terminates idle connections after some inactivity period (usually around 10 minutes).
+If Astra DB is your Target and a client connection is only sending read requests to the {zdm-proxy}, then the Astra DB connection that is paired to that client connection will remain idle and will be eventually terminated.
+
+A potential workaround is to not connect these read-only client applications to {zdm-proxy}, but you need to ensure that these client applications switch reads to Target at any point after all the data has been migrated and all validation and reconciliation has completed.
+
+Another work around is to implement a mechanism in your client application that creates a new `Session` periodically to avoid the {company} Astra DB inactivity timeout.
+You can also implement some kind of meaningless write request that the application sends periodically to make sure the {company} Astra DB connection doesn't idle.
+
+==== *Version 2.1.0 and newer*
+
+This issue is solved in version 2.1.0 of the {zdm-proxy}, which introduces periodic heartbeats to keep alive idle cluster connections.
+We strongly recommend using version 2.1.0 (or newer) to benefit from this improvement, especially if you have a read-only workload.
+
+[[non-idempotent-operations]]
+== Lightweight Transactions and other non-idempotent operations
+
+Examples of non-idempotent operations in CQL are:
+
+* Lightweight Transactions (LWTs)
+* Counter updates
+* Collection updates with `+=` and `-=` operators
+* Non-deterministic functions like `now()` and `uuid()`
+
+For more information on how to handle non-deterministic functions please refer to <<cql-function-replacement,Server-side non-deterministic functions in the primary key>>.
+
+Given that there are two separate clusters involved, the state of each cluster may be different.
+For conditional writes, this may create a divergent state for a time.
+It may not make a difference in many cases, but if non-idempotent operations are used, we recommend a reconciliation phase in the migration before and after switching reads to rely on Target (setting Target as the primary cluster). 
+
+For details about using the {cstar-data-migrator}, see xref:migrate-and-validate-data.adoc[].
+
+[TIP]
+====
+Some application workloads can tolerate inconsistent data in some cases (especially for counter values) in which case you may not need to do anything special to handle those non-idempotent operations.
+====
+
+[[_lightweight_transactions_and_the_applied_flag]]
+=== Lightweight Transactions and the `applied` flag
+
+{zdm-proxy} handles LWTs as write operations.
+The proxy sends the LWT to Origin and Target clusters concurrently, and waits for a response from both.
+{zdm-proxy} will return a `success` status to the client if both Origin and Target send successful acknowledgements, or otherwise will return a `failure` status if one or both do not return an acknowledgement.
+
+What sets LWTs apart from regular writes is that they are conditional.
+In other words, a LWT can appear to have been successful (its execution worked as expected).
+However, the change will be applied only if the LWT's condition was met.
+Whether the condition was met depends on the state of the data on the cluster.
+In a migration, the clusters will not be in sync until all existing data has been imported into Target.
+Up to that point, an LWT's condition can be evaluated differently on each side, leading to a different outcome even though the LWT was technically successful on both sides.
+
+The response that a cluster sends after executing a LWT includes a flag called `applied`.
+This flag tells the client whether the LWT update was actually applied.
+The status depends on the condition, which in turn depends on the state of the data.
+When {zdm-proxy} receives a response from both Origin and Target, each response would have its own `applied` flag. 
+
+However, {zdm-proxy} can only return a *single response* to the client.
+Recall that the client has no knowledge that there are two clusters behind the proxy.
+Therefore, {zdm-proxy} returns the `applied` flag from the cluster that is *currently used as primary*.
+If your client has logic that depends on the `applied` flag, be aware that during the migration, you will only have visibility of the flag coming from the primary cluster; that is, the cluster to which synchronous reads are routed.
+
+To reiterate, {zdm-proxy} only returns the `applied` value from the primary cluster, which is the cluster from where read results are returned to the client application (by default, Origin).
+This means that when you set Target as your primary cluster, the `applied` value returned to the client application will come from Target.
+
+
+== Advanced workloads (DataStax Enterprise)
+
+=== Graph
+
+{zdm-proxy} handles all {company} Graph requests as write requests even if the traversals are read-only. There is no special handling for these requests, so you need to take a look at the traversals that your client application sends and determine whether the traversals are idempotent. If the traversals are non-idempotent then the reconciliation step is needed.
+
+Keep in mind that our recommended tools for data migration and reconciliation are CQL-based, so they can be used for migrations where Origin is a database that uses the new {company} Graph engine released with DSE 6.8, but *cannot be used for the old Graph engine* that older DSE versions relied on.
+See <<non-idempotent-operations,this section>> for more information about non-idempotent operations.
+
+=== Search
+
+Read-only Search workloads can be moved directly from Origin to Target without {zdm-proxy} being involved.
+If your client application uses Search and also issues writes, or if you need the read routing capabilities from {zdm-proxy}, then you can connect your search workloads to it as long as you are using the {company} drivers to submit these queries.
+This approach means the queries are regular CQL `SELECT` statements, so {zdm-proxy} handles them as regular read requests.
+
+If you use the HTTP API then you can either modify your applications to use the CQL API instead or you will have to move those applications directly from Origin to Target when the migration is complete if that is acceptable.
+
+
+== Client compression
+
+The binary protocol used by Cassandra, DSE, and {astra_db} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
+
+{zdm-proxy} doesn't support protocol compression at this time.
+This kind of compression is disabled by default on all of our {company} drivers so if you enabled it on your client application then you will need to disable it before starting the migration process.
+
+This is *NOT* related to storage compression which you can configure on a table by table basis with the `compression` table property.
+Storage/table compression does not affect the client application or {zdm-proxy} in any way.
+
+	
+== Authenticator and Authorizer configuration
+
+{zdm-proxy} supports the following cluster authenticator configurations:
+
+* No authenticator
+* `PasswordAuthenticator`
+* `DseAuthenticator` with `internal` or `ldap` scheme
+
+{zdm-proxy} does *not* support `DseAuthenticator` with `kerberos` scheme.
+
+While the authenticator has to be supported, the *authorizer* does not affect client applications or {zdm-proxy} so you should be able to use any kind of authorizer configuration on both of your clusters.
+
+The authentication configuration on each cluster can be different between Origin and Target, as the {zdm-proxy} treats them independently.
+
+[[cql-function-replacement]]
+== Server-side non-deterministic functions in the primary key
+
+Statements with functions like `now()` and `uuid()` will result in data inconsistency between Origin and Target because the values are computed at cluster level. 
+
+If these functions are used for columns that are not part of the primary key, you may find it acceptable to have different values in the two clusters depending on your application business logic.
+However, if these columns are part of the primary key, the data migration phase will not be successful as there will be data inconsistencies between the two clusters and they will never be in sync.
+
+[NOTE]
+====
+{zdm-shortproduct} does not support the `uuid()` function currently.
+====
+
+{zdm-proxy} is able to compute timestamps and replace `now()` function references with such timestamps in CQL statements at proxy level to ensure that these parameters will have the same value when these statements are sent to both clusters.
+However, this feature is disabled by default because it might result in performance degradation.
+We highly recommend that you test this properly before using it in production.
+Also keep in mind that this feature is only supported for `now()` functions at the moment.
+To enable this feature, set the configuration variable `replace_cql_function` to `true`.
+For more, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
+
+If you find that the performance is not acceptable when this feature is enabled, or the feature doesn't cover a particular function that your client application is using, then you will have to make a change to your client application so that the value is computed locally (at client application level) before the statement is sent to the database.
+Most drivers have utility methods that help you compute these values locally, please refer to the documentation of the driver you are using.
+
+
+== Driver retry policy and query idempotence
+
+As part of the normal migration process, the {zdm-proxy} instances will have to be restarted in between phases to apply configuration changes.
+From the point of view of the client application, this is a similar behavior to a DSE or Cassandra cluster going through a rolling restart in a non-migration scenario.
+
+If your application already tolerates rolling restarts of your current cluster then you should see no issues when there is a rolling restart of {zdm-proxy} instances.
+
+To ensure that your client application retries requests when a database connection is closed you should check the section of your driver's documentation related to retry policies.
+
+Most {company} drivers require a statement to be marked as `idempotent` in order to retry it in case of a connection error (such as the termination of a database connection).
+This means that these drivers treat statements as *non-idempotent* by default and will *not* retry them in the case of a connection error unless action is taken.
+Whether you need to take action or not depends on what driver you are using.
+In this section we outline the default behavior of some of these drivers and provide links to the relevant documentation sections.
+
+=== {company} Java Driver 4.x
+
+The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically. See this Java 4.x https://docs.datastax.com/en/developer/java-driver/latest/manual/core/idempotence/[query idempotence documentation section].
+
+=== {company} Java Driver 3.x
+
+The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically. See this Java 3.x https://docs.datastax.com/en/developer/java-driver/3.11/manual/idempotence/[query idempotence documentation section].
+
+This behavior was introduced in version 3.1.0 so prior to this version the default retry policy retried all requests regardless of idempotence.
+
+=== {company} Nodejs Driver 4.x
+
+The default retry policy takes idempotence in consideration. See this Nodejs 4.x https://docs.datastax.com/en/developer/nodejs-driver/latest/features/speculative-executions/#query-idempotence[query idempotence documentation section].
+
+=== {company} C# Driver 3.x and {company} Python Driver 3.x
+
+The default retry policy retries all requests in case of a connection error *regardless of idempotence*. There are retry policies that are idempotency aware but these are not the default policies. Keep in mind that the plan is to make the default retry policy idempotency aware in a future release.
+
+=== {company} C++ Driver 2.x
+
+Prior to version 2.5.0, this driver did *NOT* retry any requests after they have been written to the socket, it was up to the client application to handle these and retry them if they are suitable for a retry.
+
+With the release of 2.5.0, the driver retries requests that are set as `idempotent`. See this C++ 2.x https://docs.datastax.com/en/developer/cpp-driver/2.16/topics/configuration/#query-idempotence[query idempotence documentation section, window="_blank"].

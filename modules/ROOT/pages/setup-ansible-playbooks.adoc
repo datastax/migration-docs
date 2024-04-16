@@ -1,0 +1,262 @@
+= Set up the {zdm-automation} with {zdm-utility}
+:page-tag: migration,zdm,zero-downtime,zdm-automation,zdm-proxy,ansible
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+This page explains how to use the {zdm-utility} to set up the Ansible Control Host container for the {zdm-automation}.
+
+After completing the setup tasks in {zdm-utility}, see the xref:deploy-proxy-monitoring.adoc[next topic] for subsequent steps to use {zdm-automation}, which you will use to deploy {zdm-proxy} instances and the monitoring stack.
+
+Once completed, you will have a working and fully monitored {zdm-proxy} deployment.
+
+== Introduction
+
+The {zdm-automation} uses **Ansible**, which deploys and configures the {zdm-proxy} instances and monitoring stack via playbooks.
+This step expects that the infrastructure has been already provisioned.
+See xref:deployment-infrastructure.adoc[Deployment and infrastructure considerations], which include the infrastructure requirements.
+
+Configuring a machine to serve as the Ansible Control Host is very easy using the {zdm-utility}. 
+This is a Golang (Go) executable program that runs anywhere.
+This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use.
+From this container, you will be able to easily configure and run the {zdm-automation} Ansible playbooks.
+
+image::{imagesprefix}docker-container-and-zdm-utility.png[ZDM Proxy connections from Docker container created by ZDM Utility]
+
+== Prerequisites
+
+. You must have already provisioned the ZDM infrastructure, which means you must have the server machines ready, and know their IP addresses.
+These can be in the cloud provider of your choice or on-premise.
+. Docker needs to be installed on the machine that will be running the Ansible Control Host container.
+For comprehensive installation instructions, please refer to the https://docs.docker.com/engine/install/#server[official Docker documentation].
+. The `docker` command must not require superuser privileges.
+The instructions to do this can be found https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[here].
+
+[NOTE]
+====
+Please note that the manual, non-superuser installation of Docker described above is to be done on the machine that will run the Ansible Control Host.
+From that point, the automation will take care of installing Docker on the ZDM Proxy machines without further intervention.
+====
+
+== Alternative Docker configurations
+
+There are two options for users who don't want to pull from a specific registry or are not connecting servers directly to the internet.
+
+Option 1: Pull through local cache::
+Servers can connect directly to the Docker local registry so that the server then pulls containers from the internet itself.
+See the https://docs.docker.com/docker-hub/mirror/[Docker documentation] for instructions on how to set up a pull through cache.
+This option makes it possible to only have the local Docker registry connected to the internet.
+
+Option 2: Unconnected local registry::
+Local registries not connected to the internet require administrators to manually add containers to their registry.
+For {zdm-utility} users, this option requires the following five containers to install and configure the jumphost, ZDM Proxy, and monitoring:
+
+[source,no-highlight]
+----
+grafana/grafana:7.5.17
+prom/prometheus:latest
+datastax/zdm-ansible:2.x
+prom/node-exporter:latest
+datastax/zdm-proxy:2.x
+----
+
+== Jumphost
+
+In this guide, we'll use a jumphost to run the Ansible Control Host container.
+
+A jumphost is a server on a network used to access and manage devices in a separate security zone, providing a controlled means of access between them.
+The jumphost can be, for example, a Linux server machine that is able to access the server machines that you wish to use for your {zdm-proxy} deployment.
+
+The jumphost will serve three purposes:
+
+* Accessing the {zdm-proxy} machines.
+* Running the Ansible Control Host container, from which the {zdm-automation} can be run.
+* Running the {zdm-shortproduct} monitoring stack, which uses Prometheus and Grafana to expose the metrics of all the {zdm-proxy} instances in a preconfigured dashboard.
+
+[TIP]
+====
+To simplify accessing the jumphost and {zdm-proxy} instances from your machine, create a xref:deployment-infrastructure.adoc#_connecting_to_the_zdm_infrastructure_from_an_external_machine[custom SSH configuration file].
+The following steps will assume that this file exists.
+====
+
+Let's get started.
+
+== Proxy deployment setup on the jumphost
+
+To run the {zdm-automation}, the Ansible Control Host needs to be able to connect to all other instances of the {zdm-proxy} deployment.
+For this reason, it needs to have the SSH key required by those instances.
+
+=== Add SSH keys to the jumphost
+
+From your local machine, transfer (`scp`) the SSH private key for the {zdm-shortproduct} deployment to the jumphost.
+Example:
+
+[source,bash]
+----
+scp -F <path to zdm_ssh_config> <zdm key> jumphost:
+----
+
+Now connect to the jumphost.
+
+[source,bash]
+----
+ssh -F <path to zdm_ssh_config> jumphost
+----
+
+== Running the {zdm-utility}
+
+From the jumphost, download the {zdm-utility}'s executable.
+Releases are available https://github.com/datastax/zdm-proxy-automation/releases[here].
+
+The downloadable archive name format is `zdm-util-<platform>-<version>`.
+
+The latest version: 
+
+image:https://img.shields.io/github/v/release/datastax/zdm-proxy-automation?color=green&display_name=tag[GitHub release, latest by date]
+
+[source,bash]
+----
+wget https://github.com/datastax/zdm-proxy-automation/releases/download/<version>/zdm-util-linux-amd64-<version>.tgz 
+----
+
+Here's an example to wget {zdm-utility} 2.3.0:
+
+[source,bash]
+----
+wget https://github.com/datastax/zdm-proxy-automation/releases/download/v2.3.0/zdm-util-linux-amd64-v2.3.0.tgz 
+----
+
+Once downloaded, unzip it.
+Here's an example with {zdm-utility} 2.3.0:
+
+[source,bash]
+----
+tar -xvf zdm-util-linux-amd64-v2.3.0.tgz
+----
+
+Run the {zdm-utility}.
+Here's an example with {zdm-utility} 2.3.0:
+
+[source,bash]
+----
+./zdm-util-v2.3.0
+----
+
+The utility prompts you for a few configuration values, then creates and initializes the Ansible Control Host container.
+
+[TIP]
+====
+The {zdm-utility} will store the configuration that you provide into a file named `ansible_container_init_config` in the current directory.
+If you run the utility again, it will detect the file  and ask you if you wish to use that configuration or discard it.
+If the configuration is not fully valid, you will be prompted for the missing or invalid parameters only.
+
+You can also pass a custom configuration file to the {zdm-utility} with the optional command-line parameter `-utilConfigFile`.
+Example:
+
+Here's an example with {zdm-utility} 2.3.0:
+
+[source,bash]
+----
+./zdm-util-v2.3.0 -utilConfigFile your_config_file
+----
+====
+
+[NOTE]
+====
+The {zdm-utility} will validate each variable that you enter.
+In case of invalid variables, it will display specific messages to help you fix the problem.
+
+You have five attempts to enter valid variables.
+You can always run the {zdm-utility} again, if necessary.
+====
+
+. Enter the path to, and name of, the SSH private key to access the proxy hosts.
+Example:
++
+[source,bash]
+----
+~/my-zdm-key
+----
+
+. Enter the common prefix of the private IP addresses of the proxy hosts.
+Example:
++
+[source,bash]
+----
+172.18.*
+----
+
+. You're asked if you have an existing Ansible inventory file.
+If you do, and you transferred it to the jumphost, you can just specify it.
+If you do not, the {zdm-utility} will create one based on your answers to prompts and save it.
+Here we'll assume that you do not have one. Enter `n`.
++
+The created file will be named `zdm_ansible_inventory` in your working directory.
+
+. Next, indicate if this deployment is for local testing and evaluation (such as when you're creating a demo or just experimenting with the {zdm-proxy}).
+In this example, we'll enter `n` because this scenario is for a production deployment.
+. Now enter at least three proxy private IP addresses for the machines that will run the {zdm-proxy} instances, for a production deployment.
+(If we had indicated above that we're doing local testing in dev, only one proxy would have been required.)
+Example values entered at the {zdm-utility}'s prompt, for production:
++
+[source,bash]
+----
+172.18.10.137
+172.18.11.88
+172.18.12.191
+----
++
+To finish entering private IP addresses, simply press ENTER at the prompt.
+
+. Optionally, when prompted, you can enter the private IP address of your Monitoring instance, which will use Prometheus to store data and Grafana to visualize it into a preconfigured dashboard.
+It is strongly recommended exposing the {zdm-proxy} metrics in the preconfigured dashboard that ships with the {zdm-automation} for easy monitoring.
+You can skip this step if you haven't decided which machine to use for monitoring, or if you wish to use your own monitoring stack.
++
+[NOTE]
+====
+We highly recommend that you configure a monitoring instance, unless you intend to use a monitoring stack that you already have.
+For migrations that may run for multiple days, it is essential that you use metrics to understand the performance and health of the {zdm-proxy} instances.
+
+You cannot rely solely on information in the logs.
+They report connection or protocol errors, but do not give you enough information on how the {zdm-proxy} is working and how each cluster is responding.
+Metrics, however, provide especially helpful data and the graphs show you how they vary over time.
+The monitoring stack ships with preconfigured Grafana dashboards that are automatically set up as part of the monitoring deployment.
+
+For details about the metrics you can observe in these preconfigured Grafana dashboards, see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips.
+====
++
+You can choose to deploy the monitoring stack on the jumphost or on a different machine, as long as it can connect to the {zdm-proxy} instances over TCP on ports 9100 (to collect host-level metrics) and on the port on which the {zdm-proxy} exposes its own metrics, typically 14001.
+
+In this example, we'll enter the same IP of the Ansible control host (the jumphost machine on which we're running the {zdm-utility}).
+Example:
+
+[source,bash]
+----
+172.18.100.128
+----
+
+At this point, the {zdm-utility}:
+
+* Has created the Ansible Inventory to the default file, `zdm_ansible_inventory`.
+* Has written the {zdm-utility} configuration to the default file, `ansible_container_init_config`.
+* Presents a summary of the configuration thus far, and prompts you to Continue.
+Example:
+
+image::{imagesprefix}zdm-go-utility-results3.png[A summary of the configuration provided is displayed in the terminal]
+
+If you agree, enter `Y` to proceed.
+
+The {zdm-utility} now:
+
+* Creates and downloads the image of the Ansible Docker container for you.
+* Creates, configures and starts the Ansible Control Host container.
+* Displays a message. Example:
+
+image::{imagesprefix}zdm-go-utility-success3.png[Ansible Docker container success messages]
+
+[NOTE]
+====
+Depending on your circumstances, you can make different choices in the ZDM Utility, which will result in a path that is slightly different to the one explained here.
+The utility will guide you through the process with meaningful, self-explanatory messages and help you rectify any issue that you may encounter.
+
+The successful outcome will always be a configured Ansible Control Host container ready to run the {zdm-automation}.
+====

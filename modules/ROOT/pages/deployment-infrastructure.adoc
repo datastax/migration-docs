@@ -1,0 +1,157 @@
+= Deployment and infrastructure considerations
+:page-tag: migration,zdm,zero-downtime,zdm-proxy,deploy,infrastructure
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+== Choosing where to deploy the proxy
+
+A typical {zdm-proxy} deployment is made up of multiple proxy instances.
+A minimum of three proxy instances is recommended for any deployment apart from those for demo or local testing purposes.
+
+All {zdm-proxy} instances must be reachable by the client application and must be able to connect to your Origin and Target clusters.
+The {zdm-proxy} process is lightweight, requiring only a small amount of resources and no storage to persist state (apart from logs).
+
+The {zdm-proxy} should be deployed close to your client application instances.
+This can be on any cloud provider as well as on-premise, depending on your existing infrastructure.
+
+If you have a multi-DC cluster with multiple set of client application instances deployed to geographically distributed data centers, you should plan for a separate {zdm-proxy} deployment for each data center.
+
+Here's a typical deployment showing connectivity between client applications, {zdm-proxy} instances, and clusters:
+
+image::{imagesprefix}zdm-during-migration3.png[Connectivity between client applications, proxy instances, and clusters.]
+
+== Infrastructure requirements
+
+To deploy the {zdm-proxy} and its companion monitoring stack, you will have to provision infrastructure that meets the following requirements.
+
+[[_machines]]
+=== Machines
+
+We will use the term "machine" to indicate a cloud instance (on any cloud provider), a VM, or a physical server.
+
+* N machines to run the desired number of {zdm-proxy} instances:
+** You will need one machine for each {zdm-proxy} instance.
+** Requirements for each {zdm-proxy} instance:
+*** Ubuntu Linux 20.04 or newer, RedHat Family Linux 7 or newer
+*** 4 vCPUs
+*** 8GB RAM
+*** 20GB - 100GB root volume
+*** Equivalent to AWS `c5.xlarge` / GCP `e2-standard-4` / Azure `A4 v2`
+* One machine for the jumphost, which is typically also used as Ansible Control Host and to run the monitoring stack (Prometheus + Grafana):
+** The most common option is using a single machine for all these functions, but you could split these functions across different machines if you prefer.
+** Requirements:
+*** Ubuntu Linux 20.04 or newer, RedHat Family Linux 7 or newer
+*** 8 vCPUs
+*** 16GB RAM
+*** 200GB - 500GB storage (depending on the amount of metrics history that you wish to retain)
+*** Equivalent to AWS `c5.2xlarge` / GCP `e2-standard-8` / Azure `A8 v2`
+* 1-M machines to run either {dsbulk-migrator} or {cstar-data-migrator}.
+** It's recommended that you start with at least one VM with 16 vCPUs and 64GB RAM and a minimum of 200GB storage. Depending on the total amount of data that is planned for migration, more than one VM may be needed.
+** Requirements:
+*** Ubuntu Linux 20.04 or newer, RedHat Family Linux 7 or newer
+*** 16 vCPUs
+*** 64GB RAM
+*** 200GB - 2TB storage (if you use dsbulk-migrator to unload multiple terabytes of data from origin, then load into target, you may need to consider more space to accommodate the data that needs to be staged)
+*** Equivalent to AWS `m5.4xlarge` / GCP `e2-standard-16` / Azure `D16v5`
+
+[NOTE]
+====
+* Scenario: If you have 20 TBs of existing data to be migrated and want to speed up the migration, you could use multiple VMs.
+For example, you can use four VMs that are the equivalent of an AWS m5.4xlarge, a GCP e2-standard-16 or an Azure D16v5.
++
+Next, run DSBulk Migrator or Cassandra-Data-Migrator in parallel on each VM with each one responsible for migrating around 5TB of data.
+If there is one super large table (e.g. 15 TB of 20 TB is in one table), you can choose to migrate this table in three parts on three separate VMs in parallel by splitting the full token range into three parts and migrating the rest of the tables on the fourth VM. 
+
+* Ensure that your Origin and Target clusters can handle high traffic from Cassandra Data Migrator or DSBulk in addition to the live traffic from your application. 
+
+* Test any migration in a lower environment before you plan to do it in production.
+
+* Contact https://support.datastax.com/s/[DataStax support] for help configuring your workload.
+====
+
+// TODO: investigate how to "leverage the parallelism of {cstar-data-migrator} to run the migration process across all 4 machines."
+
+=== Connectivity
+The {zdm-proxy} machines must be reachable by:
+
+* The client application instances, on port 9042
+* The monitoring machine on port 14001
+* The jumphost on port 22
+
+[IMPORTANT]
+====
+The {zdm-proxy} machines should not be directly accessible by external machines.
+The only direct access to these machines should be from the jumphost.
+====
+
+The {zdm-proxy} machines must be able to connect to the Origin and Target cluster nodes:
+
+* For self-managed (non-Astra DB) clusters, connectivity is needed to the Cassandra native protocol port (typically 9042).
+* For Astra DB clusters, you will need to ensure outbound connectivity to the Astra endpoint indicated in the Secure Connect Bundle.
+Connectivity over Private Link is also supported.
+
+The connectivity requirements for the jumphost / monitoring machine are:
+
+* Connecting to the {zdm-proxy} instances: on port 14001 for metrics collection, and on port 22 to run the Ansible automation and for log inspection or troubleshooting.
+* Allowing incoming ssh connections from outside, potentially from allowed IP ranges only.
+* Exposing the Grafana UI on port 3000.
+
+[IMPORTANT]
+====
+It is strongly recommended **to restrict external access** to this machine to specific IP ranges (for example, the IP range of your corporate networks or trusted VPNs).
+====
+
+The {zdm-proxy} and monitoring machines must be able to connect externally, as the automation will download:
+
+* Various software packages (Docker, Prometheus, Grafana).
+* {zdm-proxy} image from DockerHub repo.
+
+=== Connecting to the ZDM infrastructure from an external machine
+
+To connect to the jumphost from an external machine, ensure that its IP address belongs to a permitted IP range.
+If you are connecting through a VPN that only intercepts connections to selected destinations, you may have to add a route from your VPN IP gateway to the public IP of the jumphost.
+
+To simplify connecting to the jumphost and, through it, to the {zdm-proxy} instances, you can create a custom SSH config file.
+You can use this template and replace all the placeholders in angle brackets with the appropriate values for your deployment, adding more entries if you have more than three proxy instances.
+Save this file, for example calling it `zdm_ssh_config`.
+
+[source,bash]
+----
+Host <jumphost_private_IP_address> jumphost
+  Hostname <jumphost_public_IP_address>
+  Port 22
+
+Host <private_IP_address_of_proxy_instance_0> zdm-proxy-0
+  Hostname <private_IP_address_of_proxy_instance_0>
+  ProxyJump jumphost
+
+Host <private_IP_address_of_proxy_instance_1> zdm-proxy-1
+  Hostname <private_IP_address_of_proxy_instance_1>
+  ProxyJump jumphost
+
+Host <private_IP_address_of_proxy_instance_2> zdm-proxy-2
+  Hostname <private_IP_address_of_proxy_instance_2>
+  ProxyJump jumphost
+
+Host *
+    User <linux user>
+    IdentityFile < Filename (with absolute path) of the locally-generated key pair for the ZDM infrastructure. Example ~/.ssh/zdm-key-XXX >
+    IdentitiesOnly yes
+    StrictHostKeyChecking no
+    GlobalKnownHostsFile /dev/null
+    UserKnownHostsFile /dev/null
+----
+
+With this file, you can connect to your jumphost simply with:
+
+[source,bash]
+----
+ssh -F zdm_ssh_config jumphost
+----
+
+Likewise, connecting to any {zdm-proxy} instance is as easy as this (replacing the instance number as desired):
+
+[source,bash]
+----
+ssh -F zdm_ssh_config zdm-proxy-0
+----

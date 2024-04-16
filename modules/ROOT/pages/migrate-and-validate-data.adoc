@@ -1,0 +1,90 @@
+= Phase 2: Migrate and validate data
+:page-tag: migration,zdm,zero-downtime,validate-data
+ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
+ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+This topic introduces two open-source data migration tools that you can use during Phase 2 of your migration project.
+
+For full details, see these topics:
+
+* xref:cassandra-data-migrator.adoc[{cstar-data-migrator}]
+* xref:dsbulk-migrator.adoc[{dsbulk-migrator}]
+
+These tools provide sophisticated features that help you migrate your data from any Cassandra **Origin** (Apache Cassandra&reg;, {company} Enterprise (DSE), {company} {astra_db}) to any Cassandra **Target** (Apache Cassandra, DSE, {company} {astra_db}). 
+
+//include::partial$lightbox-tip.adoc[]
+
+image::{imagesprefix}migration-phase2ra.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
+
+//For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
+
+== What's the difference between these data migration tools?
+
+In general:
+
+* {cstar-data-migrator} (CDM) is the best choice to migrate large data quantities, and where detailed logging, data verifications, table column renaming (if needed), and reconciliation options are provided. 
+
+* {dsbulk-migrator} leverages {company} Bulk Loader (DSBulk) to perform the data migration, and provides new commands specific to migrations. {dsbulk-migrator} is ideal for simple migration of smaller data quantities, and where data validation (other than post-migration row counts) is not necessary.
+
+== Open-source repos with essential data migration tools
+
+Refer to the following GitHub repos:
+
+* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator] repo.
+
+* https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator}] repo.
+
+A number of helpful assets are provided in each repo. 
+
+In particular, the CDM repo provides two configuration templates, with embedded comments and default values, which you can customize to match your data migration's requirements:
+
+* https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[cdm.properties, window="_blank"] provides a subset of configuration options with commonly required settings.
+
+* https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[cdm-detailed.properties, window="_blank"] with all available options.
+
+[[cstar-data-migrator-key-features]]
+== {cstar-data-migrator} features
+
+CDM offers functionalities like bulk export, import, data conversion, mapping of column names between Origin and Target, and validation. 
+The CDM capabilities are extensive:
+
+* Automatic detection of each table's schema - column names, types, keys, collections, UDTs, and other schema items.
+* Validation - Log partitions range-level exceptions, use the exceptions file as input for rerun operations.
+* Supports migration of Counter tables.
+* Preserves writetimes and Time To Live (TTL).
+* Validation of advanced data types - Sets, Lists, Maps, UDTs.
+* Filter records from Origin using writetimes, and/or CQL conditions, and/or a list of token ranges.
+* Guardrail checks, such as identifying large fields.
+* Fully containerized support - Docker and Kubernetes friendly.
+* SSL support - including custom cipher algorithms.
+* Migration/validation from and to Azure Cosmos Cassandra.
+* Validate migration accuracy and performance using a smaller randomized data-set.
+* Support for adding custom fixed writetime.
+
+With new or enhanced capabilities in recent https://github.com/datastax/cassandra-data-migrator/packages/1832128[CDM v4.x releases, window="_blank"].
+
+* Column names can differ between Origin and Target.
+* UDTs can be migrated from Origin to Target, even when the keyspace names differ.
+* Predefined Codecs allow for data type conversion between Origin and Target; you can add custom Codecs.
+* Separate Writetime and TTL configuration supported. Writetime columns can differ from TTL columns.
+* A subset of columns can be specified with Writetime and TTL: Not all eligible columns need to be used to compute the Origin value.
+* Automatic `RandomPartitioner` min/max: Partition min/max values no longer need to be manually configured.
+* You can populate Target columns with constant values: New columns can be added to the Target table, and populated with constant values.
+* Expand Origin Map Column into Target rows: A Map in Origin can be expanded into multiple rows in Target when the Map key is part of the Target primary key.
+
+For extensive usage and reference details, see xref:cassandra-data-migrator.adoc[{cstar-data-migrator}]. 
+
+[[dsbulk-migrator-key-features]]
+== {dsbulk-migrator} features
+
+{dsbulk-migrator}, which is based on {company} Bulk Loader (DSBulk), is best for migrating smaller amounts of data, and/or when you can shard data from table rows into more manageable quantities.  
+
+{dsbulk-migrator} provides the following commands:
+
+* `migrate-live` starts a live data migration using a pre-existing DSBulk installation, or alternatively, the embedded DSBulk version. A "live" migration means that the data migration will start immediately and will be performed by this migrator tool through the desired DSBulk installation.
+
+* `generate-script` generates a migration script that, once executed, will perform the desired data migration, using a pre-existing DSBulk installation. Please note: this command does not actually migrate the data; it only generates the migration script.
+
+* `generate-ddl` reads the schema from Origin and generates CQL files to recreate it in an {astra_db} cluster used as Target.
+
+For extensive usage and reference details, see xref:dsbulk-migrator.adoc[{dsbulk-migrator}].
