@@ -53,16 +53,10 @@ Data migrations with downtime are those where the data being migrated is critica
 * Storage system migration: migrating from on-prem to cloud may need downtime to reconfigure systems.
 * Network infrastructure changes: these systems may require downtime for completely smooth transition.
 
-A migration with no downtime is seamless and ideal, but doesn't always happen or a viable option. 
-Downtime may not be required for:
+A migration with no downtime is seamless and ideal, but doesn't always happen. This happens when your business can tolerate a brief outage. 
+Here are scenarios for such migration:
 
-* Continuous data replication: When real-time data replication is implemented, changes made to the source data are continuously mirrored to the target system. 
-This means both systems remain synchronized without the need for downtime. 
-* Online database migration: Some database migration allows for the migration to happen while the database remains online and accessible. Technologies like database replication and synchronization tools can also facilitate seamless migration with minimal disruption.
-* Incremental data migration:Transfers data in smaller batches over time, which allows for minimal disruption to ongoing operations since only a portion of the data is being migrated at any given time. 
-This option can be used for large-scale migrations where downtime is not feasible or acceptable.
-* Load balancing and redundancy: In environments with redundant systems or load balancing capabilities, data migrations can be performed without downtime by routing traffic to the target system while the migration is in progress. This allows users to access services without interruption, as the load is distributed between the source and target systems.
-* Cloud-based data migration: This often provide tools and services that enable live data migration with minimal downtime. 
+include::partial$migration-scenarios.adoc[]
 
 == Data migration tools
 
