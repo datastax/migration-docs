@@ -19,7 +19,7 @@
 * xref:migrate-and-validate-data.adoc[]
 ** xref:cassandra-data-migrator.adoc[]
 * xref:cdm-steps.adoc[]
-* xref:cdm-parameteres.adoc[]
+* xref:cdm-parameters.adoc[]
 .{dsbulk-migrator}
 ** xref:dsbulk-migrator.adoc[]
 //phase 3
