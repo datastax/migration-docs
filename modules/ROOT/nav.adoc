@@ -1,6 +1,6 @@
 .{product}
 //* xref:introduction.adoc[]
-* xref:ROOT:index.adoc[]
+* xref:index.adoc[]
 * xref:components.adoc[]
 * xref:preliminary-steps.adoc[]
 ** xref:feasibility-checklists.adoc[]
