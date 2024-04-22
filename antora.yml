@@ -1,7 +1,7 @@
 name: data-migration
 title: Data Migration
 version: ~
-start_page: index.adoc
+start_page: introduction.adoc
 
 nav:
 - modules/ROOT/nav.adoc
