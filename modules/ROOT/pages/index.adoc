@@ -11,7 +11,7 @@ DataStax has developed a set of thoroughly tested self-service tools to walk you
 * Zero Downtime Migration 
 * Cassandra Data Migrator
 * DSBulk Migrator
-
+ 
 With these tools, you can move your application to {astra_db}, DSE, or Cassandra with no downtime and with minimal configuration changes.
 Your clusters are kept in sync at all times by a dual-write logic configuration.
 You can roll back at any point, for complete peace of mind.
