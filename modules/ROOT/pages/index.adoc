@@ -3,7 +3,7 @@
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
-Enterprises today want to reliably migrate mission-critical client applications and data to cloud environments with zero downtime or near zero downtime during the migration.
+Enterprises today want to reliably migrate mission-critical client applications and data to cloud environments with zero downtime or near zero downtime during the migration. 
 
 A migration is a workflow that encompasses the lifecycle of uploading and importing your data to the selected keyspaces. 
 DataStax has developed a set of thoroughly tested self-service tools to walk you through well-defined migration options:
