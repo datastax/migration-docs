@@ -3,7 +3,7 @@
 Each parameter below offers a different connection. Review each option to determine what is best for your organization. 
 
 [[cdm-origin-schema-params]]
-== Origin schema parameters
+== Origin schema parameters 
 
 [cols="3,1,5a"]
 |===
