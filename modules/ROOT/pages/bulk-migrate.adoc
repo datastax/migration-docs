@@ -1,0 +1,64 @@
+= Migrate data
+
+With xref:dsbulk-prereqs.adoc[prerequisites installed], it's time to build, test, and run the DSBulk Migrator.
+
+Building {dsbulk-migrator} is accomplished with Maven. First, clone the git repo to your local machine.
+Example:
+
+[source,bash]
+----
+cd ~/github
+git clone git@github.com:datastax/dsbulk-migrator.git
+cd dsbulk-migrator
+----
+
+Then run:
+
+[source,bash]
+----
+mvn clean package
+----
+
+The build produces two distributable fat jars:
+
+* `dsbulk-migrator-<VERSION>-embedded-driver.jar` : contains an embedded Java driver; suitable for live migrations using an external DSBulk or for script generation.
+This jar is NOT suitable for live migrations using an embedded DSBulk since no DSBulk classes are present.
+* `dsbulk-migrator-<VERSION>-embedded-dsbulk.jar`: contains an embedded DSBulk and an embedded Java driver and is suitable for all operations.
+This jar is much bigger than the previous one due to the presence of DSBulk classes.
+
+[[testing-dsbulk-migrator]]
+== Testing {dsbulk-migrator}
+
+The project contains a few integration tests.
+Run them with:
+
+[source,bash]
+----
+mvn clean verify
+----
+
+[NOTE]
+====
+The integration tests require https://github.com/datastax/simulacron[Simulacron].
+Be sure to meet all the https://github.com/datastax/simulacron#prerequisites[Simulacron prerequisites] before running the
+tests.
+====
+
+[[running-dsbulk-migrator]]
+== Running {dsbulk-migrator}
+
+Launch the {dsbulk-migrator} tool:
+
+[source,bash]
+----
+java -jar /path/to/dsbulk-migrator.jar { migrate-live | generate-script | generate-ddl } [OPTIONS]
+----
+
+In a live migration, the options effectively configure DSBulk and to connect to the clusters.
+
+When generating a migration script, most options serve as default values in the generated scripts.
+Even when generating scripts, this tool still needs to access the Origin cluster to gather metadata about the tables to migrate.
+
+When generating a DDL file, only a few options are meaningful.
+Because standard DSBulk is not used, and the import cluster is never contacted, import options and DSBulk-related options are ignored.
+The tool still needs to access the Origin cluster to gather metadata about the keyspaces and tables for which to generate DDL statements.

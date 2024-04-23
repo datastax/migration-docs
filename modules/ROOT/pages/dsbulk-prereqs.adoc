@@ -1,0 +1,10 @@
+= Prerequisites
+
+Use {dsbulk-migrator} to perform simple migration of smaller data quantities, where data validation (other than post-migration row counts) is not necessary. Enure you have the prerequisites to 
+
+* Install or switch to Java 11.
+* Install https://maven.apache.org/download.cgi[Maven] 3.9.x.
+* Optionally install https://docs.datastax.com/en/dsbulk/docs/installing/install.html[DSBulk Loader, window="_blank"], if you elect to reference your own external installation of DSBulk, instead of the embedded DSBulk that's in {dsbulk-migrator}.
+* Install https://github.com/datastax/simulacron#prerequisites[Simulacron] 0.12.x and its prerequisites, for integration tests.
+
+With prerequisites installed, you can begin to xref:bulk-migrate.adoc[migrate data], use the xref:bulk-command-line.adoc[command line options], or use the xref:dsbulk-examples.adoc[case examples]!

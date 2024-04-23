@@ -1,79 +1,4 @@
-= {dsbulk-migrator}
-
-Use {dsbulk-migrator} to perform simple migration of smaller data quantities, where data validation (other than post-migration row counts) is not necessary.
-
-[[prereqs-dsbulk-migrator]]
-== {dsbulk-migrator} prerequisites
-
-* Install or switch to Java 11.
-* Install https://maven.apache.org/download.cgi[Maven] 3.9.x.
-* Optionally install https://docs.datastax.com/en/dsbulk/docs/installing/install.html[DSBulk Loader, window="_blank"], if you elect to reference your own external installation of DSBulk, instead of the embedded DSBulk that's in {dsbulk-migrator}.
-* Install https://github.com/datastax/simulacron#prerequisites[Simulacron] 0.12.x and its prerequisites, for integration tests.
-
-[[building-dsbulk-migrator]]
-== Building {dsbulk-migrator}
-
-Building {dsbulk-migrator} is accomplished with Maven. First, clone the git repo to your local machine.
-Example:
-
-[source,bash]
-----
-cd ~/github
-git clone git@github.com:datastax/dsbulk-migrator.git
-cd dsbulk-migrator
-----
-
-Then run:
-
-[source,bash]
-----
-mvn clean package
-----
-
-The build produces two distributable fat jars:
-
-* `dsbulk-migrator-<VERSION>-embedded-driver.jar` : contains an embedded Java driver; suitable for live migrations using an external DSBulk, or for script generation.
-This jar is NOT suitable for live migrations using an embedded DSBulk, since no DSBulk classes are present.
-* `dsbulk-migrator-<VERSION>-embedded-dsbulk.jar`: contains an embedded DSBulk and an embedded Java driver; suitable for all operations.
-Note that this jar is much bigger than the previous one, due to the presence of DSBulk classes.
-
-[[testing-dsbulk-migrator]]
-== Testing {dsbulk-migrator}
-
-The project contains a few integration tests.
-Run them with:
-
-[source,bash]
-----
-mvn clean verify
-----
-
-The integration tests require https://github.com/datastax/simulacron[Simulacron].
-Be sure to meet all the https://github.com/datastax/simulacron#prerequisites[Simulacron prerequisites] before running the
-tests.
-
-[[running-dsbulk-migrator]]
-== Running {dsbulk-migrator}
-
-Launch the {dsbulk-migrator} tool:
-
-[source,bash]
-----
-java -jar /path/to/dsbulk-migrator.jar { migrate-live | generate-script | generate-ddl } [OPTIONS]
-----
-
-In live migration, the options effectively configure DSBulk and to connect to
-the clusters.
-
-When generating a migration script, most options serve as default values in the generated scripts.
-Even when generating scripts, this tool still needs to access the Origin cluster to gather metadata about the tables to migrate.
-
-When generating a DDL file, only a few options are meaningful.
-Because standard DSBulk is not used, and the import cluster is never contacted, import options and DSBulk-related options are ignored.
-The tool still needs to access the Origin cluster to gather metadata about the keyspaces and tables for which to generate DDL statements.
-
-[[dsbulk-migrator-reference]]
-== {dsbulk-migrator} reference
+= Command-line options
 
 * xref:#dsbulk-live[Live migration command-line options]
 * xref:#dsbulk-script[Script generation command-line options]
@@ -83,7 +8,7 @@ The tool still needs to access the Origin cluster to gather metadata about the k
 
 
 [[dsbulk-live]]
-=== Live migration command-line options
+== Live migration command-line options
 
 The following options are available for the `migrate-live` command.
 Most options have sensible default values and do not need to be specified, unless you want to override the default value.
@@ -285,7 +210,7 @@ If unspecified, it defaults to the current working directory.
 
 
 [[dsbulk-script]]
-=== Script generation command-line options
+== Script generation command-line options
 
 The following options are available for the `generate-script` command.
 Most options have sensible default values and do not need to be specified, unless you want to override the default value.
@@ -458,7 +383,7 @@ Case-sensitive table names must be entered in their exact case.
 
 
 [[dsbulk-ddl]]
-=== DDL generation command-line options
+== DDL generation command-line options
 
 The following options are available for the `generate-ddl` command. 
 Most options have sensible default values and do not need to be specified, unless you want to override the default value.
@@ -540,95 +465,4 @@ For individual command help and each one's options:
 [source,bash]
 ----
 java -jar /path/to/dsbulk-migrator-embedded-dsbulk.jar COMMAND --help
-----
-
-[[dsbulk-examples]]
-== {dsbulk-migrator} examples
-
-[NOTE]
-====
-These examples show sample `username` and `password` values that are for demonstration purposes only. 
-Do not use these values in your environment.
-==== 
-
-=== Generate migration script
-
-Generate a migration script to migrate from an existing Origin cluster to a Target {astra_db} cluster:
-
-[source,bash]
-----
-    java -jar target/dsbulk-migrator-<VERSION>-embedded-driver.jar migrate-live \
-        --data-dir=/path/to/data/dir \
-        --dsbulk-cmd=${DSBULK_ROOT}/bin/dsbulk \
-        --dsbulk-log-dir=/path/to/log/dir \
-        --export-host=my-origin-cluster.com \
-        --export-username=user1 \
-        --export-password=s3cr3t \
-        --import-bundle=/path/to/bundle \
-        --import-username=user1 \
-        --import-password=s3cr3t
-----
-
-=== Migrate live using external DSBulk install
-
-Migrate live from an existing Origin cluster to a Target {astra_db} cluster using an external DSBulk installation. 
-Passwords will be prompted interactively:
-
-[source,bash]
-----
-    java -jar target/dsbulk-migrator-<VERSION>-embedded-driver.jar migrate-live \
-        --data-dir=/path/to/data/dir \
-        --dsbulk-cmd=${DSBULK_ROOT}/bin/dsbulk \
-        --dsbulk-log-dir=/path/to/log/dir \
-        --export-host=my-origin-cluster.com \
-        --export-username=user1 \
-        --export-password # password will be prompted \
-        --import-bundle=/path/to/bundle \
-        --import-username=user1 \
-        --import-password # password will be prompted
-----
-
-=== Migrate live using embedded DSBulk install
-
-Migrate live from an existing Origin cluster to a Target {astra_db} cluster using the embedded DSBulk installation. 
-Passwords will be prompted interactively. 
-In this example, additional DSBulk options are passed. 
-
-[NOTE]
-====
-In this example, you must use the `dsbulk-migrator-<VERSION>-embedded-dsbulk.jar` fat jar. 
-Otherwise, an error is raised because no embedded DSBulk can be found.
-====
-
-[source,bash]
-----
-    java -jar target/dsbulk-migrator-<VERSION>-embedded-dsbulk.jar migrate-live \
-        --data-dir=/path/to/data/dir \
-        --dsbulk-use-embedded \
-        --dsbulk-log-dir=/path/to/log/dir \
-        --export-host=my-origin-cluster.com \
-        --export-username=user1 \
-        --export-password # password will be prompted \
-        --export-dsbulk-option "--connector.csv.maxCharsPerColumn=65536" \
-        --export-dsbulk-option "--executor.maxPerSecond=1000" \
-        --import-bundle=/path/to/bundle \
-        --import-username=user1 \
-        --import-password # password will be prompted \
-        --import-dsbulk-option "--connector.csv.maxCharsPerColumn=65536" \
-        --import-dsbulk-option "--executor.maxPerSecond=1000" 
-----
-
-
-=== Generate DDL to recreate Origin schema in Target
-
-Generate DDL files to recreate the Origin schema in a Target {astra_db} cluster:
-
-[source,bash]
-----
-    java -jar target/dsbulk-migrator-<VERSION>-embedded-driver.jar generate-ddl \
-        --data-dir=/path/to/data/dir \
-        --export-host=my-origin-cluster.com \
-        --export-username=user1 \
-        --export-password=s3cr3t \
-        --optimize-for-astra
 ----

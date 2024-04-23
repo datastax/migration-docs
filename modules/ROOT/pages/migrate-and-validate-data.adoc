@@ -8,7 +8,7 @@ This topic introduces two open-source data migration tools that you can use duri
 For full details, see these topics:
 
 * xref:cassandra-data-migrator.adoc[{cstar-data-migrator}]
-* xref:dsbulk-migrator.adoc[{dsbulk-migrator}]
+* xref:dsbulk-prereqs.adoc[{dsbulk-migrator}]
 
 These tools provide sophisticated features that help you migrate your data from any Cassandra **Origin** (Apache Cassandra&reg;, {company} Enterprise (DSE), {company} {astra_db}) to any Cassandra **Target** (Apache Cassandra, DSE, {company} {astra_db}). 
 
@@ -87,4 +87,4 @@ For extensive usage and reference details, see xref:cassandra-data-migrator.adoc
 
 * `generate-ddl` reads the schema from Origin and generates CQL files to recreate it in an {astra_db} cluster used as Target.
 
-For extensive usage and reference details, see xref:dsbulk-migrator.adoc[{dsbulk-migrator}].
+For extensive usage and reference details, see xref:bulk-command-line.adoc[{dsbulk-migrator} command-line options].

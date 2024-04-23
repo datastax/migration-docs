@@ -24,6 +24,11 @@
 * xref:change-read-routing.adoc[]
 //phase 5
 * xref:connect-clients-to-target.adoc[]
+* DSBulk Migrator
+** xref:dsbulk-prereqs.adoc[]
+** xref:bulk-migrate.adoc[]
+** xref:bulk-command-line.adoc[]
+** xref:dsbulk-examples.adoc[]
 * Troubleshooting
 ** xref:troubleshooting.adoc[]
 ** xref:troubleshooting-tips.adoc[]

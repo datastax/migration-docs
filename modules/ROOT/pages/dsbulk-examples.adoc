@@ -1,0 +1,89 @@
+= Case examples
+
+[NOTE]
+====
+These examples show sample `username` and `password` values that are for demonstration purposes only. 
+Do not use these values in your environment.
+==== 
+
+== Generate migration script
+
+Generate a migration script to migrate from an existing Origin cluster to a Target {astra_db} cluster:
+
+[source,bash]
+----
+    java -jar target/dsbulk-migrator-<VERSION>-embedded-driver.jar migrate-live \
+        --data-dir=/path/to/data/dir \
+        --dsbulk-cmd=${DSBULK_ROOT}/bin/dsbulk \
+        --dsbulk-log-dir=/path/to/log/dir \
+        --export-host=my-origin-cluster.com \
+        --export-username=user1 \
+        --export-password=s3cr3t \
+        --import-bundle=/path/to/bundle \
+        --import-username=user1 \
+        --import-password=s3cr3t
+----
+
+== Migrate live using external DSBulk install
+
+Migrate live from an existing Origin cluster to a Target {astra_db} cluster using an external DSBulk installation. 
+Passwords are prompted interactively:
+
+[source,bash]
+----
+    java -jar target/dsbulk-migrator-<VERSION>-embedded-driver.jar migrate-live \
+        --data-dir=/path/to/data/dir \
+        --dsbulk-cmd=${DSBULK_ROOT}/bin/dsbulk \
+        --dsbulk-log-dir=/path/to/log/dir \
+        --export-host=my-origin-cluster.com \
+        --export-username=user1 \
+        --export-password # password will be prompted \
+        --import-bundle=/path/to/bundle \
+        --import-username=user1 \
+        --import-password # password will be prompted
+----
+
+== Migrate live using embedded DSBulk install
+
+Migrate live from an existing Origin cluster to a Target {astra_db} cluster using the embedded DSBulk installation. 
+Passwords are prompted interactively. 
+In this example, additional DSBulk options are passed. 
+
+[NOTE]
+====
+You must use the `dsbulk-migrator-<VERSION>-embedded-dsbulk.jar` fat jar here. 
+Otherwise, an error is raised because no embedded DSBulk can be found.
+====
+
+[source,bash]
+----
+    java -jar target/dsbulk-migrator-<VERSION>-embedded-dsbulk.jar migrate-live \
+        --data-dir=/path/to/data/dir \
+        --dsbulk-use-embedded \
+        --dsbulk-log-dir=/path/to/log/dir \
+        --export-host=my-origin-cluster.com \
+        --export-username=user1 \
+        --export-password # password will be prompted \
+        --export-dsbulk-option "--connector.csv.maxCharsPerColumn=65536" \
+        --export-dsbulk-option "--executor.maxPerSecond=1000" \
+        --import-bundle=/path/to/bundle \
+        --import-username=user1 \
+        --import-password # password will be prompted \
+        --import-dsbulk-option "--connector.csv.maxCharsPerColumn=65536" \
+        --import-dsbulk-option "--executor.maxPerSecond=1000" 
+----
+
+
+== Generate DDL to recreate Origin schema in Target
+
+Generate DDL files to recreate the Origin schema in a Target {astra_db} cluster:
+
+[source,bash]
+----
+    java -jar target/dsbulk-migrator-<VERSION>-embedded-driver.jar generate-ddl \
+        --data-dir=/path/to/data/dir \
+        --export-host=my-origin-cluster.com \
+        --export-username=user1 \
+        --export-password=s3cr3t \
+        --optimize-for-astra
+----
