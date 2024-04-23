@@ -16,7 +16,7 @@
 ** xref:manage-proxy-instances.adoc[]
 //phase 2
 * xref:migrate-and-validate-data.adoc[]
-** xref:cassandra-data-migrator.adoc[]
+//** xref:cassandra-data-migrator.adoc[]
 ** xref:dsbulk-migrator.adoc[]
 //phase 3
 * xref:enable-async-dual-reads.adoc[]
@@ -24,6 +24,10 @@
 * xref:change-read-routing.adoc[]
 //phase 5
 * xref:connect-clients-to-target.adoc[]
+* Cassandra Data Migrator
+** xref:cassandra-data-migrator.adoc[]
+** xref: cdm-steps.adoc[]
+** xref: cdm-parameters.adoc[]
 * Troubleshooting
 ** xref:troubleshooting.adoc[]
 ** xref:troubleshooting-tips.adoc[]
