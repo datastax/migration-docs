@@ -16,7 +16,7 @@ With these tools, you can move your application to {astra_db}, DSE, or Cassandra
 Your clusters are kept in sync at all times by a dual-write logic configuration.
 You can roll back at any point, for complete peace of mind.
 
-== Migrations process
+== Migration process
 
 Downtime may be necessary when you need to migrate data that is critical for ongoing operations. 
 In some cases, the migration process itself may require systems to be taken offline temporarily. 
