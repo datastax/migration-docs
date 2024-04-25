@@ -1,6 +1,6 @@
 .Data migration
-//* xref:introduction.adoc[]
 * xref:index.adoc[]
+* xref:introduction.adoc[]
 * xref:components.adoc[]
 * xref:preliminary-steps.adoc[]
 ** xref:feasibility-checklists.adoc[]
