@@ -18,8 +18,8 @@ You can roll back at any point, for complete peace of mind.
 
 == Migrations process
 
-Data migrations with downtime are those where the data being migrated is critical for ongoing operations. 
-The migration process itself may require systems to be taken offline temporarily. 
+Downtime may be necessary when you need to migrate data that is critical for ongoing operations. 
+In some cases, the migration process itself may require systems to be taken offline temporarily. 
 Your business determines the downtime for any migration and how much downtime (if any) is necessary. 
 Large amounts of data require more time; small amounts of data require less time and may also be migrated through the {astra_ui}.
 
