@@ -1,5 +1,5 @@
-.{product}
-* xref:introduction.adoc[]
+.Data migration
+//* xref:introduction.adoc[]
 * xref:index.adoc[]
 * xref:components.adoc[]
 * xref:preliminary-steps.adoc[]
