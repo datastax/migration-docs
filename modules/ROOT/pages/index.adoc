@@ -8,7 +8,7 @@ Enterprises today want to reliably migrate mission-critical client applications 
 A migration is a workflow that encompasses the lifecycle of uploading and importing your data to the selected keyspaces. 
 DataStax has developed a set of thoroughly tested self-service tools to walk you through well-defined migration options:
 
-* Zero Downtime Migration 
+* Zero Downtime Migration
 * Cassandra Data Migrator
 * DSBulk Migrator
  
