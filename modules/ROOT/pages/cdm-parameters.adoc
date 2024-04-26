@@ -37,7 +37,7 @@ The `spark.cdm.transform.custom.writetime` property, if set, would override `spa
 
 | `spark.cdm.schema.origin.column.writetime.names`
 | 
-| Default is empty, meaning the names will be determined automatically if `spark.cdm.schema.origin.column.writetime.automatic` is set.
+| Default is empty, meaning the names are determined automatically if `spark.cdm.schema.origin.column.writetime.automatic` is set.
 Otherwise, specify a subset of eligible columns that are used to calculate the WRITETIME of the Target record.
 Example: `data_col1,data_col2,...`
 
@@ -88,15 +88,15 @@ For information about invoking `DiffData` in a {cstar-data-migrator} command, se
 
 | `spark.cdm.autocorrect.missing` 
 | `false`
-| When `true`, data that is missing in Target but is found in Origin will be re-migrated to Target.
+| When `true`, data that is missing in Target but is found in Origin is re-migrated to Target.
 
 | `spark.cdm.autocorrect.mismatch` 
 | `false`
-| When `true`, data that is different between Origin and Target will be reconciled. 
+| When `true`, data that is different between Origin and Target is reconciled. 
 [NOTE]
 ====
 The `TIMESTAMP` of records may have an effect.
-If the `WRITETIME` of the Origin record (determined with `.writetime.names`) is earlier than the `WRITETIME` of the Target record, the change will not appear in Target.
+If the `WRITETIME` of the Origin record (determined with `.writetime.names`) is earlier than the `WRITETIME` of the Target record, the change does appear in Target.
 This comparative state may be particularly challenging to troubleshoot if individual columns (cells) have been modified in Target.
 ====
 
@@ -109,8 +109,8 @@ By default, Counter tables are not copied when missing, unless explicitly set.
 | `./<keyspace>.<tablename>_partitions.csv`
 | Commented out.
 This CSV file is used as input, as well as output when applicable.
-If the file exists, only the partition ranges in this file will be migrated or validated.
-Similarly, if exceptions occur while migrating or validating, partition ranges with exceptions will be logged to this file. 
+If the file exists, only the partition ranges in this file are migrated or validated.
+Similarly, if exceptions occur while migrating or validating, partition ranges with exceptions are logged to this file. 
 
 |===
 
@@ -132,9 +132,9 @@ During initial testing, you may want this to be a small number (such as `1`).
 
 | `spark.cdm.perfops.batchSize`
 | `5`
-| When writing to Target, this comprises the number of records that will be put into an `UNLOGGED` batch.
-{cstar-data-migrator} will tend to work on the same partition at a time.
-Thus if your partition sizes are larger, this number may be increased.
+| When writing to Target, this comprises the number of records that are put into an `UNLOGGED` batch.
+{cstar-data-migrator} tends to work on the same partition at a time.
+If your partition sizes are larger, this number may be increased.
 If the `spark.cdm.perfops.batchSize` would mean that more than 1 partition is often contained in a batch, reduce this parameter's value.
 Ideally < 1% of batches have more than 1 partition.
 
@@ -193,7 +193,8 @@ By default, these parameters are commented out.
 | `spark.cdm.transform.missing.key.ts.replace.value`
 | `1685577600000`
 | Timestamp value in milliseconds. 
-Partition and clustering columns cannot have null values, but if these are added as part of a schema transformation between Origin and Target, it is possible that the Origin side is null.
+Partition and clustering columns cannot have null values. 
+If they are added as part of a schema transformation between Origin and Target, it is possible that the Origin side is null.
 In this case, the `Migrate` data operation would fail.
 This parameter allows a crude constant value to be used in its place, separate from the Constant values feature.
 
@@ -207,7 +208,7 @@ This parameter allows a crude constant value to be used in its place, and overri
 | `spark.cdm.transform.custom.writetime.incrementBy` 
 | `0`
 | Default is `0`.
-This is useful when you have a List that is not frozen, and you are updating this via the autocorrect feature.
+This is useful when you have a List that is not frozen, and you are updating this using the autocorrect feature.
 Lists are not idempotent, and subsequent UPSERTs would add duplicates to the list.
 
 | `spark.cdm.transform.codecs` 
@@ -245,7 +246,7 @@ Must be in `ZoneRulesProvider.getAvailableZoneIds()`.
 == Cassandra filter parameters
 
 Cassandra filters are applied on the coordinator node.
-Note that, depending on the filter, the coordinator node may need to do a lot more work than is normal, notably because {cstar-data-migrator} specifies `ALLOW FILTERING`.
+Depending on the filter, the coordinator node may need to do a lot more work than is normal, notably because {cstar-data-migrator} specifies `ALLOW FILTERING`.
 
 By default, these parameters are commented out.
 
@@ -296,26 +297,27 @@ Invalid percentages will be treated as 100.
 | `0`
 | The lowest (inclusive) writetime values to be migrated.
 Using the `spark.cdm.filter.java.writetime.min` and `spark.cdm.filter.java.writetime.max` thresholds, {cstar-data-migrator} can filter records based on their writetimes.
-The maximum writetime of the columns configured at `spark.cdm.schema.origin.column.writetime.names` will be compared to the `.min` and `.max` thresholds, which must be in **microseconds since the epoch**.
-If the `spark.cdm.schema.origin.column.writetime.names` are not specified, or the thresholds are null or otherwise invalid, the filter will be ignored.
-Note that `spark.cdm.s.perfops.batchSize` will be ignored when this filter is in place; a value of 1 will be used instead.
+The maximum writetime of the columns configured at `spark.cdm.schema.origin.column.writetime.names` are compared to the `.min` and `.max` thresholds, which must be in **microseconds since the epoch**.
+If the `spark.cdm.schema.origin.column.writetime.names` are not specified or the thresholds are null or otherwise invalid, the filter is ignored.
+Note that `spark.cdm.s.perfops.batchSize` is ignored when this filter is in place; a value of 1 is used instead.
 
 | `spark.cdm.filter.java.writetime.max`
 | `9223372036854775807`
 | The highest (inclusive) writetime values to be migrated.
-Maximum timestamp of the columns specified by `spark.cdm.schema.origin.column.writetime.names`; if that property is not specified, or is for some reason null, the filter is ignored.
+Maximum timestamp of the columns specified by `spark.cdm.schema.origin.column.writetime.names`. 
+If that property is not specified or is for some reason null, the filter is ignored.
 
 | `spark.cdm.filter.java.column.name`
 | 
 | Filter rows based on matching a configured value.
 With `spark.cdm.filter.java.column.name`, specify the column name against which the `spark.cdm.filter.java.column.value` is compared.
 Must be on the column list specified at `spark.cdm.schema.origin.column.names`.
-The column value will be converted to a String, trimmed of whitespace on both ends, and compared.
+The column value is converted to a String, trimmed of whitespace on both ends, and compared.
 
 | `spark.cdm.filter.java.column.value`
 | 
 | String value to use as comparison.
-Whitespace on the ends of `spark.cdm.filter.java.column.value` will be trimmed.
+The whitespace on the ends of `spark.cdm.filter.java.column.value` is trimmed.
 |===
 
 
@@ -347,7 +349,8 @@ Examples: `'abcd'` for a string; `1234` for an int, and so on.
 
 | `spark.cdm.feature.constantColumns.splitRegex`
 | `,`
-| Defaults to comma, but can be any regex character that works with `String.split(regex)`; this option is needed because some type values contain commas, such as in lists, maps, and sets.
+| Defaults to comma, but can be any regex character that works with `String.split(regex)`. 
+This option is needed because some type values contain commas, such as in lists, maps, and sets.
 
 |===
 
@@ -368,11 +371,11 @@ By default, these parameters are commented out.
 Must be defined on `spark.cdm.schema.origin.column.names`, and the corresponding type on `spark.cdm.schema.origin.column.types` must be a map.
 
 | `spark.cdm.feature.explodeMap.origin.name.key`
-| The name of the column on the Target table that will hold the map key, such as `my_map_key`.
+| The name of the column on the Target table that holds the map key, such as `my_map_key`.
 This key must be present on the Target primary key `spark.cdm.schema.target.column.id.names`.
 
 | `spark.cdm.feature.explodeMap.origin.value`
-| The name of the column on the Target table that will hold the map value, such as `my_map_value`.
+| The name of the column on the Target table that holds the map value, such as `my_map_value`.
 |===
 
 
@@ -380,7 +383,7 @@ This key must be present on the Target primary key `spark.cdm.schema.target.colu
 == Guardrail feature parameter
 
 The guardrail feature manages records that exceed guardrail checks. 
-The Guardrail job will generate a report; other jobs will skip records that exceed the guardrail limit.
+The Guardrail job generates a report; other jobs skip records that exceed the guardrail limit.
 
 By default, these parameters are commented out.
 

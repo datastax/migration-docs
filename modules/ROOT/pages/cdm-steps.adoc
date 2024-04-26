@@ -1,31 +1,13 @@
-= Steps to use {cstar-data-migrator} for data migration
+= Migrate {cstar-data-migrator}
 
 Use {cstar-data-migrator} to migrate and validate tables between Origin and Target Cassandra clusters, with available logging and reconciliation support.
 
-[[cdm-prereqs]]
-== {cstar-data-migrator} prerequisites
-
-* Install or switch to Java 11.
-The Spark binaries are compiled with this version of Java.
-* Install https://archive.apache.org/dist/spark/spark-3.5.1/[Spark 3.5.1] on a single VM (no cluster necessary) where you want to run this job.
-* Optionally, install https://maven.apache.org/download.cgi[Maven] 3.9.x if you want to build the JAR for local development.
-
-You can install Apache Spark by running the following commands:
-
-[source,bash]
-----
-wget https://archive.apache.org/dist/spark/spark-3.5.1/spark-3.5.1-bin-hadoop3-scala2.13.tgz
-
-tar -xvzf spark-3.5.1-bin-hadoop3-scala2.13.tgz
-----
-
-
 == {cstar-data-migrator} steps
 
-1. Configure for your environment the `cdm*.properties` file that's provided in the {cstar-data-migrator} https://github.com/datastax/cassandra-data-migrator/tree/main/src/resources[GitHub repo].
+. Configure for your environment the `cdm*.properties` file that's provided in the {cstar-data-migrator} https://github.com/datastax/cassandra-data-migrator/tree/main/src/resources[GitHub repo].
 The file can have any name.
 It does not need to be `cdm.properties` or `cdm-detailed.properties`.
-In both versions, only the parameters that aren't commented out will be processed by the `spark-submit` job.
+In both versions, the `spark-submit` job processes only the parameters that aren't commented out.
 Other parameter values use defaults or are ignored.
 See the descriptions and defaults in each file.
 Refer to:
@@ -33,9 +15,9 @@ Refer to:
    This file contains only those parameters that are commonly configured.
    * The complete sample properties configuration, https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[cdm-detailed.properties], for the full set of configurable settings.
 
-2. Place the properties file that you elected to use and customize where it can be accessed while running the job via `spark-submit`.
+. Place the properties file that you elected to use and customize where it can be accessed while running the job using `spark-submit`.
 
-3. Run the job using `spark-submit` command:
+. Run the job using `spark-submit` command:
 
 [source,bash]
 ----
@@ -65,7 +47,7 @@ Example:
 --class com.datastax.cdm.job.DiffData cassandra-data-migrator-x.y.z.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
 
-The {cstar-data-migrator} validation job will report differences as `ERROR` entries in the log file. 
+The {cstar-data-migrator} validation job reports differences as `ERROR` entries in the log file. 
 Example:
 
 [source,bash]
