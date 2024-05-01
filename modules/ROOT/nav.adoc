@@ -30,5 +30,6 @@
 ** xref:troubleshooting-tips.adoc[]
 ** xref:troubleshooting-scenarios.adoc[]
 * xref:faqs.adoc[]
+* xref:glossary.adoc[]
 * xref:contributions.adoc[]
 * xref:release-notes.adoc[]
