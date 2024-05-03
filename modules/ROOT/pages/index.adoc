@@ -18,21 +18,23 @@ You can roll back at any point, for complete peace of mind.
 
 == Migration process
 
-Downtime may be necessary when you need to migrate data that is critical for ongoing operations. 
+{company} can migrate all applications, however critical, without downtime. If the business can tolerate some amount of application downtime and the data can be migrated within this period, tools such as Cassandra Data Migrator or DSBulk can be used for the migration.
 In some cases, the migration process itself may require systems to be taken offline temporarily. 
 Your business determines the downtime for any migration and how much downtime (if any) is necessary. 
 Large amounts of data require more time; small amounts of data require less time and may also be migrated through the {astra_ui}.
 
 == Data migration tools
 
-For modest data volumes where temporary downtime is tolerable, Datastax recommends two open-source data migration tools to help with brief outages:
+For modest data volumes where temporary downtime is tolerable, Datastax recommends two open-source data migration tools to help with the migration of existing data or help migrating existing data:
 
 * *Cassandra Data Migrator*: The best choice to migrate large data quantities, and where detailed logging, data verifications, table column renaming (if needed), and reconciliation options are provided.
 * *DSBulk Migrator*: This leverages DataStax Bulk Loader (DSBulk) to perform the data migration, and provides new commands specific to migrations. DSBulk Migrator is ideal for simple migration of smaller data quantities, and where data validation (other than post-migration row counts) is not necessary.
 
 These tools provide sophisticated features that help you migrate your data from any Cassandra Origin (Apache Cassandra®, {company} Enterprise (DSE), {company} {astra_db}) to any Cassandra Target (Apache Cassandra, DSE, {company} {astra_db}).
 
-For large datasets, it's best to use the Zero Downtime Migration (ZDM).
+ZDM is available for all data sets and works with ZDM proxy. 
+The proxy does the dual writing to both clusters.
+
 ZDM provides a simple and reliable way for you to migrate applications from any CQL-based cluster (Apache Cassandra®, {company} Enterprise (DSE), {astra_db}, or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
 
 xref:components.adoc#role-of-zdm-proxy[ZDM proxy], the main component of ZDM, is an open-source software designed to run in a clustered fashion so there is never a single point of failure. 
