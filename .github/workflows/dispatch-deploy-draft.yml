@@ -1,4 +1,4 @@
-name: Dispatch Deploy to GitHub Pages
+name: Dispatch Deploy Draft
 
 on:
   push:
@@ -39,12 +39,12 @@ jobs:
           echo "draft_branch=$draft_branch" >> $GITHUB_OUTPUT
         id: branches
 
-      - name: Dispatch Deploy to GitHub Pages
+      - name: Dispatch Deploy Draft
         uses: convictional/trigger-workflow-and-wait@v1.6.1
         with:
           owner: riptano
           repo: datastax-docs-site
           github_token: ${{ secrets.DISPATCH_GITHUB_TOKEN }}
           github_user: mlr
-          workflow_file_name: gh-pages-build.yml
+          workflow_file_name: deploy-draft.yml
           client_payload: '{ "build_repository": "${{ github.event.repository.full_name }}", "build_branch": "${{ steps.branches.outputs.build_branch }}", "draft_branch": "${{ steps.branches.outputs.draft_branch }}", "pull_request_number": "${{ github.event.pull_request.number }}" }'
