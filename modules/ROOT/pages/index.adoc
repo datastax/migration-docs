@@ -5,40 +5,36 @@ ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 Enterprises today want to reliably migrate mission-critical client applications and data to cloud environments with zero downtime or near zero downtime during the migration. 
 
-A migration is a workflow that encompasses the lifecycle of uploading and importing your data to the selected keyspaces. 
-DataStax has developed a set of thoroughly tested self-service tools to walk you through well-defined migration options:
+A migration is a workflow that encompasses the lifecycle of uploading and importing your data to the selected databases. 
+{company} has developed a set of thoroughly tested self-service tools to walk you through well-defined migration options:
 
-* Zero Downtime Migration
+* Zero Downtime Migration (ZDM) Proxy
 * Cassandra Data Migrator
-* DSBulk Migrator
+* DSBulk Loader
  
 With these tools, you can move your application to {astra_db}, DSE, or Cassandra with no downtime and with minimal configuration changes.
 Your clusters are kept in sync at all times by a dual-write logic configuration.
-You can roll back at any point, for complete peace of mind.
+You can roll back at any point for complete peace of mind.
 
-== Migration process
+== Migration process and tools
 
-{company} can migrate all applications, however critical, without downtime. If the business can tolerate some amount of application downtime and the data can be migrated within this period, tools such as Cassandra Data Migrator or DSBulk can be used for the migration.
-In some cases, the migration process itself may require systems to be taken offline temporarily. 
-Your business determines the downtime for any migration and how much downtime (if any) is necessary. 
-Large amounts of data require more time; small amounts of data require less time and may also be migrated through the {astra_ui}.
+{company} can migrate all data, however critical, with or without downtime from one application to our database. 
+When migrating data, you begin with an application connected to a cluster. 
+You run data and connect your own users to this application.
+Reads and writes are moved (as necessary) from the application to the cluster.
+After completing the migration, the data runs from your cluster to our database.
+Our data migration process is about the same, but with several options to make the transition smooth. 
+//The migration process differs slightly with each of our migration tools. 
 
-== Data migration tools
-
-For modest data volumes where temporary downtime is tolerable, Datastax recommends two open-source data migration tools to help with the migration of existing data or help migrating existing data:
-
-* *Cassandra Data Migrator*: The best choice to migrate large data quantities, and where detailed logging, data verifications, table column renaming (if needed), and reconciliation options are provided.
-* *DSBulk Migrator*: This leverages DataStax Bulk Loader (DSBulk) to perform the data migration, and provides new commands specific to migrations. DSBulk Migrator is ideal for simple migration of smaller data quantities, and where data validation (other than post-migration row counts) is not necessary.
+* *ZDM Proxy*: You can continue to run your current application and migrate data to the Origin database without any downtime. 
+It's a process of moving your current data from your application to the {company}'s Origin cluster seamlessly without stopping any connection to and from any cluster or application. 
+The proxy helps to manage the activity in transition.
+Your applications connect directly to the proxy instead of pointing to the database.
+NOTE: We recommend using three ZDM Proxies for this option. 
+* *Cassandra Data Migrator (CDM)*: This option migrates and validates data between Cassandra-compatible clusters. 
+It supports migration at scale and ensures accuracy and efficiency during the process.
+CDM allows for migration with zero downtime when used with the ZDM Proxy, and it can also be used for migrations with acceptable downtime. 
+* *DSBulk Loader*: This option is loading and unloading CSV/JSON data and counting table rows. 
+ DSBulk Loader does not inherently support zero downtime migrations like CDM when used with ZDM Proxy.
 
 These tools provide sophisticated features that help you migrate your data from any Cassandra Origin (Apache Cassandra®, {company} Enterprise (DSE), {company} {astra_db}) to any Cassandra Target (Apache Cassandra, DSE, {company} {astra_db}).
-
-ZDM is available for all data sets and works with ZDM proxy. 
-The proxy does the dual writing to both clusters.
-
-ZDM provides a simple and reliable way for you to migrate applications from any CQL-based cluster (Apache Cassandra®, {company} Enterprise (DSE), {astra_db}, or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
-
-xref:components.adoc#role-of-zdm-proxy[ZDM proxy], the main component of ZDM, is an open-source software designed to run in a clustered fashion so there is never a single point of failure. 
-It handles all real-time requests generated by your client applications.
-
-
-
