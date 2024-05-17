@@ -44,7 +44,7 @@ For more, see https://docs.datastax.com/en/astra-db-serverless/index.html[{compa
 
 * From any CQL-based database type/version to the equivalent CQL-based database type/version. 
 
-include::partial$note-downtime.adoc[]
+include::partial$note-downtime.adoc[] 
 
 [TIP]
 ====
