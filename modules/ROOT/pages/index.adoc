@@ -23,11 +23,10 @@ When migrating data, you begin with an application connected to a cluster.
 You run data and connect your own users to this application.
 Reads and writes are moved (as necessary) from the application to the cluster.
 After completing the migration, the data runs from your cluster to our database.
-Our data migration process is about the same, but with several options to make the transition smooth. 
-//The migration process differs slightly with each of our migration tools. 
+Our data migration process has several options to make the transition smooth. 
 
 * *ZDM Proxy*: You can continue to run your current application and migrate data to the Origin database without any downtime. 
-It's a process of moving your current data from your application to the {company}'s Origin cluster seamlessly without stopping any connection to and from any cluster or application. 
+It's a process of moving your current data from your application to the {company}'s Origin cluster without stopping any connection to and from any cluster or application. 
 The proxy helps to manage the activity in transition.
 Your applications connect directly to the proxy instead of pointing to the database.
 NOTE: We recommend using three ZDM Proxies for this option. 
@@ -35,6 +34,6 @@ NOTE: We recommend using three ZDM Proxies for this option.
 It supports migration at scale and ensures accuracy and efficiency during the process.
 CDM allows for migration with zero downtime when used with the ZDM Proxy, and it can also be used for migrations with acceptable downtime. 
 * *DSBulk Loader*: This option is loading and unloading CSV/JSON data and counting table rows. 
- DSBulk Loader does not inherently support zero downtime migrations like CDM when used with ZDM Proxy.
+ DSBulk also allows for migration with zero downtime when used with the ZDM Proxy. It does not support data validation/reconciliation other than validating the final table counts.
 
-These tools provide sophisticated features that help you migrate your data from any Cassandra Origin (Apache Cassandra®, {company} Enterprise (DSE), {company} {astra_db}) to any Cassandra Target (Apache Cassandra, DSE, {company} {astra_db}).
+These tools provide features that help you migrate your data from any Cassandra Origin (Apache Cassandra®, {company} Enterprise (DSE), {company} {astra_db}) to any Cassandra Target (Apache Cassandra, DSE, {company} {astra_db}).
