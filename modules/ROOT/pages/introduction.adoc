@@ -1,10 +1,10 @@
-= {zdm-product}
+= Introduction to {zdm-product}
 :navtitle: Introduction
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,introduction
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
-{zdm-shortproduct} provides a simple and reliable way for you to migrate applications from any CQL-based cluster (https://cassandra.apache.org/_/index.html[Apache Cassandra&reg;], https://www.datastax.com/products/datastax-enterprise[DataStax Enterprise (DSE)], https://www.datastax.com/products/datastax-astra[{astra_db}], or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
+{zdm-product} provides a simple and reliable way for you to migrate applications from any CQL-based cluster (https://cassandra.apache.org/_/index.html[Apache Cassandra&reg;], https://www.datastax.com/products/datastax-enterprise[DataStax Enterprise (DSE)], https://www.datastax.com/products/datastax-astra[{astra_db}], or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
 
 * You can move your application to {astra_db}, DSE, or Cassandra with no downtime and with minimal configuration changes.
 * Your clusters are kept in sync at all times by a dual-write logic configuration.

@@ -1,12 +1,11 @@
 .Data migration
-* xref:index.adoc[]
-** xref:introduction.adoc[Zero Downtime Migration]
-*** xref:components.adoc[]
-*** xref:preliminary-steps.adoc[]
-**** xref:feasibility-checklists.adoc[]
-**** xref:deployment-infrastructure.adoc[]
-**** xref:create-target.adoc[]
-**** xref:rollback.adoc[]
+* xref:introduction.adoc[Zero Downtime Migration]
+** xref:components.adoc[]
+** xref:preliminary-steps.adoc[]
+*** xref:feasibility-checklists.adoc[]
+*** xref:deployment-infrastructure.adoc[]
+*** xref:create-target.adoc[]
+*** xref:rollback.adoc[]
 //phase 1
 ** xref:phase1.adoc[]
 *** xref:setup-ansible-playbooks.adoc[]
@@ -25,11 +24,16 @@
 ** xref:change-read-routing.adoc[]
 //phase 5
 ** xref:connect-clients-to-target.adoc[]
-* Troubleshooting
-** xref:troubleshooting.adoc[]
-** xref:troubleshooting-tips.adoc[]
-** xref:troubleshooting-scenarios.adoc[]
-* xref:faqs.adoc[]
-* xref:glossary.adoc[]
-* xref:contributions.adoc[]
-* xref:release-notes.adoc[]
+* Reference
+** Troubleshooting
+*** xref:troubleshooting.adoc[]
+*** xref:troubleshooting-tips.adoc[]
+*** xref:troubleshooting-scenarios.adoc[]
+** Frequently Asked Questions
+*** xref:faqs.adoc[]
+** Glossary
+*** xref:glossary.adoc[]
+** Contributions
+*** xref:contributions.adoc[]
+** Release Notes
+*** xref:release-notes.adoc[]
