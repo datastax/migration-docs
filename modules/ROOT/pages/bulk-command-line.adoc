@@ -24,11 +24,11 @@ The default is simply `dsbulk`, assuming that the command is available through t
 
 | `-d`
 | `--data-dir=PATH`
-| The directory where data will be exported to and imported from.
+| The directory where data is exported to and imported from.
 The default is a `data` subdirectory in the current working directory.
-The data directory will be created if it does not exist.
-Tables will be exported and imported in subdirectories of the data directory specified here.
-There will be one subdirectory per keyspace in the data directory, then one subdirectory per table in each keyspace directory.
+The data directory is created if it does not exist.
+Tables are exported and imported in subdirectories of the data directory specified here.
+There is one subdirectory per keyspace in the data directory, then one subdirectory per table in each keyspace directory.
 
 | `-e`
 | `--dsbulk-use-embedded`
@@ -48,14 +48,14 @@ The default is `LOCAL_QUORUM`.
 | 
 | `--export-dsbulk-option=OPT=VALUE`
 | An extra DSBulk option to use when exporting.
-Any valid DSBulk option can be specified here, and it will passed as is to the DSBulk process.
+Any valid DSBulk option can be specified here and pass without change to the DSBulk process.
 DSBulk options, including driver options, must be passed as `--long.option.name=<value>`.
 Short options are not supported.
 
 | 
 | `--export-host=HOST[:PORT]`
 | The host name or IP and, optionally, the port of a node from the Origin cluster.
-If the port is not specified, it will default to `9042`.
+If the port is not specified, it defaults to `9042`.
 This option can be specified multiple times.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
 
@@ -119,14 +119,14 @@ The default is `1970-01-01T00:00:00Z`.
 | 
 | `--import-dsbulk-option=OPT=VALUE`
 | An extra DSBulk option to use when importing.
-Any valid DSBulk option can be specified here, and it will passed as is to the DSBulk process.
+Any valid DSBulk option can be specified here and pass without change to the DSBulk process.
 DSBulk options, including driver options, must be passed as `--long.option.name=<value>`.
 Short options are not supported.
 
 | 
 | `--import-host=HOST[:PORT]`
 | The host name or IP and, optionally, the port of a node from the Target cluster.
-If the port is not specified, it will default to `9042`.
+If the port is not specified, it defaults to `9042`.
 This option can be specified multiple times.
 Options `--import-host` and `--import-bundle` are mutually exclusive.
 
@@ -168,15 +168,15 @@ Case-sensitive keyspace names must be entered in their exact case.
 | `--dsbulk-log-dir=PATH`
 | The directory where DSBulk should store its logs.
 The default is a `logs` subdirectory in the current working directory.
-This subdirectory will be created if it does not exist.
-Each DSBulk operation will create a subdirectory in the log directory specified here.
+This subdirectory is created if it does not exist.
+Each DSBulk operation creates a subdirectory in the log directory specified here.
 
 | 
 | `--max-concurrent-ops=NUM`
 | The maximum number of concurrent operations (exports and imports) to carry.
 The default is `1`.
 Set this to higher values to allow exports and imports to occur concurrently.
-For example, with a value of `2`, each table will be imported as soon as it is exported, while the next table is being exported.
+For example, with a value of `2`, each table is imported as soon as it is exported while the next table is being exported.
 
 | 
 | `--skip-truncate-confirmation`
@@ -226,9 +226,9 @@ The default is simply `dsbulk`, assuming that the command is available through t
 
 | `-d`
 | `--data-dir=PATH`
-| The directory where data will be exported to and imported from. 
+| The directory where data isexported to and imported from. 
 The default is a `data` subdirectory in the current working directory. 
-The data directory will be created if it does not exist. 
+The data directory is created if it does not exist. 
 
 |
 | `--export-bundle=PATH`
@@ -243,14 +243,14 @@ The default is `LOCAL_QUORUM`.
 |
 | `--export-dsbulk-option=OPT=VALUE`
 | An extra DSBulk option to use when exporting.
-Any valid DSBulk option can be specified here, and it will passed as is to the DSBulk process.
+Any valid DSBulk option can be specified here and pass without change to the DSBulk process.
 DSBulk options, including driver options, must be passed as `--long.option.name=<value>`.
 Short options are not supported.
 
 |
 | `--export-host=HOST[:PORT]`
 | The host name or IP and, optionally, the port of a node from the Origin cluster.
-If the port is not specified, it will default to `9042`.
+If the port is not specified, it defaults to `9042`.
 This option can be specified multiple times.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
 
@@ -315,14 +315,14 @@ The default is `1970-01-01T00:00:00Z`.
 |
 | `--import-dsbulk-option=OPT=VALUE`
 | An extra DSBulk option to use when importing.
-Any valid DSBulk option can be specified here, and it will passed as is to the DSBulk process.
+Any valid DSBulk option can be specified here and pass without change to the DSBulk process.
 DSBulk options, including driver options, must be passed as `--long.option.name=<value>`.
 Short options are not supported.
 
 |
 | `--import-host=HOST[:PORT]`
 | The host name or IP and, optionally, the port of a node from the Target cluster.
-If the port is not specified, it will default to `9042`.
+If the port is not specified, it defaults to `9042`.
 This option can be specified multiple times.
 Options `--import-host` and `--import-bundle` are mutually exclusive.
 
@@ -342,7 +342,7 @@ The default is `AUTO`.
 | `--import-max-errors=NUM`
 | The maximum number of failed records to tolerate when importing data.
 The default is `1000`.
-Failed records will appear in a `load.bad` file in the DSBulk operation directory.
+Failed records appear in a `load.bad` file in the DSBulk operation directory.
 
 |
 | `--import-password`
@@ -365,8 +365,8 @@ Case-sensitive keyspace names must be entered in their exact case.
 | `--dsbulk-log-dir=PATH`
 | The directory where DSBulk should store its logs.
 The default is a `logs` subdirectory in the current working directory.
-This subdirectory will be created if it does not exist.
-Each DSBulk operation will create a subdirectory in the log directory specified here.
+This subdirectory is created if it does not exist.
+Each DSBulk operation creates a subdirectory in the log directory specified here.
 
 | `-t`
 | `--tables=REGEX`
@@ -395,13 +395,13 @@ Most options have sensible default values and do not need to be specified, unles
 | `--optimize-for-astra`
 | Produce CQL scripts optimized for {company} {astra_db}.
 {astra_db} does not allow some options in DDL statements.
-Using this {dsbulk-migrator} command option, forbidden {astra_db} options will be omitted from the generated CQL files.
+Using this {dsbulk-migrator} command option, forbidden {astra_db} options are omitted from the generated CQL files.
 
 | `-d`
 | `--data-dir=PATH`
-| The directory where data will be exported to and imported from.
+| The directory where data is exported to and imported from.
 The default is a `data` subdirectory in the current working directory.
-The data directory will be created if it does not exist.
+The data directory is created if it does not exist.
 
 |
 | `--export-bundle=PATH`
@@ -411,7 +411,7 @@ Options `--export-host` and `--export-bundle` are mutually exclusive.
 |
 | `--export-host=HOST[:PORT]`
 | The host name or IP and, optionally, the port of a node from the Origin cluster.
-If the port is not specified, it will default to `9042`.
+If the port is not specified, it defaults to `9042`.
 This option can be specified multiple times.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
 

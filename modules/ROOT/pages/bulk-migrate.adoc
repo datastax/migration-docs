@@ -60,5 +60,5 @@ When generating a migration script, most options serve as default values in the 
 Even when generating scripts, this tool still needs to access the Origin cluster to gather metadata about the tables to migrate.
 
 When generating a DDL file, only a few options are meaningful.
-Because standard DSBulk is not used, and the import cluster is never contacted, import options and DSBulk-related options are ignored.
+Because standard DSBulk is not used and the import cluster is never contacted, import options and DSBulk-related options are ignored.
 The tool still needs to access the Origin cluster to gather metadata about the keyspaces and tables for which to generate DDL statements.
