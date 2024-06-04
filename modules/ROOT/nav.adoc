@@ -26,8 +26,8 @@
 * xref:connect-clients-to-target.adoc[]
 * Cassandra Data Migrator
 ** xref:cassandra-data-migrator.adoc[]
-** xref: cdm-steps.adoc[]
-** xref: cdm-parameters.adoc[]
+** xref:cdm-steps.adoc[]
+** xref:cdm-parameters.adoc[]
 * Troubleshooting
 ** xref:troubleshooting.adoc[]
 ** xref:troubleshooting-tips.adoc[]
