@@ -79,14 +79,14 @@ spark.cdm.autocorrect.mismatch                    false|true
 
 [IMPORTANT]
 ====
-The {cstar-data-migrator} validation job will never delete records from Target.
+The {cstar-data-migrator} validation job nevers delete records from Target.
 The job only adds or updates data on Target.
 ====
 
 [[cdm-guardrail-checks]]
 == Perform large-field guardrail violation checks
 
-Use {cstar-data-migrator} to identify large fields from a table that may break your cluster guardrails.
+Use {cstar-data-migrator} to identify large fields from a table that may break your https://docs.datastax.com/en/astra-db-serverless/cql/cassandra-guardrails.html[cluster guardrails].
 For example, {astra_db} has a 10MB limit for a single large field.
 Specify `--class com.datastax.cdm.job.GuardrailCheck` on the command.
 Example:
