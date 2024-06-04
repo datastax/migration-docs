@@ -1,11 +1,12 @@
 .Data migration
-* xref:introduction.adoc[Zero Downtime Migration]
+* Get Started
 ** xref:components.adoc[]
 ** xref:preliminary-steps.adoc[]
 *** xref:feasibility-checklists.adoc[]
 *** xref:deployment-infrastructure.adoc[]
 *** xref:create-target.adoc[]
 *** xref:rollback.adoc[]
+* xref:introduction.adoc[Zero Downtime Migration]
 //phase 1
 ** xref:phase1.adoc[]
 *** xref:setup-ansible-playbooks.adoc[]
