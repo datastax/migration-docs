@@ -29,7 +29,7 @@
 ** xref:cdm-steps.adoc[Migrate data]
 ** xref:cdm-parameters.adoc[Parameters]
 * Troubleshooting
-** xref:troubleshooting.adoc[]
+** xref:troubleshooting.adoc[] 
 ** xref:troubleshooting-tips.adoc[]
 ** xref:troubleshooting-scenarios.adoc[]
 * xref:faqs.adoc[]
