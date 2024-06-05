@@ -1,4 +1,6 @@
-= Prerequisites
+= Installing DataStax Bulk Loader
+
+https://docs.datastax.com/en/dsbulk/installing/install.html
 
 Use {dsbulk-migrator} to perform simple migration of smaller data quantities, where data validation (other than post-migration row counts) is not necessary. Enure you have the prerequisites to 
 
