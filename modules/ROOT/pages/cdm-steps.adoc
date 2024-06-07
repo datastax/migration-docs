@@ -1,8 +1,8 @@
-= Migrate {cstar-data-migrator}
+= {cstar-data-migrator}
 
 Use {cstar-data-migrator} to migrate and validate tables between Origin and Target Cassandra clusters, with available logging and reconciliation support.
 
-== {cstar-data-migrator} steps
+== Use {cstar-data-migrator}
 
 . Configure for your environment the `cdm*.properties` file that's provided in the {cstar-data-migrator} https://github.com/datastax/cassandra-data-migrator/tree/main/src/resources[GitHub repo].
 The file can have any name.
@@ -10,7 +10,7 @@ It does not need to be `cdm.properties` or `cdm-detailed.properties`.
 In both versions, the `spark-submit` job processes only the parameters that aren't commented out.
 Other parameter values use defaults or are ignored.
 See the descriptions and defaults in each file.
-Refer to:
+For more information,see the following:
    * The simplified sample properties configuration, https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[cdm.properties].
    This file contains only those parameters that are commonly configured.
    * The complete sample properties configuration, https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[cdm-detailed.properties], for the full set of configurable settings.
@@ -29,12 +29,12 @@ Refer to:
 
 [TIP]
 ====
-* Above command generates a log file `logfile_name_*.txt` to avoid log output on the console.
-* Update the memory options (driver & executor memory) based on your use-case
+* The command generates a log file `logfile_name_*.txt` to prevent log output on the console.
+* Update the memory options, driver & executor memory, based on your use-case
 ====
 
 [[cdm-validation-steps]]
-== {cstar-data-migrator} steps in validation mode
+== Validation mode for {cstar-data-migrator}
 
 To run your migration job with {cstar-data-migrator} in **data validation mode**, use class option `--class com.datastax.cdm.job.DiffData`. 
 Example:
@@ -64,7 +64,7 @@ To get the list of missing or mismatched records, grep for all `ERROR` entries i
 Differences noted in the log file are listed by primary-key values.
 ====
 
-You can also run the {cstar-data-migrator} validation job in an **AutoCorrect** mode. This mode can:
+You can also run the {cstar-data-migrator} validation job in an **AutoCorrect** mode, which can:
 
 * Add any missing records from Origin to Target.
 * Update any mismatched records between Origin and Target; this action makes Target the same as Origin.

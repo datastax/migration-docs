@@ -4,21 +4,8 @@ Read the prerequistes below before using the Cassandra Data Migrator.
 
 * Install or switch to Java 11.
 The Spark binaries are compiled with this version of Java.
-* Install https://archive.apache.org/dist/spark/spark-3.5.1/[Spark 3.5.1] on a single VM (no cluster necessary) where you want to run this job.
-* Optionally, install https://maven.apache.org/download.cgi[Maven] 3.9.x if you want to build the JAR for local development.
-
-You can install Apache Spark by running the following commands:
-
-[source,bash]
-----
-wget https://archive.apache.org/dist/spark/spark-3.5.1/spark-3.5.1-bin-hadoop3-scala2.13.tgz
-
-tar -xvzf spark-3.5.1-bin-hadoop3-scala2.13.tgz
-----
-
-* Install or switch to Java 11.
-The Spark binaries are compiled with this version of Java.
-* Install https://archive.apache.org/dist/spark/spark-3.5.1/[Spark 3.5.1] on a single VM (no cluster necessary) where you want to run this job.
+* Install https://archive.apache.org/dist/spark/spark-3.5.1/[Spark 3.5.1] on a single VM where you want to run this job.
+No cluster is necessary
 * Optionally, install https://maven.apache.org/download.cgi[Maven] 3.9.x if you want to build the JAR for local development.
 
 Run the following commands to install Apache Spark:
@@ -31,11 +18,11 @@ tar -xvzf spark-3.5.1-bin-hadoop3-scala2.13.tgz
 ----
 
 [[cdm-install-as-container]]
-== Install {cstar-data-migrator} as a Container
+== Install {cstar-data-migrator} as a container
 
 Get the latest image that includes all dependencies from https://hub.docker.com/r/datastax/cassandra-data-migrator[DockerHub].
 
-All migration tools (`cassandra-data-migrator` + `dsbulk` + `cqlsh`) are available in the `/assets/` folder of the container.
+All migration tools, `cassandra-data-migrator` + `dsbulk` + `cqlsh`, are available in the `/assets/` folder of the container.
 
 [[cdm-install-as-jar]]
 == Install {cstar-data-migrator} as a JAR file
@@ -52,7 +39,8 @@ If you're starting new, we recommended that you use the latest released version.
 [[cdm-build-jar-local]]
 == Build {cstar-data-migrator} JAR for local development (optional)
 
-Optionally, you can build the {cstar-data-migrator} JAR for local development. (You'll need https://maven.apache.org/download.cgi[Maven] 3.9.x.)
+Optionally, you can build the {cstar-data-migrator} JAR for local development. 
+You'll need https://maven.apache.org/download.cgi[Maven] 3.9.x.
 
 Example:
 

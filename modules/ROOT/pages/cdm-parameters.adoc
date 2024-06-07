@@ -18,7 +18,7 @@ Table must exist in Origin.
 | `true`
 | Default is `true`, unless `spark.cdm.schema.origin.column.ttl.names` is specified.
 When `true`, determine the Time To Live (TTL) of the Target record. 
-Find the maximum TTL of all Origin columns that can have TTL set (which excludes partition key, clustering key, collections/UDT/tuple, and frozen columns).
+Find the maximum TTL of all Origin columns that can have TTL set. This excludes partition key, clustering key, collections/UDT/tuple, and frozen columns.
 When `false`, and  `spark.cdm.schema.origin.column.ttl.names` is not set, the Target record has the TTL determined by the Target table configuration.
 
 | `spark.cdm.schema.origin.column.ttl.names`
@@ -30,8 +30,9 @@ Specify a subset of eligible columns that are used to calculate the TTL of the T
 | `true`
 | Default is `true`, unless `spark.cdm.schema.origin.column.writetime.names` is specified.
 When `true`, determine the `WRITETIME` of the Target record. 
-Find the maximum `WRITETIME` of all Origin columns that can have `WRITETIME` set (which excludes partition key, clustering key, collections/UDT/tuple, and frozen columns).
-When `false`, and `spark.cdm.schema.origin.column.writetime.names` is not set, the Target record has the `WRITETIME` determined by the Target table configuration. 
+Find the maximum `WRITETIME` of all Origin columns that can have `WRITETIME` set. This excludes partition key, clustering key, collections/UDT/tuple, and frozen columns.
+When `false`, and `spark.cdm.schema.origin.column.writetime.names` is not set, the Target table configuration determines the Target record's `WRITETIME`. 
+
 [NOTE]
 ====
 The `spark.cdm.transform.custom.writetime` property, if set, overrides `spark.cdm.schema.origin.column.writetime`.
@@ -55,7 +56,7 @@ You only need to list renamed columns.
 
 [NOTE]
 ====
-For optimization reasons, {cstar-data-migrator} does not migrate TTL and writetime at the field-level.
+For optimization reasons, {cstar-data-migrator} does not migrate TTL and writetime at the field level.
 Instead, {cstar-data-migrator} finds the field with the highest TTL, and the field with the highest writetime within an Origin table row, and uses those values on the entire Target table row.
 ====
 
@@ -79,10 +80,10 @@ Table must exist in Target.
 == Auto-correction parameters
 
 Auto-correction parameters allow {cstar-data-migrator} to correct data differences found between Origin and Target when you run the `DiffData` program.
-Typically, these are run-disabled (for "what if" migration testing), which generate a list of data discrepancies.
+Typically, these are run-disabled for "what if" migration testing, and generate a list of data discrepancies.
 The reasons for these discrepancies can then be investigated, and if necessary the parameters below can be enabled.
 
-For information about invoking `DiffData` in a {cstar-data-migrator} command, see xref:#cdm-validation-steps[{cstar-data-migrator} steps in validation mode] in this topic.
+For information about invoking `DiffData` in a {cstar-data-migrator} command, see xref:#cdm-validation-steps[{cstar-data-migrator} steps in validation mode].
 
 [cols="2,2,3a"]
 |===
@@ -105,7 +106,7 @@ This comparative state may be particularly challenging to troubleshoot if indivi
 | `spark.cdm.autocorrect.missing.counter` 
 | `false`
 | Commented out.
-By default, Counter tables are not copied when missing, unless explicitly set.  
+By default, counter tables are not copied when missing, unless explicitly set.  
 
 | `spark.tokenrange.partitionFile`
 | `./<keyspace>.<tablename>_partitions.csv`
@@ -197,8 +198,8 @@ By default, these parameters are commented out.
 | Timestamp value in milliseconds. 
 Partition and clustering columns cannot have null values. 
 If they are added as part of a schema transformation between Origin and Target, it is possible that the Origin side is null.
-In this case, the `Migrate` data operation would fail.
-This parameter allows a crude constant value to be used in its place that is separate from the Constant values feature.
+In this case, the `Migrate` data operation fails.
+This parameter allows a crude constant value to be used in its place that is separate from the constant values feature.
 
 | `spark.cdm.transform.custom.writetime` 
 | `0`
@@ -218,12 +219,12 @@ Lists are not idempotent, and subsequent UPSERTs add duplicates to the list.
 | Default is empty.
 A comma-separated list of additional codecs to enable. 
 
- * `INT_STRING` : int stored in a String.
- * `DOUBLE_STRING` : double stored in a String.
- * `BIGINT_STRING` : bigint stored in a String.
- * `DECIMAL_STRING` : decimal stored in a String.
- * `TIMESTAMP_STRING_MILLIS` : timestamp stored in a String, as Epoch milliseconds.
- * `TIMESTAMP_STRING_FORMAT` : timestamp stored in a String, with a custom format.
+ * `INT_STRING` : int stored in a string.
+ * `DOUBLE_STRING` : double stored in a string.
+ * `BIGINT_STRING` : bigint stored in a string.
+ * `DECIMAL_STRING` : decimal stored in a string.
+ * `TIMESTAMP_STRING_MILLIS` : timestamp stored in a string, as Epoch milliseconds.
+ * `TIMESTAMP_STRING_FORMAT` : timestamp stored in a string with a custom format.
 
 [NOTE]
 ====
@@ -306,7 +307,7 @@ Note that `spark.cdm.s.perfops.batchSize` is ignored when this filter is in plac
 | `spark.cdm.filter.java.writetime.max`
 | `9223372036854775807`
 | The highest (inclusive) writetime values to be migrated.
-Maximum timestamp of the columns specified by `spark.cdm.schema.origin.column.writetime.names`. 
+The `spark.cdm.schema.origin.column.writetime.names` specifies the maximum timestamp of the columns. 
 If that property is not specified or is for some reason null, the filter is ignored.
 
 | `spark.cdm.filter.java.column.name`
@@ -314,7 +315,7 @@ If that property is not specified or is for some reason null, the filter is igno
 | Filter rows based on matching a configured value.
 With `spark.cdm.filter.java.column.name`, specify the column name against which the `spark.cdm.filter.java.column.value` is compared.
 Must be on the column list specified at `spark.cdm.schema.origin.column.names`.
-The column value is converted to a String, trimmed of whitespace on both ends, and compared.
+The column value is converted to a string, trimmed of whitespace on both ends, and compared.
 
 | `spark.cdm.filter.java.column.value`
 | 
