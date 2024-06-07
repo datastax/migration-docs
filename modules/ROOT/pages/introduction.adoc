@@ -55,7 +55,7 @@ The highlighted components in each phase emphasize how your client applications 
 ==== Pre-migration client application operations
 
 Here's a look at a pre-migration from a high-level view.
-At this point, your client applications are performing read/write operations with an existing CQL-compatible database: Apache Cassandra, DSE, or {astra_db}.
+At this point, your client applications are performing read/write operations with an existing CQL-compatible database such as Apache Cassandra, DSE, or {astra_db}.
 
 image:pre-migration0ra9.png["Pre-migration environment."]
 
@@ -73,10 +73,10 @@ image:migration-phase1ra9.png["Migration Phase 1."]
 
 ==== Phase 2: Migrate data
 
-In this phase, migrate existing data using Cassandra Data Migrator and/or DSBulk Migrator.
+In this phase, migrate existing data using Cassandra Data Migrator and/or DSBulk Loader.
 Validate that the migrated data is correct, while continuing to perform dual writes.
 
-image:migration-phase2ra9.png["Migration Phase 2."]
+image:migration-phase2ra9a.png["Migration Phase 2."]
 
 '''
 
