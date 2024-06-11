@@ -133,8 +133,8 @@ spark.cdm.autocorrect.mismatch                    false|true
 
 [IMPORTANT]
 ====
-The {cstar-data-migrator} validation job will never delete records from Target.
-The job only adds or updates data on Target.
+You may still have differences in your clusters after running validation job as {cstar-data-migrator} does not delete records from Target that don't exists on Origin.
+The job only adds or updates records on Target that exists on Origin.
 ====
 
 [[cdm--partition-ranges]]
@@ -161,7 +161,7 @@ Example:
 ----
 ./spark-submit --properties-file cdm.properties \
  --conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" \
- --conf spark.cdm.tokenRange.partitionFile="/<path-to-file>/<csv-input-filename>" \
+ --conf spark.cdm.tokenrange.partitionFile.input="/<path-to-file>/<csv-input-filename>" \
  --master "local[*]" --driver-memory 25G --executor-memory 25G \
  --class com.datastax.cdm.job.<Migrate|DiffData> cassandra-data-migrator-x.y.z.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
