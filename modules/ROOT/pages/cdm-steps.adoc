@@ -1,6 +1,6 @@
 = {cstar-data-migrator}
 
-Use {cstar-data-migrator} to migrate and validate tables between Origin and Target Cassandra clusters, with available logging and reconciliation support.
+Use {cstar-data-migrator} to migrate and validate tables between the Origin and Target Cassandra clusters, with available logging and reconciliation support.
 
 == Use {cstar-data-migrator}
 
@@ -66,8 +66,8 @@ Differences noted in the log file are listed by primary-key values.
 
 You can also run the {cstar-data-migrator} validation job in an **AutoCorrect** mode, which can:
 
-* Add any missing records from Origin to Target.
-* Update any mismatched records between Origin and Target; this action makes Target the same as Origin.
+* Add any missing records from the Origin to Target cluster.
+* Update any mismatched records between the Origin and Target clusters; this action makes the Target cluster the same as the Origin cluster.
 
 To enable or disable this feature, use one or both of the following settings in your `*.properties` configuration file.
 
@@ -79,8 +79,8 @@ spark.cdm.autocorrect.mismatch                    false|true
 
 [IMPORTANT]
 ====
-The {cstar-data-migrator} validation job nevers delete records from Target.
-The job only adds or updates data on Target.
+The {cstar-data-migrator} validation job nevers delete records from the Target cluster.
+The job only adds or updates data on the Target cluster.
 ====
 
 [[cdm-guardrail-checks]]

@@ -33,7 +33,7 @@ image:https://img.shields.io/github/v/release/datastax/cassandra-data-migrator?c
 [NOTE]
 ====
 Version 4.x of {cstar-data-migrator} is not backward-compatible with `*.properties` files created in previous versions, and package names have changed.
-If you're starting new, we recommended that you use the latest released version.
+If you're starting new, DataStax recommendeds that you use the latest released version.
 ====
 
 [[cdm-build-jar-local]]
@@ -52,4 +52,4 @@ cd cassandra-data-migrator
 mvn clean package
 ----
 
-The fat jar (`cassandra-data-migrator-x.y.z.jar`) file should be present now in the `target` folder.
+The fat jar file, or `cassandra-data-migrator-x.y.z.jar`, should be present now in the `target` folder.
