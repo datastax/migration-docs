@@ -25,16 +25,12 @@
 ** xref:change-read-routing.adoc[]
 //phase 5
 ** xref:connect-clients-to-target.adoc[]
+* Troubleshooting
+** xref:troubleshooting.adoc[]
+** xref:troubleshooting-tips.adoc[]
+** xref:troubleshooting-scenarios.adoc[]
 * Reference
-** Troubleshooting
-*** xref:troubleshooting.adoc[]
-*** xref:troubleshooting-tips.adoc[]
-*** xref:troubleshooting-scenarios.adoc[]
-** Frequently Asked Questions
-*** xref:faqs.adoc[]
-** Glossary
-*** xref:glossary.adoc[]
-** Contributions
-*** xref:contributions.adoc[]
-** Release Notes
-*** xref:release-notes.adoc[]
+** xref:faqs.adoc[]
+** xref:glossary.adoc[]
+** xref:contributions.adoc[]
+** xref:release-notes.adoc[]
