@@ -49,7 +49,7 @@ Example: `data_col1,data_col2,...`
 | Default is empty.
 If column names are changed between the origin and target clusters, then this mapped list provides a mechanism to associate the two.
 The format is `<origin_column_name>:<target_column_name>`.
-The list is comma-separated.
+The list is comma separated.
 You only need to list renamed columns. 
 
 |===
@@ -83,7 +83,7 @@ Auto-correction parameters allow {cstar-data-migrator} to correct data differenc
 Typically, these are run-disabled for "what if" migration testing, and generate a list of data discrepancies.
 The reasons for these discrepancies can then be investigated, and if necessary the parameters below can be enabled.
 
-For information about invoking `DiffData` in a {cstar-data-migrator} command, see xref:#cassandra-data-migrator.adoc#cdm-validation-steps[{cstar-data-migrator} steps in validation mode].
+For information about invoking `DiffData` in a {cstar-data-migrator} command, see https://docs.datastax.com/en/data-migration/cdm.html#cdm-validation-steps[{cstar-data-migrator} steps in validation mode].
 
 [cols="2,2,3a"]
 |===
