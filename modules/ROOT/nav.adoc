@@ -25,7 +25,7 @@
 //phase 5
 * xref:connect-clients-to-target.adoc[]
 * Cassandra Data Migrator
-** xref:cassandra-data-migrator.adoc[]
+** xref:cassandra-data-migrator.adoc[Overview]
 ** xref:cdm-prereqs.adoc[Prerequisites]
 ** xref:cdm-steps.adoc[Migrate data]
 ** xref:cdm-parameters.adoc[Parameters]

@@ -1,6 +1,6 @@
 = {cstar-data-migrator} prerequisites
 
-Read the prerequistes below before using the Cassandra Data Migrator.
+Read the prerequisites below before using the Cassandra Data Migrator.
 
 * Install or switch to Java 11.
 The Spark binaries are compiled with this version of Java.
@@ -17,39 +17,4 @@ wget https://archive.apache.org/dist/spark/spark-3.5.1/spark-3.5.1-bin-hadoop3-s
 tar -xvzf spark-3.5.1-bin-hadoop3-scala2.13.tgz
 ----
 
-[[cdm-install-as-container]]
-== Install {cstar-data-migrator} as a container
 
-Get the latest image that includes all dependencies from https://hub.docker.com/r/datastax/cassandra-data-migrator[DockerHub].
-
-All migration tools, `cassandra-data-migrator` + `dsbulk` + `cqlsh`, are available in the `/assets/` folder of the container.
-
-[[cdm-install-as-jar]]
-== Install {cstar-data-migrator} as a JAR file
-
-Download the *latest* JAR file from the {cstar-data-migrator} https://github.com/datastax/cassandra-data-migrator/packages/1832128[GitHub repo].
-image:https://img.shields.io/github/v/release/datastax/cassandra-data-migrator?color=green[Latest release]
-
-[NOTE]
-====
-Version 4.x of {cstar-data-migrator} is not backward-compatible with `*.properties` files created in previous versions, and package names have changed.
-If you're starting new, DataStax recommendeds that you use the latest released version.
-====
-
-[[cdm-build-jar-local]]
-== Build {cstar-data-migrator} JAR for local development (optional)
-
-Optionally, you can build the {cstar-data-migrator} JAR for local development. 
-You'll need https://maven.apache.org/download.cgi[Maven] 3.9.x.
-
-Example:
-
-[source,bash]
-----
-cd ~/github
-git clone git@github.com:datastax/cassandra-data-migrator.git
-cd cassandra-data-migrator
-mvn clean package
-----
-
-The fat jar file, or `cassandra-data-migrator-x.y.z.jar`, should be present now in the `target` folder.
