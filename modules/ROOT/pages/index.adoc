@@ -12,7 +12,7 @@ These tools provide features that help you migrate your data from any Cassandra 
 
 A migration is a workflow that encompasses the lifecycle of uploading and importing your data to the selected databases. 
 {company} can migrate all data, however critical, with acceptable or zero downtime. 
-When the migration is complete, the data runs from your cluster to our database.
+When the migration is complete, the data is present in the new database and all client applications connect exclusively to the new database. The old database becomes obsolete and can be removed.
 
 The migration tools are:
 
