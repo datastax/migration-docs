@@ -8,7 +8,7 @@
 
 These tools a simple and reliable way for you to migrate applications from any CQL-based cluster (https://cassandra.apache.org/_/index.html[Apache Cassandra&reg;], https://www.datastax.com/products/datastax-enterprise[DataStax Enterprise (DSE)], https://www.datastax.com/products/datastax-astra[{astra_db}], or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
 
-////
+
 include::partial$note-downtime.adoc[]
 
 [TIP]
@@ -17,19 +17,19 @@ The {zdm-product} process requires you to be able to perform rolling restarts of
 
 This is standard practice for client applications that are deployed over multiple instances and is a widely used approach to roll out releases and configuration changes.
 ====
-////
+
 
 include::partial$supported-releases.adoc[]
 
-There are many reasons to migrate your data and client applications from one cluster to another, for example:
+There are many reasons to migrate your data and client applications from one cluster to another:
 
 * Moving to a different type of CQL database, for example an on-demand cloud-based proposition such as {astra_db}.
 
 * Upgrading a cluster to a newer version, or newer infrastructure, in as little as one step while leaving your existing cluster untouched throughout the process.
 
-* Moving one or more client applications out of a shared cluster and onto a dedicated one, in order to manage and configure each cluster independently.
+* Moving one or more client applications out of a shared cluster and onto a dedicated one to manage and configure each cluster independently.
 
-* Consolidating client applications, which may be currently running on separate clusters, onto a shared one in order to reduce overall database footprint and maintenance overhead.
+* Consolidating client applications, which may be currently running on separate clusters, onto a shared one to reduce overall database footprint and maintenance overhead.
 
 The following are our migration paths/scenarios available when using one of {company} migration tools:
 
@@ -48,9 +48,9 @@ include::partial$note-downtime.adoc[]
 
 [TIP]
 ====
-An important migration prerequisite is that you already have the matching schema on Target.
-A CQL statement that your client application sends to {zdm-proxy} must be able to succeed on both Origin and Target clusters.
-This means that any keyspace that your client application uses must exist on both Origin and Target with the same name.
+An important migration prerequisite is that you already have the matching schema on target.
+A CQL statement that your client application sends to {zdm-proxy} must be able to succeed on both origin and target clusters.
+This means that any keyspace that your client application uses must exist on both origin and target clusters with the same name.
 Table names must also match.
 For more, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
 ====
