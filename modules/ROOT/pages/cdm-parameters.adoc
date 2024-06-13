@@ -5,471 +5,61 @@ Each parameter below offers a different connection. Review each option to determ
 [[cdm-origin-schema-params]]
 == Origin schema parameters 
 
-[cols="3,1,5a"]
-|===
-|Property | Default | Notes
-
-| `spark.cdm.schema.origin.keyspaceTable`
-| 
-| Required - the `<keyspace>.<table_name>` of the table to be migrated.
-Table must exist in the origin cluster.
-
-| `spark.cdm.schema.origin.column.ttl.automatic`
-| `true`
-| Default is `true`, unless `spark.cdm.schema.origin.column.ttl.names` is specified.
-When `true`, determine the Time To Live (TTL) of the target record. 
-Find the maximum TTL of all origin columns that can have TTL set. This excludes partition key, clustering key, collections/UDT/tuple, and frozen columns.
-When `false`, and  `spark.cdm.schema.origin.column.ttl.names` is not set, the target record has the target table configuration determine the TTL.  
-
-| `spark.cdm.schema.origin.column.ttl.names`
-| 
-| Default is empty, meaning the names are determined automatically if `spark.cdm.schema.origin.column.ttl.automatic` is set.
-Specify a subset of eligible columns that are used to calculate the TTL of the target record.
-
-| `spark.cdm.schema.origin.column.writetime.automatic`
-| `true`
-| Default is `true`, unless `spark.cdm.schema.origin.column.writetime.names` is specified.
-When `true`, determine the `WRITETIME` of the target record. 
-Find the maximum `WRITETIME` of all origin columns that can have `WRITETIME` set. This excludes partition key, clustering key, collections/UDT/tuple, and frozen columns.
-When `false`, and `spark.cdm.schema.origin.column.writetime.names` is not set, the target table configuration determines the target record's `WRITETIME`. 
-
-[NOTE]
-====
-The `spark.cdm.transform.custom.writetime` property, if set, overrides `spark.cdm.schema.origin.column.writetime`.
-====
-
-| `spark.cdm.schema.origin.column.writetime.names`
-| 
-| Default is empty, meaning the names are determined automatically if `spark.cdm.schema.origin.column.writetime.automatic` is set.
-Otherwise, specify a subset of eligible columns that are used to calculate the WRITETIME of the target record.
-Example: `data_col1,data_col2,...`
-
-| `spark.cdm.schema.origin.column.names.to.target`
-| 
-| Default is empty.
-If column names are changed between the origin and target clusters, then this mapped list provides a mechanism to associate the two.
-The format is `<origin_column_name>:<target_column_name>`.
-The list is comma separated.
-You only need to list renamed columns. 
-
-|===
-
-[NOTE]
-====
-For optimization reasons, {cstar-data-migrator} does not migrate TTL and writetime at the field level.
-Instead, {cstar-data-migrator} finds the field with the highest TTL and the field with the highest writetime within an origin table row, and uses those values on the entire target table row.
-====
+include::partial$origin-schema-parameters.adoc[]
 
 [[cdm-target-schema-params]]
 == Target schema parameter
 
-[cols="3,1,2"]
-|===
-|Property | Default | Notes
-
-| `spark.cdm.schema.target.keyspaceTable` 
-| Equals the value of `spark.cdm.schema.origin.keyspaceTable`
-| This parameter is commented out.
-It's the `<keyspace>.<table_name>` of the table to be migrated into the target.
-Table must exist in the target cluster.
-
-|===
-
+include::partial$target-schema-parameters.adoc[]
 
 [[cdm-auto-correction-params]]
 == Auto-correction parameters
 
-Auto-correction parameters allow {cstar-data-migrator} to correct data differences found between the origin and target clusters when you run the `DiffData` program.
-Typically, these are run-disabled for "what if" migration testing, and generate a list of data discrepancies.
-The reasons for these discrepancies can then be investigated, and if necessary the parameters below can be enabled.
-
-For information about invoking `DiffData` in a {cstar-data-migrator} command, see https://docs.datastax.com/en/data-migration/cdm.html#cdm-validation-steps[{cstar-data-migrator} steps in validation mode].
-
-[cols="2,2,3a"]
-|===
-|Property | Default | Notes
-
-| `spark.cdm.autocorrect.missing` 
-| `false`
-| When `true`, data that is missing in the target cluster but is found in the origin cluster is re-migrated to the target cluster.
-
-| `spark.cdm.autocorrect.mismatch` 
-| `false`
-| When `true`, data that is different between the origin and target clusters is reconciled. 
-[NOTE]
-====
-The `TIMESTAMP` of records may have an effect.
-If the `WRITETIME` of the origin record that is determined with `.writetime.names` is earlier than the `WRITETIME` of the target record, the change does appear in the target cluster.
-This comparative state may be particularly challenging to troubleshoot if individual columns or cells have been modified in the target cluster.
-====
-
-| `spark.cdm.autocorrect.missing.counter` 
-| `false`
-| Commented out.
-By default, counter tables are not copied when missing, unless explicitly set.  
-
-| `spark.tokenrange.partitionFile`
-| `./<keyspace>.<tablename>_partitions.csv`
-| Commented out.
-This CSV file is used as input, as well as output, when applicable.
-If the file exists, only the partition ranges in this file are migrated or validated.
-Similarly, if exceptions occur while migrating or validating, partition ranges with exceptions are logged to this file. 
-
-|===
+include::partial$auto-correction-parameters.adoc[]
 
 
 [[cdm-performance-operations-params]]
 == Performance and operations parameters
 
-Performance and operations parameters that can affect migration throughput, error handling, and similar concerns.
-
-[cols="4,1,3"]
-|===
-|Property | Default | Notes
-
-| `spark.cdm.perfops.numParts`
-| `10000`
-| In standard operation, the full token range of -2^63 to 2^63-1 is divided into a number of parts, which are parallel processed.
-You should aim for each part to comprise a total of ≈1-10GB of data to migrate.
-During initial testing, you may want this to be a small number, such as `1`.
-
-| `spark.cdm.perfops.batchSize`
-| `5`
-| When writing to the target cluster, this comprises the number of records that are put into an `UNLOGGED` batch.
-{cstar-data-migrator} tends to work on the same partition at a time.
-If your partition sizes are larger, this number may be increased.
-If the `spark.cdm.perfops.batchSize` would mean that more than 1 partition is often contained in a batch, reduce this parameter's value.
-Ideally < 1% of batches have more than 1 partition.
-
-| `spark.cdm.perfops.ratelimit.origin`
-| `20000`
-| Concurrent number of operations across all parallel threads from the origin cluster.
-This value may be adjusted up or down, depending on the amount of data and the processing capacity of the origin cluster.
-
-| `spark.cdm.perfops.ratelimit.target` 
-| `40000`
-| Concurrent number of operations across all parallel threads from the target cluster.
-This may be adjusted up or down, depending on the amount of data and the processing capacity of the target cluster.
-
-| `spark.cdm.perfops.consistency.read`
-| `LOCAL_QUORUM`
-| Commented out.
-Read consistency from the origin cluster and from the target cluster when records are read for comparison purposes.
-The consistency parameters may be one of: `ANY`, `ONE`, `TWO`, `THREE`, `QUORUM`, `LOCAL_ONE`, `EACH_QUORUM`, `LOCAL_QUORUM`, `SERIAL`, `LOCAL_SERIAL`, `ALL`.
-
-| `spark.cdm.perfops.consistency.write`
-| `LOCAL_QUORUM`
-| Commented out.
-Write consistency to the arget cluster.
-The consistency parameters may be one of: `ANY`, `ONE`, `TWO`, `THREE`, `QUORUM`, `LOCAL_ONE`, `EACH_QUORUM`, `LOCAL_QUORUM`, `SERIAL`, `LOCAL_SERIAL`, `ALL`.
-
-| `spark.cdm.perfops.printStatsAfter`
-| `100000`
-| Commented out.
-Number of rows of processing after which a progress log entry is made.
-
-| `spark.cdm.perfops.fetchSizeInRows`
-| `1000`
-| Commented out.
-This parameter affects the frequency of reads from the origin cluster and the frequency of flushes to the target cluster. 
-
-| `spark.cdm.perfops.errorLimit`
-| `0`
-| Commented out.
-Controls how many errors a thread may encounter during `MigrateData` and `DiffData` operations before failing.
-Recommendation: set this parameter to a non-zero value **only when not doing** a mutation-type operation, such as when you're running `DiffData` without `.autocorrect`.
-
-|===
+include::partial$performance-and-operations-parameters.adoc[]
 
 
 [[cdm-transformation-params]]
 == Transformation parameters
 
-Parameters to perform schema transformations between the origin and target clusters.
-
-By default, these parameters are commented out.
-
-[cols="2,1,4a"]
-|===
-|Property | Default | Notes
-
-| `spark.cdm.transform.missing.key.ts.replace.value`
-| `1685577600000`
-| Timestamp value in milliseconds. 
-Partition and clustering columns cannot have null values. 
-If they are added as part of a schema transformation between the origin and target clusters, it is possible that the origin side is null.
-In this case, the `Migrate` data operation fails.
-This parameter allows a crude constant value to be used in its place that is separate from the constant values feature.
-
-| `spark.cdm.transform.custom.writetime` 
-| `0`
-| Default is 0 (disabled).
-Timestamp value in microseconds to use as the `WRITETIME` for the target record.
-This is useful when the `WRITETIME` of the record in the origin cluster cannot be determined. Such an example is when the only non-key columns are collections.
-This parameter allows a crude constant value to be used in its place and overrides `spark.cdm.schema.origin.column.writetime.names`.
-
-| `spark.cdm.transform.custom.writetime.incrementBy` 
-| `0`
-| Default is `0`.
-This is useful when you have a list that is not frozen and you are updating this using the autocorrect feature.
-Lists are not idempotent, and subsequent UPSERTs add duplicates to the list.
-
-| `spark.cdm.transform.codecs` 
-| 
-| Default is empty.
-A comma-separated list of additional codecs to enable. 
-
- * `INT_STRING` : int stored in a string.
- * `DOUBLE_STRING` : double stored in a string.
- * `BIGINT_STRING` : bigint stored in a string.
- * `DECIMAL_STRING` : decimal stored in a string.
- * `TIMESTAMP_STRING_MILLIS` : timestamp stored in a string, as Epoch milliseconds.
- * `TIMESTAMP_STRING_FORMAT` : timestamp stored in a string with a custom format.
-
-[NOTE]
-====
-Where there are multiple type pair options, such as with `TIMESTAMP_STRING_*`, only one can be configured at a time with the `spark.cdm.transform.codecs` parameter.
-====
-
-| `spark.cdm.transform.codecs.timestamp.string.format` 
-| `yyyyMMddHHmmss`
-| Configuration for `CQL_TIMESTAMP_TO_STRING_FORMAT` codec.
-Default format is `yyyyMMddHHmmss`; `DateTimeFormatter.ofPattern(formatString)`
-
-
-| `spark.cdm.transform.codecs.timestamp.string.zone` 
-| `UTC`
-| Default is `UTC`.
-Must be in `ZoneRulesProvider.getAvailableZoneIds()`.
-
-|===
+include::partial$transformation-parameters.adoc[]
 
 
 [[cdm-cassandra-filter-params]]
 == Cassandra filter parameters
 
-Cassandra filters are applied on the coordinator node.
-Depending on the filter, the coordinator node may need to do a lot more work than is normal, notably because {cstar-data-migrator} specifies `ALLOW FILTERING`.
-
-By default, these parameters are commented out.
-
-[cols="3,1,3"]
-|===
-|Property | Default | Notes
-
-| `spark.cdm.filter.cassandra.partition.min`
-| `-9223372036854775808`
-| Default is `0` when using `RandomPartitioner` and `-9223372036854775808` or -2^63 otherwise.
-Lower partition bound of the range is inclusive.
-
-| `spark.cdm.filter.cassandra.partition.max`
-| `9223372036854775807`
-| Default is `2^127-1` when using `RandomPartitioner` and `9223372036854775807` or 2^63-1 otherwise.
-Upper partition bound of the range is inclusive.
-
-| `spark.cdm.filter.cassandra.whereCondition`
-| 
-| CQL added to the `WHERE` clause of `SELECT` statements from the origin cluster.
-
-|===
+include::partial$cassandra-filter-parameters.adoc[]
 
 
 [[cdm-java-filter-params]]
 == Java filter parameters
 
-Java filters are applied on the client node.
-Data must be pulled from the origin cluster and then filtered.
-However, this option may have a lower impact on the production cluster than xref:cdm-cassandra-filter-params[Cassandra filters].
-Java filters put a load onto the {cstar-data-migrator} processing node.
-They send more data from Cassandra.
-Cassandra filters put a load on the Cassandra nodes because {cstar-data-migrator} specifies `ALLOW FILTERING`, which could cause the coordinator node to perform a lot more work.
-
-By default, these parameters are commented out.
-
-[cols="2,1,4"]
-|===
-|Property | Default | Notes
-
-| `spark.cdm.filter.java.token.percent`
-| `100`
-| Between 1 and 100 percent of the token in each split that is migrated. 
-This property is used to do a wide and random sampling of the data.
-The percentage value is applied to each split.
-Invalid percentages are treated as 100.
-
-| `spark.cdm.filter.java.writetime.min`
-| `0`
-| The lowest (inclusive) writetime values to be migrated.
-Using the `spark.cdm.filter.java.writetime.min` and `spark.cdm.filter.java.writetime.max` thresholds, {cstar-data-migrator} can filter records based on their writetimes.
-The maximum writetime of the columns configured at `spark.cdm.schema.origin.column.writetime.names` are compared to the `.min` and `.max` thresholds, which must be in **microseconds since the epoch**.
-If the `spark.cdm.schema.origin.column.writetime.names` are not specified or the thresholds are null or otherwise invalid, the filter is ignored.
-Note that `spark.cdm.s.perfops.batchSize` is ignored when this filter is in place; a value of 1 is used instead.
-
-| `spark.cdm.filter.java.writetime.max`
-| `9223372036854775807`
-| The highest (inclusive) writetime values to be migrated.
-The `spark.cdm.schema.origin.column.writetime.names` specifies the maximum timestamp of the columns. 
-If that property is not specified or is for some reason null, the filter is ignored.
-
-| `spark.cdm.filter.java.column.name`
-| 
-| Filter rows based on matching a configured value.
-With `spark.cdm.filter.java.column.name`, specify the column name against which the `spark.cdm.filter.java.column.value` is compared.
-Must be on the column list specified at `spark.cdm.schema.origin.column.names`.
-The column value is converted to a string, trimmed of whitespace on both ends, and compared.
-
-| `spark.cdm.filter.java.column.value`
-| 
-| String value to use as comparison.
-The whitespace on the ends of `spark.cdm.filter.java.column.value` is trimmed.
-|===
+include::partial$java-filter-parameters.adoc[]
 
 
 [[cdm-constant-column-feature-params]]
 == Constant column feature parameters
 
-The constant columns feature allows you to add constant columns to the target table. 
-If used, the `spark.cdm.feature.constantColumns.names`, `spark.cdm.feature.constantColumns.types`, and `spark.cdm.feature.constantColumns.values` lists must all be the same length. 
-
-By default, these parameters are commented out.
-
-[cols="2,1,3"]
-|===
-|Property | Default | Notes
-
-| `spark.cdm.feature.constantColumns.names`
-| 
-| A comma-separated list of column names, such as `const1,const2`.
-
-| `spark.cdm.feature.constantColumns.type`
-| 
-| A comma-separated list of column types.
-
-| `spark.cdm.feature.constantColumns.values`
-| 
-| A comma-separated list of hard-coded values.
-Each value should be provided as you would use on the `CQLSH` command line.
-Examples: `'abcd'` for a string; `1234` for an int, and so on.
-
-| `spark.cdm.feature.constantColumns.splitRegex`
-| `,`
-| Defaults to comma, but can be any regex character that works with `String.split(regex)`. 
-This option is needed because some type values contain commas, such as in lists, maps, and sets.
-
-|===
+include::partial$constant-column-feature-parameters.adoc[]
 
 
 [[cdm-explode-map-feature-params]]
 == Explode map feature parameters
 
-The explode map feature allows you convert an origin table map into multiple target table records. 
-
-By default, these parameters are commented out.
-
-[cols="3,3"]
-|===
-|Property | Notes
-
-| `spark.cdm.feature.explodeMap.origin.name`
-| The name of the map column, such as `my_map`.
-Must be defined on `spark.cdm.schema.origin.column.names`, and the corresponding type on `spark.cdm.schema.origin.column.types` must be a map.
-
-| `spark.cdm.feature.explodeMap.origin.name.key`
-| The name of the column on the target table that holds the map key, such as `my_map_key`.
-This key must be present on the target primary key `spark.cdm.schema.target.column.id.names`.
-
-| `spark.cdm.feature.explodeMap.origin.value`
-| The name of the column on the target table that holds the map value, such as `my_map_value`.
-|===
+include::partial$explode-map-feature-parameters.adoc[]
 
 
 [[cdm-guardrail-feature-params]]
 == Guardrail feature parameter
 
-The guardrail feature manages records that exceed guardrail checks. 
-The Guardrail job generates a report; other jobs skip records that exceed the guardrail limit.
-
-By default, these parameters are commented out.
-
-[cols="3,1,3"]
-|===
-|Property | Default | Notes
-
-| `spark.cdm.feature.guardrail.colSizeInKB`
-| `0`
-| The `0` default means the guardrail check is not done.
-If set, table records with one or more fields that exceed the column size in kB are flagged.
-Note this is kB which is base 10, not kiB which is base 2.
-
-|===
-
+include::partial$guardrail-feature-parameters.adoc[]
 
 [[cdm-tls-ssl-connection-params]]
 == TLS (SSL) connection parameters
 
-These are TLS (SSL) connection parameters, if configured, for the origin and target clusters. 
-Note that a secure connect bundle (SCB) embeds these details. 
-
-By default, these parameters are commented out.
-
-[cols="3,3,3"]
-|===
-|Property | Default | Notes
-
-| `spark.cdm.connect.origin.tls.enabled`
-| `false`
-| If TLS is used, set to `true`.
-
-| `spark.cdm.connect.origin.tls.trustStore.path`
-| 
-| Path to the Java truststore file.
-
-| `spark.cdm.connect.origin.tls.trustStore.password`
-| 
-| Password needed to open the truststore.
-
-| `spark.cdm.connect.origin.tls.trustStore.type`
-| `JKS`
-| 
-
-| `spark.cdm.connect.origin.tls.keyStore.path`
-| 
-| Path to the Java keystore file.
-
-| `spark.cdm.connect.origin.tls.keyStore.password`
-| 
-| Password needed to open the keystore.
-
-| `spark.cdm.connect.origin.tls.enabledAlgorithms`
-| `TLS_RSA_WITH_AES_128_CBC_SHA`,`TLS_RSA_WITH_AES_256_CBC_SHA`
-| 
-
-| `spark.cdm.connect.target.tls.enabled`
-| `false`
-| If TLS is used, set to `true`.
-
-| `spark.cdm.connect.target.tls.trustStore.path`
-| 
-| Path to the Java truststore file.
-
-| `spark.cdm.connect.target.tls.trustStore.password`
-| 
-| Password needed to open the truststore.
-
-| `spark.cdm.connect.target.tls.trustStore.type`
-| `JKS`
-| 
-
-| `spark.cdm.connect.target.tls.keyStore.path`
-| 
-| Path to the Java keystore file.
-
-| `spark.cdm.connect.target.tls.keyStore.password`
-| 
-| Password needed to open the keystore.
-
-| `spark.cdm.connect.target.tls.enabledAlgorithms`
-| `TLS_RSA_WITH_AES_128_CBC_SHA`,`TLS_RSA_WITH_AES_256_CBC_SHA`
-| 
-
-|===
+include::partial$tls-connection-parameters.adoc[]
