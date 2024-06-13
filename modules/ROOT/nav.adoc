@@ -43,12 +43,3 @@
 ** xref:cdm-prereqs.adoc[Prerequisites]
 ** xref:cdm-steps.adoc[Migrate data]
 ** xref:cdm-parameters.adoc[Parameters]
-
-#include <cdm-overview.adoc>
-#include "myheader.h"
-
-// Function definition
-void myFunction(xref) {
-    // Call another function (include)
-    anotherFunction(include::partial::$cdm-overview);
-}
