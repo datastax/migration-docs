@@ -1,4 +1,4 @@
-You can also use {cstar-data-migrator} to migrate or validate specific partition ranges, by using a **partition-file** with the name `./<keyspacename>.<tablename>_partitions.csv`.
+You can also use {cstar-data-migrator} to migrate or validate specific partition ranges. Use a **partition-file** with the name `./<keyspacename>.<tablename>_partitions.csv`.
 Use the following format in the CSV file, in the current folder as input. 
 Example:
 
