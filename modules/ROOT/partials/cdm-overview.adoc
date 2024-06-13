@@ -44,6 +44,7 @@ include::partial$cdm-guardrail-checks.adoc[]
 
 [[cdm-reference]]
 * include::partial$common-connection-parameters.adoc[Common connection parameters for origin and target]
+xref:common-connection-parameters.adoc[Common connection parameters for origin and target] 
 
 include::partial$origin-schema-parameters.adoc[Origin schema parameters]
 
