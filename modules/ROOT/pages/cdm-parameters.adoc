@@ -2,6 +2,11 @@
 
 Each parameter below offers a different connection. Review each option to determine what is best for your organization. 
 
+[{cdm-connection-params}]
+== Common connection parameters for origin and target
+
+include::partial$common-connection-parameters.adoc[]
+
 [[cdm-origin-schema-params]]
 == Origin schema parameters 
 

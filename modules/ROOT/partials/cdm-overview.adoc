@@ -43,40 +43,5 @@ include::partial$cdm-guardrail-checks.adoc[]
 == {cstar-data-migrator} reference
 
 [[cdm-reference]]
-* include::partial$common-connection-parameters.adoc[Common connection parameters for origin and target]
-xref:common-connection-parameters.adoc[Common connection parameters for origin and target] 
 
-include::partial$origin-schema-parameters.adoc[Origin schema parameters]
 
-include::partial$target-schema-parameters.adoc[Target schema parameter]
-
-include::partial$auto-correction-parameters.adoc[Auto-correction parameters]
-
-include::partial$performance-and-operation-parameters.adoc[Performance and operations parameters]
-
-include::partial$transformation-parameters.adoc[Transformation parameters]
-
-include::partial$cassandra-filter-parameters.adoc[Cassandra filter parameters]
-
-include::partial$java-filter-parameters.adoc[Java filter parameters]
-
-include::partial$constant-column-feature-parameters.adoc[Constant column feature parameters]
-
-include::partial$explode-map-feature-parameters.adoc[Explode map feature parameters]
-
-include::partial$guardrail-feature-parameters.adoc[Guardrail feature parameters]
-
-include::partial$tls-ssl-connection-parameters.adoc[TLS (SSL) connection parameters]
-
-* xref:#cdm-connection-params[Common connection parameters for Origin and Target]
-* xref:#cdm-origin-schema-params[Origin schema parameters]
-* xref:#cdm-target-schema-params[Target schema parameter]
-* xref:#cdm-auto-correction-params[Auto-correction parameters]
-* xref:#cdm-performance-operations-params[Performance and operations parameters]
-* xref:#cdm-transformation-params[Transformation parameters]
-* xref:#cdm-cassandra-filter-params[Cassandra filter parameters]
-* xref:#cdm-java-filter-params[Java filter parameters]
-* xref:#cdm-constant-column-feature-params[Constant column feature parameters]
-* xref:#cdm-explode-map-feature-params[Explode map feature parameters]
-* xref:#cdm-guardrail-feature-params[Guardrail feature parameters]
-* xref:#cdm-tls-ssl-connection-params[TLS (SSL) connection parameters]

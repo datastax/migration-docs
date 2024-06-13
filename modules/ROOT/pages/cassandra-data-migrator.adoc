@@ -2,6 +2,9 @@
 
 Use {cstar-data-migrator} to migrate and validate tables between origin and target Cassandra clusters, with available logging and reconciliation support.
 
+[[cdm-prerequisites]]
+== {cstar-data-migrator} prerequisites
+
 include::partial$cdm-prerequisites.adoc[]
 
 [[cdm-install-as-container]]
@@ -39,10 +42,12 @@ include::partial$cdm-partition-ranges.adoc[]
 
 include::partial$cdm-guardrail-checks.adoc[]
 
-[[cdm-reference]]
-== {cstar-data-migrator} reference
+
+[[cdm-references]]
+== {cstar-data-migrator} references
 
 * include::partial$common-connection-parameters.adoc[Common connection parameters for origin and target]
+
 * include::partial$origin-schema-parameters.adoc[Origin schema parameters]
 * include::partial$target-schema-parameters.adoc[Target schema parameter]
 * include::partial$auto-correction-parameters.adoc[Auto-correction parameters]
