@@ -16,7 +16,7 @@
 ** xref:manage-proxy-instances.adoc[]
 //phase 2
 * xref:migrate-and-validate-data.adoc[]
-//** xref:cassandra-data-migrator.adoc[]
+** xref:cassandra-data-migrator.adoc[]
 ** xref:dsbulk-migrator.adoc[]
 //phase 3
 * xref:enable-async-dual-reads.adoc[]
