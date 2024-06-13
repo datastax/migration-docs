@@ -10,4 +10,4 @@ cd cassandra-data-migrator
 mvn clean package
 ----
 
-The fat jar file, or`cassandra-data-migrator-x.y.z.jar`, should be present now in the `target` folder.
+The fat jar file, `cassandra-data-migrator-x.y.z.jar`, should be present now in the `target` folder.
