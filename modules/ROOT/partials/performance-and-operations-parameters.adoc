@@ -37,7 +37,7 @@ The consistency parameters may be one of: `ANY`, `ONE`, `TWO`, `THREE`, `QUORUM`
 | `spark.cdm.perfops.consistency.write`
 | `LOCAL_QUORUM`
 | Commented out.
-Write consistency to the arget cluster.
+Write consistency to the target cluster.
 The consistency parameters may be one of: `ANY`, `ONE`, `TWO`, `THREE`, `QUORUM`, `LOCAL_ONE`, `EACH_QUORUM`, `LOCAL_QUORUM`, `SERIAL`, `LOCAL_SERIAL`, `ALL`.
 
 | `spark.cdm.perfops.printStatsAfter`

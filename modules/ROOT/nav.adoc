@@ -25,21 +25,30 @@
 //phase 5
 ** xref:connect-clients-to-target.adoc[]
 
-* Troubleshooting
-** xref:troubleshooting.adoc[] 
-** xref:troubleshooting-tips.adoc[]
-** xref:troubleshooting-scenarios.adoc[]
+** Troubleshooting
+*** xref:troubleshooting.adoc[] 
+*** xref:troubleshooting-tips.adoc[]
+*** xref:troubleshooting-scenarios.adoc[]
 
-* xref:faqs.adoc[]
+** xref:faqs.adoc[]
 
-* xref:glossary.adoc[]
+** xref:glossary.adoc[]
 
-* xref:contributions.adoc[]
+** xref:contributions.adoc[]
 
-* xref:release-notes.adoc[]
+** xref:release-notes.adoc[]
 
 * {cstar-data-migrator}
-** xref:cassandra-data-migrator.adoc[Overview]
+** xref:cassandra-data-migrator.adoc[]
 ** xref:cdm-prereqs.adoc[Prerequisites]
 ** xref:cdm-steps.adoc[Migrate data]
 ** xref:cdm-parameters.adoc[Parameters]
+
+#include <cdm-overview.adoc>
+#include "myheader.h"
+
+// Function definition
+void myFunction(xref) {
+    // Call another function (include)
+    anotherFunction(include::partial::$cdm-overview);
+}

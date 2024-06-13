@@ -1,5 +1,5 @@
 The guardrail feature manages records that exceed guardrail checks. 
-The Guardrail job generates a report; other jobs skip records that exceed the guardrail limit.
+The guardrail job generates a report; other jobs skip records that exceed the guardrail limit.
 
 By default, these parameters are commented out.
 

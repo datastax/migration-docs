@@ -1,0 +1,13 @@
+Optionally, you can build the {cstar-data-migrator} JAR for local development. You'll need https://maven.apache.org/download.cgi[Maven] 3.9.x.
+
+Example:
+
+[source,bash]
+----
+cd ~/github
+git clone git@github.com:datastax/cassandra-data-migrator.git
+cd cassandra-data-migrator
+mvn clean package
+----
+
+The fat jar file, or`cassandra-data-migrator-x.y.z.jar`, should be present now in the `target` folder.
