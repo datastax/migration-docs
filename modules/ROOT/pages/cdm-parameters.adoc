@@ -2,7 +2,7 @@
 
 Each parameter below offers a different connection. Review each option to determine what is best for your organization. 
 
-[{cdm-connection-params}]
+[[cdm-connection-params]]
 == Common connection parameters for origin and target
 
 include::partial$common-connection-parameters.adoc[]
@@ -67,4 +67,4 @@ include::partial$guardrail-feature-parameters.adoc[]
 [[cdm-tls-ssl-connection-params]]
 == TLS (SSL) connection parameters
 
-include::partial$tls-connection-parameters.adoc[]
+include::partial$tls-ssl-connection-parameters.adoc[]
