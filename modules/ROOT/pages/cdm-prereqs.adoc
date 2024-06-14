@@ -1,4 +1,0 @@
-= {cstar-data-migrator} prerequisites
-
-include::partial$cdm-prerequisites.adoc[]
-

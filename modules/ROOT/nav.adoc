@@ -39,7 +39,6 @@
 ** xref:release-notes.adoc[]
 
 * {cstar-data-migrator}
-** xref:cassandra-data-migrator.adoc[]
-** xref:cdm-prereqs.adoc[Prerequisites]
+** xref:cdm-overview.adoc[]
 ** xref:cdm-steps.adoc[Migrate data]
 ** xref:cdm-parameters.adoc[Parameters]

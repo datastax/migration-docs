@@ -1,22 +1,31 @@
-= {cstar-data-migrator}
+= Overview
 
-Use {cstar-data-migrator} to migrate and validate tables between origin and target Cassandra clusters, with available logging and reconciliation support.
+Cassandra Data Migrator (CDM) is a tool designed for migrating and validating data between origin and target Apache Cassandra-compatible clusters. It facilitates the transfer of data, creating multiple jobs at once that can access the Cassandra cluster concurrently. This tool is also useful when dealing with large datasets and requires careful configuration to balance performance impact and migration speed. 
+
+The information below explains how to get started with CDM. Review your prerequisites and decide between the two installation options: as a container or as a JAR file. 
 
 [[cdm-prerequisites]]
 == {cstar-data-migrator} prerequisites
 
 include::partial$cdm-prerequisites.adoc[]
 
+== CDM installation methods
+
+Both installation methods require attention to version compatibility, especially with the `cdm.properties` files.
+Both environments also use `spark-submit` to run the jobs.
+
 [[cdm-install-as-container]]
-== Install {cstar-data-migrator} as a Container
+=== Install {cstar-data-migrator} as a Container
 
 include::partial$cdm-install-as-container.adoc[]
 
 [[cdm-install-as-jar]]
-== Install {cstar-data-migrator} as a JAR file
+=== Install {cstar-data-migrator} as a JAR file
 
 include::partial$cdm-install-as-jar.adoc[]
 
+
+//// 
 [[cdm-build-jar-local]]
 == Build {cstar-data-migrator} JAR for local development (optional)
 
@@ -44,6 +53,7 @@ include::partial$cdm-guardrail-checks.adoc[]
 
 [[cdm-reference]]
 == {cstar-data-migrator} references
+
 
 === Common connection parameters for Origin and Target
 
@@ -92,3 +102,4 @@ include::partial$guardrail-feature-parameters.adoc[]
 === TLS (SSL) connection parameters
 
 include::partial$tls-ssl-connection-parameters.adoc[]
+////
