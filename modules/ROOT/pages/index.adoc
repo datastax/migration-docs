@@ -6,7 +6,7 @@ ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 Enterprises today want to reliably migrate mission-critical client applications and data to cloud environments with zero downtime or near zero downtime during the migration. 
 
 {company} has developed a set of thoroughly tested self-service tools to walk you through well-defined migration options.
-These tools provide features that help you migrate your data from any Cassandra Origin (Apache Cassandra®, {company} Enterprise (DSE), {company} {astra_db}) to any Cassandra Target (Apache Cassandra®, DSE, {company} {astra_db}).
+These tools provide features that help you migrate your data from any Cassandra origin (Apache Cassandra®, {company} Enterprise (DSE), {company} {astra_db}) to any Cassandra target (Apache Cassandra®, DSE, {company} {astra_db}).
 
 == Migration process and tools
 
