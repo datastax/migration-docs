@@ -1,0 +1,11 @@
+[cols="3,1,2"]
+|===
+|Property | Default | Notes
+
+| `spark.cdm.schema.target.keyspaceTable` 
+| Equals the value of `spark.cdm.schema.origin.keyspaceTable`
+| This parameter is commented out.
+It's the `<keyspace>.<table_name>` of the table to be migrated into the target.
+Table must exist in the target cluster.
+
+|===

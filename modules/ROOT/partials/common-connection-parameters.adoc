@@ -1,0 +1,50 @@
+[cols="5,2,4"]
+|===
+|Property | Default | Notes
+
+| `spark.cdm.connect.origin.host`
+| `localhost`
+| Hostname/IP address of the cluster.
+May be a comma-separated list, and can follow the `<hostname>:<port>` convention.
+
+| `spark.cdm.connect.origin.port`
+| `9042`
+| Port number to use if not specified on `spark.cdm.connect.origin.host`.
+
+| `spark.cdm.connect.origin.scb`
+| (Not set)
+| Secure Connect Bundle, used to connect to an Astra DB database.
+Example: `file:///aaa/bbb/scb-enterprise.zip`.
+
+| `spark.cdm.connect.origin.username`
+| `cassandra`
+| Username (or `client_id` value) used to authenticate.
+
+| `spark.cdm.connect.origin.password`
+| `cassandra`
+| Password (or `client_secret` value) used to authenticate.
+
+| `spark.cdm.connect.target.host`
+| `localhost`
+| Hostname/IP address of the cluster.
+May be a comma-separated list, and can follow the `<hostname>:<port>` convention.
+
+| `spark.cdm.connect.target.port`
+| `9042`
+| Port number to use if not specified on `spark.cdm.connect.origin.host`.
+
+| `spark.cdm.connect.target.scb`
+| (Not set)
+| Secure Connect Bundle, used to connect to an Astra DB database.
+Default is not set.
+Example if set: `file:///aaa/bbb/my-scb.zip`.
+
+| `spark.cdm.connect.target.username`
+| `cassandra`
+| Username (or `client_id` value) used to authenticate.
+
+| `spark.cdm.connect.origin.password`
+| `cassandra`
+| Password (or `client_secret` value) used to authenticate.
+
+|===

@@ -1,0 +1,3 @@
+Get the latest image that includes all dependencies from https://hub.docker.com/r/datastax/cassandra-data-migrator[DockerHub].
+
+All migration tools, `cassandra-data-migrator` and `dsbulk` and `cqlsh`, are available in the `/assets/` folder of the container.

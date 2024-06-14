@@ -1,0 +1,46 @@
+Java filters are applied on the client node.
+Data must be pulled from the origin cluster and then filtered.
+However, this option may have a lower impact on the production cluster than xref:cdm-cassandra-filter-params[Cassandra filters].
+Java filters put a load onto the {cstar-data-migrator} processing node.
+They send more data from Cassandra.
+Cassandra filters put a load on the Cassandra nodes because {cstar-data-migrator} specifies `ALLOW FILTERING`, which could cause the coordinator node to perform a lot more work.
+
+By default, these parameters are commented out.
+
+[cols="2,1,4"]
+|===
+|Property | Default | Notes
+
+| `spark.cdm.filter.java.token.percent`
+| `100`
+| Between 1 and 100 percent of the token in each split that is migrated. 
+This property is used to do a wide and random sampling of the data.
+The percentage value is applied to each split.
+Invalid percentages are treated as 100.
+
+| `spark.cdm.filter.java.writetime.min`
+| `0`
+| The lowest (inclusive) writetime values to be migrated.
+Using the `spark.cdm.filter.java.writetime.min` and `spark.cdm.filter.java.writetime.max` thresholds, {cstar-data-migrator} can filter records based on their writetimes.
+The maximum writetime of the columns configured at `spark.cdm.schema.origin.column.writetime.names` are compared to the `.min` and `.max` thresholds, which must be in **microseconds since the epoch**.
+If the `spark.cdm.schema.origin.column.writetime.names` are not specified or the thresholds are null or otherwise invalid, the filter is ignored.
+Note that `spark.cdm.s.perfops.batchSize` is ignored when this filter is in place; a value of 1 is used instead.
+
+| `spark.cdm.filter.java.writetime.max`
+| `9223372036854775807`
+| The highest (inclusive) writetime values to be migrated.
+The `spark.cdm.schema.origin.column.writetime.names` specifies the maximum timestamp of the columns. 
+If that property is not specified or is for some reason null, the filter is ignored.
+
+| `spark.cdm.filter.java.column.name`
+| 
+| Filter rows based on matching a configured value.
+With `spark.cdm.filter.java.column.name`, specify the column name against which the `spark.cdm.filter.java.column.value` is compared.
+Must be on the column list specified at `spark.cdm.schema.origin.column.names`.
+The column value is converted to a string, trimmed of whitespace on both ends, and compared.
+
+| `spark.cdm.filter.java.column.value`
+| 
+| String value to use as comparison.
+The whitespace on the ends of `spark.cdm.filter.java.column.value` is trimmed.
+|===
