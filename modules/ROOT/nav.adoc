@@ -17,7 +17,7 @@
 //phase 2
 ** xref:migrate-and-validate-data.adoc[]
 *** xref:cassandra-data-migrator.adoc[]
-*** xref:dsbulk-migrator.adoc[]
+*** https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[DSBulk Loader]
 //phase 3
 ** xref:enable-async-dual-reads.adoc[]
 //phase 4
