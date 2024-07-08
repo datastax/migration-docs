@@ -42,3 +42,16 @@
 ** xref:cdm-overview.adoc[]
 ** xref:cdm-steps.adoc[Migrate data]
 ** xref:cdm-parameters.adoc[Parameters]
+
+* {dsbulk-loader}
+** xref:dsbulk:overview:dsbulk-about.adoc[]
+** xref:dsbulk:installing/install.adoc[]
+** Loading and unloading data
+*** xref:dsbulk:getting-started/simple-load.adoc[]
+*** xref:dsbulk:getting-started/simple-unload.adoc[]
+*** xref:dsbulk:developing/loading-unloading-vector-data.adoc[]
+** Loading and unloading data examples
+*** xref:dsbulk:reference/load.adoc[]
+*** xref:dsbulk:reference/unload.adoc[]
+** xref:dsbulk:reference/dsbulk-cmd.adoc#escaping-and-quoting-command-line-arguments[]
+
