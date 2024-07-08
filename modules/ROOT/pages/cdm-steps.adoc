@@ -1,0 +1,23 @@
+= {cstar-data-migrator}
+
+Use {cstar-data-migrator} to migrate and validate tables between the origin and target Cassandra clusters, with available logging and reconciliation support.
+
+[[cdm-steps]]
+== Use {cstar-data-migrator}
+
+include::partial$use-cdm-migrator.adoc[]
+
+[[cdm-validation-steps]]
+== Use {cstar-data-migrator} steps in validation mode 
+
+include::partial$cdm-validation-steps.adoc[]
+
+[[cdm--partition-ranges]]
+== Migrate or validate specific partition ranges
+
+include::partial$cdm-partition-ranges.adoc[]
+
+[[cdm-guardrail-checks]]
+== Perform large-field guardrail violation checks
+
+include::partial$cdm-guardrail-checks.adoc[]

@@ -1,0 +1,28 @@
+. Configure for your environment the `cdm*.properties` file that's provided in the {cstar-data-migrator} https://github.com/datastax/cassandra-data-migrator/tree/main/src/resources[GitHub repo].
+The file can have any name.
+It does not need to be `cdm.properties` or `cdm-detailed.properties`.
+In both versions, the `spark-submit` job processes only the parameters that aren't commented out.
+Other parameter values use defaults or are ignored.
+See the descriptions and defaults in each file.
+For more information, see the following:
+   * The simplified sample properties configuration, https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[cdm.properties].
+   This file contains only those parameters that are commonly configured.
+   * The complete sample properties configuration, https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[cdm-detailed.properties], for the full set of configurable settings.
+
+. Place the properties file that you elected to use and customize where it can be accessed while running the job using `spark-submit`.
+
+. Run the job using `spark-submit` command:
+
+[source,bash]
+----
+./spark-submit --properties-file cdm.properties \
+--conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" \
+--master "local[*]" --driver-memory 25G --executor-memory 25G \
+--class com.datastax.cdm.job.Migrate cassandra-data-migrator-x.y.z.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+----
+
+[TIP]
+====
+* The command generates a log file `logfile_name_*.txt` to prevent log output on the console.
+* Update the memory options, driver and executor memory, based on your use case.
+====

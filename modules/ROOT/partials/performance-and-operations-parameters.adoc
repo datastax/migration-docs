@@ -1,0 +1,59 @@
+Performance and operations parameters that can affect migration throughput, error handling, and similar concerns.
+
+[cols="4,1,3"]
+|===
+|Property | Default | Notes
+
+| `spark.cdm.perfops.numParts`
+| `10000`
+| In standard operation, the full token range of -2^63 to 2^63-1 is divided into a number of parts, which are parallel processed.
+You should aim for each part to comprise a total of ≈1-10GB of data to migrate.
+During initial testing, you may want this to be a small number, such as `1`.
+
+| `spark.cdm.perfops.batchSize`
+| `5`
+| When writing to the target cluster, this comprises the number of records that are put into an `UNLOGGED` batch.
+{cstar-data-migrator} tends to work on the same partition at a time.
+If your partition sizes are larger, this number may be increased.
+If the `spark.cdm.perfops.batchSize` would mean that more than 1 partition is often contained in a batch, reduce this parameter's value.
+Ideally < 1% of batches have more than 1 partition.
+
+| `spark.cdm.perfops.ratelimit.origin`
+| `20000`
+| Concurrent number of operations across all parallel threads from the origin cluster.
+This value may be adjusted up or down, depending on the amount of data and the processing capacity of the origin cluster.
+
+| `spark.cdm.perfops.ratelimit.target` 
+| `40000`
+| Concurrent number of operations across all parallel threads from the target cluster.
+This may be adjusted up or down, depending on the amount of data and the processing capacity of the target cluster.
+
+| `spark.cdm.perfops.consistency.read`
+| `LOCAL_QUORUM`
+| Commented out.
+Read consistency from the origin cluster and from the target cluster when records are read for comparison purposes.
+The consistency parameters may be one of: `ANY`, `ONE`, `TWO`, `THREE`, `QUORUM`, `LOCAL_ONE`, `EACH_QUORUM`, `LOCAL_QUORUM`, `SERIAL`, `LOCAL_SERIAL`, `ALL`.
+
+| `spark.cdm.perfops.consistency.write`
+| `LOCAL_QUORUM`
+| Commented out.
+Write consistency to the target cluster.
+The consistency parameters may be one of: `ANY`, `ONE`, `TWO`, `THREE`, `QUORUM`, `LOCAL_ONE`, `EACH_QUORUM`, `LOCAL_QUORUM`, `SERIAL`, `LOCAL_SERIAL`, `ALL`.
+
+| `spark.cdm.perfops.printStatsAfter`
+| `100000`
+| Commented out.
+Number of rows of processing after which a progress log entry is made.
+
+| `spark.cdm.perfops.fetchSizeInRows`
+| `1000`
+| Commented out.
+This parameter affects the frequency of reads from the origin cluster and the frequency of flushes to the target cluster. 
+
+| `spark.cdm.perfops.errorLimit`
+| `0`
+| Commented out.
+Controls how many errors a thread may encounter during `MigrateData` and `DiffData` operations before failing.
+Recommendation: set this parameter to a non-zero value **only when not doing** a mutation-type operation, such as when you're running `DiffData` without `.autocorrect`.
+
+|===

@@ -1,0 +1,37 @@
+Auto-correction parameters allow {cstar-data-migrator} to correct data differences found between the origin and target clusters when you run the `DiffData` program.
+Typically, these parameters are run-disabled for "what if" migration testing, and generate a list of data discrepancies.
+The reasons for these discrepancies can then be investigated, and if necessary the parameters below can be enabled.
+
+For information about invoking `DiffData` in a {cstar-data-migrator} command, see https://docs.datastax.com/en/data-migration/cdm.html#cdm-validation-steps[{cstar-data-migrator} steps in validation mode].
+
+[cols="2,2,3a"]
+|===
+|Property | Default | Notes
+
+| `spark.cdm.autocorrect.missing` 
+| `false`
+| When `true`, data that is missing in the target cluster but is found in the origin cluster is re-migrated to the target cluster.
+
+| `spark.cdm.autocorrect.mismatch` 
+| `false`
+| When `true`, data that is different between the origin and target clusters is reconciled. 
+[NOTE]
+====
+The `TIMESTAMP` of records may have an effect.
+If the `WRITETIME` of the origin record that is determined with `.writetime.names` is earlier than the `WRITETIME` of the target record, the change does appear in the target cluster.
+This comparative state may be particularly challenging to troubleshoot if individual columns or cells have been modified in the target cluster.
+====
+
+| `spark.cdm.autocorrect.missing.counter` 
+| `false`
+| Commented out.
+By default, counter tables are not copied when missing, unless explicitly set.  
+
+| `spark.tokenrange.partitionFile`
+| `./<keyspace>.<tablename>_partitions.csv`
+| Commented out.
+This CSV file is used as input, as well as output, when applicable.
+If the file exists, only the partition ranges in this file are migrated or validated.
+Similarly, if exceptions occur while migrating or validating, partition ranges with exceptions are logged to this file. 
+
+|===
