@@ -49,7 +49,7 @@
 ** Loading and unloading data
 *** xref:dsbulk:getting-started:simple-load.adoc[]
 *** xref:dsbulk:getting-started:simple-unload.adoc[]
-*** xref:dsbulk:developing/loading-unloading-vector-data.adoc[]
+*** xref:dsbulk:developing:loading-unloading-vector-data.adoc[]
 ** Loading and unloading data examples
 *** xref:dsbulk:reference:load.adoc[]
 *** xref:dsbulk:reference:unload.adoc[]
