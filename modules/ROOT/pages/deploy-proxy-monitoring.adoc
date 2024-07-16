@@ -48,7 +48,7 @@ The {zdm-proxy} configuration is composed of five files:
 
 === Container configuration
 The first step of the proxy container configuration is to open the `zdm_proxy_container_config.yml` file.
-Configure the desired ZDM proxy version and determine the configuration parameters. 
+Configure the desired ZDM proxy version and create a strategy to inject configuration parameters. 
 All versions of ZDM proxy support providing configuration parameters using environment variables. 
 Starting with ZDM 2.3.0, you can inject the configuration with the YAML file generated from automation scripts.
 
