@@ -40,7 +40,7 @@ image::{imagesprefix}zdm-ansible-container-ls3.png[Contents of the Ansible Contr
 
 The {zdm-proxy} configuration is composed of five files:
 
-* `zdm_proxy_container_config.yml`, containing internal configuration of proxy container itself.
+* `zdm_proxy_container_config.yml`, containing the internal configuration of the proxy container itself.
 * `zdm_proxy_cluster_config.yml`, containing all the configuration that allows the proxy to connect to Origin and Target. This is always required.
 * `zdm_proxy_core_config.yml`, containing important configuration that is commonly used and changed during the migration.
 * `zdm_proxy_advanced_config.yml`, containing advanced configuration that may be required in some scenarios but can be usually left to its default values.
@@ -49,7 +49,7 @@ The {zdm-proxy} configuration is composed of five files:
 === Container configuration
 The first step of the proxy container configuration is to open the `zdm_proxy_container_config.yml` file.
 Configure the desired ZDM proxy version and create a strategy to inject configuration parameters. 
-All versions of ZDM proxy support providing configuration parameters using environment variables. 
+All versions of ZDM proxy support the ability to provide configuration parameters using environment variables. 
 Starting with ZDM 2.3.0, you can inject the configuration with the YAML file generated from automation scripts.
 
 === Cluster and core configuration
