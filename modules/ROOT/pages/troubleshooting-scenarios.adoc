@@ -61,8 +61,8 @@ If you are using spring boot and/or spring-data-cassandra then an upgrade of the
 Alternatively, you can force the protocol version on the driver to the max supported version by both clusters.
 V4 is a good recommendation that usually fits all but if the user is migrating from DSE to DSE then DSE_V1 should be used for DSE 5.x and DSE_V2 should be used for DSE 6.x.
 
-To force the protocol version on the Java driver, check this section of the https://docs.datastax.com/en/developer/java-driver/3.11/manual/native_protocol/#controlling-the-protocol-version[driver manual, window="_blank"].
-We don't believe this issue affects Java driver 3.x, but here are the https://docs.datastax.com/en/developer/java-driver/3.11/manual/native_protocol/#controlling-the-protocol-version[instructions, window="_blank"] on how to force the version on 3.x, if necessary.
+To force the protocol version on the Java driver, check this section of the https://docs.datastax.com/en/developer/java-driver/3.11/manual/native_protocol/#controlling-the-protocol-version[driver manual].
+We don't believe this issue affects Java driver 3.x, but here are the https://docs.datastax.com/en/developer/java-driver/3.11/manual/native_protocol/#controlling-the-protocol-version[instructions] on how to force the version on 3.x, if necessary.
 
 == Protocol errors in the proxy logs but clients can connect successfully
 
@@ -238,7 +238,7 @@ The driver might also have it enabled for Astra DB depending on what server vers
 === Solution or Workaround
 
 These log messages are harmless but if your need to get rid of them, you can disable the DSE Insights driver feature through the driver configuration.
-Refer to https://github.com/datastax/java-driver/blob/65d2c19c401175dcc6c370560dd5f783d05b05b9/core/src/main/resources/reference.conf#L1328[this property, window="_blank"] for Java driver 4.x.
+Refer to https://github.com/datastax/java-driver/blob/65d2c19c401175dcc6c370560dd5f783d05b05b9/core/src/main/resources/reference.conf#L1328[this property] for Java driver 4.x.
 
 
 
@@ -344,7 +344,7 @@ The Astra DevOps API is likely temporarily unavailable.
 === Solution or Workaround
 
 Download the Astra DB Secure Connect Bundle (SCB) manually and provide its path to the {zdm-automation} as explained xref:deploy-proxy-monitoring.adoc#_core_configuration[here].
-For information about the SCB, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[working with Secure Connect Bundle, window="_blank"].
+For information about the SCB, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[working with Secure Connect Bundle].
 
 == Metadata service (Astra) returned not successful status code 4xx or 5xx
 
@@ -372,7 +372,7 @@ If it is `Hibernated`, click the “Resume” button and wait for it to become `
 If it is `Active` already, then it is likely an issue with permissions.
 
 We recommend starting with a token that has the Database Administrator role in Astra DB to confirm that it is a permissions issue.
-Refer to https://docs.datastax.com/en/astra/astra-db-vector/administration/manage-database-access.html[Manage user permissions, window="_blank"].
+Refer to https://docs.datastax.com/en/astra/astra-db-vector/administration/manage-database-access.html[Manage user permissions].
 
 [[_async_read_timeouts_stream_id_map_exhausted]]
 == Async read timeouts / stream id map exhausted
@@ -407,7 +407,7 @@ Starting in version 2.1.0, you can now tune the maximum number of stream ids ava
 You can increase it to match your driver configuration through the xref:manage-proxy-instances.adoc#zdm_proxy_max_stream_ids[zdm_proxy_max_stream_ids] property.
 
 If these errors are being constantly written to the log files (for minutes or even hours) then it is likely that only an application OR {zdm-proxy} restart will fix it.
-If you find an issue like this please submit an https://github.com/datastax/zdm-proxy/issues[Issue, window="_blank"] in our GitHub repo.
+If you find an issue like this please submit an https://github.com/datastax/zdm-proxy/issues[Issue] in our GitHub repo.
 
 == Client application closed connection errors every 10 minutes when migrating to Astra DB
 

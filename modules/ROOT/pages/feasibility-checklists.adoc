@@ -243,4 +243,4 @@ The default retry policy retries all requests in case of a connection error *reg
 
 Prior to version 2.5.0, this driver did *NOT* retry any requests after they have been written to the socket, it was up to the client application to handle these and retry them if they are suitable for a retry.
 
-With the release of 2.5.0, the driver retries requests that are set as `idempotent`. See this C++ 2.x https://docs.datastax.com/en/developer/cpp-driver/2.16/topics/configuration/#query-idempotence[query idempotence documentation section, window="_blank"].
+With the release of 2.5.0, the driver retries requests that are set as `idempotent`. See this C++ 2.x https://docs.datastax.com/en/developer/cpp-driver/2.16/topics/configuration/#query-idempotence[query idempotence documentation section].
