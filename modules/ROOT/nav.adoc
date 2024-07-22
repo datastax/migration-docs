@@ -42,3 +42,16 @@
 ** xref:cdm-overview.adoc[]
 ** xref:cdm-steps.adoc[Migrate data]
 ** xref:cdm-parameters.adoc[Parameters]
+
+* {dsbulk-loader}
+** https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[Overview]
+** https://docs.datastax.com/en/dsbulk/installing/install.html[Installing DataStax Bulk Loader]
+** Loading and unloading data
+*** https://docs.datastax.com/en/dsbulk/getting-started/simple-load.html[Loading data without a configuration file]
+*** https://docs.datastax.com/en/dsbulk/getting-started/simple-unload.html[Unloading data without a configuration file]
+*** https://docs.datastax.com/en/dsbulk/developing/loading-unloading-vector-data.html[Loading and unloading vector data]
+** Loading and unloading data examples
+*** https://docs.datastax.com/en/dsbulk/reference/load.html[Loading data examples]
+*** https://docs.datastax.com/en/dsbulk/reference/unload.html[Unloading data examples]
+** https://docs.datastax.com/en/dsbulk/reference/dsbulk-cmd.html#escaping-and-quoting-command-line-arguments[Escaping and quoting command line arguments]
+
