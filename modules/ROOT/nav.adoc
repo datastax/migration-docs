@@ -23,6 +23,16 @@
 //phase 4
 ** xref:change-read-routing.adoc[]
 //phase 5
+* xref:connect-clients-to-target.adoc[]
+* xref:migration-paths.adoc[]
+* Troubleshooting
+** xref:troubleshooting.adoc[]
+** xref:troubleshooting-tips.adoc[]
+** xref:troubleshooting-scenarios.adoc[]
+* xref:faqs.adoc[]
+* xref:glossary.adoc[]
+* xref:contributions.adoc[]
+* xref:release-notes.adoc[]
 ** xref:connect-clients-to-target.adoc[]
 
 ** Troubleshooting
