@@ -15,7 +15,6 @@ jobs:
         with:
           owner: riptano
           repo: datastax-docs-site
-          ref: org-comment-pat
           github_token: ${{ secrets.DISPATCH_GITHUB_TOKEN }}
           github_user: ${{ secrets.DISPATCH_GITHUB_USER }}
           workflow_file_name: deploy-draft.yml
