@@ -41,7 +41,7 @@
 * {cstar-data-migrator}
 ** xref:cdm-overview.adoc[]
 ** xref:cdm-steps.adoc[Migrate data]
-** xref:cdm-parameters.adoc[Parameters]
+//** xref:cdm-parameters.adoc[Parameters]
 
 * {dsbulk-loader}
 ** https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[Overview]
