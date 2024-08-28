@@ -12,7 +12,7 @@ The {zdm-proxy} itself doesn't have any capability to migrate data or knowledge 
 
 * {company} {zdm-product} also provides the **{zdm-utility}** and **{zdm-automation}** to set up and run the Ansible playbooks that deploy and manage the {zdm-proxy} and its monitoring stack.
 
-* Multiple data migration tools such as **{cstar-data-migrator}** and **{dsbulk-migrator}** are available.
+* Multiple data migration tools such as **{cstar-data-migrator}** and **{dsbulk-loader}** are available.
 
 == Role of {zdm-proxy}
 
@@ -85,7 +85,7 @@ For details, see:
 
 == Data migration tools
 
-As part of the overall migration process, you can use {cstar-data-migrator} and/or {dsbulk-migrator} to migrate your data.
+As part of the overall migration process, you can use {cstar-data-migrator} and/or {dsbulk-loader} to migrate your data.
 Other technologies such as Apache Spark™ can be used to write your own custom data migration process.
 
 === {cstar-data-migrator}
@@ -111,8 +111,8 @@ Cassandra Data Migrator is designed to:
 * Report differences in a detailed log file.
 * Optionally reconcile any missing records and fix any data inconsistencies in Target by enabling `autocorrect` in a config file.
 
-=== {dsbulk-migrator}
+=== {dsbulk-loader}
 
-You can also take advantage of {dsbulk-migrator} to migrate smaller sets of data. 
+You can also take advantage of {dsbulk-loader} to migrate smaller sets of data. 
 
 For more about both tools, see xref:migrate-and-validate-data.adoc[].
