@@ -3,6 +3,7 @@ The file can have any name.
 It does not need to be `cdm.properties` or `cdm-detailed.properties`.
 In both versions, the `spark-submit` job processes only the parameters that aren't commented out.
 Other parameter values use defaults or are ignored.
++
 See the descriptions and defaults in each file.
 For more information about the sample properties configuration, see the https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[cdm-detailed.properties].
 This is the full set of configurable settings.
