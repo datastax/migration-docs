@@ -38,9 +38,9 @@ A number of helpful assets are provided in each repo.
 
 In particular, the CDM repo provides two configuration templates, with embedded comments and default values, which you can customize to match your data migration's requirements:
 
-* https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[cdm.properties, window="_blank"] provides a subset of configuration options with commonly required settings.
+* https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[cdm.properties] provides a subset of configuration options with commonly required settings.
 
-* https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[cdm-detailed.properties, window="_blank"] with all available options.
+* https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[cdm-detailed.properties] with all available options.
 
 [[cstar-data-migrator-key-features]]
 == {cstar-data-migrator} features
@@ -61,7 +61,7 @@ The CDM capabilities are extensive:
 * Validate migration accuracy and performance using a smaller randomized data-set.
 * Support for adding custom fixed writetime.
 
-With new or enhanced capabilities in recent https://github.com/datastax/cassandra-data-migrator/packages/1832128[CDM v4.x releases, window="_blank"].
+With new or enhanced capabilities in recent https://github.com/datastax/cassandra-data-migrator/packages/1832128[CDM v4.x releases].
 
 * Column names can differ between Origin and Target.
 * UDTs can be migrated from Origin to Target, even when the keyspace names differ.

@@ -8,7 +8,7 @@ We've built a complementary learning resource that is a companion to this compre
 
 [NOTE]
 ====
-To run the lab, all major browsers are supported, except Safari. For more, see the lab's https://www.datastax.com/dev/zdm[start page, window="_blank"].
+To run the lab, all major browsers are supported, except Safari. For more, see the lab's https://www.datastax.com/dev/zdm[start page].
 ====
 
 We encourage you to explore this free hands-on interactive lab from {company} Academy. It's an excellent, detailed view of the migration process. The lab describes and demonstrates all the steps and automation performed to prepare for, and complete, a migration from any Cassandra/DSE/{astra_db} database to another Cassandra/DSE/{astra_db} database across clusters. 
