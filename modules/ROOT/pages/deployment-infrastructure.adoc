@@ -32,7 +32,7 @@ We will use the term "machine" to indicate a cloud instance (on any cloud provid
 * N machines to run the desired number of {zdm-proxy} instances:
 ** You will need one machine for each {zdm-proxy} instance.
 ** Requirements for each {zdm-proxy} instance:
-*** Ubuntu Linux 20.04 or 22.04, RedHat Family Linux 7 or newer
+*** Ubuntu Linux 20.04 or 22.04, Red Hat Family Linux 7 or newer
 *** 4 vCPUs
 *** 8GB RAM
 *** 20GB - 100GB root volume
@@ -40,7 +40,7 @@ We will use the term "machine" to indicate a cloud instance (on any cloud provid
 * One machine for the jumphost, which is typically also used as Ansible Control Host and to run the monitoring stack (Prometheus + Grafana):
 ** The most common option is using a single machine for all these functions, but you could split these functions across different machines if you prefer.
 ** Requirements:
-*** Ubuntu Linux 20.04 or 22.04, RedHat Family Linux 7 or newer
+*** Ubuntu Linux 20.04 or 22.04, Red Hat Family Linux 7 or newer
 *** 8 vCPUs
 *** 16GB RAM
 *** 200GB - 500GB storage (depending on the amount of metrics history that you wish to retain)
@@ -48,7 +48,7 @@ We will use the term "machine" to indicate a cloud instance (on any cloud provid
 * 1-M machines to run either {dsbulk-migrator} or {cstar-data-migrator}.
 ** It's recommended that you start with at least one VM with 16 vCPUs and 64GB RAM and a minimum of 200GB storage. Depending on the total amount of data that is planned for migration, more than one VM may be needed.
 ** Requirements:
-*** Ubuntu Linux 20.04 or 22.04, RedHat Family Linux 7 or newer
+*** Ubuntu Linux 20.04 or 22.04, Red Hat Family Linux 7 or newer
 *** 16 vCPUs
 *** 64GB RAM
 *** 200GB - 2TB storage (if you use dsbulk-migrator to unload multiple terabytes of data from origin, then load into target, you may need to consider more space to accommodate the data that needs to be staged)
