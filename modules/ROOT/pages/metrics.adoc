@@ -51,18 +51,20 @@ This is configured by the {zdm-automation} through the variable `primary_cluster
 ** Cache Misses: meaning, a prepared statement was sent to the {zdm-proxy}, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again.
 ** Number of cached prepared statements.
 
-* Request Failure Rates: number of request failures per interval.
-You can set the interval via the `Error Rate interval` dashboard variable at the top.
-** Read Failure Rate: one `cluster` label with two settings: `origin` and `target`.
-The label that contains data depends on which cluster is currently considered the primary (same as the latency and throughput metrics explained above).
-** Write Failure Rate: one `failed_on` label with three settings: `origin`, `target` and `both`.
+* Request Failure Rates: the number of request failures per interval.
+You can set the interval in the `Error Rate interval` dashboard variable at the top.
+** Connect Failure Rate: one `cluster` label with two settings, `origin` and `target`, that represent the cluster to which the connection attempt failed.
+** Read Failure Rate: one `cluster` label with two settings, `origin` and `target`.
+The label that contains data depends on which cluster is currently considered the primary, the same as the latency and throughput metrics explained above.
+** Write Failure Rate: one `failed_on` label with three settings, `origin`, `target` and `both`.
 *** `failed_on=origin`: the write request failed on Origin ONLY.
 *** `failed_on=target`: the write request failed on Target ONLY.
 *** `failed_on=both`: the write request failed on BOTH clusters.
 
 * Request Failure Counters: Number of total request failures (resets when the {zdm-proxy} instance is restarted)
-** Read Failure Counters: same labels as read failure rate.
-** Write Failure Counters: same labels as write failure rate.
+** Connect Failure Counters: the same labels as the connect failure rate.
+** Read Failure Counters: the same labels as the read failure rate.
+** Write Failure Counters: the same labels as the write failure rate.
 
 To see error metrics by error type, see the node-level error metrics on the next section.
 
