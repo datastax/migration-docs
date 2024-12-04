@@ -53,7 +53,7 @@ This is configured by the {zdm-automation} through the variable `primary_cluster
 
 * Request Failure Rates: the number of request failures per interval.
 You can set the interval in the `Error Rate interval` dashboard variable at the top.
-** Connect Failure Rate: one `cluster` label with two settings, `origin` and `target`, that represent the cluster to which the connection attempt failed.
+** Connect Failure Rate: one `cluster` label with two settings, `origin` and `target`, which represent the cluster to which the connection attempt failed.
 ** Read Failure Rate: one `cluster` label with two settings, `origin` and `target`.
 The label that contains data depends on which cluster is currently considered the primary, the same as the latency and throughput metrics explained above.
 ** Write Failure Rate: one `failed_on` label with three settings, `origin`, `target`, and `both`.
