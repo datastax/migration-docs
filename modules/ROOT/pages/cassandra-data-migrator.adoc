@@ -36,3 +36,8 @@ include::partial$cdm-validation-steps.adoc[]
 == Perform large-field guardrail violation checks
 
 include::partial$cdm-guardrail-checks.adoc[]
+
+[[cdm-next-steps]]
+== Next steps
+
+For advanced operations, see documentation at https://github.com/datastax/cassandra-data-migrator[the repository].
