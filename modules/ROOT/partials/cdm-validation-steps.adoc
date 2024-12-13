@@ -41,6 +41,6 @@ spark.cdm.autocorrect.mismatch                    false|true
 
 [IMPORTANT]
 ====
-The {cstar-data-migrator} validation job never deletes records from the target cluster.
+The {cstar-data-migrator} validation job never deletes records from the source or target clusters.
 The job only adds or updates data on the target cluster.
 ====

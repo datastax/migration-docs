@@ -1,35 +1,9 @@
-You can also use {cstar-data-migrator} to migrate or validate specific partition ranges. Use a **partition-file** with the name `./<keyspacename>.<tablename>_partitions.csv`.
-Use the following format in the CSV file, in the current folder as input. 
-Example:
-
-[source,csv]
-----
--507900353496146534,-107285462027022883
--506781526266485690,1506166634797362039
-2637884402540451982,4638499294009575633
-798869613692279889,8699484505161403540
-----
-
-Each line in the CSV represents a partition-range (`min,max`). 
-
-Alternatively, you can also pass the partition-file with a command-line parameter. 
-Example:
+You can also use {cstar-data-migrator} to xref:cdm-steps.adoc#cdm-steps[migrate] or xref:cdm-steps.adoc#cdm-validation-steps[validate] specific partition ranges by passing the below additional parameters.
 
 [source,bash]
 ----
-./spark-submit --properties-file cdm.properties \
- --conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" \
- --conf spark.cdm.tokenrange.partitionFile.input="/<path-to-file>/<csv-input-filename>" \
- --master "local[*]" --driver-memory 25G --executor-memory 25G \
- --class com.datastax.cdm.job.<Migrate|DiffData> cassandra-data-migrator-x.y.z.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+--conf spark.cdm.filter.cassandra.partition.min=<token-range-min>
+--conf spark.cdm.filter.cassandra.partition.max=<token-range-max>
 ----
 
-This mode is specifically useful to process a subset of partition-ranges that may have failed during a previous run.
-
-[NOTE]
-====
-In the format shown above, the migration and validation jobs autogenerate a file named `./<keyspacename>.<tablename>_partitions.csv`.
-The file contains any failed partition ranges.
-No file is created if there were no failed partitions.
-You can use the CSV as input to process any failed partition in a subsequent run.
-====
+This mode is specifically useful to process a subset of partition-ranges.
