@@ -1,4 +1,5 @@
 = {cstar-data-migrator}
+:page-aliases: cdm-parameters.adoc
 
 Use {cstar-data-migrator} to migrate and validate tables between origin and target Cassandra clusters, with available logging and reconciliation support.
 
