@@ -6,7 +6,7 @@ Example:
 ./spark-submit --properties-file cdm.properties \
 --conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" \
 --master "local[*]" --driver-memory 25G --executor-memory 25G \
---class com.datastax.cdm.job.DiffData cassandra-data-migrator-5.x.x.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+--class com.datastax.cdm.job.DiffData cassandra-data-migrator-x.y.z.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
 
 The {cstar-data-migrator} validation job reports differences as `ERROR` entries in the log file. 

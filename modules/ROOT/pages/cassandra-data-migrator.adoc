@@ -32,6 +32,11 @@ include::partial$use-cdm-migrator.adoc[]
 
 include::partial$cdm-validation-steps.adoc[]
 
+[[cdm-partition-ranges]]
+== Migrate or validate specific partition ranges
+
+include::partial$cdm-partition-ranges.adoc[]
+
 [[cdm-guardrail-checks]]
 == Perform large-field guardrail violation checks
 
