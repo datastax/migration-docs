@@ -3,7 +3,7 @@ Read the prerequisites below before using the Cassandra Data Migrator.
 * Install or switch to Java 11.
 The Spark binaries are compiled with this version of Java.
 * Select a single VM to run this job and install https://archive.apache.org/dist/spark/spark-3.5.3/[Spark 3.5.3] there.
-No cluster is necessary and is recommended for most one-time migrations however cluster mode is also supported for complex migrations.
+No cluster is necessary for most one-time migrations however Spark cluster mode is also supported for complex migrations.
 * Optionally, install https://maven.apache.org/download.cgi[Maven] `3.9.x` if you want to build the JAR for local development.
 
 Run the following commands to install Apache Spark:
