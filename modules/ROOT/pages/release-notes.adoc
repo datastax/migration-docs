@@ -53,9 +53,9 @@ You can tune the heartbeat interval with the Ansible configuration variable `hea
 
 DataStax strongly recommends that you use version 2.1.0 (or newer) to benefit from this improvement, especially if you have a read-only workload.
 
-To verify which {zdm-proxy} version you're running, see this xref:troubleshooting-tips.adoc#_how_to_identify_the_zdm_proxy_version[topic, window="_blank"].
+To verify which {zdm-proxy} version you're running, see this xref:troubleshooting-tips.adoc#_how_to_identify_the_zdm_proxy_version[topic].
 
-To find out how to upgrade an existing {zdm-proxy} deployment, see xref:manage-proxy-instances.adoc#_upgrade_the_proxy_version[Upgrade the proxy version, window="_blank"].
+To find out how to upgrade an existing {zdm-proxy} deployment, see xref:manage-proxy-instances.adoc#_upgrade_the_proxy_version[Upgrade the proxy version].
 
 === {zdm-proxy} 2.1.0 changes
 
@@ -69,16 +69,16 @@ For the latest information about {zdm-proxy} new features and other changes, ple
 
 The following topics have been updated for the 2.1.0 release:
 
-* xref:feasibility-checklists.adoc#_read_only_applications[Feasibility checks for read-only applications, window="_blank"].
+* xref:feasibility-checklists.adoc#_read_only_applications[Feasibility checks for read-only applications].
 See the notes indicating that this issue is solved by the {zdm-proxy} 2.1.0 release.
 
-* xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable, window="_blank"].
+* xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
 See the `heartbeat_interval_ms` and `zdm-proxy_max_stream_ids` information.
 
-* xref:troubleshooting-scenarios.adoc#_async_read_timeouts_stream_id_map_exhausted[Async read timeouts, window="_blank"].
+* xref:troubleshooting-scenarios.adoc#_async_read_timeouts_stream_id_map_exhausted[Async read timeouts].
 See the clarification in the *Workaround* section indicating that this issue is solved by the {zdm-proxy} 2.1.0 release.
 
-* xref:metrics.adoc#_node_level_metrics[Node-level metrics, window="_blank"].
+* xref:metrics.adoc#_node_level_metrics[Node-level metrics].
 See the "Number of Used Stream Ids" section.
 
 
