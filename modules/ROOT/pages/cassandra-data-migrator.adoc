@@ -1,4 +1,5 @@
 = {cstar-data-migrator}
+:page-aliases: cdm-parameters.adoc
 
 Use {cstar-data-migrator} to migrate and validate tables between origin and target Cassandra clusters, with available logging and reconciliation support.
 
@@ -42,55 +43,7 @@ include::partial$cdm-partition-ranges.adoc[]
 
 include::partial$cdm-guardrail-checks.adoc[]
 
+[[cdm-next-steps]]
+== Next steps
 
-[[cdm-reference]]
-== {cstar-data-migrator} references
-
-=== Common connection parameters for Origin and Target
-
-include::partial$common-connection-parameters.adoc[]
-
-=== Origin schema parameters
-
-include::partial$origin-schema-parameters.adoc[]
-
-=== Target schema parameters
-
-include::partial$target-schema-parameters.adoc[]
-
-=== Auto-correction parameters
-
-include::partial$auto-correction-parameters.adoc[]
-
-=== Performance and operations parameters
-
-include::partial$performance-and-operations-parameters.adoc[]
-
-=== Transformation parameters
-
-include::partial$transformation-parameters.adoc[]
-
-=== Cassandra filter parameters
-
-include::partial$cassandra-filter-parameters.adoc[]
-
-=== Java filter parameters
-
-include::partial$java-filter-parameters.adoc[]
-
-=== Constant column feature parameters
-
-include::partial$constant-column-feature-parameters.adoc[]
-
-=== Explode map feature parameters
-
-include::partial$explode-map-feature-parameters.adoc[]
-
-=== Guardrail feature parameter
-
-include::partial$guardrail-feature-parameters.adoc[]
-
-=== TLS (SSL) connection parameters
-
-include::partial$tls-ssl-connection-parameters.adoc[]
-
+For advanced operations, see documentation at https://github.com/datastax/cassandra-data-migrator[the repository].

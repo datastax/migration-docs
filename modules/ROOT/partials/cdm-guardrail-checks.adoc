@@ -9,5 +9,5 @@ Example:
 --conf spark.cdm.schema.origin.keyspaceTable="<keyspacename>.<tablename>" \
 --conf spark.cdm.feature.guardrail.colSizeInKB=10000 \
 --master "local[*]" --driver-memory 25G --executor-memory 25G \
---class com.datastax.cdm.job.GuardrailCheck cassandra-data-migrator-4.x.x.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+--class com.datastax.cdm.job.GuardrailCheck cassandra-data-migrator-x.y.z.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----

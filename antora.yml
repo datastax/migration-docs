@@ -16,6 +16,7 @@ asciidoc:
     zdm-automation: 'ZDM Proxy Automation'
     cstar-data-migrator: 'Cassandra Data Migrator'
     dsbulk-migrator: 'DSBulk Migrator'
+    dsbulk-loader: 'DSBulk Loader'
     db-serverless: 'Serverless (Non-Vector)'
     db-serverless-vector: 'Serverless (Vector)'
     db-classic: 'Classic'
