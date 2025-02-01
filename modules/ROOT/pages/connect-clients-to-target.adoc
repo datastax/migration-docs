@@ -30,7 +30,7 @@ For further information, please refer to the documentation of the driver languag
 
 == Configuring your driver to connect to Astra DB
 
-To connect to your Astra DB cluster, you will need:
+To connect to your Astra DB cluster, you need:
 
 * A valid set of credentials (ClientID and Client Secret) for the Astra DB organization to which your cluster belongs:
 ** Note: You will already have used these credentials when you configured the {zdm-proxy} to connect to your Astra DB cluster as Target.
@@ -42,9 +42,8 @@ To connect to your Astra DB cluster, you will need:
 
 include::partial$tip-scb.adoc[]
 
-You will also need to check whether the driver used by your client application has native support for the xref:glossary.adoc#_secure_connect_bundle_scb[Astra DB Secure Connect Bundle].
-To do so, please refer to the documentation for your driver language and version,
-and check the per-language https://docs.datastax.com/en/driver-matrix/docs/version-compatibility.html[driver compatibility matrix] for details (look for the support status in the **Astra / Cloud** column for your driver version).
+Make sure you choose a driver language and version that is compatible with {astra_db}.
+For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
 
 // The SCB support was made available beginning the following versions in the drivers:
 //
