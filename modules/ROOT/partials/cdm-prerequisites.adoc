@@ -1,4 +1,4 @@
-Read the prerequisites below before using the Cassandra Data Migrator.
+Read the prerequisites below before using the {cstar-data-migrator}:
 
 * Install or switch to Java 11.
 The Spark binaries are compiled with this version of Java.

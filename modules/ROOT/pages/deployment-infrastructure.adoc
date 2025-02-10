@@ -5,33 +5,33 @@ ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 == Choosing where to deploy the proxy
 
-A typical {zdm-proxy} deployment is made up of multiple proxy instances.
+A typical {product-proxy} deployment is made up of multiple proxy instances.
 A minimum of three proxy instances is recommended for any deployment apart from those for demo or local testing purposes.
 
-All {zdm-proxy} instances must be reachable by the client application and must be able to connect to your Origin and Target clusters.
-The {zdm-proxy} process is lightweight, requiring only a small amount of resources and no storage to persist state (apart from logs).
+All {product-proxy} instances must be reachable by the client application and must be able to connect to your Origin and Target clusters.
+The {product-proxy} process is lightweight, requiring only a small amount of resources and no storage to persist state (apart from logs).
 
-The {zdm-proxy} should be deployed close to your client application instances.
+The {product-proxy} should be deployed close to your client application instances.
 This can be on any cloud provider as well as on-premise, depending on your existing infrastructure.
 
-If you have a multi-DC cluster with multiple set of client application instances deployed to geographically distributed data centers, you should plan for a separate {zdm-proxy} deployment for each data center.
+If you have a multi-DC cluster with multiple set of client application instances deployed to geographically distributed data centers, you should plan for a separate {product-proxy} deployment for each data center.
 
-Here's a typical deployment showing connectivity between client applications, {zdm-proxy} instances, and clusters:
+Here's a typical deployment showing connectivity between client applications, {product-proxy} instances, and clusters:
 
 image::{imagesprefix}zdm-during-migration3.png[Connectivity between client applications, proxy instances, and clusters.]
 
 == Infrastructure requirements
 
-To deploy the {zdm-proxy} and its companion monitoring stack, you will have to provision infrastructure that meets the following requirements.
+To deploy the {product-proxy} and its companion monitoring stack, you will have to provision infrastructure that meets the following requirements.
 
 [[_machines]]
 === Machines
 
 We will use the term "machine" to indicate a cloud instance (on any cloud provider), a VM, or a physical server.
 
-* N machines to run the desired number of {zdm-proxy} instances:
-** You will need one machine for each {zdm-proxy} instance.
-** Requirements for each {zdm-proxy} instance:
+* N machines to run the desired number of {product-proxy} instances:
+** You will need one machine for each {product-proxy} instance.
+** Requirements for each {product-proxy} instance:
 *** Ubuntu Linux 20.04 or 22.04, Red Hat Family Linux 7 or newer
 *** 4 vCPUs
 *** 8GB RAM
@@ -62,7 +62,7 @@ For example, you can use four VMs that are the equivalent of an AWS m5.4xlarge, 
 Next, run DSBulk Migrator or Cassandra-Data-Migrator in parallel on each VM with each one responsible for migrating around 5TB of data.
 If there is one super large table (e.g. 15 TB of 20 TB is in one table), you can choose to migrate this table in three parts on three separate VMs in parallel by splitting the full token range into three parts and migrating the rest of the tables on the fourth VM. 
 
-* Ensure that your Origin and Target clusters can handle high traffic from Cassandra Data Migrator or DSBulk in addition to the live traffic from your application. 
+* Ensure that your Origin and Target clusters can handle high traffic from {cstar-data-migrator} or DSBulk in addition to the live traffic from your application. 
 
 * Test any migration in a lower environment before you plan to do it in production.
 
@@ -72,7 +72,7 @@ If there is one super large table (e.g. 15 TB of 20 TB is in one table), you can
 // TODO: investigate how to "leverage the parallelism of {cstar-data-migrator} to run the migration process across all 4 machines."
 
 === Connectivity
-The {zdm-proxy} machines must be reachable by:
+The {product-proxy} machines must be reachable by:
 
 * The client application instances, on port 9042
 * The monitoring machine on port 14001
@@ -80,11 +80,11 @@ The {zdm-proxy} machines must be reachable by:
 
 [IMPORTANT]
 ====
-The {zdm-proxy} machines should not be directly accessible by external machines.
+The {product-proxy} machines should not be directly accessible by external machines.
 The only direct access to these machines should be from the jumphost.
 ====
 
-The {zdm-proxy} machines must be able to connect to the Origin and Target cluster nodes:
+The {product-proxy} machines must be able to connect to the Origin and Target cluster nodes:
 
 * For self-managed (non-Astra DB) clusters, connectivity is needed to the Cassandra native protocol port (typically 9042).
 * For Astra DB clusters, you will need to ensure outbound connectivity to the Astra endpoint indicated in the Secure Connect Bundle.
@@ -92,7 +92,7 @@ Connectivity over Private Link is also supported.
 
 The connectivity requirements for the jumphost / monitoring machine are:
 
-* Connecting to the {zdm-proxy} instances: on port 14001 for metrics collection, and on port 22 to run the Ansible automation and for log inspection or troubleshooting.
+* Connecting to the {product-proxy} instances: on port 14001 for metrics collection, and on port 22 to run the Ansible automation and for log inspection or troubleshooting.
 * Allowing incoming ssh connections from outside, potentially from allowed IP ranges only.
 * Exposing the Grafana UI on port 3000.
 
@@ -101,17 +101,17 @@ The connectivity requirements for the jumphost / monitoring machine are:
 It is strongly recommended **to restrict external access** to this machine to specific IP ranges (for example, the IP range of your corporate networks or trusted VPNs).
 ====
 
-The {zdm-proxy} and monitoring machines must be able to connect externally, as the automation will download:
+The {product-proxy} and monitoring machines must be able to connect externally, as the automation will download:
 
 * Various software packages (Docker, Prometheus, Grafana).
-* {zdm-proxy} image from DockerHub repo.
+* {product-proxy} image from DockerHub repo.
 
 === Connecting to the ZDM infrastructure from an external machine
 
 To connect to the jumphost from an external machine, ensure that its IP address belongs to a permitted IP range.
 If you are connecting through a VPN that only intercepts connections to selected destinations, you may have to add a route from your VPN IP gateway to the public IP of the jumphost.
 
-To simplify connecting to the jumphost and, through it, to the {zdm-proxy} instances, you can create a custom SSH config file.
+To simplify connecting to the jumphost and, through it, to the {product-proxy} instances, you can create a custom SSH config file.
 You can use this template and replace all the placeholders in angle brackets with the appropriate values for your deployment, adding more entries if you have more than three proxy instances.
 Save this file, for example calling it `zdm_ssh_config`.
 
@@ -149,7 +149,7 @@ With this file, you can connect to your jumphost simply with:
 ssh -F zdm_ssh_config jumphost
 ----
 
-Likewise, connecting to any {zdm-proxy} instance is as easy as this (replacing the instance number as desired):
+Likewise, connecting to any {product-proxy} instance is as easy as this (replacing the instance number as desired):
 
 [source,bash]
 ----

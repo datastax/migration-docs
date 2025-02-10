@@ -46,7 +46,7 @@ You would typically perform this step once you have migrated all the existing da
 
 == Asynchronous Dual Reads mode
 
-When using the {zdm-proxy}, all writes are synchronously sent to both Origin and Target.
+When using the {product-proxy}, all writes are synchronously sent to both Origin and Target.
 Reads operate differently: with the default read mode, reads are only sent to the primary cluster (Origin by default).
 
 Before changing the read routing so that reads are routed to Target (phase 4), you may want to temporarily send the reads to both clusters, to make sure that Target can handle the full workload of reads and writes.
@@ -71,9 +71,9 @@ This means that, while this feature provides a way to route read requests to Tar
 Because the client application is not impacted by these asynchronous reads, the only way to measure the performance and error rate of these asynchronous reads are:
 
 * Check the metrics of the cluster itself
-* Check the asynchronous reads section of the {zdm-proxy} metrics
+* Check the asynchronous reads section of the {product-proxy} metrics
 
-In the {zdm-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads where you can see latency percentiles, error rates, and some other metrics specific to these requests. 
+In the {product-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads where you can see latency percentiles, error rates, and some other metrics specific to these requests. 
 
 For more, see xref:metrics.adoc#_asynchronous_read_requests_metrics[Asynchronous read requests metrics].
 

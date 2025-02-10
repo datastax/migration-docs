@@ -1,4 +1,4 @@
-= {company} {zdm-product} Release Notes
+= {company} {product} Release Notes
 :navtitle: Release notes
 :page-tag: migration,zdm,zero-downtime,release-notes
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
@@ -34,7 +34,7 @@ For more about the YML files used to configure access to your clusters, see xref
 
 [NOTE]
 ====
-The latest {zdm-proxy} version is 2.1.0.
+The latest {product-proxy} version is 2.1.0.
 The latest {zdm-automation} version is 2.3.1.
 ====
 
@@ -44,22 +44,22 @@ If you are using a {zdm-automation} version up to and including 2.1.0, please us
 
 **13 January 2023**
 
-The ZDM 2.1.0 release adds {zdm-proxy} heartbeat functionality and provides several bug fixes.
+The ZDM 2.1.0 release adds {product-proxy} heartbeat functionality and provides several bug fixes.
 
 The periodic heartbeat feature in 2.1.0 has been implemented to keep alive idle cluster connections.
 
-By default, {zdm-proxy} now sends heartbeats after 30 seconds of inactivity on a cluster connection.
+By default, {product-proxy} now sends heartbeats after 30 seconds of inactivity on a cluster connection.
 You can tune the heartbeat interval with the Ansible configuration variable `heartbeat_insterval_ms`, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you do not use the {zdm-automation}.
 
 DataStax strongly recommends that you use version 2.1.0 (or newer) to benefit from this improvement, especially if you have a read-only workload.
 
-To verify which {zdm-proxy} version you're running, see this xref:troubleshooting-tips.adoc#_how_to_identify_the_zdm_proxy_version[topic].
+To verify which {product-proxy} version you're running, see this xref:troubleshooting-tips.adoc#_how_to_identify_the_zdm_proxy_version[topic].
 
-To find out how to upgrade an existing {zdm-proxy} deployment, see xref:manage-proxy-instances.adoc#_upgrade_the_proxy_version[Upgrade the proxy version].
+To find out how to upgrade an existing {product-proxy} deployment, see xref:manage-proxy-instances.adoc#_upgrade_the_proxy_version[Upgrade the proxy version].
 
-=== {zdm-proxy} 2.1.0 changes
+=== {product-proxy} 2.1.0 changes
 
-For the latest information about {zdm-proxy} new features and other changes, please refer to these GitHub-hosted documents in the open-source {zdm-proxy} repo:
+For the latest information about {product-proxy} new features and other changes, please refer to these GitHub-hosted documents in the open-source {product-proxy} repo:
 
 * https://github.com/datastax/zdm-proxy/blob/main/RELEASE_NOTES.md[RELEASE_NOTES]
 
@@ -70,13 +70,13 @@ For the latest information about {zdm-proxy} new features and other changes, ple
 The following topics have been updated for the 2.1.0 release:
 
 * xref:feasibility-checklists.adoc#_read_only_applications[Feasibility checks for read-only applications].
-See the notes indicating that this issue is solved by the {zdm-proxy} 2.1.0 release.
+See the notes indicating that this issue is solved by the {product-proxy} 2.1.0 release.
 
 * xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
 See the `heartbeat_interval_ms` and `zdm-proxy_max_stream_ids` information.
 
 * xref:troubleshooting-scenarios.adoc#_async_read_timeouts_stream_id_map_exhausted[Async read timeouts].
-See the clarification in the *Workaround* section indicating that this issue is solved by the {zdm-proxy} 2.1.0 release.
+See the clarification in the *Workaround* section indicating that this issue is solved by the {product-proxy} 2.1.0 release.
 
 * xref:metrics.adoc#_node_level_metrics[Node-level metrics].
 See the "Number of Used Stream Ids" section.
@@ -86,37 +86,37 @@ See the "Number of Used Stream Ids" section.
 
 **18 October 2022**
 
-=== {zdm-proxy} 2.0.0 changes
+=== {product-proxy} 2.0.0 changes
 
-This 2.0.0 version marks the public release of the self-service {company} {zdm-product} product suite.
+This 2.0.0 version marks the public release of the self-service {company} {product} product suite.
 
 The following GitHub repos are public.
 You are welcome to read the source and submit feedback via GitHub Issues per repo.
 
-* https://github.com/datastax/zdm-proxy[{zdm-proxy}] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion, provided you accept the https://cla.datastax.com/[{company} Contributor License Agreement (CLA)].
+* https://github.com/datastax/zdm-proxy[{product-proxy}] open-source repo: in addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion, provided you accept the https://cla.datastax.com/[{company} Contributor License Agreement (CLA)].
 For more information, see xref:contributions.adoc[].
 
-* https://github.com/datastax/zdm-proxy-automation[{zdm-automation}] repo for Ansible-based {zdm-proxy} automation.
+* https://github.com/datastax/zdm-proxy-automation[{zdm-automation}] repo for Ansible-based {product-proxy} automation.
 
 * https://github.com/datastax/dsbulk-migrator[DSBulk Migrator] repo for migration of smaller data quantities.
 
-* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator] repo for migration of larger data quantities and where detailed verifications and reconciliation options are needed.
+* https://github.com/datastax/cassandra-data-migrator[{cstar-data-migrator}] repo for migration of larger data quantities and where detailed verifications and reconciliation options are needed.
 
 include::partial$note-downtime.adoc[]
 
-For the latest information about {zdm-proxy} new features and other changes, please refer to the GitHub-hosted https://github.com/datastax/zdm-proxy/blob/main/RELEASE_NOTES.md[RELEASE_NOTES] in the open-source {zdm-proxy} repo.
-The document includes CHANGELOG links for each {zdm-proxy} `N.n` release.
+For the latest information about {product-proxy} new features and other changes, please refer to the GitHub-hosted https://github.com/datastax/zdm-proxy/blob/main/RELEASE_NOTES.md[RELEASE_NOTES] in the open-source {product-proxy} repo.
+The document includes CHANGELOG links for each {product-proxy} `N.n` release.
 
 [TIP]
 ====
-The {zdm-product} process requires you to be able to perform rolling restarts of your client applications during the migration.
+The {product} process requires you to be able to perform rolling restarts of your client applications during the migration.
 This is standard practice for client applications that are deployed over multiple instances and is a widely used approach to roll out releases and configuration changes.
 ====
 
 
 === ZDM 2.0.0 documentation updates
 
-Starting with the 2.0.0 version on 18-Oct-2022, the {zdm-product} documentation set is available online, starting xref:introduction.adoc[here].
+Starting with the 2.0.0 version on 18-Oct-2022, the {product} documentation set is available online, starting xref:introduction.adoc[here].
 
 == Supported releases
 

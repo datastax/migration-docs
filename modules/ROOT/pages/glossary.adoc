@@ -3,7 +3,7 @@
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
-Here are a few terms used throughout the {company} {zdm-product} documentation and code.
+Here are a few terms used throughout the {company} {product} documentation and code.
 
 [[_ansible_playbooks]]
 == Ansible playbooks
@@ -17,7 +17,7 @@ For details about the playbooks available in {zdm-automation}, see:
 [[_asynchronous_dual_reads]]
 == Asynchronous dual reads
 
-An optional testing phase in which reads are sent to both Origin and Target, enabling you to check that the intended Target of your migration can handle the full workload of reads and writes before finalizing the migration and moving off the {zdm-proxy} instances.
+An optional testing phase in which reads are sent to both Origin and Target, enabling you to check that the intended Target of your migration can handle the full workload of reads and writes before finalizing the migration and moving off the {product-proxy} instances.
 For details, see xref:enable-async-dual-reads.adoc[].
 
 == CQL
@@ -28,8 +28,8 @@ For details, see https://docs.datastax.com/en/astra/astra-db-vector/cql/develop-
 
 == Dual-write logic
 
-{zdm-proxy} handles your client application's real-time write requests and forwards them to two Cassandra-based clusters (Origin and Target) simultaneously.
-The dual-write logic in {zdm-proxy} means that you do not need to modify your client application to perform dual writes manually during a migration: {zdm-proxy} takes care of it for you.
+{product-proxy} handles your client application's real-time write requests and forwards them to two Cassandra-based clusters (Origin and Target) simultaneously.
+The dual-write logic in {product-proxy} means that you do not need to modify your client application to perform dual writes manually during a migration: {product-proxy} takes care of it for you.
 See the diagram in the xref:introduction.adoc#migration-workflow[workflow introduction].
 
 [[origin]]
@@ -67,7 +67,7 @@ See xref:glossary.adoc#_asynchronous_dual_reads[Asynchronous dual reads].
 
 During a migration, the secondary cluster is the one that is currently **not** the source of truth. 
 
-When using the {zdm-proxy}, all writes are synchronously sent to both Origin and Target.
+When using the {product-proxy}, all writes are synchronously sent to both Origin and Target.
 Reads operate differently: with the default read mode, reads are only sent to the primary cluster (Origin by default).
 In Phase 3 of a migration, you may (optionally) want to temporarily send the reads to both clusters, to make sure that Target can handle the full workload of reads and writes. 
 
@@ -91,8 +91,8 @@ The new cluster to which you want to migrate client applications and data with z
 [[zdm-automation]]
 == {zdm-automation}
 
-An Ansible-based tool that allows you to deploy and manage the {zdm-proxy} instances and associated monitoring stack.
-To simplify its setup, the suite includes the {zdm-utility}.
+An Ansible-based tool that allows you to deploy and manage the {product-proxy} instances and associated monitoring stack.
+To simplify its setup, the suite includes the {product-proxy}.
 This interactive utility creates a Docker container acting as the Ansible Control Host.
 The Ansible playbooks constitute the {zdm-automation}.
 

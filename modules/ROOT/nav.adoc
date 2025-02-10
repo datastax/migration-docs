@@ -1,56 +1,63 @@
-* Zero Downtime Migration
-** xref:introduction.adoc[]
-** xref:components.adoc[]
-** xref:preliminary-steps.adoc[]
-*** xref:feasibility-checklists.adoc[]
-*** xref:deployment-infrastructure.adoc[]
-*** xref:create-target.adoc[]
-*** xref:rollback.adoc[]
-//phase 1
-** xref:phase1.adoc[]
-*** xref:setup-ansible-playbooks.adoc[]
-*** xref:deploy-proxy-monitoring.adoc[]
-*** xref:tls.adoc[]
-*** xref:connect-clients-to-proxy.adoc[]
-*** xref:metrics.adoc[]
-*** xref:manage-proxy-instances.adoc[]
-//phase 2
-** xref:migrate-and-validate-data.adoc[]
-*** xref:cassandra-data-migrator.adoc[]
-*** https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[DSBulk Loader]
-//phase 3
-** xref:enable-async-dual-reads.adoc[]
-//phase 4
-** xref:change-read-routing.adoc[]
-//phase 5
-** xref:connect-clients-to-target.adoc[]
+.Get started
+* xref:introduction.adoc[]
+* xref:components.adoc[]
 
-** Troubleshooting
-*** xref:troubleshooting.adoc[] 
-*** xref:troubleshooting-tips.adoc[]
-*** xref:troubleshooting-scenarios.adoc[]
+.Planning
+* xref:preliminary-steps.adoc[]
+* xref:feasibility-checklists.adoc[]
+* xref:deployment-infrastructure.adoc[]
+* xref:create-target.adoc[]
+* xref:rollback.adoc[]
 
-** xref:faqs.adoc[]
+.Phase 1
+* xref:phase1.adoc[]
+* xref:setup-ansible-playbooks.adoc[]
+* xref:deploy-proxy-monitoring.adoc[]
+* xref:tls.adoc[]
+* xref:connect-clients-to-proxy.adoc[]
+* xref:metrics.adoc[]
+* xref:manage-proxy-instances.adoc[]
 
-** xref:glossary.adoc[]
-
-** xref:contributions.adoc[]
-
-** xref:release-notes.adoc[]
-
+.Phase 2
+* xref:migrate-and-validate-data.adoc[]
 * {cstar-data-migrator}
+** xref:cassandra-data-migrator.adoc[]
 ** xref:cdm-overview.adoc[]
 ** xref:cdm-steps.adoc[Migrate data]
-
 * {dsbulk-loader}
+** https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[DSBulk Loader]
 ** https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[Overview]
 ** https://docs.datastax.com/en/dsbulk/installing/install.html[Installing DataStax Bulk Loader]
 ** Loading and unloading data
 *** https://docs.datastax.com/en/dsbulk/getting-started/simple-load.html[Loading data without a configuration file]
 *** https://docs.datastax.com/en/dsbulk/getting-started/simple-unload.html[Unloading data without a configuration file]
 *** https://docs.datastax.com/en/dsbulk/developing/loading-unloading-vector-data.html[Loading and unloading vector data]
-** Loading and unloading data examples
 *** https://docs.datastax.com/en/dsbulk/reference/load.html[Loading data examples]
 *** https://docs.datastax.com/en/dsbulk/reference/unload.html[Unloading data examples]
 ** https://docs.datastax.com/en/dsbulk/reference/dsbulk-cmd.html#escaping-and-quoting-command-line-arguments[Escaping and quoting command line arguments]
 
+.Phase 3
+* xref:enable-async-dual-reads.adoc[]
+
+.Phase 4
+* xref:change-read-routing.adoc[]
+
+.Phase 5
+* xref:connect-clients-to-target.adoc[]
+
+.Troubleshooting
+* xref:troubleshooting.adoc[]
+* xref:troubleshooting-tips.adoc[]
+* xref:troubleshooting-scenarios.adoc[]
+
+.Contributing
+* xref:contributions.adoc[]
+
+.FAQ
+* xref:faqs.adoc[]
+
+.Glossary
+* xref:glossary.adoc[]
+
+.Release notes
+* xref:release-notes.adoc[]

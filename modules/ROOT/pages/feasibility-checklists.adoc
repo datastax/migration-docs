@@ -3,7 +3,7 @@
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
-Before starting your migration, refer to the following considerations to ensure that your client application workload and xref:glossary.adoc#origin[**Origin**] are suitable for this {zdm-product} process.
+Before starting your migration, refer to the following considerations to ensure that your client application workload and xref:glossary.adoc#origin[**Origin**] are suitable for this {product} process.
 
 == Cassandra Native Protocol version and cluster version support
 
@@ -193,7 +193,7 @@ However, if these columns are part of the primary key, the data migration phase 
 
 [NOTE]
 ====
-{zdm-shortproduct} does not support the `uuid()` function currently.
+{product-short} does not support the `uuid()` function currently.
 ====
 
 {zdm-proxy} is able to compute timestamps and replace `now()` function references with such timestamps in CQL statements at proxy level to ensure that these parameters will have the same value when these statements are sent to both clusters.

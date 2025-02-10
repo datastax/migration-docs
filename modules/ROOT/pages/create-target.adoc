@@ -46,7 +46,7 @@ Assign your preferred values for the serverless database:
 
 When the Astra DB reaches **Active** status, perform the following steps in an Astra DB user account.
 Create an IAM token with the "Read/Write User" role.
-This role will be used by the client application, the {zdm-proxy}, and the {zdm-automation}.
+This role will be used by the client application, the {product-proxy}, and the {zdm-automation}.
 
 In Astra Portal, choose **Organization Settings** (upper left) from the drop-down menu, and then **Token Management**.
 Select the **Read/Write User** role:
@@ -70,7 +70,7 @@ Your cluster's https://docs.datastax.com/en/astra/astra-db-vector/drivers/secure
 It will be needed by:
 
 * Your client application, to connect directly to Astra DB near the end of the migration;
-* Cassandra Data Migrator or DSBulk Migrator, to migrate and validate data into Astra DB.
+* {cstar-data-migrator} or DSBulk Migrator, to migrate and validate data into Astra DB.
 
 Note that the credentials are **not contained** in the SCB.
 
@@ -112,7 +112,7 @@ Note that CQL statements, such as those used to reproduce the schema on the targ
 
 === Create and configure the cluster
 
-{zdm-shortproduct} can be used to migrate to any type of CQL cluster, running in any cloud or even on-premise.
+{product-short} can be used to migrate to any type of CQL cluster, running in any cloud or even on-premise.
 
 Here are the steps that you'll need to follow:
 
@@ -126,7 +126,7 @@ You should also consider testing your new cluster to ensure it meets your perfor
 [NOTE]
 ====
 Your new cluster can be configured as you wish, independently of how Origin is configured.
-{zdm-proxy} allows you to specify a separate set of configuration to connect to each cluster.
+{product-proxy} allows you to specify a separate set of configuration to connect to each cluster.
 ====
 
 * If you enabled authentication, create a user with the required permissions to be used for your client application.

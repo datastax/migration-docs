@@ -6,7 +6,7 @@ ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 At this point in our migration phases, we've completed:
 
-* Phase 1: Connected client applications to {zdm-proxy}, which included setting up Ansible playbooks with the {zdm-utility}, and deploying the {zdm-proxy} instances via the Docker container with {zdm-automation}.
+* Phase 1: Connected client applications to {product-proxy}, which included setting up Ansible playbooks with the {product-proxy}, and deploying the {product-proxy} instances via the Docker container with {zdm-automation}.
 
 * Phase 2: Migrated and validated our data with {cstar-data-migrator} and/or {dsbulk-migrator}.
 
@@ -33,7 +33,7 @@ For further information, please refer to the documentation of the driver languag
 To connect to your Astra DB cluster, you need:
 
 * A valid set of credentials (ClientID and Client Secret) for the Astra DB organization to which your cluster belongs:
-** Note: You will already have used these credentials when you configured the {zdm-proxy} to connect to your Astra DB cluster as Target.
+** Note: You will already have used these credentials when you configured the {product-proxy} to connect to your Astra DB cluster as Target.
 ** For more information on creating credentials (tokens), see https://docs.datastax.com/en/astra/astra-db-vector/administration/manage-application-tokens.html[here].
 * The Secure Connect Bundle (SCB) for your Astra DB cluster:
 ** This is a zip archive containing connection metadata and files to automatically enable Mutual TLS encryption between your client application and Astra DB.

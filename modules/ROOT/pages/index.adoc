@@ -3,7 +3,7 @@
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
-Enterprises today want to reliably migrate mission-critical client applications and data to cloud environments with zero downtime or near zero downtime during the migration. 
+Enterprises today want to reliably migrate mission-critical client applications and data to cloud environments with zero downtime or near zero downtime during the migration.
 
 {company} has developed a set of thoroughly tested self-service tools to walk you through well-defined migration options.
 These tools provide features that help you migrate your data from any Cassandra origin (Apache Cassandra®, {company} Enterprise (DSE), {company} {astra_db}) to any Cassandra target (Apache Cassandra®, DSE, {company} {astra_db}).
@@ -16,9 +16,9 @@ When the migration is complete, the data is present in the new database and all 
 
 The migration tools are:
 
-* https://docs.datastax.com/en/data-migration/introduction.html[*Zero Downtime Migration*] (ZDM) Proxy: You can continue to run your current application and migrate data from the Origin to the Target database without any downtime.
-The proxy helps to manage the activity in transition.
-* xref:cassandra-data-migrator.adoc[*Cassandra Data Migrator*]: It can be used in conjunction with the ZDM Proxy for a migration with zero downtime. It can also be used on its own for migrations with acceptable downtime.
-* https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[*DSBulk Loader*]: In addition to loading and unloading CSV and JSON data, DSBulk can transfer data between databases. 
+* https://docs.datastax.com/en/data-migration/introduction.html[{product}] ({product-short}): Comprised of {product-proxy}, {product-proxy}, and {zdm-automation}, you can continue to run your current application and migrate data from the Origin to the Target database without any downtime.
+{product-proxy} helps to manage the activity in transition.
+* xref:cassandra-data-migrator.adoc[{cstar-data-migrator}]: It can be used in conjunction with the ZDM Proxy for a migration with zero downtime. It can also be used on its own for migrations with acceptable downtime.
+* https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[{dsbulk-loader}]: In addition to loading and unloading CSV and JSON data, DSBulk can transfer data between databases. 
 It can read data from a table from your origin database and write it to a table in your target database. 
-It can be used as an alternative to Cassandra Data Migrator (CDM). 
+It can be used as an alternative to {cstar-data-migrator} (CDM). 
