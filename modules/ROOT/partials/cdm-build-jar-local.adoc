@@ -1,4 +1,4 @@
-Optionally, you can build the {cstar-data-migrator} JAR for local development. You'll need https://maven.apache.org/download.cgi[Maven] 3.9.x.
+Optionally, you can build the {cass-migrator} JAR for local development. You'll need https://maven.apache.org/download.cgi[Maven] 3.9.x.
 
 Example:
 

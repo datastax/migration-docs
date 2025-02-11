@@ -1,5 +1,5 @@
-Use {cstar-data-migrator} to identify large fields from a table that may break your https://docs.datastax.com/en/astra-db-serverless/cql/cassandra-guardrails.html[cluster guardrails].
-For example, {astra_db} has a 10MB limit for a single large field.
+Use {cass-migrator} to identify large fields from a table that may break your https://docs.datastax.com/en/astra-db-serverless/cql/cassandra-guardrails.html[cluster guardrails].
+For example, {astra-db} has a 10MB limit for a single large field.
 Specify `--class com.datastax.cdm.job.GuardrailCheck` on the command.
 Example:
 

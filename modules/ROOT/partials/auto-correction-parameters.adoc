@@ -1,8 +1,8 @@
-Auto-correction parameters allow {cstar-data-migrator} to correct data differences found between the origin and target clusters when you run the `DiffData` program.
+Auto-correction parameters allow {cass-migrator} to correct data differences found between the origin and target clusters when you run the `DiffData` program.
 Typically, these parameters are run-disabled for "what if" migration testing, and generate a list of data discrepancies.
 The reasons for these discrepancies can then be investigated, and if necessary the parameters below can be enabled.
 
-For information about invoking `DiffData` in a {cstar-data-migrator} command, see https://docs.datastax.com/en/data-migration/cdm.html#cdm-validation-steps[{cstar-data-migrator} steps in validation mode].
+For information about invoking `DiffData` in a {cass-migrator} command, see https://docs.datastax.com/en/data-migration/cdm.html#cdm-validation-steps[{cass-migrator} steps in validation mode].
 
 [cols="2,2,3a"]
 |===

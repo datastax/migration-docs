@@ -1,4 +1,4 @@
-= Phase 1: Deploy {zdm-proxy} and connect client applications
+= Phase 1: Deploy {product-proxy} and connect client applications
 :page-tag: migration,zdm,zero-downtime,deploy,zdm-proxy,connect-apps
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
@@ -13,6 +13,6 @@ This section presents the following:
 
 //include::partial$lightbox-tip.adoc[]
 
-image::{imagesprefix}migration-phase1ra.png[Phase 1 diagram shows deployed ZDM Proxy instances, client app connections to proxies, and Target is setup.]
+image::{imagesprefix}migration-phase1ra.png[Phase 1 diagram shows deployed {product-proxy} instances, client app connections to proxies, and Target is setup.]
 
 //For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].

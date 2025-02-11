@@ -5,15 +5,15 @@ ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 Refer to the tips on this page for information that can help you troubleshoot issues with your migration.
 
-== How to retrieve the {zdm-proxy} log files
+== How to retrieve the {product-proxy} log files
 
-Depending on how you deployed {zdm-proxy}, there may be different ways to access
+Depending on how you deployed {product-proxy}, there may be different ways to access
 the logs.
-If you used the {zdm-automation}, see xref:manage-proxy-instances.adoc#_view_the_logs[View the logs] for a quick way
+If you used the {product-automation}, see xref:manage-proxy-instances.adoc#_view_the_logs[View the logs] for a quick way
 to view the logs of a single proxy instance.
 Follow the instructions on xref:manage-proxy-instances.adoc#_collect_the_logs[Collect the logs] for a playbook that systematically retrieves all logs by all instances and packages them in a zip archive for later inspection.
 
-If you did not use the {zdm-automation}, you might have to access the logs differently.
+If you did not use the {product-automation}, you might have to access the logs differently.
 If Docker is used, enter the following command to export the logs of a container to a file:
 
 [source,bash]
@@ -28,19 +28,19 @@ Keep in mind that docker logs are deleted if the container is recreated.
 
 == What to look for in the logs
 
-Make sure that the log level of the {zdm-proxy} is set to the appropriate value:
+Make sure that the log level of the {product-proxy} is set to the appropriate value:
 
-* If you deployed the {zdm-proxy} through the {zdm-automation}, the log level is determined by the variable `log_level` in `vars/zdm_proxy_core_config.yml`.
+* If you deployed the {product-proxy} through the {product-automation}, the log level is determined by the variable `log_level` in `vars/zdm_proxy_core_config.yml`.
 This value can be changed in a rolling fashion by editing this variable and running the playbook `rolling_update_zdm_proxy.yml`.
 For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
 
-* If you did not use the {zdm-automation} to deploy the {zdm-proxy}, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
+* If you did not use the {product-automation} to deploy the {product-proxy}, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
 
 Here are the most common messages you'll find in the proxy logs:
 
-=== {zdm-proxy} startup message
+=== {product-proxy} startup message
 
-Assuming the Log Level is not filtering out `INFO` entries, you can look for the following type of log message in order to verify that the {zdm-proxy} is starting up correctly.
+Assuming the Log Level is not filtering out `INFO` entries, you can look for the following type of log message in order to verify that the {product-proxy} is starting up correctly.
 Example:
 
 [source,json]
@@ -50,9 +50,9 @@ msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
 \"\n","stream":"stderr","time":"2023-01-13T11:50:48.522097083Z"}
 ----
 
-=== {zdm-proxy} configuration
+=== {product-proxy} configuration
 
-The first few lines of the {zdm-proxy} log file contains all the configuration variables and values.
+The first few lines of the {product-proxy} log file contains all the configuration variables and values.
 They are printed in a long JSON string format.
 You can copy/paste the string into a JSON formatter/viewer to make it easier to read.
 Example log message:
@@ -79,8 +79,8 @@ When you find a log message that looks like an error, the most important thing i
 
 * Log messages with `level=warn` are usually related to events that are not fatal to the overall running workload, but may cause issues with individual requests or connections.
 
-* In general, log messages with `level=error` or `level=warn` should be brought to the attention of DataStax, if the meaning is not clear.
-In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue] to ask questions about log messages of type `error` or `warn` that are unclear.
+* In general, log messages with `level=error` or `level=warn` should be brought to the attention of {company}, if the meaning is not clear.
+In the {product-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue] to ask questions about log messages of type `error` or `warn` that are unclear.
 
 === Protocol log messages
 
@@ -99,9 +99,9 @@ However, if you find a log message similar to the example above with log level `
 Instead, it's more likely an expected part of the handshake process during the connection initialization; that is, the normal protocol version negotiation.
 
 [[_how_to_identify_the_zdm_proxy_version]]
-== How to identify the {zdm-proxy} version
+== How to identify the {product-proxy} version
 
-In the {zdm-proxy} logs, the first message contains the version string (just before the message that shows the configuration):
+In the {product-proxy} logs, the first message contains the version string (just before the message that shows the configuration):
 
 
 [source,console]
@@ -110,7 +110,7 @@ time="2023-01-13T13:37:28+01:00" level=info msg="Starting ZDM proxy version 2.1.
 time="2023-01-13T13:37:28+01:00" level=info msg="Parsed configuration: {removed for simplicity}"
 ----
 
-You can also provide a `-version` command line parameter to the {zdm-proxy} and it will only print the version.
+You can also provide a `-version` command line parameter to the {product-proxy} and it will only print the version.
 Example:
 
 [source,bash]
@@ -121,25 +121,25 @@ ZDM proxy version 2.1.0
 
 [TIP]
 ====
-Do not use `--rm` when actually launching the {zdm-proxy} otherwise you will not be able to access the logs when it stops (or crashes).
+Do not use `--rm` when actually launching the {product-proxy} otherwise you will not be able to access the logs when it stops (or crashes).
 ====
 
 [#how-to-leverage-metrics]
-== How to leverage the metrics provided by {zdm-proxy}
+== How to leverage the metrics provided by {product-proxy}
 
 See xref:metrics.adoc[].
 
 == Reporting an issue
 
 If you encounter a problem during your migration, please contact us.
-In the {zdm-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue].
+In the {product-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue].
 Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
 
-* {zdm-proxy} version (see xref:_how_to_identify_the_zdm_proxy_version[here]).
-* {zdm-proxy} logs: ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change.
-* Version of database software on the Origin and Target clusters (relevant for DSE and Apache Cassandra deployments only).
-* If Astra DB is being used, please let us know in the issue description.
-* Screenshots of the {zdm-proxy} metrics dashboards from Grafana or whatever visualization tool you use.
+* {product-proxy} version (see xref:_how_to_identify_the_zdm_proxy_version[here]).
+* {product-proxy} logs: ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change.
+* Version of database software on the Origin and Target clusters (relevant for {dse-short} and {cass} deployments only).
+* If {astra-db} is being used, please let us know in the issue description.
+* Screenshots of the {product-proxy} metrics dashboards from Grafana or whatever visualization tool you use.
 If you can provide a way for us to access those metrics directly that would be even better.
 * Application/Driver logs.
 * Driver and version that the client application is using.
@@ -157,5 +157,5 @@ Or are you using the actual batch statement objects that drivers allow you to cr
 * Is CQL function replacement enabled?
 You can see if this feature is enabled by looking at the value of the Ansible advanced configuration variable `replace_cql_functions` if using the automation, or the environment variable `ZDM_REPLACE_CQL_FUNCTIONS` otherwise.
 CQL function replacement is disabled by default.
-* If permissible within your security rules, please provide us access to the {zdm-proxy} metrics dashboard.
+* If permissible within your security rules, please provide us access to the {product-proxy} metrics dashboard.
 Screenshots are fine but for performance issues it is more helpful to have access to the actual dashboard so the team can use all the data from these metrics in the troubleshooting process.

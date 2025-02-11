@@ -1,27 +1,27 @@
-= Leverage metrics provided by {zdm-proxy}
+= Leverage metrics provided by {product-proxy}
 :page-tag: migration,zdm,zero-downtime,metrics
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
-This topic provides detailed information about the metrics captured by the {zdm-proxy} and explains how to interpret the metrics. 
+This topic provides detailed information about the metrics captured by the {product-proxy} and explains how to interpret the metrics. 
 
 == Benefits
 
-The {zdm-proxy} gathers a large number of metrics, which allows you to gain deep insights into how it is operating with regard to its communication with client applications and clusters, as well as its request handling.
+The {product-proxy} gathers a large number of metrics, which allows you to gain deep insights into how it is operating with regard to its communication with client applications and clusters, as well as its request handling.
 
-Having visibility on all aspects of the {zdm-proxy}'s behavior is extremely important in the context of a migration of critical client applications, and is a great help in building confidence in the process and troubleshooting any issues.
-For this reason, we strongly encourage you to monitor the {zdm-proxy}, either by deploying the self-contained monitoring stack provided by the {zdm-automation} or by importing the pre-built Grafana dashboards in your own monitoring infrastructure.
+Having visibility on all aspects of the {product-proxy}'s behavior is extremely important in the context of a migration of critical client applications, and is a great help in building confidence in the process and troubleshooting any issues.
+For this reason, we strongly encourage you to monitor the {product-proxy}, either by deploying the self-contained monitoring stack provided by the {product-automation} or by importing the pre-built Grafana dashboards in your own monitoring infrastructure.
 
-== Retrieving the {zdm-proxy} metrics
+== Retrieving the {product-proxy} metrics
 
-{zdm-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format.  
+{product-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format.  
 
-{zdm-automation} can deploy Prometheus and Grafana, configuring them automatically, as explained xref:deploy-proxy-monitoring.adoc#_setting_up_the_monitoring_stack[here].
-The Grafana dashboards are ready to go with metrics that are being scraped from the {zdm-proxy} instances.
+{product-automation} can deploy Prometheus and Grafana, configuring them automatically, as explained xref:deploy-proxy-monitoring.adoc#_setting_up_the_monitoring_stack[here].
+The Grafana dashboards are ready to go with metrics that are being scraped from the {product-proxy} instances.
 
-If you already have a Grafana deployment then you can import the dashboards from the two ZDM dashboard files from this https://github.com/datastax/zdm-proxy-automation/tree/main/grafana-dashboards[{zdm-automation} GitHub location].
+If you already have a Grafana deployment then you can import the dashboards from the two {product-short} dashboard files from this https://github.com/datastax/zdm-proxy-automation/tree/main/grafana-dashboards[{product-automation} GitHub location].
  
-== Grafana dashboard for {zdm-proxy} metrics
+== Grafana dashboard for {product-proxy} metrics
 
 There are three groups of metrics in this dashboard:
 
@@ -29,15 +29,15 @@ There are three groups of metrics in this dashboard:
 * Node level metrics
 * Asynchronous read requests metrics
 
-image::{imagesprefix}zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of ZDM metrics for the proxy.]
+image::{imagesprefix}zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of {product-short} metrics for the proxy.]
 
 === Proxy-level metrics
 
 * Latency:
-** Read Latency: total latency measured by the {zdm-proxy} (including post-processing like response aggregation) for read requests.
+** Read Latency: total latency measured by the {product-proxy} (including post-processing like response aggregation) for read requests.
 This metric has two labels (`reads_origin` and `reads_target`): the label that has data will depend on which cluster is receiving the reads, i.e. which cluster is currently considered the xref:glossary.adoc#_primary_cluster[primary cluster].
-This is configured by the {zdm-automation} through the variable `primary_cluster`, or directly through the environment variable `ZDM_PRIMARY_CLUSTER` of the {zdm-proxy}.
-** Write Latency: total latency measured by the {zdm-proxy} (including post-processing like response aggregation) for write requests.
+This is configured by the {product-automation} through the variable `primary_cluster`, or directly through the environment variable `ZDM_PRIMARY_CLUSTER` of the {product-proxy}.
+** Write Latency: total latency measured by the {product-proxy} (including post-processing like response aggregation) for write requests.
 
 * Throughput (same structure as the previous latency metrics):
 ** Read Throughput
@@ -48,7 +48,7 @@ This is configured by the {zdm-automation} through the variable `primary_cluster
 * Number of client connections
 
 * Prepared Statement cache:
-** Cache Misses: meaning, a prepared statement was sent to the {zdm-proxy}, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again.
+** Cache Misses: meaning, a prepared statement was sent to the {product-proxy}, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again.
 ** Number of cached prepared statements.
 
 * Request Failure Rates: the number of request failures per interval.
@@ -61,7 +61,7 @@ The label that contains data depends on which cluster is currently considered th
 *** `failed_on=target`: the write request failed on Target ONLY.
 *** `failed_on=both`: the write request failed on BOTH clusters.
 
-* Request Failure Counters: Number of total request failures (resets when the {zdm-proxy} instance is restarted)
+* Request Failure Counters: Number of total request failures (resets when the {product-proxy} instance is restarted)
 ** Connect Failure Counters: the same labels as the connect failure rate.
 ** Read Failure Counters: the same labels as the read failure rate.
 ** Write Failure Counters: the same labels as the write failure rate.
@@ -72,8 +72,8 @@ To see error metrics by error type, see the node-level error metrics on the next
 === Node-level metrics
 
 * Latency: metrics on this bucket are not split by request type like the proxy level latency metrics so writes and reads are mixed together:
-** Origin: latency measured by the {zdm-proxy} up to the point it received a response from the Origin connection.
-** Target: latency measured by the {zdm-proxy} up to the point it received a response from the Target connection.
+** Origin: latency measured by the {product-proxy} up to the point it received a response from the Origin connection.
+** Target: latency measured by the {product-proxy} up to the point it received a response from the Target connection.
 
 * Throughput: same as node level latency metrics, reads and writes are mixed together.
 
@@ -98,27 +98,27 @@ Possible values for the `error` type label:
 === Asynchronous read requests metrics
 
 These metrics are specific to asynchronous reads, so they are only populated if asynchronous dual reads are enabled.
-This is done by setting the {zdm-automation} variable `read_mode`, or its equivalent environment variable `ZDM_READ_MODE`, to `DUAL_ASYNC_ON_SECONDARY` as explained xref:enable-async-dual-reads.adoc[here].
+This is done by setting the {product-automation} variable `read_mode`, or its equivalent environment variable `ZDM_READ_MODE`, to `DUAL_ASYNC_ON_SECONDARY` as explained xref:enable-async-dual-reads.adoc[here].
 
 These metrics track:
 
 * Latency.
 * Throughput.
-* Number of dedicated connections per node for async reads: whether it's Origin or Target connections depends on the {zdm-proxy} configuration.
+* Number of dedicated connections per node for async reads: whether it's Origin or Target connections depends on the {product-proxy} configuration.
 That is, if the primary cluster is Origin, then the asynchronous reads are sent to Target.
 * Number of errors per error type per node.
 
-=== Insights via the {zdm-proxy} metrics
+=== Insights via the {product-proxy} metrics
 
 Some examples of problems manifesting on these metrics:
 
-* Number of client connections close to 1000 per {zdm-proxy} instance: by default, {zdm-proxy} starts rejecting client connections after having accepted 1000 of them.
+* Number of client connections close to 1000 per {product-proxy} instance: by default, {product-proxy} starts rejecting client connections after having accepted 1000 of them.
 * Always increasing Prepared Statement cache metrics: both the **entries** and **misses** metrics.
 * Error metrics depending on the error type: these need to be evaluated on a per-case basis.
 
 == Go runtime metrics dashboard and system dashboard
 
-This dashboard in Grafana is not as important as the {zdm-proxy} dashboard. However, it may be useful to troubleshoot performance issues.
+This dashboard in Grafana is not as important as the {product-proxy} dashboard. However, it may be useful to troubleshoot performance issues.
 Here you can see memory usage, Garbage Collection (GC) duration, open fds (file descriptors - useful to detect leaked connections), and the number of goroutines:
 
 image::{imagesprefix}zdm-golang-dashboard.png[Golang metrics dashboard example is shown.]
@@ -130,6 +130,6 @@ Some examples of problem areas on these Go runtime metrics:
 * Always increasing memory usage.
 * Always increasing number of goroutines.
 
-The ZDM monitoring stack also includes a system-level dashboard collected through the Prometheus Node Exporter.
+The {product-short} monitoring stack also includes a system-level dashboard collected through the Prometheus Node Exporter.
 This dashboard contains hardware and OS-level metrics for the host on which the proxy runs.
 This can be useful to check the available resources and identify low-level bottlenecks or issues.

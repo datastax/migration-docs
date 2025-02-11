@@ -1,4 +1,4 @@
-To run your migration job with {cstar-data-migrator} in **data validation mode**, use class option `--class com.datastax.cdm.job.DiffData`. 
+To run your migration job with {cass-migrator} in **data validation mode**, use class option `--class com.datastax.cdm.job.DiffData`. 
 Example:
 
 [source,bash]
@@ -9,7 +9,7 @@ Example:
 --class com.datastax.cdm.job.DiffData cassandra-data-migrator-x.y.z.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
 
-The {cstar-data-migrator} validation job reports differences as `ERROR` entries in the log file. 
+The {cass-migrator} validation job reports differences as `ERROR` entries in the log file. 
 Example:
 
 [source,bash]
@@ -26,7 +26,7 @@ To get the list of missing or mismatched records, grep for all `ERROR` entries i
 Differences noted in the log file are listed by primary-key values.
 ====
 
-You can also run the {cstar-data-migrator} validation job in an **AutoCorrect** mode, which can:
+You can also run the {cass-migrator} validation job in an **AutoCorrect** mode, which can:
 
 * Add any missing records from the origin to target cluster.
 * Update any mismatched records between the origin and target clusters; this action makes the target cluster the same as the origin cluster.
@@ -41,6 +41,6 @@ spark.cdm.autocorrect.mismatch                    false|true
 
 [IMPORTANT]
 ====
-The {cstar-data-migrator} validation job never deletes records from the source or target clusters.
+The {cass-migrator} validation job never deletes records from the source or target clusters.
 The job only adds or updates data on the target cluster.
 ====

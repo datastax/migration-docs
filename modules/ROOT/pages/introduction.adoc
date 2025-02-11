@@ -1,12 +1,12 @@
-= Introduction to {zdm-product}
+= Introduction to {product}
 :navtitle: Introduction
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,introduction
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
-{zdm-product} provides a simple and reliable way for you to migrate applications from any CQL-based cluster (https://cassandra.apache.org/_/index.html[Apache Cassandra&reg;], https://www.datastax.com/products/datastax-enterprise[DataStax Enterprise (DSE)], https://www.datastax.com/products/datastax-astra[{astra_db}], or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
+{product} provides a simple and reliable way for you to migrate applications from any CQL-based cluster (https://cassandra.apache.org/_/index.html[{cass-reg}], https://www.datastax.com/products/datastax-enterprise[{dse}], https://www.datastax.com/products/datastax-astra[{astra-db}], or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
 
-* You can move your application to {astra_db}, DSE, or Cassandra with no downtime and with minimal configuration changes.
+* You can move your application to {astra-db}, {dse-short}, or {cass-short} with no downtime and with minimal configuration changes.
 * Your clusters are kept in sync at all times by a dual-write logic configuration.
 * You can xref:rollback.adoc[roll back] at any point, for complete peace of mind.
 
@@ -14,7 +14,7 @@ include::partial$note-downtime.adoc[]
 
 [TIP]
 ====
-The {zdm-product} process requires you to be able to perform rolling restarts of your client applications during the migration.
+The {product} process requires you to be able to perform rolling restarts of your client applications during the migration.
 
 This is standard practice for client applications that are deployed over multiple instances and is a widely used approach to roll out releases and configuration changes.
 ====
@@ -30,7 +30,7 @@ include::partial$migration-scenarios.adoc[]
 [TIP]
 ====
 An important migration prerequisite is that you already have the matching schema on Target.
-A CQL statement that your client application sends to {zdm-proxy} must be able to succeed on both Origin and Target clusters.
+A CQL statement that your client application sends to {product-proxy} must be able to succeed on both Origin and Target clusters.
 This means that any keyspace that your client application uses must exist on both Origin and Target with the same name.
 Table names must also match.
 For more, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
@@ -38,9 +38,9 @@ For more, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Sch
 
 == Migration phases
 
-First, a couple of key terms used throughout the ZDM documentation and software components:
+First, a couple of key terms used throughout the {product-short} documentation and software components:
 
-* **Origin:** This cluster is your existing Cassandra-based environment, whether it's open-source Apache Cassandra, DSE, or {astra_db} Classic.
+* **Origin:** This cluster is your existing {cass-short}-based environment, whether it's {cass}, {dse-short}, or {astra-db}.
 
 * **Target:** This cluster is the new environment to which you want to migrate client applications and data.
 
@@ -55,15 +55,15 @@ The highlighted components in each phase emphasize how your client applications 
 ==== Pre-migration client application operations
 
 Here's a look at a pre-migration from a high-level view.
-At this point, your client applications are performing read/write operations with an existing CQL-compatible database such as Apache Cassandra, DSE, or {astra_db}.
+At this point, your client applications are performing read/write operations with an existing CQL-compatible database such as {cass}, {dse-short}, or {astra-db}.
 
 image:pre-migration0ra9.png["Pre-migration environment."]
 
 '''
 
-==== Phase 1: Deploy ZDM Proxy and connect client applications
+==== Phase 1: Deploy {product-proxy} and connect client applications
 
-In this first phase, deploy the ZDM Proxy instances and connect client applications to the proxies.
+In this first phase, deploy the {product-proxy} instances and connect client applications to the proxies.
 This phase activates the dual-write logic.
 Writes are bifurcated (sent to both Origin and Target), while reads are executed on Origin only.
 
@@ -73,7 +73,7 @@ image:migration-phase1ra9.png["Migration Phase 1."]
 
 ==== Phase 2: Migrate data
 
-In this phase, migrate existing data using Cassandra Data Migrator and/or DSBulk Loader.
+In this phase, migrate existing data using {cass-migrator} or {dsbulk-loader}.
 Validate that the migrated data is correct, while continuing to perform dual writes.
 
 image:migration-phase2ra9a.png["Migration Phase 2."]
@@ -91,7 +91,7 @@ image:migration-phase3ra9.png["Migration Phase 3."]
 
 ==== Phase 4: Route reads to Target
 
-In this phase, read routing on the ZDM Proxy is switched to Target so that all reads are executed on it, while writes are still sent to both clusters.
+In this phase, read routing on the {product-proxy} is switched to Target so that all reads are executed on it, while writes are still sent to both clusters.
 In other words, Target becomes the primary cluster.
 
 image:migration-phase4ra9.png["Migration Phase 4."]
@@ -100,14 +100,14 @@ image:migration-phase4ra9.png["Migration Phase 4."]
 
 ==== Phase 5: Connect directly to Target
 
-In this phase, move your client applications off the ZDM Proxy and connect the apps directly to Target.
+In this phase, move your client applications off the {product-proxy} and connect the apps directly to Target.
 Once that happens, the migration is complete.
 
 image:migration-phase5ra9.png["Migration Phase 5."]
 
 '''
 
-== A fun way to learn: {zdm-product} Interactive Lab
+== A fun way to learn: {product} Interactive Lab
 
 include::partial$interactive-lab.adoc[]
 
