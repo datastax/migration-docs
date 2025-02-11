@@ -25,6 +25,7 @@
 ** xref:cdm-overview.adoc[]
 ** xref:cdm-steps.adoc[Migrate data]
 * {dsbulk-loader}
+** xref:dsbulk-migrator.adoc[]
 ** https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[{dsbulk-loader}]
 ** https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[Overview]
 ** https://docs.datastax.com/en/dsbulk/installing/install.html[Installing {dsbulk-loader}]
