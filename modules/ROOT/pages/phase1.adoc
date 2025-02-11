@@ -13,6 +13,6 @@ This section presents the following:
 
 //include::partial$lightbox-tip.adoc[]
 
-image::{imagesprefix}migration-phase1ra.png[Phase 1 diagram shows deployed ZDM Proxy instances, client app connections to proxies, and Target is setup.]
+image::{imagesprefix}migration-phase1ra.png[Phase 1 diagram shows deployed {product-proxy} instances, client app connections to proxies, and Target is setup.]
 
 //For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].

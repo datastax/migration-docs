@@ -49,6 +49,6 @@ You only need to list renamed columns.
 
 [NOTE]
 ====
-For optimization reasons, {cstar-data-migrator} does not migrate TTL and writetime at the field level.
-Instead, {cstar-data-migrator} finds the field with the highest TTL and the field with the highest writetime within an origin table row, and uses those values on the entire target table row.
+For optimization reasons, {cass-migrator} does not migrate TTL and writetime at the field level.
+Instead, {cass-migrator} finds the field with the highest TTL and the field with the highest writetime within an origin table row, and uses those values on the entire target table row.
 ====

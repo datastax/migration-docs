@@ -1,15 +1,15 @@
 = Connect your client applications to {product-proxy}
-:navtitle: Connect client applications to ZDM Proxy
+:navtitle: Connect client applications to {product-proxy}
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps
 ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
 ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
-The {product-proxy} is designed to look and feel very much like a conventional Cassandra&reg; cluster.
+The {product-proxy} is designed to be similar to a conventional {cass-reg} cluster.
 You communicate with it using the CQL query language used in your existing client applications.
-It understands the same messaging protocols used by Cassandra, DataStax Enterprise (DSE) server and {company} Astra DB.
-As a result, most of your client applications won't be able to distinguish between connecting to {product-proxy} and connecting directly to your Cassandra cluster.
+It understands the same messaging protocols used by {cass-short}, {dse}, and {astra-db}.
+As a result, most of your client applications won't be able to distinguish between connecting to {product-proxy} and connecting directly to your {cass-short} cluster.
 
-On this page, we explain how to connect your client applications to a Cassandra cluster.
+On this page, we explain how to connect your client applications to a {cass-short} cluster.
 We then move on to discuss how this process changes when connecting to a {product-proxy}.
 We conclude by describing two sample client applications that serve as real-world examples of how to build a client application that works effectively with {product-proxy}.
 
@@ -19,21 +19,21 @@ Finally, we will explain how to connect the `cqlsh` command-line client to the {
 
 == {company} drivers
 
-At DataStax, we've developed and maintain a set of drivers for client applications to use when connecting to Cassandra, DSE, or Astra DB:
+You can use {company} drivers to connect your client applications to {cass-short}, {dse-short}, and {astra-db}:
 
-* https://github.com/datastax/java-driver[{company} Java driver for Apache Cassandra]
-* https://github.com/datastax/python-driver[{company} Python driver for Apache Cassandra]
-* https://github.com/datastax/csharp-driver[{company} C# driver for Apache Cassandra]
-* https://github.com/datastax/cpp-driver[{company} C/C++ driver for Apache Cassandra]
-* https://github.com/datastax/nodejs-driver[{company} Node.js driver for Apache Cassandra]
+* https://github.com/datastax/java-driver[{company} Java driver]
+* https://github.com/datastax/python-driver[{company} Python driver]
+* https://github.com/datastax/csharp-driver[{company} C# driver]
+* https://github.com/datastax/cpp-driver[{company} C/{cpp} driver]
+* https://github.com/datastax/nodejs-driver[{company} Node.js driver]
 
-These drivers provide a native implementation of the messaging protocols used to communicate with a Cassandra or DSE cluster or Astra DB.
+These drivers provide a native implementation of the messaging protocols used to communicate with a {cass-short} cluster, {dse-short} cluster, or {astra-db}.
 They allow you to execute queries, iterate through results, access metadata about your cluster, and perform other related activities.
 
 [[_connecting_company_drivers_to_cassandra]]
-== Connecting {company} drivers to Cassandra
+== Connecting {company} drivers to {cass-short}
 
-Perhaps the simplest way to demonstrate how to use the {company} drivers to connect your client application to a Cassandra cluster is an example in the form of some sample code.
+Perhaps the simplest way to demonstrate how to use the {company} drivers to connect your client application to a {cass-short} cluster is an example in the form of some sample code.
 But there's a bit of a problem: the {company} drivers are independent projects implemented natively in the relevant programming language.
 
 This approach offers the benefit of allowing each project to provide an API that makes the most sense for the language or platform on which it's implemented.
@@ -90,7 +90,7 @@ You can find the documentation for earlier versions by selecting the appropriate
 
 == Connecting {company} drivers to {product-proxy}
 
-We mentioned above that connecting to a {product-proxy} should be almost indistinguishable from connecting directly to your Cassandra cluster.
+We mentioned above that connecting to a {product-proxy} should be almost indistinguishable from connecting directly to your {cass-short} cluster.
 This design decision means there isn't much to say here; everything we discussed in the section above also applies when connecting your {company} driver to a {product-proxy}.
 There are a few extra considerations to keep in mind, though, when using the proxy.
 
@@ -136,26 +136,26 @@ This is also the case if only Target requires authentication but Origin does not
 
 |===
 
-.How different sets of credentials are used by the ZDM Proxy when authentication is enabled on both clusters
-image::zdm-proxy-credential-usage.png[ZDM proxy credentials usage, 550]
+.How different sets of credentials are used by the {product-proxy} when authentication is enabled on both clusters
+image::zdm-proxy-credential-usage.png[{product-proxy} credentials usage, 550]
 
-=== A note on the Astra Secure Connect Bundle
+=== A note on the Secure Connect Bundle
 
-If your {product-proxy} is configured to use Astra DB as an Origin or Target, your client application **does not need** to provide an Astra Secure Connect Bundle (SCB) when connecting to the proxy.
-It will, however, have to supply the Astra client ID and client secret as a username and password (respectively).
+If your {product-proxy} is configured to use {astra-db} as an Origin or Target, your client application **does not need** to provide a Secure Connect Bundle (SCB) when connecting to the proxy.
+It will, however, have to supply an {astra-db} application token's client ID and client secret as a username and password (respectively).
 
 
 == Sample client applications
 
-The documentation for the {company} drivers provides information about how to connect these drivers to your Cassandra cluster or {product-proxy} and how to use them to issue queries, update data and perform other actions.
+The documentation for the {company} drivers provides information about how to connect these drivers to your {cass-short} cluster or {product-proxy} and how to use them to issue queries, update data and perform other actions.
 In addition to the smaller code samples provided in the documentation, we also provide a few sample client applications which demonstrate the use of the {company} Java driver to interact with {product-proxy} as well as Origin and Target for that proxy.
 
-=== {product-short} Demo Client
+=== {product-demo}
 
-https://github.com/alicel/zdm-demo-client/[{product-short} Demo Client] is a minimal Java web application which provides a simple, stripped-down example of an application built to work with {product-proxy}.
+https://github.com/alicel/zdm-demo-client/[{product-demo}] is a minimal Java web application which provides a simple, stripped-down example of an application built to work with {product-proxy}.
 After updating connection information you can compile and run the application locally and interact with it using HTTP clients such as `curl` or `wget`.
 
-You can find the details of building and running {product-short} Demo Client in the https://github.com/alicel/zdm-demo-client/blob/master/README.md[README].
+You can find the details of building and running {product-demo} in the https://github.com/alicel/zdm-demo-client/blob/master/README.md[README].
 
 [[_themis_client]]
 === Themis client
@@ -171,19 +171,19 @@ This allows you to validate that the {product-proxy} is reading and writing data
 Configuration details for the clusters and/or {product-proxy} are defined in a YAML file.
 Details are in the https://github.com/absurdfarce/themis/blob/main/README.md[README].
 
-In addition to any utility as a validation tool, Themis also serves as an example of a larger client application which uses the Java driver to connect to a {product-proxy} -- as well as directly to Cassandra or Astra DB clusters -- and perform operations.
+In addition to any utility as a validation tool, Themis also serves as an example of a larger client application which uses the Java driver to connect to a {product-proxy} -- as well as directly to {cass-short} clusters or {astra-db} -- and perform operations.
 The configuration logic as well as the cluster and session management code have been cleanly separated into distinct packages to make them easy to understand.
 
 == Connecting CQLSH to the {product-proxy}
 
 https://downloads.datastax.com/#cqlsh[CQLSH] is a simple, command-line client that is able to connect to any CQL cluster, enabling you to interactively send CQL requests to it.
-CQLSH comes pre-installed on any Cassandra or DSE node, or it can be downloaded and run as a standalone client on any machine able to connect to the desired cluster.
+CQLSH comes pre-installed on any {cass-short} or {dse-short} node, or it can be downloaded and run as a standalone client on any machine able to connect to the desired cluster.
 
 Using CQLSH to connect to a {product-proxy} instance is very easy:
 
 * Download CQLSH for free from https://downloads.datastax.com/#cqlsh[here] on a machine that has connectivity to the {product-proxy} instances:
 ** To connect to the {product-proxy}, any version is fine.
-** The Astra-ready version additionally supports connecting directly to an Astra DB cluster by passing the cluster's Secure Connect Bundle and valid credentials.
+** The {astra-db}-compatible version additionally supports connecting directly to an {astra-db} cluster by passing the cluster's Secure Connect Bundle and valid credentials.
 * Install it by uncompressing the archive: `tar -xvf cqlsh-<...>.tar.gz`.
 * Navigate to the `cqlsh-<...>/bin` directory, for example `cd cqlsh-astra/bin`.
 * Launch CQLSH:

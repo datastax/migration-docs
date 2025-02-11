@@ -9,7 +9,7 @@ Here are a few terms used throughout the {company} {product} documentation and c
 == Ansible playbooks
 
 A repeatable, re-usable, simple configuration management and multi-machine deployment system, one that is well suited to deploying complex applications.
-For details about the playbooks available in {zdm-automation}, see:
+For details about the playbooks available in {product-automation}, see:
 
 * xref:setup-ansible-playbooks.adoc[].
 * xref:deploy-proxy-monitoring.adoc[].
@@ -22,20 +22,20 @@ For details, see xref:enable-async-dual-reads.adoc[].
 
 == CQL
 
-Cassandra Query Language (CQL) is a query language for the Cassandra database.
+{cass-short} Query Language (CQL) is a query language for the {cass-short} database.
 It includes DDL and DML statements.
-For details, see https://docs.datastax.com/en/astra/astra-db-vector/cql/develop-with-cql.html[Develop with the Cassandra Query Language].
+For details, see https://docs.datastax.com/en/astra/astra-db-vector/cql/develop-with-cql.html[Develop with the {cass-short} Query Language].
 
 == Dual-write logic
 
-{product-proxy} handles your client application's real-time write requests and forwards them to two Cassandra-based clusters (Origin and Target) simultaneously.
+{product-proxy} handles your client application's real-time write requests and forwards them to two {cass-short}-based clusters (Origin and Target) simultaneously.
 The dual-write logic in {product-proxy} means that you do not need to modify your client application to perform dual writes manually during a migration: {product-proxy} takes care of it for you.
 See the diagram in the xref:introduction.adoc#migration-workflow[workflow introduction].
 
 [[origin]]
 == Origin
 
-Your existing Cassandra-based cluster, whether it's open-source Apache Cassandra&reg;, DataStax Enterprise (DSE), or Astra DB.
+Your existing {cass-short}-based cluster, whether it's {cass-reg}, {dse}, or {astra-db}.
 
 [[_primary_cluster]]
 == Primary cluster
@@ -56,7 +56,7 @@ See xref:glossary.adoc#_ansible_playbooks[Ansible playbooks].
 Generally speaking, a proxy is a software class functioning as an interface to something else.
 The proxy could interface to anything: a network connection, a large object in memory, a file, or some other resource.
 A proxy is a wrapper or agent object that is being called by the client to access the real serving object behind the scenes.
-In our context here, see <<zdm-proxy,ZDM Proxy>>.
+In our context here, see <<zdm-proxy,{product-proxy}>>.
 
 == Read mirroring
 
@@ -80,7 +80,7 @@ Also see xref:enable-async-dual-reads.adoc[].
 [[_secure_connect_bundle_scb]]
 == Secure Connect Bundle (SCB)
 
-A ZIP file generated in https://astra.datastax.com[Astra Portal] that contains connection metadata and TLS encryption certificates (but not the database credentials) for your {astra_db} database.
+A ZIP file generated in the https://astra.datastax.com[{astra-ui}] that contains connection metadata and TLS encryption certificates (but not the database credentials) for your {astra-db} database.
 For details, see https://docs.datastax.com/en/astra-serverless/docs/connect/secure-connect-bundle.html[Working with the Secure Connect Bundle].
 
 [[target]]
@@ -89,14 +89,14 @@ For details, see https://docs.datastax.com/en/astra-serverless/docs/connect/secu
 The new cluster to which you want to migrate client applications and data with zero downtime.
 
 [[zdm-automation]]
-== {zdm-automation}
+== {product-automation}
 
 An Ansible-based tool that allows you to deploy and manage the {product-proxy} instances and associated monitoring stack.
-To simplify its setup, the suite includes the {product-proxy}.
+To simplify its setup, the suite includes the {product-utility}.
 This interactive utility creates a Docker container acting as the Ansible Control Host.
-The Ansible playbooks constitute the {zdm-automation}.
+The Ansible playbooks constitute the {product-automation}.
 
 [[zdm-proxy]]
-== ZDM Proxy
+== {product-proxy}
 
 An open-source component designed to seamlessly handle the real-time client application activity while a migration is in progress.

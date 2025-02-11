@@ -7,10 +7,10 @@ This topic introduces two open-source data migration tools that you can use duri
 
 For full details, see these topics:
 
-* xref:cassandra-data-migrator.adoc[{cstar-data-migrator}]
+* xref:cassandra-data-migrator.adoc[{cass-migrator}]
 * xref:dsbulk-migrator.adoc[{dsbulk-migrator}]
 
-These tools provide sophisticated features that help you migrate your data from any Cassandra **Origin** (Apache Cassandra&reg;, {company} Enterprise (DSE), {company} {astra_db}) to any Cassandra **Target** (Apache Cassandra, DSE, {company} {astra_db}). 
+These tools provide sophisticated features that help you migrate your data from any {cass-short} **Origin** ({cass}, {dse-short}, or {astra-db}) to any {cass-short} **Target** ({cass}, {dse-short}, or {astra-db}).
 
 //include::partial$lightbox-tip.adoc[]
 
@@ -22,31 +22,31 @@ image::{imagesprefix}migration-phase2ra.png[Phase 2 diagram shows using tools to
 
 In general:
 
-* {cstar-data-migrator} (CDM) is the best choice to migrate large data quantities, and where detailed logging, data verifications, table column renaming (if needed), and reconciliation options are provided. 
+* {cass-migrator} ({cass-migrator-short}) is the best choice to migrate large data quantities, and where detailed logging, data verifications, table column renaming (if needed), and reconciliation options are provided. 
 
-* {dsbulk-migrator} leverages {company} Bulk Loader (DSBulk) to perform the data migration, and provides new commands specific to migrations. {dsbulk-migrator} is ideal for simple migration of smaller data quantities, and where data validation (other than post-migration row counts) is not necessary.
+* {dsbulk-migrator} leverages {dsbulk-loader} to perform the data migration, and provides new commands specific to migrations. {dsbulk-migrator} is ideal for simple migration of smaller data quantities, and where data validation (other than post-migration row counts) is not necessary.
 
 == Open-source repos with essential data migration tools
 
 Refer to the following GitHub repos:
 
-* https://github.com/datastax/cassandra-data-migrator[Cassandra Data Migrator] repo.
+* https://github.com/datastax/cassandra-data-migrator[{cass-migrator}] repo.
 
 * https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator}] repo.
 
 A number of helpful assets are provided in each repo. 
 
-In particular, the CDM repo provides two configuration templates, with embedded comments and default values, which you can customize to match your data migration's requirements:
+In particular, the {cass-migrator-short} repo provides two configuration templates, with embedded comments and default values, which you can customize to match your data migration's requirements:
 
 * https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[cdm.properties] provides a subset of configuration options with commonly required settings.
 
 * https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[cdm-detailed.properties] with all available options.
 
-[[cstar-data-migrator-key-features]]
-== {cstar-data-migrator} features
+[[cass-migrator-key-features]]
+== {cass-migrator} features
 
-CDM offers functionalities like bulk export, import, data conversion, mapping of column names between Origin and Target, and validation. 
-The CDM capabilities are extensive:
+{cass-migrator-short} offers functionalities like bulk export, import, data conversion, mapping of column names between Origin and Target, and validation. 
+The {cass-migrator-short} capabilities are extensive:
 
 * Automatic detection of each table's schema - column names, types, keys, collections, UDTs, and other schema items.
 * Validation - Log partitions range-level exceptions, use the exceptions file as input for rerun operations.
@@ -57,11 +57,11 @@ The CDM capabilities are extensive:
 * Guardrail checks, such as identifying large fields.
 * Fully containerized support - Docker and Kubernetes friendly.
 * SSL support - including custom cipher algorithms.
-* Migration/validation from and to Azure Cosmos Cassandra.
+* Migration/validation from and to Azure Cosmos {cass-short}.
 * Validate migration accuracy and performance using a smaller randomized data-set.
 * Support for adding custom fixed writetime.
 
-With new or enhanced capabilities in recent https://github.com/datastax/cassandra-data-migrator/packages/1832128[CDM v4.x releases].
+With new or enhanced capabilities in recent https://github.com/datastax/cassandra-data-migrator/packages/1832128[{cass-migrator-short} v4.x releases].
 
 * Column names can differ between Origin and Target.
 * UDTs can be migrated from Origin to Target, even when the keyspace names differ.
@@ -72,19 +72,19 @@ With new or enhanced capabilities in recent https://github.com/datastax/cassandr
 * You can populate Target columns with constant values: New columns can be added to the Target table, and populated with constant values.
 * Expand Origin Map Column into Target rows: A Map in Origin can be expanded into multiple rows in Target when the Map key is part of the Target primary key.
 
-For extensive usage and reference details, see xref:cassandra-data-migrator.adoc[{cstar-data-migrator}]. 
+For extensive usage and reference details, see xref:cassandra-data-migrator.adoc[{cass-migrator}]. 
 
 [[dsbulk-migrator-key-features]]
 == {dsbulk-migrator} features
 
-{dsbulk-migrator}, which is based on {company} Bulk Loader (DSBulk), is best for migrating smaller amounts of data, and/or when you can shard data from table rows into more manageable quantities.  
+{dsbulk-migrator}, which is based on {dsbulk-loader}, is best for migrating smaller amounts of data, and/or when you can shard data from table rows into more manageable quantities.  
 
 {dsbulk-migrator} provides the following commands:
 
-* `migrate-live` starts a live data migration using a pre-existing DSBulk installation, or alternatively, the embedded DSBulk version. A "live" migration means that the data migration will start immediately and will be performed by this migrator tool through the desired DSBulk installation.
+* `migrate-live` starts a live data migration using a pre-existing {dsbulk-loader} installation, or alternatively, the embedded {dsbulk-loader} version. A "live" migration means that the data migration will start immediately and will be performed by this migrator tool through the desired {dsbulk-loader} installation.
 
-* `generate-script` generates a migration script that, once executed, will perform the desired data migration, using a pre-existing DSBulk installation. Please note: this command does not actually migrate the data; it only generates the migration script.
+* `generate-script` generates a migration script that, once executed, will perform the desired data migration, using a pre-existing {dsbulk-loader} installation. Please note: this command does not actually migrate the data; it only generates the migration script.
 
-* `generate-ddl` reads the schema from Origin and generates CQL files to recreate it in an {astra_db} cluster used as Target.
+* `generate-ddl` reads the schema from Origin and generates CQL files to recreate it in an {astra-db} cluster used as Target.
 
 For extensive usage and reference details, see xref:dsbulk-migrator.adoc[{dsbulk-migrator}].

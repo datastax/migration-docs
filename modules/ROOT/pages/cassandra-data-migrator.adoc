@@ -1,35 +1,35 @@
-= {cstar-data-migrator}
+= {cass-migrator}
 :page-aliases: cdm-parameters.adoc
 
-Use {cstar-data-migrator} to migrate and validate tables between origin and target Cassandra clusters, with available logging and reconciliation support.
+Use {cass-migrator} to migrate and validate tables between origin and target {cass-short} clusters, with available logging and reconciliation support.
 
 [[cdm-prerequisites]]
-== {cstar-data-migrator} prerequisites
+== {cass-migrator} prerequisites
 
 include::partial$cdm-prerequisites.adoc[]
 
 [[cdm-install-as-container]]
-== Install {cstar-data-migrator} as a Container
+== Install {cass-migrator} as a Container
 
 include::partial$cdm-install-as-container.adoc[]
 
 [[cdm-install-as-jar]]
-== Install {cstar-data-migrator} as a JAR file
+== Install {cass-migrator} as a JAR file
 
 include::partial$cdm-install-as-jar.adoc[]
 
 [[cdm-build-jar-local]]
-== Build {cstar-data-migrator} JAR for local development (optional)
+== Build {cass-migrator} JAR for local development (optional)
 
 include::partial$cdm-build-jar-local.adoc[]
 
 [[cdm-steps]]
-== Use {cstar-data-migrator}
+== Use {cass-migrator}
 
 include::partial$use-cdm-migrator.adoc[]
 
 [[cdm-validation-steps]]
-== Use {cstar-data-migrator} steps in validation mode 
+== Use {cass-migrator} steps in validation mode 
 
 include::partial$cdm-validation-steps.adoc[]
 

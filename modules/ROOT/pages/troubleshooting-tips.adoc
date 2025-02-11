@@ -9,11 +9,11 @@ Refer to the tips on this page for information that can help you troubleshoot is
 
 Depending on how you deployed {product-proxy}, there may be different ways to access
 the logs.
-If you used the {zdm-automation}, see xref:manage-proxy-instances.adoc#_view_the_logs[View the logs] for a quick way
+If you used the {product-automation}, see xref:manage-proxy-instances.adoc#_view_the_logs[View the logs] for a quick way
 to view the logs of a single proxy instance.
 Follow the instructions on xref:manage-proxy-instances.adoc#_collect_the_logs[Collect the logs] for a playbook that systematically retrieves all logs by all instances and packages them in a zip archive for later inspection.
 
-If you did not use the {zdm-automation}, you might have to access the logs differently.
+If you did not use the {product-automation}, you might have to access the logs differently.
 If Docker is used, enter the following command to export the logs of a container to a file:
 
 [source,bash]
@@ -30,11 +30,11 @@ Keep in mind that docker logs are deleted if the container is recreated.
 
 Make sure that the log level of the {product-proxy} is set to the appropriate value:
 
-* If you deployed the {product-proxy} through the {zdm-automation}, the log level is determined by the variable `log_level` in `vars/zdm_proxy_core_config.yml`.
+* If you deployed the {product-proxy} through the {product-automation}, the log level is determined by the variable `log_level` in `vars/zdm_proxy_core_config.yml`.
 This value can be changed in a rolling fashion by editing this variable and running the playbook `rolling_update_zdm_proxy.yml`.
 For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
 
-* If you did not use the {zdm-automation} to deploy the {product-proxy}, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
+* If you did not use the {product-automation} to deploy the {product-proxy}, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
 
 Here are the most common messages you'll find in the proxy logs:
 
@@ -79,7 +79,7 @@ When you find a log message that looks like an error, the most important thing i
 
 * Log messages with `level=warn` are usually related to events that are not fatal to the overall running workload, but may cause issues with individual requests or connections.
 
-* In general, log messages with `level=error` or `level=warn` should be brought to the attention of DataStax, if the meaning is not clear.
+* In general, log messages with `level=error` or `level=warn` should be brought to the attention of {company}, if the meaning is not clear.
 In the {product-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue] to ask questions about log messages of type `error` or `warn` that are unclear.
 
 === Protocol log messages
@@ -137,8 +137,8 @@ Only to the extent that the issue's description does not contain **your propriet
 
 * {product-proxy} version (see xref:_how_to_identify_the_zdm_proxy_version[here]).
 * {product-proxy} logs: ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change.
-* Version of database software on the Origin and Target clusters (relevant for DSE and Apache Cassandra deployments only).
-* If Astra DB is being used, please let us know in the issue description.
+* Version of database software on the Origin and Target clusters (relevant for {dse-short} and {cass} deployments only).
+* If {astra-db} is being used, please let us know in the issue description.
 * Screenshots of the {product-proxy} metrics dashboards from Grafana or whatever visualization tool you use.
 If you can provide a way for us to access those metrics directly that would be even better.
 * Application/Driver logs.

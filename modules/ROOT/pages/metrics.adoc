@@ -10,16 +10,16 @@ This topic provides detailed information about the metrics captured by the {prod
 The {product-proxy} gathers a large number of metrics, which allows you to gain deep insights into how it is operating with regard to its communication with client applications and clusters, as well as its request handling.
 
 Having visibility on all aspects of the {product-proxy}'s behavior is extremely important in the context of a migration of critical client applications, and is a great help in building confidence in the process and troubleshooting any issues.
-For this reason, we strongly encourage you to monitor the {product-proxy}, either by deploying the self-contained monitoring stack provided by the {zdm-automation} or by importing the pre-built Grafana dashboards in your own monitoring infrastructure.
+For this reason, we strongly encourage you to monitor the {product-proxy}, either by deploying the self-contained monitoring stack provided by the {product-automation} or by importing the pre-built Grafana dashboards in your own monitoring infrastructure.
 
 == Retrieving the {product-proxy} metrics
 
 {product-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format.  
 
-{zdm-automation} can deploy Prometheus and Grafana, configuring them automatically, as explained xref:deploy-proxy-monitoring.adoc#_setting_up_the_monitoring_stack[here].
+{product-automation} can deploy Prometheus and Grafana, configuring them automatically, as explained xref:deploy-proxy-monitoring.adoc#_setting_up_the_monitoring_stack[here].
 The Grafana dashboards are ready to go with metrics that are being scraped from the {product-proxy} instances.
 
-If you already have a Grafana deployment then you can import the dashboards from the two ZDM dashboard files from this https://github.com/datastax/zdm-proxy-automation/tree/main/grafana-dashboards[{zdm-automation} GitHub location].
+If you already have a Grafana deployment then you can import the dashboards from the two {product-short} dashboard files from this https://github.com/datastax/zdm-proxy-automation/tree/main/grafana-dashboards[{product-automation} GitHub location].
  
 == Grafana dashboard for {product-proxy} metrics
 
@@ -29,14 +29,14 @@ There are three groups of metrics in this dashboard:
 * Node level metrics
 * Asynchronous read requests metrics
 
-image::{imagesprefix}zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of ZDM metrics for the proxy.]
+image::{imagesprefix}zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of {product-short} metrics for the proxy.]
 
 === Proxy-level metrics
 
 * Latency:
 ** Read Latency: total latency measured by the {product-proxy} (including post-processing like response aggregation) for read requests.
 This metric has two labels (`reads_origin` and `reads_target`): the label that has data will depend on which cluster is receiving the reads, i.e. which cluster is currently considered the xref:glossary.adoc#_primary_cluster[primary cluster].
-This is configured by the {zdm-automation} through the variable `primary_cluster`, or directly through the environment variable `ZDM_PRIMARY_CLUSTER` of the {product-proxy}.
+This is configured by the {product-automation} through the variable `primary_cluster`, or directly through the environment variable `ZDM_PRIMARY_CLUSTER` of the {product-proxy}.
 ** Write Latency: total latency measured by the {product-proxy} (including post-processing like response aggregation) for write requests.
 
 * Throughput (same structure as the previous latency metrics):
@@ -98,7 +98,7 @@ Possible values for the `error` type label:
 === Asynchronous read requests metrics
 
 These metrics are specific to asynchronous reads, so they are only populated if asynchronous dual reads are enabled.
-This is done by setting the {zdm-automation} variable `read_mode`, or its equivalent environment variable `ZDM_READ_MODE`, to `DUAL_ASYNC_ON_SECONDARY` as explained xref:enable-async-dual-reads.adoc[here].
+This is done by setting the {product-automation} variable `read_mode`, or its equivalent environment variable `ZDM_READ_MODE`, to `DUAL_ASYNC_ON_SECONDARY` as explained xref:enable-async-dual-reads.adoc[here].
 
 These metrics track:
 
@@ -130,6 +130,6 @@ Some examples of problem areas on these Go runtime metrics:
 * Always increasing memory usage.
 * Always increasing number of goroutines.
 
-The ZDM monitoring stack also includes a system-level dashboard collected through the Prometheus Node Exporter.
+The {product-short} monitoring stack also includes a system-level dashboard collected through the Prometheus Node Exporter.
 This dashboard contains hardware and OS-level metrics for the host on which the proxy runs.
 This can be useful to check the available resources and identify low-level bottlenecks or issues.

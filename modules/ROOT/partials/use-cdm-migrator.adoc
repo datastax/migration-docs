@@ -1,4 +1,4 @@
-. Configure for your environment the `cdm*.properties` file that's provided in the {cstar-data-migrator} https://github.com/datastax/cassandra-data-migrator/tree/main/src/resources[GitHub repo].
+. Configure for your environment the `cdm*.properties` file that's provided in the {cass-migrator} https://github.com/datastax/cassandra-data-migrator/tree/main/src/resources[GitHub repo].
 The file can have any name.
 It does not need to be `cdm.properties` or `cdm-detailed.properties`.
 In both versions, the `spark-submit` job processes only the parameters that aren't commented out.

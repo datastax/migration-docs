@@ -7,7 +7,7 @@ ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 {product-proxy} supports proxy-to-cluster and application-to-proxy TLS encryption.
 
 The TLS configuration is an optional part of the initial {product-proxy} configuration.
-See the information here in this topic, and then refer to the {zdm-automation} topics that cover:
+See the information here in this topic, and then refer to the {product-automation} topics that cover:
 
 * xref:setup-ansible-playbooks.adoc[]
 * xref:deploy-proxy-monitoring.adoc[]
@@ -23,7 +23,7 @@ One-way TLS and Mutual TLS are both supported and can be enabled depending on ea
 * When using application-to-proxy TLS, your client application is the TLS client and the {product-proxy} is the TLS server.
 One-way TLS and Mutual TLS are both supported.
 
-* When the {product-proxy} connects to Astra DB clusters, it always implicitly uses Mutual TLS.
+* When the {product-proxy} connects to {astra-db}, it always implicitly uses Mutual TLS.
 This is done through the Secure Connect Bundle (SCB) and does not require any extra configuration.
 
 [[_retrieving_files_from_a_jks_keystore]]
@@ -53,7 +53,7 @@ For more details, see the https://docs.oracle.com/javase/8/docs/technotes/tools/
 
 == Proxy to self-managed cluster TLS
 
-Here's how to configure TLS between the {product-proxy} and a self-managed (non-Astra DB) cluster.
+Here's how to configure TLS between the {product-proxy} and a self-managed cluster ({cass} or {dse-short}).
 In this case the {product-proxy} acts as the TLS client and the cluster acts as the TLS server.
 
 The files required to configure proxy-to-cluster TLS are:

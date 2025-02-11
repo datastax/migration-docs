@@ -73,7 +73,7 @@ Because the client application is not impacted by these asynchronous reads, the 
 * Check the metrics of the cluster itself
 * Check the asynchronous reads section of the {product-proxy} metrics
 
-In the {product-proxy} Grafana dashboard that the {zdm-automation} is able to deploy, there is a section dedicated to asynchronous reads where you can see latency percentiles, error rates, and some other metrics specific to these requests. 
+In the {product-proxy} Grafana dashboard that the {product-automation} is able to deploy, there is a section dedicated to asynchronous reads where you can see latency percentiles, error rates, and some other metrics specific to these requests. 
 
 For more, see xref:metrics.adoc#_asynchronous_read_requests_metrics[Asynchronous read requests metrics].
 

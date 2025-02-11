@@ -1,4 +1,4 @@
-You can also use {cstar-data-migrator} to xref:cdm-steps.adoc#cdm-steps[migrate] or xref:cdm-steps.adoc#cdm-validation-steps[validate] specific partition ranges by passing the below additional parameters.
+You can also use {cass-migrator} to xref:cdm-steps.adoc#cdm-steps[migrate] or xref:cdm-steps.adoc#cdm-validation-steps[validate] specific partition ranges by passing the below additional parameters.
 
 [source,bash]
 ----

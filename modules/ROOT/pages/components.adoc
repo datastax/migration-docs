@@ -10,14 +10,14 @@ You can view the source files and contribute code for potential inclusion via Pu
 
 The {product-proxy} itself doesn't have any capability to migrate data or knowledge that a migration may be ongoing, and it is not coupled to the migration process in any way.
 
-* {company} {product} also provides the **{product-proxy}** and **{zdm-automation}** to set up and run the Ansible playbooks that deploy and manage the {product-proxy} and its monitoring stack.
+* {company} {product} also provides the **{product-utility}** and **{product-automation}** to set up and run the Ansible playbooks that deploy and manage the {product-proxy} and its monitoring stack.
 
-* Multiple data migration tools such as **{cstar-data-migrator}** and **{dsbulk-migrator}** are available.
+* Multiple data migration tools such as **{cass-migrator}** and **{dsbulk-migrator}** are available.
 
 == Role of {product-proxy}
 
 We created {product-proxy} to function between the application and both databases (Origin and Target).
-The databases can be any CQL-compatible data store (e.g. Apache Cassandra, DataStax Enterprise and {astra_db}).
+The databases can be any CQL-compatible data store, such as {cass-reg}, {dse}, and {astra-db}.
 The proxy always sends every write operation (Insert, Update, Delete) synchronously to both clusters at the desired Consistency Level:
 
 * If the write is successful in both clusters, it returns a successful acknowledgement to the client application.
@@ -62,7 +62,7 @@ This behavior is expected and desired.
 The idea is to mimic the full read and write load on Target so there are no surprises during the last migration phase; that is, after cutting over completely to Target.
 ====
 
-== {product-proxy} and {zdm-automation}
+== {product-utility} and {product-automation}
 
 https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code.
 It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
@@ -71,10 +71,10 @@ The Ansible automation for {product-short} is organized into playbooks, each imp
 The machine from which the playbooks are run is known as the Ansible Control Host.
 In {product-short}, the Ansible Control Host will run as a Docker container.
 
-You will use the **{product-proxy}** to set up Ansible in a Docker container, and **{zdm-automation}** to run the Ansible playbooks from the Docker container created by {product-proxy}.
-In other words,the {product-proxy} creates the Docker container acting as the **Ansible Control Host**, from which the {zdm-automation} allows you to deploy and manage the {product-proxy} instances and the associated monitoring stack - Prometheus metrics and Grafana visualization of the metric data.
+You will use the **{product-utility}** to set up Ansible in a Docker container, and **{product-automation}** to run the Ansible playbooks from the Docker container created by {product-utility}.
+In other words,the {product-utility} creates the Docker container acting as the **Ansible Control Host**, from which the {product-automation} allows you to deploy and manage the {product-proxy} instances and the associated monitoring stack - Prometheus metrics and Grafana visualization of the metric data.
 
-{product-proxy} and {zdm-automation} expect that you have already provisioned the recommended infrastructure, as outlined in xref:deployment-infrastructure.adoc[].
+{product-utility} and {product-automation} expect that you have already provisioned the recommended infrastructure, as outlined in xref:deployment-infrastructure.adoc[].
 
 The source for both of these tools are in a public repo.
 
@@ -85,27 +85,27 @@ For details, see:
 
 == Data migration tools
 
-As part of the overall migration process, you can use {cstar-data-migrator} and/or {dsbulk-migrator} to migrate your data.
-Other technologies such as Apache Spark™ can be used to write your own custom data migration process.
+As part of the overall migration process, you can use {cass-migrator} and/or {dsbulk-migrator} to migrate your data.
+Other technologies such as Apache Spark(TM) can be used to write your own custom data migration process.
 
-=== {cstar-data-migrator}
+=== {cass-migrator}
 
 [TIP]
 ====
-An important **prerequisite** to use {cstar-data-migrator} is that you already have the matching schema on Target.
+An important **prerequisite** to use {cass-migrator} is that you already have the matching schema on Target.
 ====
 
-Use {cstar-data-migrator} to:
+Use {cass-migrator} to:
 
 * Migrate your data from any CQL-supported Origin to any CQL-supported Target. 
-Examples of databases that support CQL are Apache Cassandra, DataStax Enterprise and {astra_db}.
+Examples of databases that support CQL are {cass-reg}, {dse}, and {astra-db}.
 * Validate migration accuracy and performance using examples that provide a smaller, randomized data set.
 * Preserve internal `writetime` timestamps and Time To Live (TTL) values.
 * Take advantage of advanced data types (Sets, Lists, Maps, UDTs).
-* Filter records from the Origin data, using Cassandra's internal `writetime` timestamp.
+* Filter records from the Origin data, using {cass-short}'s internal `writetime` timestamp.
 * Use SSL Support, including custom cipher algorithms.
 
-{cstar-data-migrator} is designed to:
+{cass-migrator} is designed to:
 
 * Connect to and compare your Target database with Origin.
 * Report differences in a detailed log file.

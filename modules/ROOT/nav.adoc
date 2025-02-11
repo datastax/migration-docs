@@ -20,14 +20,14 @@
 
 .Phase 2
 * xref:migrate-and-validate-data.adoc[]
-* {cstar-data-migrator}
+* {cass-migrator}
 ** xref:cassandra-data-migrator.adoc[]
 ** xref:cdm-overview.adoc[]
 ** xref:cdm-steps.adoc[Migrate data]
 * {dsbulk-loader}
-** https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[DSBulk Loader]
+** https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[{dsbulk-loader}]
 ** https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[Overview]
-** https://docs.datastax.com/en/dsbulk/installing/install.html[Installing DataStax Bulk Loader]
+** https://docs.datastax.com/en/dsbulk/installing/install.html[Installing {dsbulk-loader}]
 ** Loading and unloading data
 *** https://docs.datastax.com/en/dsbulk/getting-started/simple-load.html[Loading data without a configuration file]
 *** https://docs.datastax.com/en/dsbulk/getting-started/simple-unload.html[Unloading data without a configuration file]

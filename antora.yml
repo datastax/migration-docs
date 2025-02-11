@@ -8,19 +8,40 @@ nav:
 
 asciidoc:
   attributes:
+    company: 'DataStax'
     product: 'Zero Downtime Migration'
-    zdm-product: 'Zero Downtime Migration'
-    zdm-shortproduct: 'ZDM'
-    zdm-proxy: 'ZDM Proxy'
-    zdm-utility: 'ZDM Utility'
-    zdm-automation: 'ZDM Proxy Automation'
-    cstar-data-migrator: 'Cassandra Data Migrator'
+    product-short: 'ZDM'
+    product-proxy: 'ZDM Proxy'
+    product-utility: 'ZDM Utility'
+    product-automation: 'ZDM Proxy Automation'
+    product-demo: 'ZDM Demo Client'
     dsbulk-migrator: 'DSBulk Migrator'
     dsbulk-loader: 'DSBulk Loader'
-    db-serverless: 'Serverless (Non-Vector)'
-    db-serverless-vector: 'Serverless (Vector)'
-    db-classic: 'Classic'
+    cass: 'Apache Cassandra'
+    cass-short: 'Cassandra'
+    cass-reg: 'Apache Cassandra(R)'
+    cass-migrator: 'Cassandra Data Migrator'
+    cass-migrator-short: 'CDM'
+    dse: 'DataStax Enterprise (DSE)'
+    dse-short: 'DSE'
+
+    db-serverless: 'Serverless (Non-Vector)' # check if used
+    db-serverless-vector: 'Serverless (Vector)' #check if used
+    db-classic: 'Classic' #check if used
+    astra-cli: 'Astra CLI' # check if used
+    url-astra: 'https://astra.datastax.com' # replace w astra-url
+    link-astra-portal: '{astra-url}[{astra-ui}]' # replace w astra-ui-link
+    astra-db-serverless: 'Astra DB Serverless' # Replace w/ {astra-db} Serverless
+
+# Future: Add SCB attributes.
+# new attributes
+
+
+    astra-db: 'Astra DB'
+    astra-ui: 'Astra Portal'
+    astra-url: 'https://astra.datastax.com'
     astra-cli: 'Astra CLI'
-    url-astra: 'https://astra.datastax.com'
-    link-astra-portal: '{url-astra}[{astra_ui}]'
-    astra-db-serverless: 'Astra DB Serverless'
+
+
+    hcd: ?
+    support-url?

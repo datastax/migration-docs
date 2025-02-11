@@ -13,7 +13,7 @@ May be a comma-separated list, and can follow the `<hostname>:<port>` convention
 
 | `spark.cdm.connect.origin.scb`
 | (Not set)
-| Secure Connect Bundle, used to connect to an Astra DB database.
+| Secure Connect Bundle, used to connect to an {astra-db} database.
 Example: `file:///aaa/bbb/scb-enterprise.zip`.
 
 | `spark.cdm.connect.origin.username`
@@ -35,7 +35,7 @@ May be a comma-separated list, and can follow the `<hostname>:<port>` convention
 
 | `spark.cdm.connect.target.scb`
 | (Not set)
-| Secure Connect Bundle, used to connect to an Astra DB database.
+| Secure Connect Bundle, used to connect to an {astra-db} database.
 Default is not set.
 Example if set: `file:///aaa/bbb/my-scb.zip`.
 

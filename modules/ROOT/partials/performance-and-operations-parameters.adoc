@@ -13,7 +13,7 @@ During initial testing, you may want this to be a small number, such as `1`.
 | `spark.cdm.perfops.batchSize`
 | `5`
 | When writing to the target cluster, this comprises the number of records that are put into an `UNLOGGED` batch.
-{cstar-data-migrator} tends to work on the same partition at a time.
+{cass-migrator} tends to work on the same partition at a time.
 If your partition sizes are larger, this number may be increased.
 If the `spark.cdm.perfops.batchSize` would mean that more than 1 partition is often contained in a batch, reduce this parameter's value.
 Ideally < 1% of batches have more than 1 partition.

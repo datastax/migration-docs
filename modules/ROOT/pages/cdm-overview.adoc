@@ -1,25 +1,25 @@
-= {cstar-data-migrator} (CDM) overview
+= {cass-migrator} ({cass-migrator-short}) overview
 
-{cstar-data-migrator} (CDM) is a tool designed for migrating and validating data between origin and target Apache Cassandra-compatible clusters. It facilitates the transfer of data, creating multiple jobs at once that can access the Cassandra cluster concurrently. This tool is also useful when dealing with large datasets and requires careful configuration to balance performance impact and migration speed. 
+{cass-migrator} ({cass-migrator-short}) is a tool designed for migrating and validating data between origin and target {cass-reg}-compatible clusters. It facilitates the transfer of data, creating multiple jobs at once that can access the {cass-short} cluster concurrently. This tool is also useful when dealing with large datasets and requires careful configuration to balance performance impact and migration speed. 
 
-The information below explains how to get started with CDM. Review your prerequisites and decide between the two installation options: as a container or as a JAR file. 
+The information below explains how to get started with {cass-migrator-short}. Review your prerequisites and decide between the two installation options: as a container or as a JAR file. 
 
 [[cdm-prerequisites]]
-== {cstar-data-migrator} prerequisites
+== {cass-migrator} prerequisites
 
 include::partial$cdm-prerequisites.adoc[]
 
-== {cstar-data-migrator} installation methods
+== {cass-migrator} installation methods
 
 Both installation methods require attention to version compatibility, especially with the `cdm.properties` files.
 Both environments also use `spark-submit` to run the jobs.
 
 [[cdm-install-as-container]]
-=== Install {cstar-data-migrator} as a Container
+=== Install {cass-migrator} as a Container
 
 include::partial$cdm-install-as-container.adoc[]
 
 [[cdm-install-as-jar]]
-=== Install {cstar-data-migrator} as a JAR file
+=== Install {cass-migrator} as a JAR file
 
 include::partial$cdm-install-as-jar.adoc[]

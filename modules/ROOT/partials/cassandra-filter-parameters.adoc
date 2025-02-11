@@ -1,5 +1,5 @@
-Cassandra filters are applied on the coordinator node.
-Depending on the filter, the coordinator node may need to do a lot more work than is normal, notably because {cstar-data-migrator} specifies `ALLOW FILTERING`.
+{cass-short} filters are applied on the coordinator node.
+Depending on the filter, the coordinator node may need to do a lot more work than is normal, notably because {cass-migrator} specifies `ALLOW FILTERING`.
 
 By default, these parameters are commented out.
 

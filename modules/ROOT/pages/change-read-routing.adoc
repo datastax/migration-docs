@@ -7,7 +7,7 @@ This topic explains how you can configure the {product-proxy} to route all reads
 
 //include::partial$lightbox-tip.adoc[]
 
-image::{imagesprefix}migration-phase4ra9.png["Phase 4 diagram shows read routing on ZDM Proxy was switched to Target."]
+image::{imagesprefix}migration-phase4ra9.png["Phase 4 diagram shows read routing on {product-proxy} was switched to Target."]
 
 For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
@@ -84,7 +84,7 @@ Although `DESCRIBE` requests are not system requests, they are also generally re
 
 ====
 
-Verifying that the correct routing is taking place is a slightly cumbersome operation, due to the fact that the purpose of the ZDM process is to align the clusters and therefore, by definition, the data will be identical on both sides.
+Verifying that the correct routing is taking place is a slightly cumbersome operation, due to the fact that the purpose of the {product-short} process is to align the clusters and therefore, by definition, the data will be identical on both sides.
 
 For this reason, the only way to do a manual verification test is to force a discrepancy of some test data between the clusters.
 To do this, you could consider using the xref:connect-clients-to-proxy.adoc#_themis_client[Themis sample client application].

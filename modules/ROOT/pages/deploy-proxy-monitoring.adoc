@@ -48,21 +48,21 @@ The {product-proxy} configuration is composed of five files:
 
 === Container configuration
 The first step of the proxy container configuration is to open the `zdm_proxy_container_config.yml` file.
-Configure the desired ZDM proxy version and create a strategy to inject configuration parameters. 
-All versions of ZDM proxy support the ability to provide configuration parameters using environment variables. 
-Starting with ZDM 2.3.0, you can inject the configuration with the YAML file generated from automation scripts.
+Configure the desired {product-proxy} version and create a strategy to inject configuration parameters. 
+All versions of {product-proxy} support the ability to provide configuration parameters using environment variables. 
+Starting with {product-short} 2.3.0, you can inject the configuration with the YAML file generated from automation scripts.
 
 === Cluster and core configuration
 
 The next step is to edit the `zdm_proxy_cluster_config.yml` file in the Docker container.
-You'll want to enter your Cassandra/DSE username, password, and other variables.
+You'll want to enter your {cass-short}/{dse-short} username, password, and other variables.
 
 In the container shell, `cd` to `~/zdm-proxy-automation/ansible/vars` and edit `zdm_proxy_cluster_config.yml`.
 The `vi` and `nano` text editors are available in the container.
 
 [NOTE]
 ====
-Starting in version 2.2.0 of the {zdm-automation}, we added the `zdm_proxy_cluster_config.yml` file to contain all the configuration variables for Origin and Target.
+Starting in version 2.2.0 of the {product-automation}, we added the `zdm_proxy_cluster_config.yml` file to contain all the configuration variables for Origin and Target.
 Prior to version 2.2.0, the variables were in the `zdm_proxy_core_config.yml` file.
 
 If you are using an automation version up to and including 2.1.0, please use `zdm_proxy_core_config.yml` to configure access to your clusters.
@@ -78,22 +78,22 @@ Populate the appropriate variables in each section for the respective cluster, b
 . Cluster credentials:
 .. If it is a self-managed cluster, `*_username` and `*_password` must be valid credentials for it.
 Leave blank if authentication is not enabled on the cluster.
-.. If it is an Astra DB cluster, authentication is always enabled: `*_username` must be the Client ID and `*_password` the Client Secret of a valid Astra DB set of credentials with the `R/W User` role.
-. Contact points and port (only relevant for self-managed clusters, leave unset for Astra clusters)
+.. If it is an {astra-db} database, authentication is always enabled: `*_username` must be the Client ID and `*_password` the Client Secret of a valid {astra-db} set of credentials with the `R/W User` role.
+. Contact points and port (only relevant for self-managed clusters, leave unset for {astra-db})
 .. `*_contact points`: comma-separated list of IP addresses of the cluster's seed nodes.
 .. `*_port`: port on which the cluster listens for client connections. Defaults to 9042.
-. For Astra DB clusters, choose one of the following options and leave unset the other (leave both unset for self-managed clusters):
+. For {astra-db}, choose one of the following options and leave unset the other (leave both unset for self-managed clusters):
 .. If you wish to manually provide the cluster's Secure Connect Bundle:
-... Download it from the Astra Portal and place it on the jumphost
+... Download it from the {astra-ui} and place it on the jumphost
 ... Copy it to the container. Open a new shell on the jumphost, run `docker cp <your_scb.zip> zdm-ansible-container:/home/ubuntu`
 ... Specify its path in `*_astra_secure_connect_bundle_path`.
 .. Otherwise, if you wish the automation to download the cluster's Secure Connect Bundle for you, just specify the two following variables:
 ... `*_astra_db_id`: the cluster's https://docs.datastax.com/en/astra/astra-db-vector/faqs.html#where-do-i-find-the-organization-id-database-id-or-region-id[database id].
-... `*_astra_token`: the token field from a valid set of credentials for a `R/W User` Astra role (this is the long string that starts with `AstraCS:`).
+... `*_astra_token`: the token value from an {astra-db} application token with the *Read/Write User* role, prefixed by `AstraCS:`.
 
 Save the file and exit the editor.
 
-Example of a completed `zdm_proxy_cluster_config.yml` file for a migration from a self-managed Origin to an Astra DB Target:
+Example of a completed `zdm_proxy_cluster_config.yml` file for a migration from a self-managed Origin to an {astra-db} Target:
 
 [source,yml]
 ----
@@ -154,12 +154,12 @@ If Origin is a multi-datacenter cluster, you will need to specify the name of th
 Likewise, for multi-datacenter Target clusters you will need to set `target_local_datacenter` appropriately.
 
 These two variables are located in `vars/zdm_proxy_advanced_config.yml`.
-Note that this is not relevant for multi-region Astra DB clusters, where this is handled through region-specific Secure Connect Bundles.
+Note that this is not relevant for multi-region {astra-db} databases, where this is handled through region-specific Secure Connect Bundles.
 
 [[_ports]]
 ==== *Ports*
 
-Each {product-proxy} instance listens on port 9042 by default, like a regular Cassandra cluster.
+Each {product-proxy} instance listens on port 9042 by default, like a regular {cass-short} cluster.
 This can be overridden by setting `zdm_proxy_listen_port` to a different value.
 This can be useful if the Origin nodes listen on a port that is not 9042 and you want to configure the {product-proxy} to listen on that same port to avoid changing the port in your client application configuration.
 
@@ -185,14 +185,14 @@ That's it! A {product-proxy} container has been created on each proxy host.
 The playbook will create one {product-proxy} instance for each proxy host listed in the inventory file.
 It will indicate the operations that it is performing and print out any errors, or a success confirmation message at the end.
 
-Confirm that the ZDM proxies are up and running by using one of the following options:
+Confirm that the {product-short} proxies are up and running by using one of the following options:
 
 * Call the `liveness` and `readiness` HTTP endpoints for {product-proxy} instances.
 * Check {product-proxy} instances via docker logs.
 
 === Call the `liveness` and `readiness` HTTP endpoints
 
-ZDM metrics provide `/health/liveness` and `/health/readiness` HTTP endpoints, which you can call to determine the state of {product-proxy} instances.
+{product-short} metrics provide `/health/liveness` and `/health/readiness` HTTP endpoints, which you can call to determine the state of {product-proxy} instances.
 It's often fine to simply submit the `readiness` check to return the proxy's state.
 
 The format:
@@ -260,7 +260,7 @@ You can do so from within the Ansible container, or directly from the jumphost m
 ssh <linux user>@<zdm proxy ip address>
 ----
 
-Then, use the `docker logs` command to view the logs of this ZDM proxy instance.
+Then, use the `docker logs` command to view the logs of this {product-proxy} instance.
 
 [source,bash]
 ----
@@ -313,7 +313,7 @@ Please note that running the `deploy_zdm_proxy.yml` playbook will result in a br
 [[_setting_up_the_monitoring_stack]]
 == Setting up the Monitoring stack
 
-The {zdm-automation} enables you to easily set up a self-contained monitoring stack that is preconfigured to collect metrics from your {product-proxy} instances and display them in ready-to-use Grafana dashboards.
+The {product-automation} enables you to easily set up a self-contained monitoring stack that is preconfigured to collect metrics from your {product-proxy} instances and display them in ready-to-use Grafana dashboards.
 
 The monitoring stack is deployed entirely on Docker.
 It includes the following components, all deployed as Docker containers:
