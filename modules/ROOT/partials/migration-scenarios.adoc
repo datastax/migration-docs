@@ -26,6 +26,6 @@ Here are just a few examples of migration scenarios that are supported when movi
 
 ** {dse-short} 4.7.1+ or 4.8.x to {cass-short} 4.0.x or 4.1.x.
 
-* From https://docs.datastax.com/en/astra-classic/docs[{astra-db} Classic] to https://docs.datastax.com/en/astra/astra-db-vector/[{astra-db-serverless}].
+* From https://docs.datastax.com/en/astra-classic/docs[{astra-db} Classic] to https://docs.datastax.com/en/astra/astra-db-vector/[{astra-db} Serverless].
 
 * From any CQL-based database type/version to the equivalent CQL-based database type/version.

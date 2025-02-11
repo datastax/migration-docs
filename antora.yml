@@ -24,24 +24,7 @@ asciidoc:
     cass-migrator-short: 'CDM'
     dse: 'DataStax Enterprise (DSE)'
     dse-short: 'DSE'
-
-    db-serverless: 'Serverless (Non-Vector)' # check if used
-    db-serverless-vector: 'Serverless (Vector)' #check if used
-    db-classic: 'Classic' #check if used
-    astra-cli: 'Astra CLI' # check if used
-    url-astra: 'https://astra.datastax.com' # replace w astra-url
-    link-astra-portal: '{astra-url}[{astra-ui}]' # replace w astra-ui-link
-    astra-db-serverless: 'Astra DB Serverless' # Replace w/ {astra-db} Serverless
-
-# Future: Add SCB attributes.
-# new attributes
-
-
     astra-db: 'Astra DB'
     astra-ui: 'Astra Portal'
     astra-url: 'https://astra.datastax.com'
-    astra-cli: 'Astra CLI'
-
-
-    hcd: ?
-    support-url?
+    support-url: 'https://support.datastax.com'

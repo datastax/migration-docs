@@ -66,7 +66,7 @@ If there is one super large table (e.g. 15 TB of 20 TB is in one table), you can
 
 * Test any migration in a lower environment before you plan to do it in production.
 
-* Contact https://support.datastax.com/[{company} Support] for help configuring your workload.
+* Contact {support-url}[{company} Support] for help configuring your workload.
 ====
 
 // TODO: investigate how to "leverage the parallelism of {cass-migrator} to run the migration process across all 4 machines."

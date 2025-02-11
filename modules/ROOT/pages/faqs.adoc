@@ -90,8 +90,8 @@ The suite of {product} tools from {company} is free and open-sourced.
 
 == Is there support available if I have questions or issues during our migration?
 
-{product-proxy} and related software tools in the migration suite include technical assistance by https://support.datastax.com/s/[{company} Support] for {dse-short} and Luna subscribers, and {astra-db} users who are on an Enterprise plan.
-Free and Pay As You Go plan users do not have support access and must raise questions in the {astra_ui} chat.
+{product-proxy} and related software tools in the migration suite include technical assistance by {support-url}[{company} Support] for {dse-short} and Luna subscribers, and {astra-db} users who are on an Enterprise plan.
+Free and Pay As You Go plan users do not have support access and must raise questions in the {astra-ui} chat.
 https://www.datastax.com/products/luna[Luna] is a subscription to the {cass} support and expertise at {company}.
 
 For any observed problems with the {product-proxy}, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue] in the {product-proxy} GitHub repo.
@@ -167,4 +167,4 @@ At the same time, with on-premise clusters you take on the cost of infrastructur
 Ranging from large enterprises to small teams, IT managers, operators, and developers are realizing that the Total Cost of Ownership (TCO) with cloud solutions is much lower than continuing to run on-prem physical data centers.
 
 A CNDB like {astra-db} is a different environment.
-Running on proven cloud providers like AWS, Google Cloud, and Azure, {astra-db} greatly reduces complexity and increases convenience by surfacing a subset of configurable settings, providing a well-designed UI known as {astra_ui}, plus a set of APIs and commands to interact with your {astra-db} organizations and databases.
+Running on proven cloud providers like AWS, Google Cloud, and Azure, {astra-db} greatly reduces complexity and increases convenience by surfacing a subset of configurable settings, providing a UI (the {astra-ui}) and APIs and CLI tools to interact with your {astra-db} organizations and databases.

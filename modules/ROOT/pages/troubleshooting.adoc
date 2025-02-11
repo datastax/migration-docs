@@ -17,6 +17,6 @@ If you still have questions, please submit a GitHub Issue in the relevant public
 * https://github.com/datastax/cassandra-data-migrator/issues[{cass-migrator}].
 * https://github.com/datastax/dsbulk-migrator/issues[{dsbulk-migrator}].
 
-You may also contact your {company} account representative or https://support.datastax.com/s/[{company} Support] if you have a Luna service contract.
+You may also contact your {company} account representative or {support-url}[{company} Support] if you have a Luna service contract.
 https://www.datastax.com/products/luna[Luna] is a subscription to the {cass} support and expertise at {company}. 
 ====

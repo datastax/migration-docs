@@ -6,15 +6,15 @@ ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 In this topic, we'll see how to create and prepare a new cluster to be used as Target.
 
-This section covers in detail the steps to prepare a {company} {astra-db-serverless} database, and also outlines how to create and prepare a different cluster, which could be for example {cass-short} 4.0.x or {dse-short} 6.8.x.
+This section covers in detail the steps to prepare an {astra-db} Serverless database, and also outlines how to create and prepare a different cluster, which could be for example {cass-short} 4.0.x or {dse-short} 6.8.x.
 
 == Overview
 
 If you intend to use {astra-db} as Target for the migration, you will need to:
 
-* Create an {astra-db-serverless} cluster.
+* Create an {astra-db} Serverless database.
 * Retrieve its Secure Connect Bundle (SCB) and upload it to the application instances.
-* Create {astra-db} access credentials for the cluster.
+* Create {astra-db} access credentials for your database.
 * Create the client application schema.
 
 To use a generic {cass-short} or {dse-short} cluster, you will have to:
@@ -28,9 +28,9 @@ To use a generic {cass-short} or {dse-short} cluster, you will have to:
 
 === Prerequisites
 
-* An active https://astra.datastax.com[{astra-db} account^]
+* An active {astra-url}[{astra-db} account^]
 
-=== Create an {astra-db-serverless} cluster
+=== Create an {astra-db} Serverless database
 
 Log into the {astra-ui} and create an {astra-db} Serverless database.
 You can start with a Free plan, but consider upgrading during your migration project to an {astra-db} Pay As You Go or Enterprise plan, to take advantage of additional functionality -- such as Exporting Metrics to external third-party applications, Bring Your Own Keys, and other features.
