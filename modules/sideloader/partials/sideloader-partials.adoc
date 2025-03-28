@@ -1,0 +1,28 @@
+// tag::check-status[]
+[source,curl]
+----
+curl -X GET \
+    -H "Authorization: Bearer ${token}" \
+    https://api.astra.datastax.com/v2/databases/${dbID}/migrations/${migrationID} \
+    | jq .
+----
++
+A successful response contains a `MigrationStatus` object.
+It can take a few minutes for the {devops-api} to reflect status changes during a migration.
+Immediately calling this endpoint after starting a new phase of the migration might not return the actual current status.
+// end::check-status[]
+
+// tag::command-placeholders-common[]
+* *`CASSANDRA_DATA_DIR`*: The absolute file system path to where {cass-short} data is stored on the node.
+For example, `/var/lib/cassandra/data`.
+* *`KEYSPACE_NAME`*: The name of the keyspace that contains the tables you want to migrate.
+* *`SNAPSHOT_NAME`*: The name of the xref:sideloader:sideloader-overview.adoc#create-snapshots[snapshot backup] that you created with `nodetool snapshot`.
+* *`MIGRATION_DIR`*: The entire `uploadBucketDir` value that was generated when you <<initalize-migration,initialized the migration>>, including the trailing slash.
+* *`NODE_NAME`*: The host name of the current node you are uploading the snapshot from.
+// end::command-placeholders-common[]
+
+// tag::validate[]
+After the migration is complete, you can query the migrated data using the xref:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL shell].
+
+To thoroughly validate migration accuracy and reconcile any differences, run the https://github.com/datastax/cassandra-data-migrator[{cass-short} Data Migrator] in the xref:data-migration:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[validation mode].
+// end::validate[]
