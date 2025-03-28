@@ -27,6 +27,8 @@ asciidoc:
     hcd: 'Hyper-Converged Database (HCD)'
     hcd-short: 'HCD'
     astra-db: 'Astra DB'
+    db-serverless: 'Serverless (Non-Vector)'
+    db-serverless-vector: 'Serverless (Vector)'
     astra-ui: 'Astra Portal'
     astra-url: 'https://astra.datastax.com'
     astra-ui-link: '{astra-url}[{astra-ui}^]'
@@ -35,13 +37,4 @@ asciidoc:
     devops-api-ref-url: 'xref:astra-api-docs:ROOT:attachment$devops-api/index.html'
     support-url: 'https://support.datastax.com'
 
-
-#    product: 'Astra DB Serverless'
-#    product-short: 'Astra'
-#    db-serverless: 'Serverless (Non-Vector)'
-#    db-serverless-vector: 'Serverless (Vector)'
-#    data-api: 'Data API'
-#    astra-cli: 'Astra CLI'
-#    scb: 'Secure Connect Bundle (SCB)'
-#    scb-short: 'SCB'
-#    scb-brief: 'Secure Connect Bundle'
+#TODO: Bring SCB attributes

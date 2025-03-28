@@ -1,20 +1,20 @@
 = Migrate data using {astra-db} {sstable-sideloader}
 :page-aliases: data-importer:data-importer-overview.adoc
 include::ROOT:partial$astra-role-attributes.adoc[]
-:description: {sstable-sideloader} lets you migrate data from an {cass-reg} or {dse} cluster into {astra-db} without impacting the origin cluster or your {product} database.
+:description: {sstable-sideloader} lets you migrate data from an {cass-reg} or {dse} cluster into {astra-db} without impacting the origin cluster or your {astra-db} Serverless database.
 :loop-var: pass:[${i}]
 
 //TODO: Check for other duplicate content that could be moved to the partial file.
 //TODO: Check links and attributes
 //TODO: Redirect & unhide
 
-{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-reg}, {dse}, or {hcd} cluster.
+{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-reg} or {dse} cluster.
 
 Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like xref:dsbulk:overview:dsbulk-about.adoc[{company} Bulk Loader (DSBulk)] and xref:ROOT:cassandra-data-migrator.adoc[{cass-short} Data Migrator (CDM)], including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
 
 [TIP]
 ====
-If you need to migrate a live database, you can use {sstable-sideloader} instead of DSBulk or {cass-short} Data Migrator during Phase 2 (data-loading phase) of xref:data-migration:ROOT:introduction.adoc[Zero Downtime Migration (ZDM)].
+If you need to migrate a live database, you can use {sstable-sideloader} instead of DSBulk or {cass-short} Data Migrator during of xref:ROOT:migrate-and-validate-data.adoc[Phase 2 of Zero Downtime Migration (ZDM)].
 
 .Use {sstable-sideloader} in the context of Zero Downtime Migration
 image::sideloader:data-importer-zdm.svg[]
@@ -33,10 +33,10 @@ Origin, origin cluster::
 In the context of {sstable-sideloader}, this refers to your existing {cass-short} or {dse-short} cluster.
 
 Target, target database::
-In the context of {sstable-sideloader}, this refers to the {product} database where you will migrate your data.
+In the context of {sstable-sideloader}, this refers to the {astra-db} Serverless database where you will migrate your data.
 
 Administration server::
-A server where you can run the migration commands, including CLI commands and {product-short} {devops-api} calls.
+A server where you can run the migration commands, including CLI commands and {astra-db} {devops-api} calls.
 This server must have SSH access to each node in your origin cluster.
 
 Migration::
@@ -80,7 +80,7 @@ For specific requirements and more information, see <<record-schema>>.
 .Initialize a migration
 [%collapsible]
 ====
-After you create snapshots on the origin cluster and pre-configure the schema on the target database, you can <<initialize-migration,use the {product-short} {devops-api} to initialize the migration>>.
+After you create snapshots on the origin cluster and pre-configure the schema on the target database, you can <<initialize-migration,use the {astra-db} {devops-api} to initialize the migration>>.
 
 image::sideloader:data-importer-workflow.svg[]
 
@@ -91,7 +91,7 @@ When you initialize a migration, {sstable-sideloader} does the following:
 The migration bucket is only created during the first initialization.
 All subsequent migrations use different directories in the same migration bucket.
 +
-{company} owns the migration bucket, and it is located within the {product-short} perimeter.
+{company} owns the migration bucket, and it is located within the {astra-db} perimeter.
 
 . Generates a migration ID that is unique to the new migration.
 
@@ -141,7 +141,7 @@ This is considered a cross-datacenter transfer, and the delay increases relative
 |The slowest uploads happen when the data must travel over transoceanic cables.
 If the data must also change cloud providers, there can be additional delays.
 
-In this case, consider creating your target database in a co-located datacenter, and then xref:databases:manage-regions.adoc[deploy your database to other regions] after the migration.
+In this case, consider creating your target database in a co-located datacenter, and then xref:astra-vector-docs:databases:manage-regions.adoc[deploy your database to other regions] after the migration.
 |===
 ====
 
@@ -175,9 +175,9 @@ Once {sstable-sideloader} begins to import SSTable metadata (the next step), you
 +
 If the dataset contains tombstones, any read operations on the target database can return inconsistent results during this step.
 Since compaction is disabled, there is no risk of permanent inconsistencies.
-However, in the context of xref:data-migration:ROOT:introduction.adoc[Zero Downtime Migration], it's important that the ZDM proxy continues to read from the origin cluster.
+However, in the context of xref:ROOT:introduction.adoc[Zero Downtime Migration], it's important that the ZDM proxy continues to read from the origin cluster.
 
-. Re-enables compactions on the {product} database.
+. Re-enables compactions on the {astra-db} Serverless database.
 
 Each step must finish successfully.
 If one step fails, the import operation stops and no data is imported into your target database.
@@ -198,33 +198,24 @@ To use {sstable-sideloader}, your target database, origin cluster, and administr
 
 === Target {astra-db} database requirements
 
-* Your {astra-db} organization must be on an *Enterprise* xref:administration:subscription-plans.adoc[subscription plan].
+* Your {astra-db} organization must be on an *Enterprise* xref:astra-vector-docs:administration:subscription-plans.adoc[subscription plan].
 +
 {sstable-sideloader} is a premium feature that incurs costs based on usage.
 
-* Your target database must be a {product} database.
-If you don't already have one, xref:databases:create-database.adoc[create a database].
+* Your target database must be an {astra-db} Serverless database.
+If you don't already have one, xref:astra-vector-docs:databases:create-database.adoc[create a database].
 You can use either a {db-serverless} or {db-serverless-vector} database, and {db-serverless-vector} databases can store both vector and non-vector data.
 
 ////
-Uncomment for GA:
-* Your target database must be in a xref:administration:provisioned-capacity-units.adoc[PCU group].
+//TODO: Uncomment for GA. Link will not work until PCU PR is merge.
+* Your target database must be in a PCU group.
 +
-PCU groups can support either xref:administration:provisioned-capacity-units.adoc#workload-def[committed capacity or flexible capacity workloads].
+Because {sstable-sideloader} operations are typically short-term, resource-intensive events, {company} recommends that you xref:astra-vector-docs:administration:create-pcu.adoc#flexible-capacity[create a flexible capacity PCU group] exclusively to support your target database during the migration.
 +
-Committed capacity PCU groups require a long-term commitment to a minimum amount of reserved capacity.
-They are intended for databases that require continuous availability for a long time period (upwards of one year or more), such as latency-sensitive production workloads.
-In contrast, flexible capacity PCU groups can scale to zero when not needed, making them a cost-effective option for temporary capacity requirements, such as {sstable-sideloader} operations.
+After the migration, you can remove your target database out of the flexible capacity PCU group, and then park or delete the group.
+Don't park the PCU group during the {sstable-sideloader} process because databases in a parked PCU group are hibernated and unavailable for use.
 +
-Because {sstable-sideloader} operations are typically short-term events that are potentially resource-intensive, {company} recommends that you xref:administration:provisioned-capacity-units.adoc#create-pcu-groups[[create a flexible capacity PCU group] exclusively for your target database:
-+
-** When creating PCU groups in the {astra-ui}, select *Flexible capacity workload* for the *Workload type*.
-** When creating PCU groups with the {devops-api}, set `reserve` to 0 and `min` to 1 or more.
-+
-After the data transfer, you can remove your target database from the flexible capacity PCU group, and then park or delete the group to minimize costs.
-However, don't park the PCU group during the {sstable-sideloader} process.
-Databases in a parked PCU group are hibernated and unavailable for use.
-//TODO: Add to PCU user stories.
+For more information, see xref:astra-vector-docs:administration:provisioned-capacity-units.adoc[].
 ////
 
 [#origin-cluster-requirements]
@@ -275,7 +266,7 @@ Your administration server must have SSH access to each node in your origin clus
 {company} recommends that you install the following additional software on your administration server:
 
 * https://github.com/datastax/cassandra-data-migrator[{cass-short} Data Migrator (CDM)] to validate imported data and, in the context of Zero Downtime Migration, reconcile it with the origin cluster.
-* https://jqlang.github.io/jq/[jq] to format JSON responses from the {product-short} {devops-api}.
+* https://jqlang.github.io/jq/[jq] to format JSON responses from the {astra-db} {devops-api}.
 The {devops-api} commands in this guide use this tool.
 
 [#create-snapshots]
@@ -531,17 +522,17 @@ CREATE TABLE smart_home.sensor_readings (
     PRIMARY KEY (device_id, room_id, reading_timestamp)
 ) WITH CLUSTERING ORDER BY (room_id ASC, reading_timestamp DESC);
 ----
-//However, {sstable-sideloader} can't import data to a xref:databases:collection in a {db-serverless-vector} database.
+//However, {sstable-sideloader} can't import data to a xref:astra-vector-docs:databases:collection in a {db-serverless-vector} database.
 . Recreate the schemas in your target database:
 +
-.. In the {astra-ui-link}, go to *Databases*, and then select your xref:databases:create-database.adoc#create-a-serverless-non-vector-database[{db-serverless} database].
-.. xref:databases:manage-keyspaces.adoc#keyspaces[Create a keyspace] with the exact same name as your origin cluster's keyspace.
-.. In your database's xref:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL console], create tables with the exact same names and schemas as your origin cluster.
+.. In the {astra-ui-link}, go to *Databases*, and then select your xref:astra-vector-docs:databases:create-database.adoc#create-a-serverless-non-vector-database[{db-serverless} database].
+.. xref:astra-vector-docs:databases:manage-keyspaces.adoc#keyspaces[Create a keyspace] with the exact same name as your origin cluster's keyspace.
+.. In your database's xref:astra-vector-docs:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL console], create tables with the exact same names and schemas as your origin cluster.
 +
 image::sideloader:cql-console-create-identical-schema.png[]
 +
 {astra-db} rejects or ignores some table properties, such as compaction strategy.
-See xref:databases:database-limits.adoc[] for more information.
+See xref:astra-vector-docs:databases:database-limits.adoc[] for more information.
 //TODO: Does this matter?
 
 . In your terminal, set environment variables for your target database:
@@ -552,7 +543,7 @@ export dbID=*DATABASE_ID*
 export token=*TOKEN*
 ----
 +
-Replace *`DATABASE_ID`* with the xref:databases:create-database.adoc#get-db-id[database ID], and replace *`TOKEN`* with an xref:administration:manage-application-tokens.adoc[application token] with the *Database Administrator* role.
+Replace *`DATABASE_ID`* with the xref:astra-vector-docs:databases:create-database.adoc#get-db-id[database ID], and replace *`TOKEN`* with an xref:astra-vector-docs:administration:manage-application-tokens.adoc[application token] with the *Database Administrator* role.
 +
 [TIP]
 ====
@@ -1198,7 +1189,7 @@ This overrides the idle timeout for the specified migration ID only.
 curl -X POST \
     -H "Authorization: Bearer ${token}" \
     https://api.astra.datastax.com/v2/databases/${dbID}/migrations/${migrationID}/cleanup \
-    ?option.cleanupTime=**CLEANUP_TIME**" \
+    ?option.cleanupTime=**CLEANUP_TIME** \
     | jq .
 ----
 
