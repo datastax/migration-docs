@@ -1,8 +1,6 @@
 = Connect your client applications to {product-proxy}
 :navtitle: Connect client applications to {product-proxy}
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 The {product-proxy} is designed to be similar to a conventional {cass-reg} cluster.
 You communicate with it using the CQL query language used in your existing client applications.

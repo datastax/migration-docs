@@ -1,11 +1,9 @@
 = Phase 4: Change read routing to Target
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,read-routing
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 This topic explains how you can configure the {product-proxy} to route all reads to Target instead of Origin.
 
-image::{imagesprefix}migration-phase4ra9.png["Phase 4 diagram shows read routing on {product-proxy} was switched to Target."]
+image::migration-phase4ra9.png["Phase 4 diagram shows read routing on {product-proxy} was switched to Target."]
 
 For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 

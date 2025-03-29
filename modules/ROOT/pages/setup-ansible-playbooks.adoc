@@ -1,7 +1,5 @@
 = Set up the {product-automation} with {product-utility}
 :page-tag: migration,zdm,zero-downtime,zdm-automation,zdm-proxy,ansible
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 This page explains how to use the {product-utility} to set up the Ansible Control Host container for the {product-automation}.
 
@@ -20,7 +18,7 @@ This is a Golang (Go) executable program that runs anywhere.
 This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use.
 From this container, you will be able to easily configure and run the {product-automation} Ansible playbooks.
 
-image::{imagesprefix}docker-container-and-zdm-utility.png[{product-proxy} connections from Docker container created by {product-utility}]
+image::docker-container-and-zdm-utility.png[{product-proxy} connections from Docker container created by {product-utility}]
 
 == Prerequisites
 
@@ -241,7 +239,7 @@ At this point, the {product-utility}:
 * Presents a summary of the configuration thus far, and prompts you to Continue.
 Example:
 
-image::{imagesprefix}zdm-go-utility-results3.png[A summary of the configuration provided is displayed in the terminal]
+image::zdm-go-utility-results3.png[A summary of the configuration provided is displayed in the terminal]
 
 If you agree, enter `Y` to proceed.
 
@@ -251,7 +249,7 @@ The {product-utility} now:
 * Creates, configures and starts the Ansible Control Host container.
 * Displays a message. Example:
 
-image::{imagesprefix}zdm-go-utility-success3.png[Ansible Docker container success messages]
+image::zdm-go-utility-success3.png[Ansible Docker container success messages]
 
 [NOTE]
 ====

@@ -1,8 +1,6 @@
 = Frequently Asked Questions
 :navtitle: FAQs
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,faq
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 If you're new to the {company} {product} features, these FAQs are for you.
 

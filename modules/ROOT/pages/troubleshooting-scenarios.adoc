@@ -1,7 +1,5 @@
 = Troubleshooting scenarios
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,troubleshooting
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 Refer the following troubleshooting scenarios for information about resolving common migration issues.
 Each section presents:

@@ -1,12 +1,10 @@
 = Phase 3: Enable asynchronous dual reads
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,async-reads
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 In this phase, you can optionally enable asynchronous dual reads.
 The idea is to test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target.
 
-image::{imagesprefix}migration-phase3ra.png[Phase 3 diagram shows optional step enabling async dual reads to test performance of Target.]
+image::migration-phase3ra.png[Phase 3 diagram shows optional step enabling async dual reads to test performance of Target.]
 
 //For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 

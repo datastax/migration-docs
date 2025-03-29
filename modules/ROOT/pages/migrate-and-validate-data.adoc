@@ -1,11 +1,9 @@
 = Phase 2: Migrate and validate data
 :page-tag: migration,zdm,zero-downtime,validate-data
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 In phase 2 of data migration, you migrate data from the origin to the target, and then validate the migrated data.
 
-image::{imagesprefix}migration-phase2ra.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
+image::migration-phase2ra.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
 
 //For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
