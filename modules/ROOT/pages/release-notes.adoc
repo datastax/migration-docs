@@ -1,8 +1,9 @@
 = {company} {product} Release Notes
 :navtitle: Release notes
 :page-tag: migration,zdm,zero-downtime,release-notes
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+
+//TODO: Find out the latest release of ZDM. Decide if the release notes should point to github instead.
+//TODO: Add release notes/change log links for CDM, dsbulk migrator, and dsbulk as well? Create one release notes section at the end of the nav?
 
 == {product-automation} 2.3.0 update
 
@@ -102,17 +103,8 @@ For more information, see xref:contributions.adoc[].
 
 * https://github.com/datastax/cassandra-data-migrator[{cass-migrator}] repo for migration of larger data quantities and where detailed verifications and reconciliation options are needed.
 
-include::partial$note-downtime.adoc[]
-
 For the latest information about {product-proxy} new features and other changes, please refer to the GitHub-hosted https://github.com/datastax/zdm-proxy/blob/main/RELEASE_NOTES.md[RELEASE_NOTES] in the open-source {product-proxy} repo.
 The document includes CHANGELOG links for each {product-proxy} `N.n` release.
-
-[TIP]
-====
-The {product} process requires you to be able to perform rolling restarts of your client applications during the migration.
-This is standard practice for client applications that are deployed over multiple instances and is a widely used approach to roll out releases and configuration changes.
-====
-
 
 === {product-short} 2.0.0 documentation updates
 
@@ -120,8 +112,12 @@ Starting with the 2.0.0 version on 18-Oct-2022, the {product} documentation set 
 
 == Supported releases
 
+//TODO: Move to planning or intro
+
 include::partial$supported-releases.adoc[]
 
 == Migration scenarios
+
+//TODO: Create a Migration paths page or section in the Planning phase.
 
 include::partial$migration-scenarios.adoc[]

@@ -27,13 +27,11 @@ However, it is important to emphasize that the {product-proxy} can be freely use
 
 See the diagrams of the {product-short} xref:introduction.adoc#_migration_phases[migration phases].
 
-== Do you offer an interactive self-guided lab to help me learn about {product-short} migrations at my own pace?
+== Do you have a demo of {product-short}?
 
-Yes! Here's a fun way to learn.
+Yes, you can use the {product-short} interactive lab to see how the migration process works.
 
-include::partial$interactive-lab.adoc[]
-
-The interactive lab spans the pre-migration prerequisites and each of the five key migration phases.
+For more information, see xref:ROOT:introduction.adoc#lab[{product} interactive lab].
 
 == What components are provided with {product-short}?
 
@@ -68,9 +66,9 @@ Bottom line: You want to migrate your critical database infrastructure without r
 
 == Which releases of {cass-short} or {dse-short} are supported for migrations?
 
-include::partial$supported-releases.adoc[]
+include::ROOT:partial$supported-releases.adoc[]
 
-include::partial$migration-scenarios.adoc[]
+include::ROOT:partial$migration-scenarios.adoc[]
 
 == Does {product-short} migrate clusters?
 

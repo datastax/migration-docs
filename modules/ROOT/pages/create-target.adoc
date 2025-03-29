@@ -1,14 +1,12 @@
 = Create the target environment for your migration
 :navtitle: Create target environment for migration
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,target
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 In this topic, we'll see how to create and prepare a new cluster to be used as Target.
 
 This section covers in detail the steps to prepare an {astra-db} Serverless database, and also outlines how to create and prepare a different cluster, which could be for example {cass-short} 4.0.x or {dse-short} 6.8.x.
 
-== Overview
+== Using an {astra-db} database as Target
 
 If you intend to use {astra-db} as Target for the migration, you will need to:
 
@@ -16,15 +14,6 @@ If you intend to use {astra-db} as Target for the migration, you will need to:
 * Retrieve its Secure Connect Bundle (SCB) and upload it to the application instances.
 * Create {astra-db} access credentials for your database.
 * Create the client application schema.
-
-To use a generic {cass-short} or {dse-short} cluster, you will have to:
-
-* Provision the infrastructure for your new cluster.
-* Create the cluster with the desired version of {cass-short} or {dse-short}.
-* Configure the cluster according to your requirements.
-* Create the client application schema.
-
-== Using an {astra-db} database as Target
 
 === Prerequisites
 
@@ -51,19 +40,20 @@ Save the generate token and credentials (Client ID, Client Secret, and Token) in
 
 === Get the Secure Connect Bundle and upload to client instances
 
-Your database's https://docs.datastax.com/en/astra/astra-db-vector/drivers/secure-connect-bundle.html#download-the-secure-connect-bundle[Secure Connect Bundle] (SCB) is a zip file that contains the TLS encryption certificates and other metadata to connect to your database.
-It will be needed by:
+//TODO: Bring SCB attributes
 
-* Your client application, to connect directly to {astra-db} near the end of the migration;
-* {cass-migrator} or {dsbulk-migrator}, to migrate and validate data into {astra-db}.
+xref:astra-db-serverless:drivers:secure-connect-bundle.adoc[Download your {astra-db} database's Secure Connect Bundle (SCB)].
+The SCB is a zip file that contains TLS encryption certificates and other metadata required to connect to your database.
 
-Note that the credentials are **not contained** in the SCB.
+[IMPORTANT]
+====
+The SCB contains sensitive information that establishes a connection to your database, including key pairs and certificates.
+Treat is as you would any other sensitive values, such as passwords or tokens.
+====
 
-// * The {company} Bulk Migrator to import the existing data into {astra-db}
+Your client application uses the SCB to connect directly to {astra-db} near the end of the migration, and {cass-migrator} or {dsbulk-migrator} use the SCB to migrate and validate data in {astra-db}.
 
-include::partial$tip-scb.adoc[]
-
-To copy the SCB to your client application instance, use `scp`:
+Use `scp` to copy the SCB to your client application instance:
 
 [source,bash]
 ----
@@ -94,6 +84,13 @@ Note that CQL statements, such as those used to reproduce the schema on the targ
 . Any machine connected remotely using an {astra-db}-compatible https://docs.datastax.com/en/astra/astra-db-vector/cql/connect-cql-shell.html#standalone-cql-shell[standalone `cqlsh` client] (and provide the necessary connection secrets).
 
 == Using a generic CQL cluster as Target
+
+To use a generic {cass-short} or {dse-short} cluster, you will have to:
+
+* Provision the infrastructure for your new cluster.
+* Create the cluster with the desired version of {cass-short} or {dse-short}.
+* Configure the cluster according to your requirements.
+* Create the client application schema.
 
 === Create and configure the cluster
 

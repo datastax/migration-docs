@@ -22,7 +22,7 @@ For example, `/var/lib/cassandra/data`.
 // end::command-placeholders-common[]
 
 // tag::validate[]
-After the migration is complete, you can query the migrated data using the xref:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL shell].
+After the migration is complete, you can query the migrated data using the xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL shell].
 
 To thoroughly validate migration accuracy and reconcile any differences, xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-short} Data Migrator in validation mode].
 // end::validate[]

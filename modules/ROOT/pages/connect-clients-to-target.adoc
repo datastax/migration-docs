@@ -1,8 +1,6 @@
 = Step 5: Connect your client applications directly to Target
 :navtitle: Phase 5: Connect client applications directly to Target
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps,target
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 At this point in our migration phases, we've completed:
 
@@ -17,9 +15,7 @@ At this point in our migration phases, we've completed:
 Now we're ready to perform Phase 5, in which we will configure our client applications to connect directly to Target.
 The way you do this varies based on whether your Target is {astra-db}, {cass-reg}, or {dse} cluster.
 
-//include::partial$lightbox-tip.adoc[]
-
-image::{imagesprefix}migration-phase5ra.png[Phase 5 diagram shows apps no longer using proxy and instead connected directly to Target.]
+image::migration-phase5ra.png[Phase 5 diagram shows apps no longer using proxy and instead connected directly to Target.]
 
 //For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
@@ -30,20 +26,32 @@ For further information, please refer to the documentation of the driver languag
 
 == Configuring your driver to connect to {astra-db}
 
+//TODO: You can use an AstraCS token and the literal string `token` instead of clientID and client secret.
+
 To connect to {astra-db}, you need:
 
-* The ClientID and Client Secret from an {astra-db} application token with *Organization Administrator* permissions for the organization to which your {astra-db} database belongs:
-** Note: You will already have used these credentials when you configured the {product-proxy} to connect to your {astra-db} database as Target.
-** For more information on creating credentials (tokens), see https://docs.datastax.com/en/astra/astra-db-vector/administration/manage-application-tokens.html[here].
-* The Secure Connect Bundle (SCB) for your {astra-db} database:
-** This is a zip archive containing connection metadata and files to automatically enable Mutual TLS encryption between your client application and {astra-db}.
-** There is one SCB for each {astra-db} database (or one for each region of an {astra-db} multi-region database).
-** The SCB **does not contain** your DB credentials.
+* The ClientID and Client Secret from an {astra-db} application token with *Organization Administrator* permissions for the organization to which your {astra-db} database belongs.
++
+You will already have used these credentials when you configured the {product-proxy} to connect to your {astra-db} database as Target.
+For more information on creating credentials (tokens), see xref:astra-db-serverless:administration:manage-application-tokens.adoc[].
 
-include::partial$tip-scb.adoc[]
+* Your {astra-db} database's Secure Connect Bundle (SCB).
++
+The SCB is a zip file that contains TLS encryption certificates and other metadata required to connect to your database.
+Databases can have one or more SCBs.
+For more information, see xref:astra-db-serverless:drivers:secure-connect-bundle.adoc[].
++
+[IMPORTANT]
+====
+The SCB contains sensitive information that establishes a connection to your database, including key pairs and certificates.
+Treat is as you would any other sensitive values, such as passwords or tokens.
+====
 
-Make sure you choose a driver language and version that is compatible with {astra-db}.
+* Recommended: A driver language and version that is compatible with {astra-db}.
 For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
+
+If your client application uses an old version of a driver without built-in SCB support, {company} strongly recommends upgrading to a compatible driver to simplify configuration and get the latest features and bug fixes.
+However, you can still connect to {astra-db} for this migration by using https://github.com/datastax/cql-proxy[CQL Proxy] or extracting the SCB archive and using the individual files to enable mTLS in your driver's configuration.
 
 // The SCB support was made available beginning the following versions in the drivers:
 //
@@ -59,18 +67,11 @@ For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc
 //
 // Based on this, follow the instructions in the relevant section below.
 
-[TIP]
-====
-You **do not need to upgrade your client application driver** to enable it to connect to {astra-db}.
+If your driver has built-in support for the {astra-db} Secure Connect Bundle (SCB), the changes to enable your application to connect to {astra-db} are minimal.
 
-If your client application uses an old version of the driver without built-in SCB support, upgrading it would make the configuration easier, but it is not required and can be also done at a later time if desired.
-====
+//Recalling the xref:connect-clients-to-proxy.adoc#_connecting_company_drivers_to_cassandra[pseudocode to enable your client application to connect to the proxy], here it is how your code needs to change to connect directly to {astra-db}:
 
-=== Drivers with built-in support for the Secure Connect Bundle
-
-The great news is that, if your driver has built-in support for the {astra-db} Secure Connect Bundle (SCB), the changes to enable your application to connect to {astra-db} are minimal.
-
-Recalling the xref:connect-clients-to-proxy.adoc#_connecting_company_drivers_to_cassandra[pseudocode] to enable your client application to connect to the proxy, here it is how it needs to change to connect directly to {astra-db}:
+The following pseudocode provides guidance on how you might change your driver's code to connect directly to {astra-db}:
 
 [source]
 ----
@@ -97,7 +98,8 @@ print(release_version)
 ----
 
 As noted before, this pseudocode is just a guideline to illustrate the changes that are needed.
-For the specific syntax that applies to your driver, please refer to the documentation for your driver language and version:
+For the specific syntax that applies to your driver, see the following documentation:
+//TODO: Bring migration steps to this page instead of on the astra db pages where they don't seem to belong.
 
 * https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-cplusplus.html[C++ driver].
 
@@ -109,28 +111,7 @@ For the specific syntax that applies to your driver, please refer to the documen
 
 * https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-python.html[Python driver].
 
-That's it!
 Your client application is now able to connect directly to your {astra-db} database.
-
-=== Drivers without support for the Secure Connect Bundle
-
-It is possible to configure older or community-contributed drivers to connect to {astra-db} even if they lack built-in SCB support.
-
-To do so, you will need to extract the files from the SCB and use them to enable Mutual TLS in the configuration of your driver.
-Please see https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/legacy-drivers.html[here] for detailed instructions for each driver.
-
-Alternatively, you could also consider using https://www.datastax.com/blog/easily-connect-apache-cassandra-workloads-to-datastaxs-serverless-dbaas-with-our-cql-proxy[CQL Proxy], which is an open-source lightweight proxy that abstracts away all {astra-db}-specific connection configuration from your client application.
-
-=== A word on the cloud-native drivers
-
-Now that your client application is running on {astra-db}, you can take advantage of many additional features and APIs that {astra-db} offers such as gRPC, GraphQL, Document REST APIs and many more.
-To access these features, you may wish to consider moving to a cloud-native driver.
-This can be done at any time, as part of the future development and evolution of your client application.
-
-Here are the cloud-native drivers currently available:
-
-* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-java.html#_connecting_with_java_cloud_native_driver[Java cloud-native driver].
-* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-nodejs.html#_connecting_with_node_js_cloud_native_driver[Node.js cloud-native driver].
 
 == Phase 5 of migration completed
 

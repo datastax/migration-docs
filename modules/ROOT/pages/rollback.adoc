@@ -8,8 +8,6 @@ At any point during the migration process until the very last phase, if you hit 
 
 The migration can be started from scratch once the issue has been addressed.
 
-//include::partial$lightbox-tip-all-phases.adoc[]
-
 image::{imagesprefix}migration-all-phases.png[Migration phases from start to finish.]
 
 After moving your client applications off the {product-proxy} instances (Phase 5), writes are no longer sent to both Origin and Target clusters: the data on Origin is no longer kept up-to-date, and you lose this seamless rollback option.
