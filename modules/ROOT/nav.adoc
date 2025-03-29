@@ -37,8 +37,7 @@
 ** xref:release-notes.adoc[]
 
 .{cass-migrator}
-* xref:cdm-overview.adoc[{cass-migrator-short} overview]
-* xref:cdm-steps.adoc[Use {cass-migrator-short} to migrate data]
+* xref:cdm-overview.adoc[{cass-migrator}]
 
 .{dsbulk-loader}
 * xref:dsbulk:overview:dsbulk-about.adoc[{dsbulk-loader}]
@@ -48,7 +47,7 @@
 ** xref:dsbulk:getting-started:simple-unload.adoc[Unloading data without a configuration file]
 ** xref:dsbulk:developing:loading-unloading-vector-data.adoc[Loading and unloading vector data]
 ** xref:dsbulk:reference:load.adoc[Loading data examples]
-** xref:dsbulk:dsbulk:reference:unload.adoc[Unloading data examples]
+** xref:dsbulk:reference:unload.adoc[Unloading data examples]
 * xref:dsbulk:reference:dsbulk-cmd.adoc#escaping-and-quoting-command-line-arguments[Escaping and quoting command line arguments]
 
 .{astra-db} {sstable-sideloader}

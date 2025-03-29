@@ -1,6 +1,5 @@
 = Migrate data using {astra-db} {sstable-sideloader}
 :page-aliases: data-importer:data-importer-overview.adoc
-include::ROOT:partial$astra-role-attributes.adoc[]
 :description: {sstable-sideloader} lets you migrate data from an {cass-reg} or {dse} cluster into {astra-db} without impacting the origin cluster or your {astra-db} Serverless database.
 :loop-var: pass:[${i}]
 
@@ -141,7 +140,7 @@ This is considered a cross-datacenter transfer, and the delay increases relative
 |The slowest uploads happen when the data must travel over transoceanic cables.
 If the data must also change cloud providers, there can be additional delays.
 
-In this case, consider creating your target database in a co-located datacenter, and then xref:astra-vector-docs:databases:manage-regions.adoc[deploy your database to other regions] after the migration.
+In this case, consider creating your target database in a co-located datacenter, and then xref:astra-db-serverless:databases:manage-regions.adoc[deploy your database to other regions] after the migration.
 |===
 ====
 
@@ -198,24 +197,24 @@ To use {sstable-sideloader}, your target database, origin cluster, and administr
 
 === Target {astra-db} database requirements
 
-* Your {astra-db} organization must be on an *Enterprise* xref:astra-vector-docs:administration:subscription-plans.adoc[subscription plan].
+* Your {astra-db} organization must be on an *Enterprise* xref:astra-db-serverless:administration:subscription-plans.adoc[subscription plan].
 +
 {sstable-sideloader} is a premium feature that incurs costs based on usage.
 
 * Your target database must be an {astra-db} Serverless database.
-If you don't already have one, xref:astra-vector-docs:databases:create-database.adoc[create a database].
+If you don't already have one, xref:astra-db-serverless:databases:create-database.adoc[create a database].
 You can use either a {db-serverless} or {db-serverless-vector} database, and {db-serverless-vector} databases can store both vector and non-vector data.
 
 ////
 //TODO: Uncomment for GA. Link will not work until PCU PR is merge.
 * Your target database must be in a PCU group.
 +
-Because {sstable-sideloader} operations are typically short-term, resource-intensive events, {company} recommends that you xref:astra-vector-docs:administration:create-pcu.adoc#flexible-capacity[create a flexible capacity PCU group] exclusively to support your target database during the migration.
+Because {sstable-sideloader} operations are typically short-term, resource-intensive events, {company} recommends that you xref:astra-db-serverless:administration:create-pcu.adoc#flexible-capacity[create a flexible capacity PCU group] exclusively to support your target database during the migration.
 +
 After the migration, you can remove your target database out of the flexible capacity PCU group, and then park or delete the group.
 Don't park the PCU group during the {sstable-sideloader} process because databases in a parked PCU group are hibernated and unavailable for use.
 +
-For more information, see xref:astra-vector-docs:administration:provisioned-capacity-units.adoc[].
+For more information, see xref:astra-db-serverless:administration:provisioned-capacity-units.adoc[].
 ////
 
 [#origin-cluster-requirements]
@@ -522,17 +521,17 @@ CREATE TABLE smart_home.sensor_readings (
     PRIMARY KEY (device_id, room_id, reading_timestamp)
 ) WITH CLUSTERING ORDER BY (room_id ASC, reading_timestamp DESC);
 ----
-//However, {sstable-sideloader} can't import data to a xref:astra-vector-docs:databases:collection in a {db-serverless-vector} database.
+//However, {sstable-sideloader} can't import data to a xref:astra-db-serverless:databases:collection in a {db-serverless-vector} database.
 . Recreate the schemas in your target database:
 +
-.. In the {astra-ui-link}, go to *Databases*, and then select your xref:astra-vector-docs:databases:create-database.adoc#create-a-serverless-non-vector-database[{db-serverless} database].
-.. xref:astra-vector-docs:databases:manage-keyspaces.adoc#keyspaces[Create a keyspace] with the exact same name as your origin cluster's keyspace.
-.. In your database's xref:astra-vector-docs:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL console], create tables with the exact same names and schemas as your origin cluster.
+.. In the {astra-ui-link}, go to *Databases*, and then select your xref:astra-db-serverless:databases:create-database.adoc#create-a-serverless-non-vector-database[{db-serverless} database].
+.. xref:astra-db-serverless:databases:manage-keyspaces.adoc#keyspaces[Create a keyspace] with the exact same name as your origin cluster's keyspace.
+.. In your database's xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL console], create tables with the exact same names and schemas as your origin cluster.
 +
 image::sideloader:cql-console-create-identical-schema.png[]
 +
 {astra-db} rejects or ignores some table properties, such as compaction strategy.
-See xref:astra-vector-docs:databases:database-limits.adoc[] for more information.
+See xref:astra-db-serverless:databases:database-limits.adoc[] for more information.
 //TODO: Does this matter?
 
 . In your terminal, set environment variables for your target database:
@@ -543,7 +542,7 @@ export dbID=*DATABASE_ID*
 export token=*TOKEN*
 ----
 +
-Replace *`DATABASE_ID`* with the xref:astra-vector-docs:databases:create-database.adoc#get-db-id[database ID], and replace *`TOKEN`* with an xref:astra-vector-docs:administration:manage-application-tokens.adoc[application token] with the *Database Administrator* role.
+Replace *`DATABASE_ID`* with the xref:astra-db-serverless:databases:create-database.adoc#get-db-id[database ID], and replace *`TOKEN`* with an xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token] with the *Database Administrator* role.
 +
 [TIP]
 ====
