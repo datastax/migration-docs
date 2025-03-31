@@ -15,12 +15,15 @@ You can use either a {db-serverless} or {db-serverless-vector} database, and {db
 
 * Your target database must be in a PCU group.
 +
-Because {sstable-sideloader} operations are typically short-term, resource-intensive events, {company} recommends that you xref:astra-db-serverless:administration:create-pcu.adoc#flexible-capacity[create a flexible capacity PCU group] exclusively to support your target database during the migration.
+Because {sstable-sideloader} operations are typically short-term, resource-intensive events, {company} recommends that you create a flexible capacity PCU group exclusively to support your target database during the migration.
 +
 After the migration, you can move your target database out of the flexible capacity PCU group, and then park or delete the group.
 Don't park the PCU group during the {sstable-sideloader} process because databases in a parked PCU group are hibernated and unavailable for use.
 +
 For more information, see xref:astra-db-serverless:administration:provisioned-capacity-units.adoc[].
+
+//TODO: Replace line 18 after merging the PCU PR:
+//Because {sstable-sideloader} operations are typically short-term, resource-intensive events, {company} recommends that you xref:astra-db-serverless:administration:create-pcu.adoc#flexible-capacity[create a flexible capacity PCU group] exclusively to support your target database during the migration.
 
 [#origin-cluster-requirements]
 == Origin cluster requirements

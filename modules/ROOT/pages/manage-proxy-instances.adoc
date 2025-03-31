@@ -251,7 +251,7 @@ To perform an upgrade, change the version tag number to the desired version in `
 
 [source,bash]
 ----
-zdm_proxy_image datastax/zdm-proxy:x.y.z
+zdm_proxy_image: datastax/zdm-proxy:x.y.z
 ----
 
 Replace x.y.z with the version you would like to upgrade to. 
@@ -260,7 +260,7 @@ Replace x.y.z with the version you would like to upgrade to.
 
 [source,bash]
 ----
-zdm_proxy_image datastax/zdm-proxy:2.1.0
+zdm_proxy_image: datastax/zdm-proxy:2.1.0
 ----
 
 Then run the same playbook as above, with the following command:
