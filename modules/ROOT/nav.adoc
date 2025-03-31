@@ -19,7 +19,6 @@
 ** xref:migrate-and-validate-data.adoc[]
 ** xref:cassandra-data-migrator.adoc[{cass-migrator}]
 ** xref:dsbulk-migrator.adoc[{dsbulk-migrator}]
-** xref:dsbulk:overview:dsbulk-about.adoc[{dsbulk-loader}]
 * Phase 3
 ** xref:enable-async-dual-reads.adoc[]
 * Phase 4
