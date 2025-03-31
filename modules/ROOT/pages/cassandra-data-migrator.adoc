@@ -97,80 +97,6 @@ For example, the 4.x series of {cass-migrator-short} isn't backwards compatible 
 
 . Store your properties file where it can be accessed while running {cass-migrator-short} jobs using `spark-submit`.
 
-[#cdm-guardrail-checks]
-== Check for large-field guardrail violations before migrating
-
-You can use {cass-migrator-short} to identify large fields in an origin table that might hit cluster guardrails.
-Such as those defined in the xref:astra-db-serverless:databases:database-limits.adoc[{astra-db} database limits].
-
-Use the following `spark-submit` command to run a guardrail check job using the configuration in your properties file.
-The guardrail check job is specified in the `--class` argument.
-
-This command only interacts with the origin cluster; it does not interact with your target cluster.
-
-[tabs]
-======
-Local installation::
-+
---
-[source,bash,subs="+quotes,+attributes"]
-----
-./spark-submit --properties-file cdm.properties \
---conf spark.cdm.schema.origin.keyspaceTable="**KEYSPACE_NAME**.**TABLE_NAME**" \
---conf spark.cdm.feature.guardrail.colSizeInKB=**LIMIT** \
---master "local[{asterisk}]" --driver-memory 25G --executor-memory 25G \
---class com.datastax.cdm.job.GuardrailCheck cassandra-data-migrator-**VERSION**.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
-----
-
-Replace or modify the following, if needed:
-
-* `--properties-file cdm.properties`: If your properties file has a different name, specify the actual name of your properties file.
-+
-Depending on where your properties file is stored, you might need to specify the full or relative file path.
-
-* `**KEYSPACE_NAME**.**TABLE_NAME**`: Specify the name of the table that you want to check and the keyspace that it belongs to.
-+
-You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file using the same format of `**KEYSPACE_NAME**.**TABLE_NAME**`.
-
-* `**LIMIT**`: Specify the maximum field size in KB.
-Fields that exceed this limit are considered a guardrail violation.
-
-* `--driver-memory` and `--executor-memory`: For local installations, specify the appropriate memory settings for your environment.
-
-* `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
---
-
-Spark cluster::
-+
---
-[source,bash,subs="+quotes"]
-----
-./spark-submit --properties-file cdm.properties \
---conf spark.cdm.schema.origin.keyspaceTable="**KEYSPACE_NAME**.**TABLE_NAME**" \
---conf spark.cdm.feature.guardrail.colSizeInKB=10000 \
---master "spark://**MASTER_HOST**:**PORT**" \
---class com.datastax.cdm.job.GuardrailCheck cassandra-data-migrator-**VERSION**.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
-----
-
-Replace or modify the following, if needed:
-
-* `--properties-file cdm.properties`: If your properties file has a different name, specify the actual name of your properties file.
-+
-Depending on where your properties file is stored, you might need to specify the full or relative file path.
-
-* `**KEYSPACE_NAME**.**TABLE_NAME**`: Specify the name of the table that you want to validate and the keyspace that it belongs to.
-+
-You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file using the same format of `**KEYSPACE_NAME**.**TABLE_NAME**`.
-
-* `**LIMIT**`: Specify the maximum field size in KB.
-Fields that exceed this limit are considered a guardrail violation.
-
-* `--master`: Provide the URL of your Spark cluster.
-
-* `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
---
-======
-
 [#migrate]
 == Run a {cass-migrator-short} data migration job
 
@@ -351,59 +277,15 @@ For an initial data validation, consider disabling AutoCorrect so that you can g
 [#advanced]
 == Additional {cass-migrator-short} options
 
-You can modify your properties file or append additional arguments to your `spark-submit` commands to customize your {cass-migrator-short} jobs.
+You can modify your properties file or append additional `--conf` arguments to your `spark-submit` commands to customize your {cass-migrator-short} jobs.
+For example, you can do the following:
 
-The following sections describe some common or useful options.
+* Check for large field guardrail violations before migrating.
+* Filter by specific token (partition) ranges.
+* Track run details.
 
 For all options, see the https://github.com/datastax/cassandra-data-migrator[{cass-migrator-short} repository].
-
-=== Track run details
-
-If you want to track the details of a run, as recorded on the target keyspace, pass `--conf spark.cdm.trackRun=true` with your migration job command.
-
-[#token-range]
-=== Filter by specific partition ranges
-
-If you want to migrate or validate specific range of partitions (a subset of partitions), you can specify a token range in your properties file or with your `spark-submit` command:
-
-[tabs]
-======
-cdm.properties::
-+
---
-[source,properties,subs="+quotes"]
-----
-spark.cdm.filter.cassandra.partition.min          **MINIMUM_TOKEN_RANGE**
-spark.cdm.filter.cassandra.partition.max          **MAXIMUM_TOKEN_RANGE**
-----
---
-
-spark-submit::
-+
---
-[source,bash,subs="+quotes"]
-----
---conf spark.cdm.filter.cassandra.partition.min=**MINIMUM_TOKEN_RANGE**
---conf spark.cdm.filter.cassandra.partition.max=**MAXIMUM_TOKEN_RANGE**
-----
---
-======
-
-Replace `**MINIMUM_TOKEN_RANGE**` and `**MAXIMUM_TOKEN_RANGE**` with the token values for the range of partitions that you want to filter.
-
-For `partition.min`, the default is `0` when using `RandomPartitioner` and `-9223372036854775808` or -2^63 otherwise.
-The lower partition bound of the range is inclusive.
-
-For `partition.max`, the default is `2^127-1` when using `RandomPartitioner` and `9223372036854775807` or 2^63-1 otherwise.
-The upper partition bound of the range is inclusive.
-
-You can also set `spark.cdm.filter.cassandra.whereCondition`, which adds CQL to the `WHERE` clause of `SELECT` statements on the origin cluster.
-
-=== Restart a migration or validation
-
-To retry or resume an incomplete or failed migration or validation, pass `--conf spark.cdm.trackRun.previousRunId=**PREVIOUS_RUN_ID**` with your migration or validation job command.
-
-This mode skips any token rages from the previous run that were migrated or validated successfully.
+Specifically, see the https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[fully annotated properties file].
 
 == Troubleshoot {cass-migrator-short}
 
