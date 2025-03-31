@@ -1,0 +1,29 @@
+= Troubleshoot {sstable-sideloader}
+:description: Get help with {sstable-sideloader}
+
+Learn how to troubleshoot common {sstable-sideloader} issues.
+
+== Migration status is outdated
+
+You can use the {devops-api} to check the migration status at any time.
+However, it can take a few minutes for the {devops-api} to reflect status changes during a migration.
+Immediately calling the {devops-api} after starting a new phase of the migration might not return the actual current status.
+
+[#get-new-upload-credentials]
+== Get new upload credentials
+
+//TODO: Does checking the migration status always generate new creds or only if they are expired?
+
+If your credentials expire, do the following:
+
+. Use the `MigrationStatus` endpoint to generate new credentials:
++
+include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
+
+. Continue the migration with the fresh credentials.
++
+If you set environment variables for your credentials, be sure to update those values.
+
+== Retry a failed migration
+
+To reattempt a failed migration, see xref:sideloader:stop-restart-sideloader.adoc#relaunch[Relaunch a failed migration].

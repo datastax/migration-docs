@@ -1,0 +1,80 @@
+= Stop or restart a {sstable-sideloader} migration
+:description: If necessary, you can pause, cancel, or restart a {sstable-sideloader} migration.
+
+{description}
+
+== Pause a migration
+
+Use the {devops-api} to pause a migration:
+
+[source,curl]
+----
+curl -X POST \
+    -H "Authorization: Bearer ${token}" \
+    https://api.astra.datastax.com/v2/databases/${dbID}/migrations/${migrationID}/pause \
+    | jq .
+----
+
+A paused migration retains its current state and progress.
+
+Any in-progress jobs will complete, but no new jobs will start.
+
+=== Resume a migration
+
+Resume a previously-paused migration from the point at which it was paused:
+
+[source,curl]
+----
+curl -X POST \
+    -H "Authorization: Bearer ${token}" \
+    https://api.astra.datastax.com/v2/databases/${dbID}/migrations/${migrationID}/resume \
+    | jq .
+----
+
+You can only resume an active migration that has been paused.
+Running this command against migrations in other statuses, such as idle migrations that were automatically cleaned up, has no effect.
+
+[#abort-migration]
+== Abort a migration
+
+Abort a migration only if you want to abandon it completely.
+
+. Abort a migration and remove all migration progress:
++
+[source,curl]
+----
+curl -X POST \
+    -H "Authorization: Bearer ${token}" \
+    https://api.astra.datastax.com/v2/databases/${dbID}/migrations/${migrationID}/abort \
+    | jq .
+----
++
+You can abort a migration up until the point at which {sstable-sideloader} starts importing SSTable metadata.
+After this point, you must wait for the migration to finish, and then you can use the CQL shell to drop the keyspace/table in your target database before repeating the entire migration procedure.
+For more information about what happens during each phase of a migration and the point of no return, see xref:sideloader:sideloader-overview.adoc[].
+
+. Wait a few minutes, and then check the migration status to confirm that the migration stopped:
++
+include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
+
+[#relaunch]
+== Relaunch a failed migration
+
+//TODO: questions on doc-4510
+
+If a migration fails, you can reattempt the migration if you are able to resolve the cause of the failure.
+
+. Check the migration status for an error message related to the failure:
++
+include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
+
+. Attempt to resolve the issue described in the error message.
++
+For example, if there is a problem with the schema in the target database, make sure that your schemas align, as described in xref:sideloader:migrate-sideloader.adoc#record-schema[Configure the target database].
+
+. Repeat the `launch` command that you used to xref:sideloader:migrate-sideloader.adoc#import-data[import the data], and continue the migration process from there.
+
+== See also
+
+* xref:sideloader:cleanup-sideloader.adoc[]
+* xref:sideloader:troubleshoot-sideloader.adoc[]

@@ -52,3 +52,8 @@
 
 .{astra-db} {sstable-sideloader}
 * xref:sideloader:sideloader-overview.adoc[]
+* xref:sideloader:prepare-sideloader.adoc[]
+* xref:sideloader:migrate-sideloader.adoc[]
+* xref:sideloader:stop-restart-sideloader.adoc[]
+* xref:sideloader:cleanup-sideloader.adoc[]
+* xref:sideloader:troubleshoot-sideloader.adoc[]

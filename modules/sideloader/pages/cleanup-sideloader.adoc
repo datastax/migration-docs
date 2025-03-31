@@ -1,0 +1,72 @@
+= Cleanup {sstable-sideloader} migrations
+:description: {sstable-sideloader} has an automatic cleanup process.
+
+{description}
+You can also manually start or reschedule a cleanup.
+
+The cleanup process deletes all SSTable snapshots from the migration directory, revokes any unexpired upload credentials, and then closes the migration.
+
+== Idle timeout and automatic cleanup
+
+A migration becomes idle if it is _not_ in `Initializing` or `ImportInProgress` status.
+If a migration remains continuously idle for one week, it hits the idle timeout and triggers the automatic migration cleanup process.
+
+Each migration ID has its own idle timeout, and the cleanup process deletes only the files and credentials associated with the migration ID that reached the idle timeout.
+If one migration reaches the idle timeout, it doesn't affect other migrations associated with the same database.
+
+A migration's idle timer resets each time you xref:sideloader:migrate-sideloader.adoc#upload-snapshots-to-migration-directory[upload snapshots] or xref:sideloader:migrate-sideloader.adoc#import-data[import data].
+
+You can you can also override the idle timer by manually starting a cleanup or scheduling a cleanup.
+However, _you cannot permanently prevent the cleanup process_.
+
+== Manually start a cleanup
+
+. Use the {devops-api} to immediately start the cleanup process for a migration:
++
+[source,curl]
+----
+curl -X POST \
+    -H "Authorization: Bearer ${token}" \
+    https://api.astra.datastax.com/v2/databases/${dbID}/migrations/${migrationID}/cleanup \
+    | jq .
+----
++
+The cleanup process never runs on migrations in `ImportInProgress` status.
+If the request fails due to `ImportInProgress`, you must either wait for the import process to end, xref:sideloader:stop-restart-sideloader.adoc#abort-migration[abort the migration], or schedule the cleanup process for a later time.
+
+. Wait a few minutes, and then check the migration status:
++
+include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
++
+While the cleanup is running, the migration status is `CleaningUpFiles`.
+When complete, the migration status is `Closed`.
+
+== Reschedule a cleanup
+
+You can use the {devops-api} to schedule a migration cleanup for a specific date and time:
+
+[source,curl,subs="+quotes"]
+----
+curl -X POST \
+    -H "Authorization: Bearer ${token}" \
+    https://api.astra.datastax.com/v2/databases/${dbID}/migrations/${migrationID}/cleanup \
+    ?option.cleanupTime=**CLEANUP_TIME** \
+    | jq .
+----
+
+Replace the following:
+
+* Set your `dbID` and `migrationID` environment variables according to the migration that you want to reschedule.
++
+This endpoint overrides the idle timeout for the specified migration ID only.
+
+* Replace `*CLEANUP_TIME*` with the date and time that you want the cleanup process to run in https://en.wikipedia.org/wiki/ISO_8601[ISO 8601] format (`YYYY-MM-DDTHH:MM:SSZ`), such as `option.cleanupTime=2025-03-31T14:30Z`.
++
+Setting a cleanup time in the past immediately starts the cleanup process.
++
+You can't indefinitely postpone a cleanup.
+You must provide a new time for the cleanup.
+
+At your scheduled time, the cleanup process runs on the specified migration ID.
+The cleanup process never runs on migrations in `ImportInProgress` status.
+If the migration is in `ImportInProgress` at the scheduled cleanup time, the cleanup process will start when the migration's status changes.

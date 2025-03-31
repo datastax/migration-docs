@@ -17,7 +17,7 @@ Immediately calling this endpoint after starting a new phase of the migration mi
 For example, `/var/lib/cassandra/data`.
 * *`KEYSPACE_NAME`*: The name of the keyspace that contains the tables you want to migrate.
 * *`SNAPSHOT_NAME`*: The name of the xref:sideloader:sideloader-overview.adoc#create-snapshots[snapshot backup] that you created with `nodetool snapshot`.
-* *`MIGRATION_DIR`*: The entire `uploadBucketDir` value that was generated when you xref:sideloader:sideloader-overview.adoc#initalize-migration[initialized the migration], including the trailing slash.
+* *`MIGRATION_DIR`*: The entire `uploadBucketDir` value that was generated when you xref:sideloader:migrate-sideloader.adoc#initalize-migration[initialized the migration], including the trailing slash.
 * *`NODE_NAME`*: The host name of the current node you are uploading the snapshot from.
 // end::command-placeholders-common[]
 
@@ -26,3 +26,67 @@ After the migration is complete, you can query the migrated data using the xref:
 
 To thoroughly validate migration accuracy and reconcile any differences, xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-short} Data Migrator in validation mode].
 // end::validate[]
+
+// tag::initialize[]
+After you create snapshots on the origin cluster and pre-configure the schema on the target database, you can use the {astra-db} {devops-api} to initialize the migration.
+
+image::sideloader:data-importer-workflow.svg[]
+
+When you initialize a migration, {sstable-sideloader} does the following:
+
+. Creates a secure migration bucket.
++
+The migration bucket is only created during the first initialization.
+All subsequent migrations use different directories in the same migration bucket.
++
+{company} owns the migration bucket, and it is located within the {astra-db} perimeter.
+
+. Generates a migration ID that is unique to the new migration.
+
+. Creates a migration directory within the migration bucket that is unique to the new migration.
++
+The migration directory is also referred to as the `uploadBucketDir`.
+In the next phase of the migration process, you will upload your snapshots to this migration directory.
+
+. Generates upload credentials that grant read/write access to the migration directory.
++
+The credentials are formatted according to the cloud provider where your target database is located.
+// end::initialize[]
+
+// tag::import[]
+After uploading the snapshots to the migration directory, use the {devops-api} to start the data import process.
+
+During the import process, {sstable-sideloader} does the following:
+
+. Revokes access to the migration directory.
++
+You cannot read or write to the migration directory after starting the data import process.
+
+. Discovers all uploaded SSTables in the migration directory, and then groups them into approximately same-sized subsets.
+
+. Runs validation checks on each subset.
+
+. Converts all SSTables of each subset.
+
+. Disables new compactions on the target database.
++
+[WARNING]
+====
+This is the last point at which you can xref:sideloader:stop-restart-sideloader.adoc#abort-migration[abort the migration].
+
+Once {sstable-sideloader} begins to import SSTable metadata (the next step), you cannot stop the migration.
+====
+
+. Imports metadata from each SSTable.
++
+If the dataset contains tombstones, any read operations on the target database can return inconsistent results during this step.
+Since compaction is disabled, there is no risk of permanent inconsistencies.
+However, in the context of xref:ROOT:introduction.adoc[{product}], it's important that the {product-short} proxy continues to read from the origin cluster.
+
+. Re-enables compactions on the {astra-db} Serverless database.
+
+Each step must finish successfully.
+If one step fails, the import operation stops and no data is imported into your target database.
+
+If all steps finish successfully, the migration is complete and you can access the imported data in your target database.
+// end::import[]
