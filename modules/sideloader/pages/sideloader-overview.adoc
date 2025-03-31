@@ -44,7 +44,7 @@ This is an ideal approach for database migrations because creating a snapshot ha
 
 Each snapshot for each node in the origin cluster must include all the keyspaces and individual CQL tables that you want to migrate.
 
-For more information, see xref:sideloader:migrate-sideloader.adoc#create-snapshots[Migrate data with {sstable-sidealoder}: Create snapshots].
+For more information, see xref:sideloader:migrate-sideloader.adoc#create-snapshots[Migrate data with {sstable-sideloader}: Create snapshots].
 
 === Prepare the target database
 
@@ -53,7 +53,7 @@ Because snapshots don't store schema definitions, you must pre-configure the sch
 For the migration to succeed, the schema in your target database must align with the schema in the origin cluster.
 However, you might need to modify your schema or data model to be compatible with {astra-db}.
 
-For specific requirements and more information, see xref:sideloader:migrate-sideloader.adoc#record-schema[Migrate data with {sstable-sidealoder}:Configure the target database].
+For specific requirements and more information, see xref:sideloader:migrate-sideloader.adoc#record-schema[Migrate data with {sstable-sideloader}:Configure the target database].
 
 === Initialize a migration
 
