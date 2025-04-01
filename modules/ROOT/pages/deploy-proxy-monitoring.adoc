@@ -44,6 +44,18 @@ The {product-proxy} configuration is composed of five files:
 * `zdm_proxy_advanced_config.yml`, containing advanced configuration that may be required in some scenarios but can be usually left to its default values.
 * `zdm_proxy_custom_tls_config.yml`, to configure TLS encryption if desired.
 
+////
+Starting in version 2.2.0 of the {product-automation}, we added the `zdm_proxy_cluster_config.yml` file to contain all the configuration variables for Origin and Target.
+Prior to version 2.2.0, the variables were in the `zdm_proxy_core_config.yml` file.
+
+[TIP]
+====
+This change is backward compatible.
+If you previously populated the variables in `zdm_proxy_core_config.yml`, these variables will be honored and take precedence over any variables in `zdm_proxy_cluster_config.yml`, if both files are present.
+====
+
+If you are using a {product-automation} version up to and including 2.1.0, please use `zdm_proxy_core_config.yml` to configure access to your clusters.
+////
 === Container configuration
 The first step of the proxy container configuration is to open the `zdm_proxy_container_config.yml` file.
 Configure the desired {product-proxy} version and create a strategy to inject configuration parameters. 
@@ -318,7 +330,7 @@ It includes the following components, all deployed as Docker containers:
 
 * Prometheus node exporter, which runs on each {product-proxy} host and makes OS- and host-level metrics available to Prometheus.
 * Prometheus server, to collect metrics from the {product-proxy} process, its Golang runtime and the Prometheus node exporter.
-* Grafana, to visualize all these metrics in three preconfigured dashboards (see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips for details).
+* Grafana, to visualize all these metrics in three preconfigured dashboards (see xref:ROOT:metrics.adoc[]).
 
 After running the playbook described here, you will have a fully configured monitoring stack connected to your {product-proxy} deployment.
 
@@ -372,5 +384,5 @@ Login with:
 
 [TIP]
 ====
-Details about the metrics you can observe are available in xref:troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips.
+Details about the metrics you can observe are available in xref:ROOT:metrics.adoc[].
 ====

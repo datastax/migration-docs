@@ -35,7 +35,7 @@ Unless it is for a demo or local testing environment, a {product-proxy} deployme
 The term {product-proxy} indicates the whole deployment, and {product-proxy} instance refers to an individual proxy process in the deployment.
 ====
 
-== Key features of {product-proxy}
+=== Key features of {product-proxy}
 
 * Allows you to lift-and-shift existing application code from **Origin** to **Target** with a simple change of a connection string.
 
@@ -60,7 +60,7 @@ This behavior is expected and desired.
 The idea is to mimic the full read and write load on Target so there are no surprises during the last migration phase; that is, after cutting over completely to Target.
 ====
 
-== {product-utility} and {product-automation}
+=== {product-utility} and {product-automation}
 
 https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code.
 It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.

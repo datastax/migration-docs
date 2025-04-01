@@ -219,7 +219,7 @@ They report connection or protocol errors, but do not give you enough informatio
 Metrics, however, provide especially helpful data and the graphs show you how they vary over time.
 The monitoring stack ships with preconfigured Grafana dashboards that are automatically set up as part of the monitoring deployment.
 
-For details about the metrics you can observe in these preconfigured Grafana dashboards, see xref:troubleshooting-tips.adoc#how-to-leverage-metrics[this section] of the troubleshooting tips.
+For details about the metrics you can observe in these preconfigured Grafana dashboards, see xref:ROOT:metrics.adoc[].
 ====
 +
 You can choose to deploy the monitoring stack on the jumphost or on a different machine, as long as it can connect to the {product-proxy} instances over TCP on ports 9100 (to collect host-level metrics) and on the port on which the {product-proxy} exposes its own metrics, typically 14001.

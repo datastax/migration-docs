@@ -1,12 +1,12 @@
 = Troubleshooting scenarios
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,troubleshooting
 
-Refer the following troubleshooting scenarios for information about resolving common migration issues.
-Each section presents:
+//TODO: use same format as driver troubleshooting.
+//TODO: Remove or hide issues that have been resolved by a later release.
 
-* Symptoms
-* Cause
-* Solution or Workaround
+This page provides troubleshooting advice for specific issues or error messages related to {product}.
+
+Each section includes symptoms, causes, and suggested solutions or workarounds.
 
 == Configuration changes are not being applied by the automation
 
@@ -375,6 +375,8 @@ Refer to https://docs.datastax.com/en/astra/astra-db-vector/administration/manag
 [[_async_read_timeouts_stream_id_map_exhausted]]
 == Async read timeouts / stream id map exhausted
 
+//Supposedly resolved in 2.1.0 release?
+
 === Symptoms
 
 Dual reads are enabled and the following messages are found in the {product-proxy} logs:
@@ -409,6 +411,7 @@ If you find an issue like this please submit an https://github.com/datastax/zdm-
 
 == Client application closed connection errors every 10 minutes when migrating to {astra-db}
 
+//TODO: Remove - resolved in 2.1.0
 [NOTE]
 ====
 This issue is fixed in {product-proxy} 2.1.0. See the Fix section below.

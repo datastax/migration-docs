@@ -67,9 +67,13 @@ Read-only applications require special handling only if you are using {product-p
 
 [TIP]
 ====
-If you have an existing {product-proxy} deployment, you can check which version you are running as explained xref:troubleshooting-tips.adoc#_how_to_identify_the_zdm_proxy_version[here]. To find out how to upgrade an existing {product-proxy} deployment, please see xref:manage-proxy-instances.adoc#_upgrade_the_proxy_version[here].
+If you have an existing {product-proxy} deployment, you can xref:ROOT:troubleshooting-tips.adoc#check-version[check your {product-proxy} version].
+
+For upgrade instructions, see xref:ROOT:manage-proxy-instances.adoc#_upgrade_the_proxy_version[Upgrade the proxy version].
 ====
 
+//TODO: combine the below 2 sections to only use 2.1.0 or later.
+//Reconcile with troubleshooting-scenarios.adoc in case this issue is also described there.
 ==== *Versions older than 2.1.0*
 
 If a client application only sends `SELECT` statements to a database connection then you may find that {product-proxy} terminates these read-only connections periodically, which may result in request errors if the driver is not configured to retry these requests in these conditions.

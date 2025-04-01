@@ -26,17 +26,17 @@
 * Phase 5
 ** xref:connect-clients-to-target.adoc[]
 * References
-** Troubleshooting
-*** xref:troubleshooting.adoc[]
-*** xref:troubleshooting-tips.adoc[]
-*** xref:troubleshooting-scenarios.adoc[]
+** xref:troubleshooting-tips.adoc[]
+** xref:troubleshooting-scenarios.adoc[]
 ** xref:contributions.adoc[]
 ** xref:faqs.adoc[]
 ** xref:glossary.adoc[]
-** xref:release-notes.adoc[]
+** https://github.com/datastax/zdm-proxy/releases[{product-proxy} release notes]
+** https://github.com/datastax/zdm-proxy-automation/releases[{product-automation} release notes]
 
 .{cass-migrator}
 * xref:cdm-overview.adoc[{cass-migrator}]
+* https://github.com/datastax/cassandra-data-migrator/releases[{cass-migrator-short} release notes]
 
 .{dsbulk-loader}
 * xref:dsbulk:overview:dsbulk-about.adoc[{dsbulk-loader}]
@@ -48,6 +48,7 @@
 ** xref:dsbulk:reference:load.adoc[Loading data examples]
 ** xref:dsbulk:reference:unload.adoc[Unloading data examples]
 * xref:dsbulk:reference:dsbulk-cmd.adoc#escaping-and-quoting-command-line-arguments[Escaping and quoting command line arguments]
+* https://github.com/datastax/dsbulk/releases[{dsbulk-loader} release notes]
 
 .{astra-db} {sstable-sideloader}
 * xref:sideloader:sideloader-overview.adoc[]

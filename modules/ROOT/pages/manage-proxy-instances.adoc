@@ -62,11 +62,13 @@ To check the state of your {product-proxy} instances, you have a couple of optio
 See xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[Indications of success on Origin and Target clusters].
 ====
 
+[#access-the-proxy-logs]
 == Access the proxy logs
 
 To confirm that the {product-proxy} instances are operating normally, or investigate any issue, you can view or collect their logs.
 
-[[_view_the_logs]]
+You can view the logs for a single proxy instance, or you can use a playbook to systematically retrieve logs from all instances and package them in a zip archive for later inspection.
+
 === View the logs
 
 The {product-proxy} runs as a Docker container on each proxy host.
@@ -79,7 +81,6 @@ docker container logs zdm-proxy-container
 
 To leave the logs open and continuously output the latest log messages, append the `--follow` (or `-f`) option to the command above.
 
-[[_collect_the_logs]]
 === Collect the logs
 
 You can easily retrieve the logs of all {product-proxy} instances using a dedicated playbook (`collect_zdm_proxy_logs.yml`).
