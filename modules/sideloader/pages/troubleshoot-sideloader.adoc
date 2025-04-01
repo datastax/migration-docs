@@ -26,4 +26,72 @@ If you set environment variables for your credentials, be sure to update those v
 
 == Retry a failed migration
 
-To reattempt a failed migration, see xref:sideloader:stop-restart-sideloader.adoc#relaunch[Relaunch a failed migration].
+If a migration fails, there are two ways that you can reattempt the migration.
+The option you use depends on where the error occurred.
+
+* *Schema discrepancies*: This failure occurs when there is a mismatch between the origin and target schemas.
++
+If you are able to resolve the cause of the failure without modifying the migration directory contents, you can relaunch the migration using the data already present in the migration directory.
++
+For this option, see <<relaunch>>.
+
+* *Invalid data in migration directory*: This failure occurs when there is a problem with the data uploaded to the migration director.
+For example, the data might be corrupt, incomplete due a timeout, or include invalid data such as secondary index directories.
++
+When this type of failure occurs, you must reset the migration and restart the entire migration process.
++
+For this option, see <<reset>>.
+
+[#relaunch]
+=== Relaunch a failed migration
+
+//TODO: questions on doc-4510 for relaunch
+
+. Check the migration status for an error message related to the failure:
++
+include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
+
+. If possible, resolve the issue described in the error message.
++
+For example, if there is a problem with the schema in the target database, make sure that your schemas align, as described in xref:sideloader:migrate-sideloader.adoc#record-schema[Configure the target database].
++
+Some errors can't be resolved after the migration has started.
+For more information, see <<reset>>.
+
+. Repeat the `launch` command that you used to xref:sideloader:migrate-sideloader.adoc#import-data[import the data], and continue the migration process from there.
+
+[#reset]
+=== Reset a failed migration
+
+////
+Future: Reset failed migration endpoint
+https://datastax.slack.com/archives/C044Q060210/p1741772318884679?thread_ts=1741691860.400749&cid=C044Q060210
+TODO: Add to this page and stop-restart page.
+
+"resetting" a failed/aborted migration:
+- Call a new endpoint called reset, which removes all the metadata and restores their write and read access to the migration directory.
+- By doing this they accept that the progress will be wiped and that they will be charged for the failed attempt in accordance with our pricing rules.
+- Amend the data in the migration directory as needed.
+- Call relaunch to re-execute the migration from scratch.
+////
+
+When a migration fails due to a problem with the data uploaded to the migration directory, you must completely restart the migration.
+
+. Review the xref:sideloader:prepare-sideloader.adoc#origin-cluster-requirements[origin cluster requirements] to ensure that your snapshot doesn't contain invalid data, including materialized views, encrypted data, and secondary indexes.
+
+. If necessary, xref:sideloader:migrate-sideloader.adoc#create-snapshots[create new snapshots] of any invalid snapshots.
+
+. If necessary, xref:sideloader:migrate-sideloader.adoc#record-schema[reprepare the target database].
+There are two reasons you might need to do this:
++
+** The origin and target schemas don't match.
+** The migration reached a point that some data was loaded to the target database.
+This is unlikely, but, if this happens, you must xref:astra-db-serverless:databases:manage-collections.adoc#delete-a-table-in-the-astra-portal[drop the table] from your target database, and then recreate the table in the target database.
+
+. Repeat the remainder of the migration process from xref:sideloader:migrate-sideloader.adoc#initialize-migration[Initialize the migration].
++
+This starts a fresh migration with a new migration directory, a migration ID, and upload credentials.
+
+. If the migration fails again and you are unable to determine the cause of the failure, contact {support-url}[{company} Support].
+
+//Technically, if they didn't remove SI from their snapshots, DS could remove those directories from the migration bucket.

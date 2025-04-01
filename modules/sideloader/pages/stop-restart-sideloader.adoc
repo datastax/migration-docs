@@ -57,22 +57,9 @@ For more information about what happens during each phase of a migration and the
 +
 include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
 
-[#relaunch]
-== Relaunch a failed migration
+== Retry a failed migration
 
-//TODO: questions on doc-4510
-
-If a migration fails, you can reattempt the migration if you are able to resolve the cause of the failure.
-
-. Check the migration status for an error message related to the failure:
-+
-include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
-
-. Attempt to resolve the issue described in the error message.
-+
-For example, if there is a problem with the schema in the target database, make sure that your schemas align, as described in xref:sideloader:migrate-sideloader.adoc#record-schema[Configure the target database].
-
-. Repeat the `launch` command that you used to xref:sideloader:migrate-sideloader.adoc#import-data[import the data], and continue the migration process from there.
+For information about reattempting a failed migration, see xref:sideloader:troubleshoot-sideloader.adoc[].
 
 == See also
 

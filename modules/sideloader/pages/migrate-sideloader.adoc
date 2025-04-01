@@ -213,7 +213,6 @@ CREATE TABLE IF NOT EXISTS smart_home.sensor_readings (
 );
 CREATE INDEX IF NOT EXISTS roomidx ON smart_home.sensor_readings(room_id);
 ----
-//TODO: Troubleshooting - If you did not remove SI from your snapshots, you must contact {company} Support to remove these directories from your migration bucket.
 
 [#record-schema]
 == Configure the target database
