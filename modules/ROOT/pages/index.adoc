@@ -32,3 +32,17 @@ It can be used as an alternative to {cass-migrator} ({cass-migrator-short}).
 
 * https://github.com/datastax/cassandra-data-migrator[{cass-migrator}] repo for migration of larger data quantities and where detailed verifications and reconciliation options are needed.
 ////
+
+////
+Possible related content:
+
+https://docs.datastax.com/en/dse/6.8/tooling/migration-path-dse.html
+
+https://docs.datastax.com/en/dse/6.9/tooling/migration-path-dse.html
+
+MC only:
+
+https://docs.datastax.com/en/mission-control/migrate/oss-cass-to-mission-control.html
+
+https://docs.datastax.com/en/mission-control/migrate/dse-to-mission-control.html
+////
