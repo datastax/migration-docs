@@ -22,9 +22,10 @@ For example, `/var/lib/cassandra/data`.
 // end::command-placeholders-common[]
 
 // tag::validate[]
-After the migration is complete, you can query the migrated data using the xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL shell].
+After the migration is complete, you can query the migrated data using the xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL shell] or xref:astra-db-serverless:api-reference:row-methods/find-many.adoc[{data-api}].
 
-To thoroughly validate migration accuracy and reconcile any differences, xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-short} Data Migrator in validation mode].
+You can use xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator} ({cass-migrator-short}) in validation mode] for more throughout validation.
+{cass-migrator-short} also offers an AutoCorrect mode to reconcile any differences that it detects.
 // end::validate[]
 
 // tag::initialize[]
@@ -90,3 +91,8 @@ If one step fails, the import operation stops and no data is imported into your 
 
 If all steps finish successfully, the migration is complete and you can access the imported data in your target database.
 // end::import[]
+
+// tag::no-return[]
+You can abort a migration up until the point at which {sstable-sideloader} starts importing SSTable metadata.
+After this point, you must wait for the migration to finish, and then you can use the CQL shell to drop the keyspace/table in your target database before repeating the entire migration procedure.
+// end::no-return[]

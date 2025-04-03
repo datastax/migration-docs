@@ -49,8 +49,7 @@ curl -X POST \
     | jq .
 ----
 +
-You can abort a migration up until the point at which {sstable-sideloader} starts importing SSTable metadata.
-After this point, you must wait for the migration to finish, and then you can use the CQL shell to drop the keyspace/table in your target database before repeating the entire migration procedure.
+include::sideloader:partial$sideloader-partials.adoc[tags=no-return]
 For more information about what happens during each phase of a migration and the point of no return, see xref:sideloader:sideloader-overview.adoc[].
 
 . Wait a few minutes, and then check the migration status to confirm that the migration stopped:

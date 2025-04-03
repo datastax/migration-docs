@@ -98,6 +98,10 @@ Your administration server must have SSH access to each node in your origin clus
 * https://jqlang.github.io/jq/[jq] to format JSON responses from the {astra-db} {devops-api}.
 The {devops-api} commands in this guide use this tool.
 
+== Multi-region deployments
+
+If you need to migrate data that is replicated to multiple regions, contact your {company} account representative or {support-url}[{company} Support] for assistance with planning your migration.
+
 == Next steps
 
 * xref:sideloader:migrate-sideloader.adoc[]

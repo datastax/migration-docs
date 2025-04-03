@@ -6,18 +6,26 @@ You can also manually start or reschedule a cleanup.
 
 The cleanup process deletes all SSTable snapshots from the migration directory, revokes any unexpired upload credentials, and then closes the migration.
 
+Each migration ID has its own cleanup schedule, and the cleanup process deletes only the files and credentials associated with the specific migration ID that is being cleaned up.
+Cleaning up one migration doesn't affect other migrations associated with the same database.
+
 == Idle timeout and automatic cleanup
 
 A migration becomes idle if it is _not_ in `Initializing` or `ImportInProgress` status.
 If a migration remains continuously idle for one week, it hits the idle timeout and triggers the automatic migration cleanup process.
 
-Each migration ID has its own idle timeout, and the cleanup process deletes only the files and credentials associated with the migration ID that reached the idle timeout.
-If one migration reaches the idle timeout, it doesn't affect other migrations associated with the same database.
+A migration's idle timer is created when you initialize the migration, and it automatically resets when you xref:sideloader:migrate-sideloader.adoc#import-data[import data].
 
-A migration's idle timer resets each time you xref:sideloader:migrate-sideloader.adoc#upload-snapshots-to-migration-directory[upload snapshots] or xref:sideloader:migrate-sideloader.adoc#import-data[import data].
+You can override the idle timer by manually starting or scheduling a cleanup.
+However, you cannot permanently prevent the cleanup process.
 
-You can you can also override the idle timer by manually starting a cleanup or scheduling a cleanup.
-However, _you cannot permanently prevent the cleanup process_.
+[WARNING]
+====
+If your migration could be idle, uploading snapshots, or importing data for more than a few days, {company} recommends that you manually reschedule the cleanup.
+
+For large migrations, it can take several days to upload snapshots or import data.
+Make sure you manually reschedule the cleanup to avoid automatic cleanup.
+====
 
 == Manually start a cleanup
 

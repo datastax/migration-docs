@@ -6,10 +6,12 @@
 
 == Prerequisites
 
-Before you use {sstable-sideloader} for a migration, do the following:
+Before you use {sstable-sideloader} for a migration, xref:sideloader:sideloader-overview.adoc[learn about the {sstable-sideloader} process] and xref:sideloader:prepare-sideloader.adoc[prepare your environments for {sstable-sideloader}].
 
-* xref:sideloader:sideloader-overview.adoc[Learn about the {sstable-sideloader} process]
-* xref:sideloader:prepare-sideloader.adoc[Prepare your environments for {sstable-sideloader}]
+You need to be familiar with using the command line, including installing and using CLI tools, issuing curl commands, basic scripting, and security best practices.
+
+This process uses authentication credentials to write to the migration directory and your database.
+Make sure you understand how to securely store and use sensitive credentials.
 
 [#create-snapshots]
 == Create snapshots
@@ -757,12 +759,13 @@ After uploading snapshots, you must xref:sideloader:migrate-sideloader.adoc#impo
 
 As an added security measure, migrations that remain continuously idle for one week are subject to xref:sideloader:cleanup-sideloader.adoc[automatic cleanup], which deletes all associated snapshots, revokes any unexpired upload credentials, and then closes the migration.
 
-You can upload snapshots into the migration directory to reset the idle timer.
-However, this is not a reliable way to avoid automatic cleanup.
+{company} recommends that you xref:sideloader:cleanup-sideloader.adoc[manually reschedule the cleanup] if you don't plan to launch the migration within one week or if you need several days to upload snapshots or import data.
 
-If you sporadically upload snapshots with large gaps of time in between uploads, you risk hitting the idle timeout, and your uploaded snapshots will be deleted before you can complete the migration.
-
-For this reason, if you need to delay your migration, {company} recommends that you override automatic cleanup by xref:sideloader:cleanup-sideloader.adoc[scheduling a cleanup] to run at a date and time that better aligns with your overall migration plan.
+[WARNING]
+====
+For large migrations, it can take several days to upload snapshots and import data.
+Make sure you xref:sideloader:cleanup-sideloader.adoc[manually reschedule the cleanup] to avoid automatic cleanup.
+====
 
 [#import-data]
 == Import data
@@ -775,11 +778,16 @@ If one step fails, then the entire import operation stops and the migration fail
 
 .What happens during data import?
 [%collapsible]
-====
+======
 include::sideloader:partial$sideloader-partials.adoc[tags=import]
-====
+======
 
+[TIP]
+====
 If necessary, you can xref:sideloader:stop-restart-sideloader.adoc[pause or abort the migration] during the import process.
+
+include::sideloader:partial$sideloader-partials.adoc[tags=no-return]
+====
 
 . Use the {devops-api} to launch the data import:
 +
