@@ -1,5 +1,5 @@
-= Stop or restart a {sstable-sideloader} migration
-:description: If necessary, you can pause, cancel, or restart a {sstable-sideloader} migration.
+= Stop or restart an {sstable-sideloader} migration
+:description: If necessary, you can pause, cancel, or restart an {sstable-sideloader} migration.
 
 {description}
 
