@@ -51,7 +51,7 @@ When complete, the migration status is `Closed`.
 
 == Reschedule a cleanup
 
-You can use the {devops-api} to schedule a migration cleanup for a specific date and time:
+You can use the {devops-api} to schedule a migration cleanup for a specific date and time.
 
 [source,curl,subs="+quotes"]
 ----
@@ -78,3 +78,13 @@ You must provide a new time for the cleanup.
 At your scheduled time, the cleanup process runs on the specified migration ID.
 The cleanup process never runs on migrations in `ImportInProgress` status.
 If the migration is in `ImportInProgress` at the scheduled cleanup time, the cleanup process will start when the migration's status changes.
+
+[IMPORANT]
+====
+If you reschedule a cleanup, the cleanup timer doesn't reset when you import data.
+
+Keep a record of your rescheduled cleanups so you can reschedule them again, if necessary.
+
+For example, you might need to reschedule a cleanup if your migration needs more time.
+Alternatively, if your migration is complete, you might reschedule the cleanup to minimize storage costs for the migration bucket.
+====
