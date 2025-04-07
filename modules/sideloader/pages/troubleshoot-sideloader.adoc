@@ -27,20 +27,21 @@ If you set environment variables for your credentials, be sure to update those v
 == Retry a failed migration
 
 If a migration fails, there are two ways that you can reattempt the migration.
-The option you use depends on where the error occurred.
+The option you use depends on the type of error that occurred.
 
-* *Schema discrepancies*: This failure occurs when there is a mismatch between the origin and target schemas.
-+
 If you are able to resolve the cause of the failure without modifying the migration directory contents, you can relaunch the migration using the data already present in the migration directory.
-+
-For this option, see <<relaunch>>.
+Otherwise, you must abandon the failed migration and restart the entire migration process from the beginning.
 
-* *Invalid data in migration directory*: This failure occurs when there is a problem with the data uploaded to the migration director.
-For example, the data might be corrupt, incomplete due a timeout, or include invalid data such as secondary index directories.
+The two most common errors are as follows:
+
+* *Schema discrepancies*: There is a mismatch between the origin and target schemas.
+To resolve this error, you can align the schemas and then <<relaunch,relaunch the migration>>.
+
+* *Invalid data in migration directory*: The data uploaded to the migration directory is invalid or improperly formatted.
+Common cause include data corruption, incomplete upload due to a timeout, malformed file paths, and the presence of invalid data such as secondary index directories.
 +
-When this type of failure occurs, you must reset the migration and restart the entire migration process.
-+
-For this option, see <<reset>>.
+When this type of failure occurs, you must abandon the failed migration and restart the entire migration process.
+For more information, see <<restart>>.
 
 [#relaunch]
 === Relaunch a failed migration
@@ -54,17 +55,14 @@ include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
 . If possible, resolve the issue described in the error message.
 +
 For example, if there is a problem with the schema in the target database, make sure that your schemas align, as described in xref:sideloader:migrate-sideloader.adoc#record-schema[Configure the target database].
-+
-Some errors can't be resolved after the migration has started.
-For more information, see <<reset>>.
 
 . Repeat the `launch` command that you used to xref:sideloader:migrate-sideloader.adoc#import-data[import the data], and continue the migration process from there.
 
-[#reset]
-=== Reset a failed migration
+If the migration fails again, see <<restart>>.
 
 ////
-Future: Reset failed migration endpoint
+Future:
+=== Reset failed migration endpoint
 https://datastax.slack.com/archives/C044Q060210/p1741772318884679?thread_ts=1741691860.400749&cid=C044Q060210
 TODO: Add to this page and stop-restart page.
 
@@ -74,6 +72,9 @@ TODO: Add to this page and stop-restart page.
 - Amend the data in the migration directory as needed.
 - Call relaunch to re-execute the migration from scratch.
 ////
+
+[#restart]
+=== Restart a failed migration
 
 When a migration fails due to a problem with the data uploaded to the migration directory, you must completely restart the migration.
 

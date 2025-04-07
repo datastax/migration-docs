@@ -66,7 +66,7 @@ For instructions and more information, see xref:sideloader:migrate-sideloader.ad
 When initialization is complete, use your cloud provider's CLI to xref:sideloader:migrate-sideloader.adoc#upload-snapshots-to-migration-directory[upload your snapshots to the migration directory].
 
 To upload snapshots directly from the origin cluster, you must install your cloud provider's CLI on each node in the origin cluster.
-While it is possible to orchestrate this process through a staging server, this commands given in this documentation assume you are uploading snapshots directly from the origin cluster.
+While it is possible to orchestrate this process through a staging server, the commands given in this documentation assume you are uploading snapshots directly from the origin cluster.
 
 The time required to upload the snapshots depends on the size of your dataset and the network throughput between the origin cluster and the migration bucket:
 
