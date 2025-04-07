@@ -57,3 +57,19 @@
 * xref:sideloader:stop-restart-sideloader.adoc[]
 * xref:sideloader:cleanup-sideloader.adoc[]
 * xref:sideloader:troubleshoot-sideloader.adoc[]
+
+.Product-specific migration paths
+* {astra-db}
+** xref:astra-db-serverless:databases:migration-path-serverless.adoc[]
+* {dse}
+** {dse-short} 6.9
+*** xref:6.9@dse:tooling:migration-path-dse.adoc[{dse-short} 6.9 migration tools]
+*** xref:6.9@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 6.9]
+** {dse-short} 6.8
+*** xref:6.8@dse:tooling:migration-path-dse.adoc[{dse-short} 6.8 migration tools]
+*** xref:6.8@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 6.8]
+** {dse-short} 5.1
+*** xref:5.1@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 5.1]
+* {mc}
+** xref:mission-control:migrate:oss-cass-to-mission-control.adoc[]
+** xref:mission-control:migrate:dse-to-mission-control.adoc[]

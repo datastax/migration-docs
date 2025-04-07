@@ -37,5 +37,6 @@ asciidoc:
     devops-api: 'DevOps API'
     devops-api-ref-url: 'xref:astra-api-docs:ROOT:attachment$devops-api/index.html'
     support-url: 'https://support.datastax.com'
+    mc: 'Mission Control (MC)'
 
 #TODO: Bring SCB attributes

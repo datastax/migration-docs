@@ -281,14 +281,17 @@ You can modify your properties file or append additional `--conf` arguments to y
 For example, you can do the following:
 
 * Check for large field guardrail violations before migrating.
-* Filter by specific token (partition) ranges.
-* Track run details.
+* Use the `partition.min` and `partition.max` parameters to migrate or validate specific token ranges
+* Use the `track-run` feature to monitor progress and rerun a failed migration or validation job from point of failure.
 
 For all options, see the https://github.com/datastax/cassandra-data-migrator[{cass-migrator-short} repository].
 Specifically, see the https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[fully annotated properties file].
 
 == Troubleshoot {cass-migrator-short}
 
+.Java NoSuchMethodError
+[%collapsible]
+====
 If you installed Spark as a JAR file, and your Spark and Scala versions aren't compatible with your installed version of {cass-migrator-short}, {cass-migrator-short} jobs can throw exceptions such a the following:
 
 [source,console]
@@ -298,4 +301,13 @@ Exception in thread "main" java.lang.NoSuchMethodError: 'void scala.runtime.Stat
 
 Make sure that your Spark binary is compatible with your {cass-migrator-short} version.
 If you installed an earlier version of {cass-migrator-short}, you might need to install an earlier Spark binary.
+====
+
+.Rerun a failed or partially completed job
+[%collapsible]
+====
+You can use the `track-run` feature to track the progress of a migration or validation, and then, if necessary, use the `run-id` to rerun a failed job from the last successful migration or validation point.
+
+For more information, see the https://github.com/datastax/cassandra-data-migrator[{cass-migrator-short} repository] and the https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[fully annotated properties file].
+====
 // end::body[]
