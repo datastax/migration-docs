@@ -29,16 +29,54 @@ If you don't already have one, xref:astra-db-serverless:databases:create-databas
 You can use either a {db-serverless} or {db-serverless-vector} database, and {db-serverless-vector} databases can store both vector and non-vector data.
 
 * Your target database must be in a PCU group.
+You can use either a flexible capacity or committed capacity PCU group, depending on your long-term needs and other PCU group usage.
 +
-Because {sstable-sideloader} operations are typically short-term, resource-intensive events, {company} recommends that you create a flexible capacity PCU group exclusively to support your target database during the migration.
+[tabs]
+======
+Flexible capacity PCU group::
 +
+--
+Because {sstable-sideloader} operations are typically short-term, resource-intensive events, you can create a flexible capacity PCU group exclusively to support your target database during the migration.
+
+//After PCU PR merge: xref:astra-db-serverless:administration:create-pcu.adoc#flexible-capacity[create a flexible capacity PCU group]
+
 After the migration, you can move your target database out of the flexible capacity PCU group, and then park or delete the group.
 Don't park the PCU group during the {sstable-sideloader} process because databases in a parked PCU group are hibernated and unavailable for use.
+--
+
+Committed capacity PCU group::
++
+--
+If you plan to keep your target database in a PCU group after the migration, you can create a committed capacity PCU group for your target database.
+
+//After PCU PR merge: xref:astra-db-serverless:administration:create-pcu.adoc#committed-capacity[create a committed capacity PCU group]
+
+The {sstable-sideloader} process can be extremely resource intensive.
+If there are any other databases in the same PCU group, the migration process can affect their performance due to resource contention.
+
+If your PCU groups have multiple databases, consider using a flexible capacity PCU group to temporarily isolate your target database during the migration.
+
+{company} recommends the following committed capacity PCU group configuration for {sstable-sideloader} migrations:
+
+* Reserved capacity: 1 or more, depending on the PCU group's normal, long-term workload requirements.
++
+This is the amount of capacity that you want the group to have after the migration is complete.
+
+* Minimum capacity: Equal or greater than the reserved capacity.
++
+If the minimum is greater than the reserved capacity, your PCU group has consistent access to that capacity until you reduce it.
+{company} recommends this to prepare the additional capacity in advance, rather than facing potential, temporary resource shortages while autoscaling.
+
+* Maximum capacity: Greater than the minimum by several units.
++
+This allows the group to access surplus capacity during resource intensive stages of the migration.
++
+For any non-trivial migration, consider setting the maximum to 10.
+For extremely large migrations, contact your {company} account representative or {support-url}[{company} Support] to request more than 10 units to support your migration.
+--
+======
 +
 For more information, see xref:astra-db-serverless:administration:provisioned-capacity-units.adoc[].
-
-//TODO: Replace line 18 after merging the PCU PR:
-//Because {sstable-sideloader} operations are typically short-term, resource-intensive events, {company} recommends that you xref:astra-db-serverless:administration:create-pcu.adoc#flexible-capacity[create a flexible capacity PCU group] exclusively to support your target database during the migration.
 
 [#origin-cluster-requirements]
 == Origin cluster requirements
