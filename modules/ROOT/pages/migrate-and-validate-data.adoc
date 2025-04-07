@@ -13,7 +13,7 @@ This topic introduces data migration tools that you can use during phase 2 of yo
 
 * {dsbulk-migrator}: Extends {dsbulk-loader} with migration-specific commands. Best for simple migration of smaller amounts of data quantities, and migrations that don't require support for data validation during the migration.
 
-* {astra-db} {sstable-sideloader}: Exclusively for migrations from a {cass-reg}, {dse}, or {hcd} cluster to an {astra-db} database.
+* {sstable-sideloader}: Exclusively for migrations from a {cass-reg}, {dse}, or {hcd} cluster to an {astra-db} database.
 You can use {cass-migrator-short} to validate data after the migration.
 
 [[cass-migrator-key-features]]
@@ -40,7 +40,7 @@ This command _doesn't_ trigger the migration; it only generates the migration sc
 
 For more information, see xref:ROOT:dsbulk-migrator.adoc[] and the https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator} repository].
 
-== {astra-db} {sstable-sideloader}
+== {sstable-sideloader}
 
 {sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-short}, {dse-short}, or {hcd-short} cluster.
 

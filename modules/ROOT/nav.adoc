@@ -50,7 +50,7 @@
 * xref:dsbulk:reference:dsbulk-cmd.adoc#escaping-and-quoting-command-line-arguments[Escaping and quoting command line arguments]
 * https://github.com/datastax/dsbulk/releases[{dsbulk-loader} release notes]
 
-.{astra-db} {sstable-sideloader}
+.{sstable-sideloader}
 * xref:sideloader:sideloader-overview.adoc[]
 * xref:sideloader:prepare-sideloader.adoc[]
 * xref:sideloader:migrate-sideloader.adoc[]

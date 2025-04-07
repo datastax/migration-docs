@@ -22,7 +22,7 @@ In addition to loading and unloading CSV and JSON data, {dsbulk-migrator} can tr
 It can read data from a table from your origin database and write it to a table in your target database.
 It can be used as an alternative to {cass-migrator} ({cass-migrator-short}).
 
-* xref:sideloader:sideloader-overview.adoc[{astra-db} {sstable-sideloader}]: {sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-reg}, {dse}, or {hcd} cluster.
+* xref:sideloader:sideloader-overview.adoc[{sstable-sideloader}]: {sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-reg}, {dse}, or {hcd} cluster.
 
 ////
 * https://github.com/datastax/zdm-proxy-automation[{product-automation}] repo for Ansible-based {product-proxy} automation.

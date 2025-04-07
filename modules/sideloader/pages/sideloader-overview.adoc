@@ -1,4 +1,4 @@
-= About {astra-db} {sstable-sideloader}
+= About {sstable-sideloader}
 :page-aliases: data-importer:data-importer-overview.adoc, astra-db-serverless:sideloader:sideloader-overview.adoc
 :description: {sstable-sideloader} lets you migrate data from an {cass-reg} or {dse} cluster into {astra-db} without impacting the origin cluster or your {astra-db} Serverless database.
 

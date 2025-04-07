@@ -33,7 +33,7 @@ asciidoc:
     astra-ui: 'Astra Portal'
     astra-url: 'https://astra.datastax.com'
     astra-ui-link: '{astra-url}[{astra-ui}^]'
-    sstable-sideloader: 'Sideloader'
+    sstable-sideloader: '{astra-db} Sideloader'
     devops-api: 'DevOps API'
     devops-api-ref-url: 'xref:astra-api-docs:ROOT:attachment$devops-api/index.html'
     support-url: 'https://support.datastax.com'
