@@ -40,6 +40,17 @@ Because {sstable-sideloader} operations are typically short-term, resource-inten
 
 //After PCU PR merge: xref:astra-db-serverless:administration:create-pcu.adoc#flexible-capacity[create a flexible capacity PCU group]
 
+{company} recommends the following flexible capacity PCU group configuration for {sstable-sideloader} migrations:
+
+* Minimum capacity: 1 or more, depending on the scale of the migration.
+
+* Maximum capacity: Greater than the minimum by several units.
++
+This allows the group to access surplus capacity during resource intensive stages of the migration.
++
+For any non-trivial migration, consider setting the maximum to 10.
+For extremely large migrations, contact your {company} account representative or {support-url}[{company} Support] to request more than 10 units to support your migration.
+
 After the migration, you can move your target database out of the flexible capacity PCU group, and then park or delete the group.
 Don't park the PCU group during the {sstable-sideloader} process because databases in a parked PCU group are hibernated and unavailable for use.
 --
@@ -51,10 +62,13 @@ If you plan to keep your target database in a PCU group after the migration, you
 
 //After PCU PR merge: xref:astra-db-serverless:administration:create-pcu.adoc#committed-capacity[create a committed capacity PCU group]
 
+[IMPORTANT]
+====
 The {sstable-sideloader} process can be extremely resource intensive.
 If there are any other databases in the same PCU group, the migration process can affect their performance due to resource contention.
 
 If your PCU groups have multiple databases, consider using a flexible capacity PCU group to temporarily isolate your target database during the migration.
+====
 
 {company} recommends the following committed capacity PCU group configuration for {sstable-sideloader} migrations:
 
@@ -65,7 +79,7 @@ This is the amount of capacity that you want the group to have after the migrati
 * Minimum capacity: Equal or greater than the reserved capacity.
 +
 If the minimum is greater than the reserved capacity, your PCU group has consistent access to that capacity until you reduce it.
-{company} recommends this to prepare the additional capacity in advance, rather than facing potential, temporary resource shortages while autoscaling.
+This means you can prepare the additional capacity in advance, rather than facing potential temporary resource shortages while autoscaling.
 
 * Maximum capacity: Greater than the minimum by several units.
 +
@@ -73,6 +87,8 @@ This allows the group to access surplus capacity during resource intensive stage
 +
 For any non-trivial migration, consider setting the maximum to 10.
 For extremely large migrations, contact your {company} account representative or {support-url}[{company} Support] to request more than 10 units to support your migration.
+
+After the migration, you can reduce the minimum and maximum capacity to their normal levels.
 --
 ======
 +

@@ -71,5 +71,5 @@
 ** {dse-short} 5.1
 *** xref:5.1@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 5.1]
 * {mc}
-** xref:mission-control:migrate/oss-cass-to-mission-control.adoc[]
-** xref:mission-control:migrate/dse-to-mission-control.adoc[]
+** xref:mission-control:migrate:oss-cass-to-mission-control.adoc[Migrate {cass-short} clusters to {mc-short}]
+** xref:mission-control:migrate:dse-to-mission-control.adoc[[Migrate {cass-short} clusters to {dse-short}]
