@@ -8,11 +8,6 @@
 
 Before you use {sstable-sideloader} for a migration, xref:sideloader:sideloader-overview.adoc[learn about the {sstable-sideloader} process] and xref:sideloader:prepare-sideloader.adoc[prepare your environments for {sstable-sideloader}].
 
-You need to be familiar with using the command line, including installing and using CLI tools, issuing curl commands, basic scripting, and security best practices.
-
-This process uses authentication credentials to write to the migration directory and your database.
-Make sure you understand how to securely store and use sensitive credentials.
-
 [#create-snapshots]
 == Create snapshots
 
