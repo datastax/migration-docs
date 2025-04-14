@@ -66,12 +66,12 @@ When doing a live migration, the options are used to effectively configure the {
 the clusters.
 
 When generating a migration script, most options serve as default values in the generated scripts.
-Note however that, even when generating scripts, this tool still needs to access the Origin cluster
+Note however that, even when generating scripts, this tool still needs to access the origin cluster
 in order to gather metadata about the tables to migrate.
 
 When generating a DDL file, only a few options are meaningful.
 Because the standard {dsbulk-loader} is not used, and the import cluster is never contacted, import options and {dsbulk-loader}-related options are ignored.
-The tool still needs to access the Origin cluster in order to gather metadata about the keyspaces and tables for which to generate DDL statements.
+The tool still needs to access the origin cluster in order to gather metadata about the keyspaces and tables for which to generate DDL statements.
 
 [[dsbulk-migrator-reference]]
 == {dsbulk-migrator} reference
@@ -113,7 +113,7 @@ The default is to use an external {dsbulk-loader} command.
 
 | 
 | `--export-bundle=PATH`
-| The path to a secure connect bundle to connect to the Origin cluster, if that cluster is a {company} {astra-db} cluster.
+| The path to a secure connect bundle to connect to the origin cluster, if that cluster is a {company} {astra-db} cluster.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
 
 | 
@@ -130,7 +130,7 @@ Short options are not supported.
 
 | 
 | `--export-host=HOST[:PORT]`
-| The host name or IP and, optionally, the port of a node from the Origin cluster.
+| The host name or IP and, optionally, the port of a node from the origin cluster.
 If the port is not specified, it will default to `9042`.
 This option can be specified multiple times.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
@@ -155,7 +155,7 @@ The default is `-1` (export the entire table).
 
 | 
 | `--export-password`
-| The password to use to authenticate against the Origin cluster.
+| The password to use to authenticate against the origin cluster.
 Options `--export-username` and `--export-password` must be provided together, or not at all.
 Omit the parameter value to be prompted for the password interactively.
 
@@ -169,7 +169,7 @@ This is an advanced setting; you should rarely need to modify the default value.
 
 | 
 | `--export-username=STRING`
-| The username to use to authenticate against the Origin cluster.
+| The username to use to authenticate against the origin cluster.
 Options `--export-username` and `--export-password` must be provided together, or not at all.
 
 | `-h` 
@@ -178,7 +178,7 @@ Options `--export-username` and `--export-password` must be provided together, o
 
 | 
 | `--import-bundle=PATH`
-| The path to a secure connect bundle to connect to the Target cluster, if it's a {company} {astra-db} cluster.
+| The path to a Secure Connect Bundle to connect to a target {astra-db} cluster.
 Options `--import-host` and `--import-bundle` are mutually exclusive.
 
 | 
@@ -201,7 +201,7 @@ Short options are not supported.
 
 | 
 | `--import-host=HOST[:PORT]`
-| The host name or IP and, optionally, the port of a node from the Target cluster.
+| The host name or IP and, optionally, the port of a node on the target cluster.
 If the port is not specified, it will default to `9042`.
 This option can be specified multiple times.
 Options `--import-host` and `--import-bundle` are mutually exclusive.
@@ -226,13 +226,13 @@ Failed records will appear in a `load.bad` file in the {dsbulk-loader} operation
 
 | 
 | `--import-password`
-| The password to use to authenticate against the Target cluster.
+| The password to use to authenticate against the target cluster.
 Options `--import-username` and `--import-password` must be provided together, or not at all.
 Omit the parameter value to be prompted for the password interactively.
 
 | 
 | `--import-username=STRING`
-| The username to use to authenticate against the Target cluster. Options `--import-username` and `--import-password` must be provided together, or not at all.
+| The username to use to authenticate against the target cluster. Options `--import-username` and `--import-password` must be provided together, or not at all.
 
 | `-k`
 | `--keyspaces=REGEX`
@@ -308,7 +308,7 @@ The data directory will be created if it does not exist.
 
 |
 | `--export-bundle=PATH`
-| The path to a secure connect bundle to connect to the Origin cluster, if that cluster is a {company} {astra-db} cluster.
+| The path to a secure connect bundle to connect to the origin cluster, if that cluster is a {company} {astra-db} cluster.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
 
 |
@@ -325,7 +325,7 @@ Short options are not supported.
 
 |
 | `--export-host=HOST[:PORT]`
-| The host name or IP and, optionally, the port of a node from the Origin cluster.
+| The host name or IP and, optionally, the port of a node from the origin cluster.
 If the port is not specified, it will default to `9042`.
 This option can be specified multiple times.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
@@ -350,7 +350,7 @@ The default is `-1` (export the entire table).
 
 |
 | `--export-password`
-| The password to use to authenticate against the Origin cluster.
+| The password to use to authenticate against the origin cluster.
 Options `--export-username` and `--export-password` must be provided together, or not at all.
 Omit the parameter value to be prompted for the password interactively.
 
@@ -365,7 +365,7 @@ You should rarely need to modify the default value.
 
 |
 | `--export-username=STRING`
-| The username to use to authenticate against the Origin cluster.
+| The username to use to authenticate against the origin cluster.
 Options `--export-username` and `--export-password` must be provided together, or not at all.
 
 | `-h`
@@ -374,7 +374,7 @@ Options `--export-username` and `--export-password` must be provided together, o
 
 |
 | `--import-bundle=PATH`
-| The path to a secure connect bundle to connect to the Target cluster, if it's a {company} {astra-db} cluster.
+| The path to a Secure Connect Bundle to connect to a target {astra-db} cluster.
 Options `--import-host` and `--import-bundle` are mutually exclusive.
 
 |
@@ -397,7 +397,7 @@ Short options are not supported.
 
 |
 | `--import-host=HOST[:PORT]`
-| The host name or IP and, optionally, the port of a node from the Target cluster.
+| The host name or IP and, optionally, the port of a node on the target cluster.
 If the port is not specified, it will default to `9042`.
 This option can be specified multiple times.
 Options `--import-host` and `--import-bundle` are mutually exclusive.
@@ -422,13 +422,13 @@ Failed records will appear in a `load.bad` file in the {dsbulk-loader} operation
 
 |
 | `--import-password`
-| The password to use to authenticate against the Target cluster.
+| The password to use to authenticate against the target cluster.
 Options `--import-username` and `--import-password` must be provided together, or not at all.
 Omit the parameter value to be prompted for the password interactively.
 
 |
 | `--import-username=STRING`
-| The username to use to authenticate against the Target cluster.
+| The username to use to authenticate against the target cluster.
 Options `--import-username` and `--import-password` must be provided together, or not at all.
 
 | `-k`
@@ -481,25 +481,25 @@ The data directory will be created if it does not exist.
 
 |
 | `--export-bundle=PATH`
-| The path to a secure connect bundle to connect to the Origin cluster, if that cluster is a {company} {astra-db} cluster.
+| The path to a secure connect bundle to connect to the origin cluster, if that cluster is a {company} {astra-db} cluster.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
 
 |
 | `--export-host=HOST[:PORT]`
-| The host name or IP and, optionally, the port of a node from the Origin cluster.
+| The host name or IP and, optionally, the port of a node from the origin cluster.
 If the port is not specified, it will default to `9042`.
 This option can be specified multiple times.
 Options `--export-host` and `--export-bundle` are mutually exclusive.
 
 |
 | `--export-password`
-| The password to use to authenticate against the Origin cluster.
+| The password to use to authenticate against the origin cluster.
 Options `--export-username` and `--export-password` must be provided together, or not at all.
 Omit the parameter value to be prompted for the password interactively.
 
 |
 | `--export-username=STRING`
-| The username to use to authenticate against the Origin cluster.
+| The username to use to authenticate against the origin cluster.
 Options `--export-username` and `--export-password` must be provided together, or not at all.
 
 | `-h`
@@ -554,7 +554,7 @@ Do not use these values in your environment.
 
 === Generate migration script
 
-Generate a migration script to migrate from an existing Origin cluster to a Target {astra-db} cluster:
+Generate a migration script to migrate from an existing origin cluster to a target {astra-db} cluster:
 
 [source,bash]
 ----
@@ -572,8 +572,7 @@ Generate a migration script to migrate from an existing Origin cluster to a Targ
 
 === Migrate live using external {dsbulk-loader} install
 
-Migrate live from an existing Origin cluster to a Target {astra-db} cluster using an external {dsbulk-loader} installation. 
-Passwords will be prompted interactively:
+Perform a live migration from an existing origin cluster to a target {astra-db} cluster using an external {dsbulk-loader} installation:
 
 [source,bash]
 ----
@@ -589,11 +588,11 @@ Passwords will be prompted interactively:
         --import-password # password will be prompted
 ----
 
+Passwords are prompted interactively.
+
 === Migrate live using embedded {dsbulk-loader} install
 
-Migrate live from an existing Origin cluster to a Target {astra-db} cluster using the embedded {dsbulk-loader} installation. 
-Passwords will be prompted interactively. 
-In this example, additional {dsbulk-loader} options are passed. 
+Perform a live migration from an existing origin cluster to a target {astra-db} cluster using the embedded {dsbulk-loader} installation:
 
 [source,bash]
 ----
@@ -613,15 +612,16 @@ In this example, additional {dsbulk-loader} options are passed.
         --import-dsbulk-option "--executor.maxPerSecond=1000" 
 ----
 
-[NOTE]
-====
-In the example above, you must use the `dsbulk-migrator-<VERSION>-embedded-dsbulk.jar` fat jar. 
-Otherwise, an error will be raised because no embedded {dsbulk-loader} can be found.
-====
+Passwords areprompted interactively.
 
-=== Generate DDL to recreate Origin schema in Target
+The preceding example passes additional {dsbulk-loader} options.
 
-Generate DDL files to recreate the Origin schema in a Target {astra-db} cluster:
+The preceding example requires the `dsbulk-migrator-<VERSION>-embedded-dsbulk.jar` fat jar.
+Otherwise, an error is raised because no embedded {dsbulk-loader} can be found.
+
+=== Generate DDL to recreate the origin schema on the target cluster
+
+Generate DDL files to recreate the origin schema on a target {astra-db} cluster:
 
 [source,bash]
 ----

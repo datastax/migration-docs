@@ -9,6 +9,6 @@ This section presents the following:
 * xref:connect-clients-to-proxy.adoc[]
 * xref:manage-proxy-instances.adoc[]
 
-image::migration-phase1ra.png[Phase 1 diagram shows deployed {product-proxy} instances, client app connections to proxies, and Target is setup.]
+image::migration-phase1ra.png[Phase 1 diagram shows deployed {product-proxy} instances, client app connections to proxies, and the target cluster is setup.]
 
 //For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].

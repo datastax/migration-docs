@@ -2,13 +2,13 @@
 :navtitle: Create target environment for migration
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,target
 
-In this topic, we'll see how to create and prepare a new cluster to be used as Target.
+You must create and prepare a new cluster to be the target for your migration.
 
 This section covers in detail the steps to prepare an {astra-db} Serverless database, and also outlines how to create and prepare a different cluster, which could be for example {cass-short} 4.0.x or {dse-short} 6.8.x.
 
-== Using an {astra-db} database as Target
+== Using an {astra-db} database as the target
 
-If you intend to use {astra-db} as Target for the migration, you will need to:
+If you intend to use {astra-db} as the target for the migration, you will need to:
 
 * Create an {astra-db} Serverless database.
 * Retrieve its Secure Connect Bundle (SCB) and upload it to the application instances.
@@ -65,7 +65,7 @@ scp -i <your_ssh_key> secure-connect-<target cluster name>.zip <linux user>@<pub
 To complete the preparation work, create the client application schema in your newly created {astra-db} database.
 
 In the {astra-ui}, create each corresponding keyspace and table.
-The keyspace names, table names and structure must be identical to the schema on Origin, bearing in mind that:
+The keyspace names, table names, and structure must be identical to the schema on the origin cluster, bearing in mind that:
 
 * In {astra-db}, keyspaces must be created in the {astra-ui}.
 Keyspace creation through CQL is not supported.
@@ -83,7 +83,7 @@ Note that CQL statements, such as those used to reproduce the schema on the targ
 . A CQL Console located directly https://docs.datastax.com/en/astra/astra-db-vector/cql/connect-cql-shell.html#embedded-cql-shell[in the {astra-ui}].
 . Any machine connected remotely using an {astra-db}-compatible https://docs.datastax.com/en/astra/astra-db-vector/cql/connect-cql-shell.html#standalone-cql-shell[standalone `cqlsh` client] (and provide the necessary connection secrets).
 
-== Using a generic CQL cluster as Target
+== Using a generic CQL cluster as the target
 
 To use a generic {cass-short} or {dse-short} cluster, you will have to:
 
@@ -107,7 +107,7 @@ You should also consider testing your new cluster to ensure it meets your perfor
 +
 [NOTE]
 ====
-Your new cluster can be configured as you wish, independently of how Origin is configured.
+Your new cluster can be configured as you wish, independently of how the origin was configured.
 {product-proxy} allows you to specify a separate set of configuration to connect to each cluster.
 ====
 
@@ -119,9 +119,9 @@ At this point, the only thing that is left to do is creating the schema for your
 
 [IMPORTANT]
 ====
-Make sure that all keyspaces and tables being migrated are identical to the corresponding ones on Origin (including keyspace, table and column names).
+Make sure that all keyspaces and tables being migrated are identical to the corresponding ones on the origin cluster,including keyspace, table, and column names.
 ====
 
-* To copy the schema, you can simply run CQL `describe` on Origin for the schema that is being migrated, and then run the output on your new cluster.
+* To copy the schema, you can run CQL `describe` on the origin cluster to get the schema that is being migrated, and then run the output on your new cluster.
 Bear in mind that, if you are migrating from an old version, you may need to adapt some CQL clauses that are no longer supported in newer versions (e.g. `COMPACT STORAGE`).
 Please refer to the documentation of the relevant versions for more information.

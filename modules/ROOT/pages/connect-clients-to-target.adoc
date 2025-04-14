@@ -1,5 +1,5 @@
-= Step 5: Connect your client applications directly to Target
-:navtitle: Phase 5: Connect client applications directly to Target
+= Phase 5: Connect your client applications directly to the target
+:navtitle: Phase 5: Connect client applications directly to the target
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps,target
 
 At this point in our migration phases, we've completed:
@@ -8,20 +8,20 @@ At this point in our migration phases, we've completed:
 
 * Phase 2: Migrated and validated our data with {cass-migrator} and/or {dsbulk-migrator}.
 
-* Phase 3: Enabled async data reads (an optional step) to check that Target can handle the read/write traffic.
+* Phase 3: Optionally enabled async data reads to check that the target cluster can handle the full production workload of read/write traffic.
 
-* Phase 4: Changed read routing to Target.
+* Phase 4: Changed read routing to the target cluster.
 
-Now we're ready to perform Phase 5, in which we will configure our client applications to connect directly to Target.
-The way you do this varies based on whether your Target is {astra-db}, {cass-reg}, or {dse} cluster.
+In Phase 5 you will configure your client applications to connect directly to the target cluster.
+How you do this depends on whether your target cluster is {astra-db}, {cass-reg}, or {dse-short}.
 
-image::migration-phase5ra.png[Phase 5 diagram shows apps no longer using proxy and instead connected directly to Target.]
+image::migration-phase5ra.png[In Phase 5, your apps no longer using the proxy and, instead, connect directly to the target.]
 
 //For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
 == Configuring your driver to connect to a generic CQL cluster
 
-If your Target is a generic CQL cluster (such as {cass-short} or {dse-short}), you can connect your client application to it in a similar way as you previously connected it to Origin, but with the appropriate contact points and any additional configuration that your Target may require.
+If your target cluster is a generic CQL cluster, such as {cass-short} or {dse-short}, then you can connect your client application to it in a similar way as you previously connected it to the origin cluster, but with the appropriate contact points and any additional configuration that your target cluster may require.
 For further information, please refer to the documentation of the driver language and version that you are using.
 
 == Configuring your driver to connect to {astra-db}
@@ -32,7 +32,7 @@ To connect to {astra-db}, you need:
 
 * The ClientID and Client Secret from an {astra-db} application token with *Organization Administrator* permissions for the organization to which your {astra-db} database belongs.
 +
-You will already have used these credentials when you configured the {product-proxy} to connect to your {astra-db} database as Target.
+You will already have used these credentials when you configured the {product-proxy} to connect to your {astra-db} database as the target cluster.
 For more information on creating credentials (tokens), see xref:astra-db-serverless:administration:manage-application-tokens.adoc[].
 
 * Your {astra-db} database's Secure Connect Bundle (SCB).
@@ -115,5 +115,5 @@ Your client application is now able to connect directly to your {astra-db} datab
 
 == Phase 5 of migration completed
 
-Until this point, in case of any issues, you could have abandoned the migration and rolled back to connect directly to Origin at any time.
-From this point onward, the clusters will diverge, and Target is the source of truth for your client applications and data.
+Until this point, in case of any issues, you could have abandoned the migration and rolled back to connect directly to the origin cluster at any time.
+From this point onward, the clusters will diverge, and the target cluster becomes the source of truth for your client applications and data.

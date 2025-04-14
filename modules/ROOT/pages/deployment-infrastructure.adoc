@@ -6,7 +6,7 @@
 A typical {product-proxy} deployment is made up of multiple proxy instances.
 A minimum of three proxy instances is recommended for any deployment apart from those for demo or local testing purposes.
 
-All {product-proxy} instances must be reachable by the client application and must be able to connect to your Origin and Target clusters.
+All {product-proxy} instances must be reachable by the client application and must be able to connect to your origin and target clusters.
 The {product-proxy} process is lightweight, requiring only a small amount of resources and no storage to persist state (apart from logs).
 
 The {product-proxy} should be deployed close to your client application instances.
@@ -60,7 +60,7 @@ For example, you can use four VMs that are the equivalent of an AWS m5.4xlarge, 
 Next, run {dsbulk-migrator} or {cass-migrator} in parallel on each VM with each one responsible for migrating around 5TB of data.
 If there is one super large table (e.g. 15 TB of 20 TB is in one table), you can choose to migrate this table in three parts on three separate VMs in parallel by splitting the full token range into three parts and migrating the rest of the tables on the fourth VM. 
 
-* Ensure that your Origin and Target clusters can handle high traffic from {cass-migrator} or {dsbulk-migrator} in addition to the live traffic from your application. 
+* Ensure that your origin and target clusters can handle high traffic from {cass-migrator} or {dsbulk-migrator} in addition to the live traffic from your application. 
 
 * Test any migration in a lower environment before you plan to do it in production.
 
@@ -82,7 +82,7 @@ The {product-proxy} machines should not be directly accessible by external machi
 The only direct access to these machines should be from the jumphost.
 ====
 
-The {product-proxy} machines must be able to connect to the Origin and Target cluster nodes:
+The {product-proxy} machines must be able to connect to the origin and target cluster nodes:
 
 * For self-managed clusters ({cass} or {dse-short}), connectivity is needed to the {cass-short} native protocol port (typically 9042).
 * For {astra-db}, you will need to ensure outbound connectivity to the {astra-db} endpoint indicated in the Secure Connect Bundle.

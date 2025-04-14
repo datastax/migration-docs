@@ -14,7 +14,7 @@ See the information here in this topic, and then refer to the {product-automatio
 
 * All TLS configuration is optional. Enable TLS between the {product-proxy} and any cluster that requires it, and/or between your client application and the {product-proxy} if required.
 
-* Proxy-to-cluster TLS can be configured between the {product-proxy} and Origin/Target (either or both) as desired.
+* Proxy-to-cluster TLS can be configured between the {product-proxy} and either or both the origin and target clusters, as desired.
 Each set of configurations is independent of the other. When using proxy-to-cluster TLS, the {product-proxy} acts as the TLS client and the cluster as the TLS server.
 One-way TLS and Mutual TLS are both supported and can be enabled depending on each cluster's requirements.
 
@@ -27,7 +27,7 @@ This is done through the Secure Connect Bundle (SCB) and does not require any ex
 [[_retrieving_files_from_a_jks_keystore]]
 == Retrieving files from a JKS keystore
 
-If you are already using TLS between your client application and Origin, the files needed to configure TLS will already be used in the client application's configuration (TLS client files) and Origin's configuration (TLS Server files).
+If you are already using TLS between your client application and the origin cluster, then the files needed to configure TLS will already be used in the client application's configuration (TLS client files) and the origin's configuration (TLS Server files).
 In some cases, these files may be contained in a JKS keystore.
 
 The {product-proxy} does not accept a JKS keystore, requiring the raw files instead.
@@ -62,7 +62,7 @@ The files required to configure proxy-to-cluster TLS are:
 
 [TIP]
 ====
-If your Origin cluster requires TLS, your client application will already be using these files in its configuration to connect to it.
+If your origin cluster requires TLS, your client application will already be using these files in its configuration to connect to it.
 ====
 
 [NOTE]
@@ -72,32 +72,49 @@ All files must be in plain-text, non-binary format.
 
 === Prepare the TLS files and copy them to the Ansible Control Host container
 
-For each self-managed cluster requiring TLS (Origin and/or Target), execute the following steps:
+For each self-managed origin or target cluster that requires TLS, do the following:
 
-* If your TLS files are in a JKS keystore, extract them as plain text (see xref:tls.adoc#_retrieving_files_from_a_jks_keystore[]).
-* Upload the following files to the jumphost:
-** For one-way TLS, only the server CA.
-** For Mutual TLS, the server CA, the client cert and the client key.
-* From a shell on the jumphost, copy the files to the relevant TLS directory into the Ansible Control Host container:
-** For Origin: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/origin_tls_files`
-** For Target: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/target_tls_files`
+. If your TLS files are in a JKS keystore, extract them as plain text (see xref:tls.adoc#_retrieving_files_from_a_jks_keystore[]).
 
-There is a set of TLS configuration variables for Origin and a separate set for Target, so that they can be configured independently as desired.
+. Upload the following files to the jumphost:
++
+* For one-way TLS, uploda only the server CA.
+* For Mutual TLS, upload the server CA, the client cert, and the client key.
+
+. From a shell on the jumphost, copy the files to the relevant TLS directory into the Ansible Control Host container:
++
+* For origin clusters, run: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/origin_tls_files`
+* For target clusters, run: `docker cp <your_tls_files> zdm-ansible-container:/home/ubuntu/target_tls_files`
 
 === Configure TLS
 
-Here is how to do it:
+There are separate TLS configuration variables for origin and target clusters so that you can configure these independently, if needed.
 
-* Ensure that you have a shell open to the container.
-If you do not, you can open it with `docker exec -it zdm-ansible-container bash`.
-* From this shell, uncomment the relevant variables and edit their values in the configuration file `zdm-proxy-automation/ansible/vars/zdm_proxy_custom_tls_config.yml` as follows.
-** For proxy-to-Origin TLS configuration:
- *** `origin_tls_user_dir_path`: uncomment and leave to its preset value of `/home/ubuntu/origin_tls_files`.
- *** `origin_tls_server_ca_filename`: filename (without path) of the Server CA.
- *** `origin_tls_client_cert_filename`: filename (without path) of the Client cert. This is for Mutual TLS only, leave unset otherwise.
- *** `origin_tls_client_key_filename`: filename (without path) of the Client key.
- For Mutual TLS only, leave unset otherwise.
-** The configuration for proxy-to-Target TLS is done in the same way but using the Target-specific configuration variables (`target_tls_*`).
+. Open a shell to the container:
++
+[source,bash]
+----
+docker exec -it zdm-ansible-container bash
+----
+
+. Find the custom TLS configuration file at `zdm-proxy-automation/ansible/vars/zdm_proxy_custom_tls_config.yml`.
+
+. Uncomment and set the following variables in the custom TLS configuration file for the proxy-to-origin TLS configuration:
++
+* `origin_tls_user_dir_path`: uncomment and leave to its preset value of `/home/ubuntu/origin_tls_files`.
+* `origin_tls_server_ca_filename`: filename (without path) of the Server CA.
+* `origin_tls_client_cert_filename`: filename (without path) of the Client cert. This is for Mutual TLS only, leave unset otherwise.
+* `origin_tls_client_key_filename`: filename (without path) of the Client key.
+For Mutual TLS only, leave unset otherwise.
+
+. Uncomment and set the variables for the proxy-to-target TLS configuration:
++
+* `target_tls_user_dir_path`: uncomment and leave to its preset value of `/home/ubuntu/target_tls_files`.
+* `target_tls_server_ca_filename`: filename (without path) of the Server CA.
+* `target_tls_client_cert_filename`: filename (without path) of the Client cert.
+This is for Mutual TLS only, leave unset otherwise.
+* `target_tls_client_key_filename`: filename (without path) of the Client key.
+For Mutual TLS only, leave unset otherwise.
 
 == Application-to-proxy TLS
 
@@ -114,11 +131,8 @@ All these files are required for one-way and Mutual TLS.
 
 [TIP]
 ====
-If your Origin cluster currently requires TLS, it will already be using these files for its own TLS configuration.
-====
+If your origin cluster currently requires TLS, it will already be using these files for its own TLS configuration.
 
-[TIP]
-====
 All files must be in plain-text, non-binary format.
 ====
 

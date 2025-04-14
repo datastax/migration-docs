@@ -14,15 +14,16 @@ The {product-proxy} itself doesn't have any capability to migrate data or knowle
 
 == Role of {product-proxy}
 
-We created {product-proxy} to function between the application and both databases (Origin and Target).
+{company} created {product-proxy} to function between the application and both the origin and target databases.
 The databases can be any CQL-compatible data store, such as {cass-reg}, {dse}, and {astra-db}.
 The proxy always sends every write operation (Insert, Update, Delete) synchronously to both clusters at the desired Consistency Level:
 
 * If the write is successful in both clusters, it returns a successful acknowledgement to the client application.
 * If the write fails on either cluster, the failure is passed back to the client application so that it can retry it as appropriate, based on its own retry policy.
 
-This design ensures that new data is always written to both clusters, and that any failure on either cluster is always made visible to the client application. 
-{product-proxy} also sends all reads to the primary cluster (initially Origin, and later Target) and returns the result to the client application.
+This design ensures that new data is always written to both clusters, and that any failure on either cluster is always made visible to the client application.
+{product-proxy} also sends all reads to the primary cluster, and then returns the result to the client application.
+The primary cluster is initially the origin cluster, and you change it to the target cluster at the end of the migration process.
 
 {product-proxy} is designed to be highly available. It can be scaled horizontally, so typical deployments are made up of a minimum of 3 servers.
 {product-proxy} can be restarted in a rolling fashion, for example, to change configuration for different phases of the migration.
@@ -37,27 +38,27 @@ The term {product-proxy} indicates the whole deployment, and {product-proxy} ins
 
 === Key features of {product-proxy}
 
-* Allows you to lift-and-shift existing application code from **Origin** to **Target** with a simple change of a connection string.
+* Allows you to lift-and-shift existing application code from your origin cluster to your target cluster by changing only the connection string.
 
-* Reduces risks to upgrades and migrations by decoupling Origin from Target, and allowing there to be an explicit cut-over point once you're satisfied with Target.
+* Reduces risks to upgrades and migrations by decoupling the origin cluster from the target cluster, and allowing you to determine an explicit cut-over point once you're ready to commit to using the target cluster permanently.
 
 * Bifurcates writes synchronously to both clusters during the migration process.
 
 * Returns (for read operations) the response from the primary cluster, which is its designated source of truth.
-During a migration, Origin is typically the primary cluster.
-Near the end of the migration, you'll shift the primary cluster to be Target.
+During a migration, the primary cluster is typically the origin cluster.
+Near the end of the migration, you shift the primary cluster to be the target cluster.
 
-* Can be configured to also read asynchronously from Target.
-This capability is called **Asynchronous Dual Reads** (also known as **Read Mirroring**) and allows you to observe what read latencies and throughput Target can achieve under the actual production load.
-** Results from the asynchronous reads executed on Target are not sent back to the client application.
-** This design implies that failure on asynchronous reads from Target does not cause an error on the client application.
+* Can be configured to also read asynchronously from the target cluster.
+This capability is called **Asynchronous Dual Reads** (also known as **Read Mirroring**), and it allows you to observe what read latencies and throughput the target cluster can achieve under the actual production load.
+** Results from the asynchronous reads executed on the target cluster are not sent back to the client application.
+** This design implies that a failure on asynchronous reads from the target cluster does not cause an error on the client application.
 ** Asynchronous dual reads can be enabled and disabled dynamically with a rolling restart of the {product-proxy} instances.
 
 [NOTE]
 ====
-When using Asynchronous Dual Reads, any additional read load on Target may impact its ability to keep up with writes.
+When using Asynchronous Dual Reads, any additional read load on the target cluster may impact its ability to keep up with writes.
 This behavior is expected and desired.
-The idea is to mimic the full read and write load on Target so there are no surprises during the last migration phase; that is, after cutting over completely to Target.
+The idea is to mimic the full read and write load on the target cluster so there are no surprises during the last migration phase; that is, after cutting over completely to the target cluster.
 ====
 
 === {product-utility} and {product-automation}
@@ -90,24 +91,24 @@ Other technologies such as Apache Spark(TM) can be used to write your own custom
 
 [TIP]
 ====
-An important **prerequisite** to use {cass-migrator} is that you already have the matching schema on Target.
+To use {cass-migrator}, the schema on your origin and target clusters must match.
 ====
 
 Use {cass-migrator} to:
 
-* Migrate your data from any CQL-supported Origin to any CQL-supported Target. 
+* Migrate your data from any CQL-supported origin cluster to any CQL-supported target cluster. 
 Examples of databases that support CQL are {cass-reg}, {dse}, and {astra-db}.
 * Validate migration accuracy and performance using examples that provide a smaller, randomized data set.
 * Preserve internal `writetime` timestamps and Time To Live (TTL) values.
 * Take advantage of advanced data types (Sets, Lists, Maps, UDTs).
-* Filter records from the Origin data, using {cass-short}'s internal `writetime` timestamp.
+* Filter records from the the origin cluster's data, using {cass-short}'s internal `writetime` timestamp.
 * Use SSL Support, including custom cipher algorithms.
 
 {cass-migrator} is designed to:
 
-* Connect to and compare your Target database with Origin.
+* Connect to and compare your target database/cluster with the origin database/cluster.
 * Report differences in a detailed log file.
-* Optionally reconcile any missing records and fix any data inconsistencies in Target by enabling `autocorrect` in a config file.
+* Optionally reconcile any missing records and fix any data inconsistencies in the target cluster by enabling `autocorrect` in a config file.
 
 === {dsbulk-migrator}
 

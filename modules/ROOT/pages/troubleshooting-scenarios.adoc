@@ -164,8 +164,8 @@ This error means that at least one of these three sets of credentials is incorre
 
 === Solution or Workaround
 
-If the authentication error is preventing the proxy from starting then it's either the Origin or Target credentials that are incorrect or have insufficient permissions.
-The log message shows whether it is the Target or Origin handshake that is failing.
+If the authentication error is preventing the proxy from starting then it's either the origin or target credentials that are incorrect or have insufficient permissions.
+The log message shows whether it is the origin or target handshake that is failing.
 
 If the proxy is able to start up -- that is, this message can be seen in the logs:
 
@@ -419,7 +419,7 @@ This issue is fixed in {product-proxy} 2.1.0. See the Fix section below.
 
 === Symptoms
 
-Every 10 minutes a message is logged in the {product-proxy} logs showing a disconnect that was caused by {astra-db}.
+Every 10 minutes a message is logged in the {product-proxy} logs showing a disconnect that was caused by {astra-db}:
 
 [source,log]
 ----
@@ -429,7 +429,7 @@ Every 10 minutes a message is logged in the {product-proxy} logs showing a disco
 === Cause
 
 {astra-db} terminates idle connections after 10 minutes of inactivity.
-If a client application is only sending reads through a connection then the Target (i.e. {astra-db} in this case) connection will not get any traffic because {product-short} forwards all reads to the Origin connection.
+If a client application only sends reads through a connection then the target cluster, which is an {astra-db} database in this example, then the connection won't get any traffic because {product-short} forwards all reads to the origin connection.
 
 === Solution or Workaround
 
@@ -446,19 +446,19 @@ Consider a case where a user runs separate benchmarks against:
 
 * {astra-db} directly
 * Origin directly
-* {product-short} (with {astra-db} and Origin)
+* {product-short} (with {astra-db} and the origin cluster)
 
-The results of these tests show latency/throughput values are worse with {product-short} than when connecting to {astra-db} or Origin directly.
+The results of these tests show latency/throughput values are worse with {product-short} than when connecting to {astra-db} or origin cluster directly.
 
 === Cause
 
 {product-short} will always add additional latency which, depending on the nature of the test, will also result in a lower throughput.
 Whether this performance hit is expected or not depends on the difference between the {product-short} test results and the test results with the cluster that performed the worst.
 
-Writes in {product-short} require an `ACK` from both clusters while reads only require the result from the Origin cluster (or target if the proxy is set up to route reads to the target cluster).
-This means that if Origin has better performance than Target then {product-short} will inevitably have a worse performance for writes.
+Writes in {product-short} require an `ACK` from both clusters while reads only require the result from the origin cluster (or target if the proxy is set up to route reads to the target cluster).
+This means that if the origin cluster has better performance than the target cluster, then {product-short} will have worse write performance.
 
-From our testing benchmarks, a performance degradation of up to 2x latency is not unheard of even without external factors adding more latency, but it is still worth checking some things that might add additional latency like whether the proxy is deployed on the same Availability Zone (AZ) as the Origin cluster or application instances.
+From our testing benchmarks, a performance degradation of up to 2x latency is not unheard of even without external factors adding more latency, but it is still worth checking some things that might add additional latency like whether the proxy is deployed on the same Availability Zone (AZ) as the origin cluster or application instances.
 
 Simple statements and batch statements are things that will make the proxy add additional latency compared to normal prepared statements.
 Simple statements should be discouraged especially with the {product-proxy} because currently the proxy takes a considerable amount of time just parsing the queries and with prepared statements the proxy only has to parse them once.

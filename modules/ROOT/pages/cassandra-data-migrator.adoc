@@ -6,11 +6,10 @@
 // tag::body[]
 You can use {cass-migrator} ({cass-migrator-short}) to migrate and validate tables between the origin and target {cass-short} clusters, with optional logging and reconciliation support.
 
-It facilitates data transfer by creating multiple jobs that access the {cass-short} cluster concurrently, making it an ideal choice for migrating large datasets.
+{cass-migrator-short} facilitates data transfer by creating multiple jobs that access the {cass-short} cluster concurrently, making it an ideal choice for migrating large datasets.
 It offers extensive configuration options, including logging, reconciliation, performance optimization, and more.
 
 //TODO: Bring over content from the page that introduces the 3 options, and the features, limitations, and performance recommendations in the README https://github.com/datastax/cassandra-data-migrator?tab=readme-ov-file#features
-//TODO: Bring in the unused -parameters partials.
 
 == Install {cass-migrator}
 
@@ -23,7 +22,7 @@ Install as a container::
 --
 Get the latest `cassandra-data-migrator` image that includes all dependencies from https://hub.docker.com/r/datastax/cassandra-data-migrator[DockerHub].
 
-This container's `assets` directory includes all required migration tools: `cassandra-data-migrator`, `dsbulk`, and `cqlsh`.
+The container's `assets` directory includes all required migration tools: `cassandra-data-migrator`, `dsbulk`, and `cqlsh`.
 --
 
 Install as a JAR file::
@@ -37,21 +36,31 @@ Install as a JAR file::
 ====
 Single VM::
 +
-For one-off migrations, you can install the Spark binary on a single VM where you will run the {cass-migrator-short} job:
+For one-off migrations, you can install the Spark binary on a single VM where you will run the {cass-migrator-short} job.
++
+. Get the Spark tarball from the Apache Spark archive.
 +
 [source,bash,subs="+quotes"]
 ----
-# Replace **PATCH** with your Spark patch version
 wget https://archive.apache.org/dist/spark/spark-3.5.**PATCH**/spark-3.5.**PATCH**-bin-hadoop3-scala2.13.tgz
-
+----
++
+Replace `**PATCH**` with your Spark patch version.
++
+. Change to the directory where you want install Spark, and then extract the tarball:
++
+[source,bash,subs="+quotes"]
+----
 tar -xvzf spark-3.5.**PATCH**-bin-hadoop3-scala2.13.tgz
 ----
++
+Replace `**PATCH**` with your Spark patch version.
 
 Spark cluster::
 +
 For large (several terabytes) migrations, complex migrations, and use of {cass-migrator-short} as a long-term data transfer utility, {company} recommends that you use a Spark cluster or Spark Serverless platform.
 +
-If you deploy CDM on a Spark cluster, you must modify your CDM commands as follows:
+If you deploy CDM on a Spark cluster, you must modify your `spark-submit` commands as follows:
 +
 * Replace `--master "local[*]"` with the host and port for your Spark cluster, as in `--master "spark://**MASTER_HOST**:**PORT**"`.
 * Remove parameters related to single-VM installations, such as `--driver-memory` and `--executor-memory`.
@@ -61,7 +70,7 @@ If you deploy CDM on a Spark cluster, you must modify your CDM commands as follo
 
 . Add the `cassandra-data-migrator` dependency to `pom.xml`:
 +
-[source,xml]
+[source,xml,subs="+quotes"]
 ----
 <dependency>
   <groupId>datastax.cdm</groupId>
@@ -281,7 +290,7 @@ You can modify your properties file or append additional `--conf` arguments to y
 For example, you can do the following:
 
 * Check for large field guardrail violations before migrating.
-* Use the `partition.min` and `partition.max` parameters to migrate or validate specific token ranges
+* Use the `partition.min` and `partition.max` parameters to migrate or validate specific token ranges.
 * Use the `track-run` feature to monitor progress and rerun a failed migration or validation job from point of failure.
 
 For all options, see the https://github.com/datastax/cassandra-data-migrator[{cass-migrator-short} repository].

@@ -1,13 +1,13 @@
 = Phase 2: Migrate and validate data
 :page-tag: migration,zdm,zero-downtime,validate-data
 
-In phase 2 of data migration, you migrate data from the origin to the target, and then validate the migrated data.
+In Phase 2 of data migration, you migrate data from the origin to the target, and then validate the migrated data.
 
-image::migration-phase2ra.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
+image::migration-phase2ra.png[In ZDM Phase 2, you migrate data from the origin cluster to the target cluster.]
 
 //For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
-This topic introduces data migration tools that you can use during phase 2 of your migration project:
+This topic introduces data migration tools that you can use during Phase 2 of your migration project:
 
 * {cass-migrator} ({cass-migrator-short}): Best for migrating large amounts of data and for migrations that need support for detailed logging, data verification, table column renaming, and reconciliation.
 

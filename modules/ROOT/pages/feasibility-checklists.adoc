@@ -9,7 +9,7 @@ Before starting your migration, refer to the following considerations to ensure 
 
 [NOTE]
 ====
-include::partial$supported-releases.adoc[]
+include::ROOT:partial$supported-releases.adoc[]
 ====
 
 {product-proxy} technically doesn't support `v5`.
@@ -33,23 +33,23 @@ This means that {product-proxy} supports migrations of the following cluster ver
 
 [TIP]
 ====
-Ensure that you test your client application with Target (connected directly without the {product-proxy}) before the migration process begins.
+Ensure that you test your client application on the target (connected directly, without the {product-proxy}) before the migration process begins.
 ====
 
 == Schema/keyspace compatibility
 
-{product-proxy} does not modify or transform CQL statements besides the optional feature that replaces `now()` functions with timestamp literals. 
+{product-proxy} does not modify or transform CQL statements besides the optional feature that replaces `now()` functions with timestamp literals.
 See <<cql-function-replacement,this section>> for more information about this feature.
 
 A CQL statement that your client application sends to {product-proxy} must be able to succeed on both clusters.
-This means that any keyspace that your client application uses must exist on both Origin and Target with the same name (although they can have different replication strategies and durable writes settings).
+This means that any keyspace that your client application uses must exist on both the origin and target clusters with the same name (although they can have different replication strategies and durable writes settings).
 Table names must also match.
 
 The schema doesn't have to be an exact match as long as the CQL statements can be executed successfully on both clusters.
-For example, if a table has 10 columns but your client application only uses 5 of those columns then you could create that table on Target with just those 5 columns.
+For example, if a table has 10 columns but your client application only uses 5 of those columns then you could create that table on the target with just those 5 columns.
 
 You can also change the primary key in some cases.
-For example, if your compound primary key is `PRIMARY KEY (A, B)` and you always provide parameters for the `A` and `B` columns in your CQL statements then you could change the key to `PRIMARY KEY (B, A)` when creating the schema on Target because your CQL statements will still run successfully.
+For example, if your compound primary key is `PRIMARY KEY (A, B)` and you always provide parameters for the `A` and `B` columns in your CQL statements then you could change the key to `PRIMARY KEY (B, A)` when creating the schema on the target because your CQL statements will still run successfully.
 
 == Considerations for {astra-db} migrations
 
@@ -74,19 +74,19 @@ For upgrade instructions, see xref:ROOT:manage-proxy-instances.adoc#_upgrade_the
 
 //TODO: combine the below 2 sections to only use 2.1.0 or later.
 //Reconcile with troubleshooting-scenarios.adoc in case this issue is also described there.
-==== *Versions older than 2.1.0*
+==== Versions older than 2.1.0
 
 If a client application only sends `SELECT` statements to a database connection then you may find that {product-proxy} terminates these read-only connections periodically, which may result in request errors if the driver is not configured to retry these requests in these conditions.
 
 This happens because {astra-db} terminates idle connections after some inactivity period (usually around 10 minutes).
-If {astra-db} is your Target and a client connection is only sending read requests to the {product-proxy}, then the {astra-db} connection that is paired to that client connection will remain idle and will be eventually terminated.
+If {astra-db} is your target, and a client connection is only sending read requests to the {product-proxy}, then the {astra-db} connection that is paired to that client connection will remain idle and will be eventually terminated.
 
-A potential workaround is to not connect these read-only client applications to {product-proxy}, but you need to ensure that these client applications switch reads to Target at any point after all the data has been migrated and all validation and reconciliation has completed.
+A potential workaround is to not connect these read-only client applications to {product-proxy}, but you need to ensure that these client applications switch reads to the target at any point after all the data has been migrated and all validation and reconciliation has completed.
 
 Another work around is to implement a mechanism in your client application that creates a new `Session` periodically to avoid the {astra-db} inactivity timeout.
 You can also implement some kind of meaningless write request that the application sends periodically to make sure the {astra-db} connection doesn't idle.
 
-==== *Version 2.1.0 and newer*
+==== Version 2.1.0 and newer
 
 This issue is solved in version 2.1.0 of the {product-proxy}, which introduces periodic heartbeats to keep alive idle cluster connections.
 We strongly recommend using version 2.1.0 (or newer) to benefit from this improvement, especially if you have a read-only workload.
@@ -105,7 +105,8 @@ For more information on how to handle non-deterministic functions please refer t
 
 Given that there are two separate clusters involved, the state of each cluster may be different.
 For conditional writes, this may create a divergent state for a time.
-It may not make a difference in many cases, but if non-idempotent operations are used, we recommend a reconciliation phase in the migration before and after switching reads to rely on Target (setting Target as the primary cluster). 
+
+If non-idempotent operations are used, {company} recommends adding a reconciliation phase to your migration before and after Phase 4, where you switch reads to the target.
 
 For details about using the {cass-migrator}, see xref:migrate-and-validate-data.adoc[].
 
@@ -118,29 +119,29 @@ Some application workloads can tolerate inconsistent data in some cases (especia
 === Lightweight Transactions and the `applied` flag
 
 {product-proxy} handles LWTs as write operations.
-The proxy sends the LWT to Origin and Target clusters concurrently, and waits for a response from both.
-{product-proxy} will return a `success` status to the client if both Origin and Target send successful acknowledgements, or otherwise will return a `failure` status if one or both do not return an acknowledgement.
+The proxy sends the LWT to the origin and target clusters concurrently, and then waits for a response from both.
+{product-proxy} will return a `success` status to the client if both the origin and target send successful acknowledgements.
+Otherwise, it will return a `failure` status if one or both do not return an acknowledgement.
 
 What sets LWTs apart from regular writes is that they are conditional.
 In other words, a LWT can appear to have been successful (its execution worked as expected).
 However, the change will be applied only if the LWT's condition was met.
 Whether the condition was met depends on the state of the data on the cluster.
-In a migration, the clusters will not be in sync until all existing data has been imported into Target.
+In a migration, the clusters will not be in sync until all existing data has been imported into the target.
 Up to that point, an LWT's condition can be evaluated differently on each side, leading to a different outcome even though the LWT was technically successful on both sides.
 
 The response that a cluster sends after executing a LWT includes a flag called `applied`.
 This flag tells the client whether the LWT update was actually applied.
 The status depends on the condition, which in turn depends on the state of the data.
-When {product-proxy} receives a response from both Origin and Target, each response would have its own `applied` flag. 
+When {product-proxy} receives a response from both the origin and target, each response would have its own `applied` flag. 
 
 However, {product-proxy} can only return a *single response* to the client.
 Recall that the client has no knowledge that there are two clusters behind the proxy.
 Therefore, {product-proxy} returns the `applied` flag from the cluster that is *currently used as primary*.
 If your client has logic that depends on the `applied` flag, be aware that during the migration, you will only have visibility of the flag coming from the primary cluster; that is, the cluster to which synchronous reads are routed.
 
-To reiterate, {product-proxy} only returns the `applied` value from the primary cluster, which is the cluster from where read results are returned to the client application (by default, Origin).
-This means that when you set Target as your primary cluster, the `applied` value returned to the client application will come from Target.
-
+To reiterate, {product-proxy} only returns the `applied` value from the primary cluster, which is the cluster from where read results are returned to the client application. By default, this is the origin cluster.
+This means that when you set the target cluster as your primary cluster, then the `applied` value returned to the client application will come from the target cluster.
 
 == Advanced workloads ({dse-short})
 
@@ -148,17 +149,16 @@ This means that when you set Target as your primary cluster, the `applied` value
 
 {product-proxy} handles all {dse-short} Graph requests as write requests even if the traversals are read-only. There is no special handling for these requests, so you need to take a look at the traversals that your client application sends and determine whether the traversals are idempotent. If the traversals are non-idempotent then the reconciliation step is needed.
 
-Keep in mind that our recommended tools for data migration and reconciliation are CQL-based, so they can be used for migrations where Origin is a database that uses the new {dse-short} Graph engine released with {dse-short} 6.8, but *cannot be used for the old Graph engine* that older {dse-short} versions relied on.
+Keep in mind that our recommended tools for data migration and reconciliation are CQL-based, so they can be used for migrations where the origin cluster is a database that uses the new {dse-short} Graph engine released with {dse-short} 6.8, but *cannot be used for the old Graph engine* that older {dse-short} versions relied on.
 See <<non-idempotent-operations,this section>> for more information about non-idempotent operations.
 
 === Search
 
-Read-only Search workloads can be moved directly from Origin to Target without {product-proxy} being involved.
+Read-only Search workloads can be moved directly from the origin to the target without {product-proxy} being involved.
 If your client application uses Search and also issues writes, or if you need the read routing capabilities from {product-proxy}, then you can connect your search workloads to it as long as you are using the {company} drivers to submit these queries.
 This approach means the queries are regular CQL `SELECT` statements, so {product-proxy} handles them as regular read requests.
 
-If you use the HTTP API then you can either modify your applications to use the CQL API instead or you will have to move those applications directly from Origin to Target when the migration is complete if that is acceptable.
-
+If you use the HTTP API then you can either modify your applications to use the CQL API instead or you will have to move those applications directly from the origin to the target when the migration is complete if that is acceptable.
 
 == Client compression
 
@@ -170,7 +170,6 @@ This kind of compression is disabled by default on all of our {company} drivers 
 This is *NOT* related to storage compression which you can configure on a table by table basis with the `compression` table property.
 Storage/table compression does not affect the client application or {product-proxy} in any way.
 
-	
 == Authenticator and Authorizer configuration
 
 {product-proxy} supports the following cluster authenticator configurations:
@@ -183,12 +182,12 @@ Storage/table compression does not affect the client application or {product-pro
 
 While the authenticator has to be supported, the *authorizer* does not affect client applications or {product-proxy} so you should be able to use any kind of authorizer configuration on both of your clusters.
 
-The authentication configuration on each cluster can be different between Origin and Target, as the {product-proxy} treats them independently.
+The authentication configuration on each cluster can be different between the origin and target clustesr, as the {product-proxy} treats them independently.
 
 [[cql-function-replacement]]
 == Server-side non-deterministic functions in the primary key
 
-Statements with functions like `now()` and `uuid()` will result in data inconsistency between Origin and Target because the values are computed at cluster level. 
+Statements with functions like `now()` and `uuid()` will result in data inconsistency between the origin and target clusters because the values are computed at the cluster level.
 
 If these functions are used for columns that are not part of the primary key, you may find it acceptable to have different values in the two clusters depending on your application business logic.
 However, if these columns are part of the primary key, the data migration phase will not be successful as there will be data inconsistencies between the two clusters and they will never be in sync.

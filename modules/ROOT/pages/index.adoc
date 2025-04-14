@@ -12,7 +12,7 @@ The old database becomes obsolete and can be removed.
 
 Available migration tools include:
 
-* xref:ROOT:introduction.adoc[{product}] ({product-short}): Comprised of {product-proxy}, {product-proxy}, and {product-automation}, you can continue to run your current application and migrate data from the Origin to the Target database without any downtime.
+* xref:ROOT:introduction.adoc[{product}] ({product-short}): Comprised of {product-proxy}, {product-proxy}, and{product-automation}, you can continue to run your current application and migrate data from the origin to the target database without any downtime.
 {product-proxy} helps to manage the activity in transition.
 
 * xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator}]: It can be used in conjunction with the {product-proxy} for a migration with zero downtime. It can also be used on its own for migrations with acceptable downtime.
