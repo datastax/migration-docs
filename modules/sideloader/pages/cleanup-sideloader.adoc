@@ -34,7 +34,7 @@ Make sure you <<reschedule-a-cleanup,reschedule the cleanup>> to avoid automatic
 
 . Use the {devops-api} to immediately start the cleanup process for a migration:
 +
-[source,curl]
+[source,bash]
 ----
 curl -X POST \
     -H "Authorization: Bearer ${token}" \
@@ -67,7 +67,7 @@ Alternatively, if your migration is complete, you might reschedule the cleanup t
 
 You can use the {devops-api} to schedule a migration cleanup for a specific date and time:
 
-[source,curl,subs="+quotes"]
+[source,bash,subs="+quotes"]
 ----
 curl -X POST \
     -H "Authorization: Bearer ${token}" \

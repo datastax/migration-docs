@@ -7,7 +7,7 @@
 
 Use the {devops-api} to pause a migration:
 
-[source,curl]
+[source,bash]
 ----
 curl -X POST \
     -H "Authorization: Bearer ${token}" \
@@ -23,7 +23,7 @@ Any in-progress jobs will complete, but no new jobs will start.
 
 Resume a previously-paused migration from the point at which it was paused:
 
-[source,curl]
+[source,bash]
 ----
 curl -X POST \
     -H "Authorization: Bearer ${token}" \
@@ -41,7 +41,7 @@ Abort a migration only if you want to abandon it completely.
 
 . Abort a migration and remove all migration progress:
 +
-[source,curl]
+[source,bash]
 ----
 curl -X POST \
     -H "Authorization: Bearer ${token}" \

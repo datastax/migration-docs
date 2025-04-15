@@ -178,7 +178,7 @@ nodetool listsnapshots
 ----
 +
 Snapshots have a specific directory structure, such as `*KEYSPACE_NAME*/*TABLE_NAME*/snapshots/*SNAPSHOT_NAME*/...`.
-The {sstable-sideloader} relies on this fixed structure to properly interpret the SSTable components.
+{sstable-sideloader} relies on this fixed structure to properly interpret the SSTable components.
 **With the exception of secondary index directories (as explained in the following step), don't modify the snapshot's directory structure.**
 
 . If your origin cluster has xref:dse-5.1@cql:develop:indexing/2i/2i-concepts.adoc[secondary indexes (2i)], remove all directories related to those indexes from all snapshots before you xref:sideloader:migrate-sideloader.adoc#upload-snapshots-to-migration-directory[upload the snapshots].
@@ -307,7 +307,7 @@ The initialization process can take several minutes to complete, especially if t
 
 . In your terminal, use the {devops-api} to initialize the data migration:
 +
-[source,curl]
+[source,bash]
 ----
 curl -X POST \
     -H "Authorization: Bearer ${token}" \
@@ -439,10 +439,11 @@ Note the trailing slash.
 +
 [source,bash]
 ----
-curl -X GET -H "Authorization: Bearer $token" \
-https://api.astra.datastax.com/v2/databases/$dbID/migrations/$migrationID \
-| jq -r '.uploadCredentials.keys.file' \
-| base64 -d > creds.json
+curl -X GET \
+    -H "Authorization: Bearer ${token}" \
+    https://api.astra.datastax.com/v2/databases/${dbID}/migrations/${migrationID} \
+    | jq -r '.uploadCredentials.keys.file' \
+    | base64 -d > creds.json
 ----
 
 .. Securely store the `uploadBucketDir` and `creds.json`.
@@ -794,7 +795,7 @@ include::sideloader:partial$sideloader-partials.adoc[tags=no-return]
 
 . Use the {devops-api} to launch the data import:
 +
-[source,curl]
+[source,bash]
 ----
 curl -X POST \
     -H "Authorization: Bearer ${token}" \

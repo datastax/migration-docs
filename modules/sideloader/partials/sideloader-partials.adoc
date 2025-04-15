@@ -1,5 +1,5 @@
 // tag::check-status[]
-[source,curl]
+[source,bash]
 ----
 curl -X GET \
     -H "Authorization: Bearer ${token}" \
