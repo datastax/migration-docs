@@ -11,22 +11,20 @@ Before you use {sstable-sideloader} for a migration, xref:sideloader:sideloader-
 [#create-snapshots]
 == Create snapshots
 
-On _each node_ in your origin cluster, use `nodetool snapshot` to create a backup of the data that you want to migrate, including all keyspaces and CQL tables that you want to migrate.
+On _each node_ in your origin cluster, use `nodetool` to create a backup of the data that you want to migrate, including all keyspaces and CQL tables that you want to migrate.
 
 . Be aware of the {sstable-sideloader} limitations related to materialized views, secondary indexes, and encrypted data that are described in xref:sideloader:prepare-sideloader.adoc#origin-cluster-requirements[Origin cluster requirements].
 If necessary, modify the data model on your origin cluster to prepare for the migration.
 
-. Optional: Consider running `nodetool cleanup` before you create snapshots
-+
-The `xref:6.9@dse:managing:tools/nodetool/cleanup.adoc[nodetool cleanup]` command removes data that no longer belongs to a node.
-It is particularly useful after adding more nodes to a cluster because it helps ensure that each node only contains the data that it is responsible for, according to the current cluster configuration and partitioning scheme.
+. Optional: Before you create snapshots, consider running `xref:dse:managing:tools/nodetool/cleanup.adoc[nodetool cleanup]` to remove data that no longer belongs to your nodes.
+This command is particularly useful after adding more nodes to a cluster because it helps ensure that each node only contains the data that it is responsible for, according to the current cluster configuration and partitioning scheme.
 +
 If you run `nodetool cleanup` before you take a snapshot, you can ensure that the snapshot only includes relevant data, potentially reducing the size of the snapshot.
 Smaller snapshots can lead to lower overall migration times and lower network transfer costs.
 +
 However, take adequate precautions before you run this command because the cleanup operations can introduce additional load on your origin cluster.
 
-. Use `xref:6.9@dse:managing:tools/nodetool/snapshot.adoc[nodetool snapshot]` to create snapshots for the tables that you want to migrate.
+. Use `xref:dse:managing:tools/nodetool/snapshot.adoc[nodetool snapshot]` to create snapshots for the tables that you want to migrate.
 +
 Don't create snapshots of system tables or tables that you don't want to migrate.
 The migration can fail if you attempt to migrate snapshots that don't have a matching schema in the target database.
@@ -183,7 +181,7 @@ Snapshots have a specific directory structure, such as `*KEYSPACE_NAME*/*TABLE_N
 The {sstable-sideloader} relies on this fixed structure to properly interpret the SSTable components.
 **With the exception of secondary index directories (as explained in the following step), don't modify the snapshot's directory structure.**
 
-. If your origin cluster has xref:dse-5.1@cql:develop:indexing/2i/2i-concepts.adoc[secondary indexes], remove all directories related to those indexes from all snapshots before you xref:sideloader:migrate-sideloader.adoc#upload-snapshots-to-migration-directory[upload the snapshots].
+. If your origin cluster has xref:dse-5.1@cql:develop:indexing/2i/2i-concepts.adoc[secondary indexes (2i)], remove all directories related to those indexes from all snapshots before you xref:sideloader:migrate-sideloader.adoc#upload-snapshots-to-migration-directory[upload the snapshots].
 +
 [WARNING]
 ====
@@ -200,7 +198,7 @@ You can find secondary index directories in the table's snapshot directory:
 +
 For example, given the following table schema, the index directory would be located at `*NODE_UUID*/smart_home/sensor_readings-*TABLE_UUID*/snapshots/*SNAPSHOT_NAME*/.roomidx`:
 +
-[source,sql]
+[source,cql]
 ----
 CREATE TABLE IF NOT EXISTS smart_home.sensor_readings (
     device_id UUID,
@@ -223,7 +221,7 @@ Additionally, your snapshots must contain compatible data and directories, as de
 For example, {astra-db} doesn't support materialized views, and {sstable-sideloader} can't migrate encrypted data.
 
 However, indexes don't need to match.
-You can define indexes in your target database independently from the origin cluster because {sstable-sideloader} ignores SAI defined on the origin cluster.
+You can define indexes in your target database independently from the origin cluster because {sstable-sideloader} ignores Storage Attached Indexes (SAI) defined on the origin cluster.
 During the migration, {sstable-sideloader} automatically populates any SAI defined in your target database, even if those SAI weren't present in your origin cluster.
 //TODO: Difference between "indexes" and "SAI" here?
 //You can define {astra-db}-supported indexes independently on the target database and they will populate as part of the data migration process.
@@ -404,7 +402,7 @@ Note the trailing slash.
 The `sessionToken` expires after one hour.
 If your total migration takes longer than one hour, xref:sideloader:troubleshoot-sideloader.adoc#get-new-upload-credentials[generate new credentials], and then xref:sideloader:stop-restart-sideloader.adoc[resume the migration] with the fresh credentials.
 
-If you use automation to handle {sstable-sideloader} migrations, you might need to scheduled a xref:sideloader:stop-restart-sideloader.adoc[pause] every hour so you can generate new credentials without unexpectedly interrupting the migration.
+If you use automation to handle {sstable-sideloader} migrations, you might need to script a xref:sideloader:stop-restart-sideloader.adoc[pause] every hour so you can generate new credentials without unexpectedly interrupting the migration.
 ====
 --
 
@@ -441,9 +439,10 @@ Note the trailing slash.
 +
 [source,bash]
 ----
-curl -H "Authorization: Bearer " "$token" \
-https://api.astra.datastax.com/v2/databases/"$dbID"/migrations/"$migrationID" \
-| jq -r '.uploadCredentials.keys.file' | base64 -d > creds.json
+curl -X GET -H "Authorization: Bearer $token" \
+https://api.astra.datastax.com/v2/databases/$dbID/migrations/$migrationID \
+| jq -r '.uploadCredentials.keys.file' \
+| base64 -d > creds.json
 ----
 
 .. Securely store the `uploadBucketDir` and `creds.json`.
@@ -484,8 +483,8 @@ Securely store the `uploadBucketDir` and `urlSignature`:
 * `uploadBucketDir` is the migration directory URL.
 Note the trailing slash.
 
-* `uploadCredentials` contains `url` and `urlSignature` keys that represent a https://learn.microsoft.com/en-us/azure/ai-services/translator/document-translation/how-to-guides/create-sas-tokens[Azure Shared Access Signature (SAS) token].
-In the preceding example, the these strings are truncated for readability.
+* `uploadCredentials` contains `url` and `urlSignature` keys that represent an https://learn.microsoft.com/en-us/azure/ai-services/translator/document-translation/how-to-guides/create-sas-tokens[Azure Shared Access Signature (SAS) token].
+In the preceding example, these strings are truncated for readability.
 +
 You need the `urlSignature` to upload snapshots to the migration directory.
 --
@@ -496,16 +495,23 @@ You need the `urlSignature` to upload snapshots to the migration directory.
 
 //TODO: ENV VARS: A variable for MIGRATION_DIR would simplify these steps slightly. Env vars for all the values except the ones that change each time (Node name, snapshot name) would be most efficient.
 
-Use your upload credentials to upload snapshots for _each origin node_ into the migration directory.
+Use your cloud provider's CLI and your upload credentials to upload snapshots for _each origin node_ into the migration directory.
 
 [IMPORTANT]
 ====
-* Use the CLI that corresponds with your target database's cloud provider.
-These commands assume that you installed the cloud provider's CLI on the nodes in your origin cluster.
+Be aware of the following requirements for the upload commands:
 
 * You must include the asterisk (`*`) character as shown in the commands, otherwise the commands won't work properly.
 
 * With the exception of the leading `://` in the migration directory path, your paths must _not_ include double slashes (`//`).
+
+* Use the CLI that corresponds with your target database's cloud provider.
+For more information, see xref:sideloader:prepare-sideloader.adoc[].
+
+* These commands assume that you installed the cloud provider's CLI on the nodes in your origin cluster.
+For more information, see xref:sideloader:prepare-sideloader.adoc[].
+
+* You might need to modify these commands depending on your environment, node names, directory structures, and other variables.
 ====
 
 [tabs]
@@ -587,8 +593,9 @@ However, upload time primarily depends on the snapshot size, network throughput 
 . Repeat the upload process for each snapshot (*`SNAPSHOT_NAME`*) and node (*`NODE_NAME`*) in your origin cluster.
 +
 If your credentials expire, see xref:sideloader:troubleshoot-sideloader.adoc#get-new-upload-credentials[Get new upload credentials].
-+
-[TIP]
+
+.Optiona: Use a for loop to simplify snapshot uploads
+[%collapsible]
 ====
 If the nodes in your origin cluster have predictable names (for example, `dse0`, `dse1`, and `dse2`), then you can use a `for` loop to streamline the execution of the upload commands.
 For example:
@@ -661,12 +668,13 @@ Replace *`MIGRATION_DIR`* with the `uploadBucketDir` that was generated when you
 .. Compare the returned list against the files in your snapshot directory.
 When the lists match, the upload is complete.
 +
-The `https://cloud.google.com/storage/docs/gsutil/commands/rsync#description[-m]` flag in `gsutil -m rsync` enables parallel synchronization, which it can improve upload speed.
+The `https://cloud.google.com/storage/docs/gsutil/commands/rsync#description[-m]` flag in `gsutil -m rsync` enables parallel synchronization, which can improve upload speed.
 However, upload time primarily depends on the snapshot size, network throughput from your origin cluster to the migration bucket, and whether the origin cluster and migration bucket are in the same region.
 
 . Repeat the upload process for each snapshot (*`SNAPSHOT_NAME`*) and node (*`NODE_NAME`*) in your origin cluster.
-+
-[TIP]
+
+.Optiona: Use a for loop to simplify snapshot uploads
+[%collapsible]
 ====
 If the nodes in your origin cluster have predictable names (for example, `dse0`, `dse1`, and `dse2`), then you can use a `for` loop to streamline the execution of the `gsutil rsync` commands.
 For example:
@@ -754,12 +762,12 @@ After uploading snapshots, you must xref:sideloader:migrate-sideloader.adoc#impo
 
 As an added security measure, migrations that remain continuously idle for one week are subject to xref:sideloader:cleanup-sideloader.adoc[automatic cleanup], which deletes all associated snapshots, revokes any unexpired upload credentials, and then closes the migration.
 
-{company} recommends that you xref:sideloader:cleanup-sideloader.adoc[manually reschedule the cleanup] if you don't plan to launch the migration within one week or if you need several days to upload snapshots or import data.
+{company} recommends that you xref:sideloader:cleanup-sideloader.adoc#reschedule-a-cleanup[manually reschedule the cleanup] if you don't plan to launch the migration within one week or if you need several days to upload snapshots or import data.
 
 [WARNING]
 ====
 For large migrations, it can take several days to upload snapshots and import data.
-Make sure you xref:sideloader:cleanup-sideloader.adoc[manually reschedule the cleanup] to avoid automatic cleanup.
+Make sure you xref:sideloader:cleanup-sideloader.adoc#reschedule-a-cleanup[manually reschedule the cleanup] to avoid automatic cleanup.
 ====
 
 [#import-data]
@@ -804,7 +812,11 @@ include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
 +
 * `"status": "ImportInProgress"`: The data is still being imported.
 Wait a few minutes before you check the status again.
-* `"status": "MigrationDone"`: The import is complete, and you can proceed with validating the data.
+* `"status": "MigrationDone"`: The import is complete, and you can proceed to <<validate-the-migrated-data>>.
+
+. If the migration takes more than a few days, xref:sideloader:cleanup-sideloader.adoc#reschedule-a-cleanup[manually reschedule the cleanup] to avoid automatic cleanup.
+
+. If the migration fails, see xref:sideloader:troubleshoot-sideloader.adoc[].
 
 [#validate-the-migrated-data]
 == Validate the migrated data
