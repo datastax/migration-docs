@@ -3,6 +3,21 @@
 
 {description}
 
+Due to the nature of the {sstable-sideloader} process and the tools involved, you need to be familiar with using the command line, including the following:
+
+* Installing and using CLI tools
+* Issuing curl commands
+* Basic scripting
+* Modifying example commands to fit your environment
+* Security best practices
+
+[IMPORTANT]
+====
+The {sstable-sideloader} process uses authentication credentials to write to the migration directory and your database.
+
+Make sure you understand how to securely store and use sensitive credentials when working on the command line.
+====
+
 == Target {astra-db} database requirements
 
 * Your {astra-db} organization must be on an *Enterprise* xref:astra-db-serverless:administration:subscription-plans.adoc[subscription plan].
@@ -20,16 +35,19 @@ For more information and specific rates, see the https://www.datastax.com/pricin
 ====
 Migration directories are automatically cleaned up after one week of idle time.
 
-To minimize costs, you can xref:sideloader:cleanup-sideloader.adoc[manually cleanup migration directories] when you no longer need them.
+To minimize costs, you can xref:sideloader:cleanup-sideloader.adoc[manually clean up migration directories] when you no longer need them.
 ====
 --
 
 * Your target database must be an {astra-db} Serverless database.
++
 If you don't already have one, xref:astra-db-serverless:databases:create-database.adoc[create a database].
-You can use either a {db-serverless} or {db-serverless-vector} database, and {db-serverless-vector} databases can store both vector and non-vector data.
+You can use either a {db-serverless} or {db-serverless-vector} database.
++
+{db-serverless-vector} databases can store both vector and non-vector data.
 
-* Your target database must be in a PCU group.
-You can use either a flexible capacity or committed capacity PCU group, depending on your long-term needs and other PCU group usage.
+* Your target database must be in a xref:astra-db-serverless:administration:provisioned-capacity-units.adoc[Provisioned Capacity Unit (PCU) group].
+You can use either a flexible capacity PCU group or a committed capacity PCU group, depending on your long-term needs and other PCU group usage.
 +
 [tabs]
 ======
@@ -38,18 +56,24 @@ Flexible capacity PCU group::
 --
 Because {sstable-sideloader} operations are typically short-term, resource-intensive events, you can create a flexible capacity PCU group exclusively to support your target database during the migration.
 
-//After PCU PR merge: xref:astra-db-serverless:administration:create-pcu.adoc#flexible-capacity[create a flexible capacity PCU group]
+{company} recommends the following flexible capacity PCU group configuration for {sstable-sideloader} migrations.
+For instructions, see xref:astra-db-serverless:administration:create-pcu.adoc#flexible-capacity[Create a flexible capacity PCU group].
 
-{company} recommends the following flexible capacity PCU group configuration for {sstable-sideloader} migrations:
-
-* Minimum capacity: 1 or more, depending on the scale of the migration.
-
-* Maximum capacity: Greater than the minimum by several units.
+[tabs]
+====
+Target database is a {db-serverless} database::
 +
-This allows the group to access surplus capacity during resource intensive stages of the migration.
+* Minimum capacity: One or more, depending on the scale of the migration.
+* Maximum capacity: Greater than the minimum by several units to allow autoscaling during resource intensive stages of the migration.
 +
-For any non-trivial migration, consider setting the maximum to 10.
+For non-trivial migrations, consider setting the maximum to 10.
 For extremely large migrations, contact your {company} account representative or {support-url}[{company} Support] to request more than 10 units to support your migration.
+
+Target database is a {db-serverless-vector} database::
++
+By default, {db-serverless-vector} databases can have no more than one unit per PCU group.
+For any non-trivial migration, contact your {company} account representative or {support-url}[{company} Support] for assistance configuring a PCU group for your target {db-serverless-vector} database.
+====
 
 After the migration, you can move your target database out of the flexible capacity PCU group, and then park or delete the group.
 Don't park the PCU group during the {sstable-sideloader} process because databases in a parked PCU group are hibernated and unavailable for use.
@@ -60,8 +84,6 @@ Committed capacity PCU group::
 --
 If you plan to keep your target database in a PCU group after the migration, you can create a committed capacity PCU group for your target database.
 
-//After PCU PR merge: xref:astra-db-serverless:administration:create-pcu.adoc#committed-capacity[create a committed capacity PCU group]
-
 [IMPORTANT]
 ====
 The {sstable-sideloader} process can be extremely resource intensive.
@@ -70,25 +92,33 @@ If there are any other databases in the same PCU group, the migration process ca
 If your PCU groups have multiple databases, consider using a flexible capacity PCU group to temporarily isolate your target database during the migration.
 ====
 
-{company} recommends the following committed capacity PCU group configuration for {sstable-sideloader} migrations:
+{company} recommends the following committed capacity PCU group configuration for {sstable-sideloader} migrations.
+For instructions, see xref:astra-db-serverless:administration:create-pcu.adoc#committed-capacity[Create a committed capacity PCU group].
 
-* Reserved capacity: 1 or more, depending on the PCU group's normal, long-term workload requirements.
+[tabs]
+====
+Target database is a {db-serverless} database::
 +
-This is the amount of capacity that you want the group to have after the migration is complete.
+* Reserved capacity: One or more, depending on the PCU group's normal, long-term workload requirements.
++
+This is the amount of long-term capacity that you want the group to have after the migration is complete.
 
-* Minimum capacity: Equal or greater than the reserved capacity.
+* Minimum capacity: Equal to or greater than the reserved capacity.
 +
-If the minimum is greater than the reserved capacity, your PCU group has consistent access to that capacity until you reduce it.
-This means you can prepare the additional capacity in advance, rather than facing potential temporary resource shortages while autoscaling.
+If the minimum is greater than the reserved capacity, the surplus capacity is prepared in advance, and there is no autoscaling required to access that capacity.
 
-* Maximum capacity: Greater than the minimum by several units.
+* Maximum capacity: Greater than the minimum by several units to allow autoscaling during resource intensive stages of the migration.
 +
-This allows the group to access surplus capacity during resource intensive stages of the migration.
-+
-For any non-trivial migration, consider setting the maximum to 10.
+For non-trivial migrations, consider setting the maximum to 10.
 For extremely large migrations, contact your {company} account representative or {support-url}[{company} Support] to request more than 10 units to support your migration.
++
+After the migration, you can reduce the minimum and maximum capacity down to the levels required for normal database operations.
 
-After the migration, you can reduce the minimum and maximum capacity to their normal levels.
+Target database is a {db-serverless-vector} database::
++
+By default, {db-serverless-vector} databases can have no more than one unit per PCU group.
+For any non-trivial migration, contact your {company} account representative or {support-url}[{company} Support] for assistance configuring a PCU group for your target {db-serverless-vector} database.
+====
 --
 ======
 +
@@ -106,7 +136,7 @@ Review all of these to ensure that your cluster is compatible with {sstable-side
 
 * Your origin cluster must run a supported database version:
 +
-** OSS {cass-short} 3.11 or later
+** {cass-reg} 3.11 or later
 ** {dse-short} 5.1 or later
 ** {hcd-short} 1.1 or later
 //Due to a potential occasional issue affecting SSTables generated by C* 3.0 / DSE 5.0. Until the fix is rolled out, we need to restrict the SSTable versions.
@@ -121,9 +151,9 @@ To upload snapshots directly from the origin cluster, you must install your clou
 
 The tool you install depends on the region where your target {astra-db} database is deployed:
 
-* AWS regions: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[Install AWS CLI]
-* Google Cloud regions: https://cloud.google.com/sdk/docs/install-sdk[Install gcloud] and https://cloud.google.com/storage/docs/gsutil_install[install gsutil]
-* Microsoft Azure regions: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli[Install Azure CLI]
+* AWS: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[Install AWS CLI]
+* Google Cloud: https://cloud.google.com/sdk/docs/install-sdk[Install gcloud] and https://cloud.google.com/storage/docs/gsutil_install[install gsutil]
+* Microsoft Azure: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli[Install Azure CLI]
 
 Alternatively, you can upload copies of the snapshots from a separate staging server that has the CLI installed, and you must coordinate this through the administration server.
 However, this process _isn't_ covered in this guide.
@@ -152,23 +182,6 @@ Your administration server must have SSH access to each node in your origin clus
 * https://github.com/datastax/cassandra-data-migrator[{cass-short} Data Migrator (CDM)] to validate imported data and, in the context of {product}, reconcile it with the origin cluster.
 * https://jqlang.github.io/jq/[jq] to format JSON responses from the {astra-db} {devops-api}.
 The {devops-api} commands in this guide use this tool.
-
-== Command line knowledge requirements
-
-Due to the nature of the {sstable-sideloader} process and the tools involved, you need to be familiar with using the command line, including the following:
-
-* Installing and using CLI tools
-* Issuing curl commands
-* Basic scripting
-* Modifying example command to your environment
-* Security best practices
-
-[IMPORTANT]
-====
-The {sstable-sideloader} process uses authentication credentials to write to the migration directory and your database.
-
-Make sure you understand how to securely store and use sensitive credentials when working on the command line.
-====
 
 == Multi-region migration requirements
 

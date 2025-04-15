@@ -21,13 +21,13 @@ Set the {product-proxy} log level to print the messages that you need.
 The default log level is `INFO`, which is adequate for most logging.
 
 If you need more detail for temporary troubleshooting, you can set the log level to `DEBUG`.
-However, this can slightly degrade performance, and {company} recommends that you revert to `INFO` logging as soon as you possible.
+However, this can slightly degrade performance, and {company} recommends that you revert to `INFO` logging as soon as possible.
 
 How you set the log level depends on how you deployed the {product-proxy}:
 
-* If you used {product-automation} to deployed the {product-proxy}, set `log_level` in `vars/zdm_proxy_core_config.yml`.
+* If you used {product-automation} to deploy the {product-proxy}, set `log_level` in `vars/zdm_proxy_core_config.yml`.
 +
-You can change this value in a rolling fashion by editing this variable and running the `rolling_update_zdm_proxy.yml` playbook.
+You can change this value in a rolling fashion by editing the variable and running the `rolling_update_zdm_proxy.yml` playbook.
 For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
 
 * If you didn't use {product-automation} to deploy the {product-proxy}, set the `ZDM_LOG_LEVEL` environment variable on each proxy instance, and then restart each instance.
@@ -36,7 +36,7 @@ For more information, see xref:manage-proxy-instances.adoc#change-mutable-config
 
 //TODO: Reconcile with manage-proxy-instance.adoc content.
 
-If you used the {product-automation} to deploy {product-proxy}, then you can get logs for a single proxy instance and use a playbook to retrieve logs for all instances.
+If you used the {product-automation} to deploy {product-proxy}, then you can get logs for a single proxy instance, and you can use a playbook to retrieve logs for all instances.
 For instructions and more information, see xref:ROOT:manage-proxy-instances.adoc#access-the-proxy-logs[Access the proxy logs].
 
 If you did not use the {product-automation} to deploy {product-proxy}, you might have to access the logs another way.
@@ -55,7 +55,7 @@ Some log messages contain text that sounds like an error, but they are not error
 The message's `level` typically indicates severity:
 
 * `level=debug` and `level=info`: Expected and normal messages that are typically not errors.
-However, if you enable `DEBUG` logging, `debug` messages can help you track the source of a problem.
+However, if you enable `DEBUG` logging, `debug` messages can help you find the source of a problem.
 
 * `level=warn`: Reports an event that wasn't fatal to the overall process, but could indicate an issue with an individual request or connection.
 
@@ -66,11 +66,11 @@ If the meaning of a `warn` or `error` message isn't clear, you can submit an iss
 
 === Common log messages
 
-Here are the most common messages in the proxy logs.
+Here are the most common messages in the {product-proxy} logs.
 
 ==== {product-proxy} startup message
 
-If the log level doesn't filtering out `INFO` entries, you can look for a `Proxy started` log message to verify that the {product-proxy} started correctly.
+If the log level doesn't filter out `info` entries, you can look for a `Proxy started` log message to verify that the {product-proxy} started correctly.
 For example:
 
 [source,json]
@@ -82,7 +82,7 @@ msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
 
 ==== {product-proxy} configuration message
 
-If the log level doesn't filtering out `INFO` entries, the first few lines of a {product-proxy} log file contain all configuration variables and values in a long JSON string.
+If the log level doesn't filter out `info` entries, the first few lines of a {product-proxy} log file contain all configuration variables and values in a long JSON string.
 
 For example, this log message has been truncated for readability:
 
@@ -101,7 +101,7 @@ To make this message easier to read, pass it through a JSON formatter or paste i
 ==== Protocol log messages
 
 There are cases where protocol errors are fatal, and they will kill an active connection that was being used to serve requests.
-However, it is also possible to get normal protocol log message that contain wording that sounds like an error.
+However, it is also possible to get normal protocol log messages that contain wording that sounds like an error.
 
 For example, the following `DEBUG` message contains the phrases `force a downgrade` and `unsupported protocol version`, which can sound like errors:
 
@@ -128,7 +128,7 @@ time="2023-01-13T13:37:28+01:00" level=info msg="Starting ZDM proxy version 2.1.
 time="2023-01-13T13:37:28+01:00" level=info msg="Parsed configuration: ..."
 ----
 
-This message is immediately before the long `Parsed configuration` string.
+This message is logged immediately before the long `Parsed configuration` string.
 
 You can also pass the `-version` flag to the {product-proxy} to print the version.
 For example, you can use the following Docker command:
@@ -161,11 +161,11 @@ These repositories are public.
 Don't include any proprietary or private information in issues, pull requests, or comments that you make in these repositories.
 ====
 
-If possible, include the following information in the issue description, and remove all proprietary and private information before submitting the issue:
+In the issue description, include as much of the following information as possible, and make sure to remove all proprietary and private information before submitting the issue:
 
 * Your <<check-version,{product-proxy} version>>.
 
-* <<proxy-logs,{product-proxy} logs>>, ideally at `debug` level, if you can easily reproduce the issue and tolerate restarting the proxy instances to apply the log level configuration change.
+* <<proxy-logs,{product-proxy} logs>>, ideally at `DEBUG` level, if you can easily reproduce the issue and tolerate restarting the proxy instances to apply the log level configuration change.
 
 * Database deployment type ({dse-short}, {hcd-short}, {cass-short}, or {astra-db}) and version for the origin and target clusters.
 The version isn't required for {astra-db}.
@@ -179,7 +179,7 @@ This is particularly helpful for performance-related issues.
 
 * The driver language and version that the client application is using.
 
-For performance-related issues, provide following additional information:
+For performance-related issues, provide the following additional information:
 
 * Which statement types (simple, prepared, batch) do you use?
 

@@ -1,4 +1,4 @@
-= Cleanup {sstable-sideloader} migrations
+= Clean up {sstable-sideloader} migrations
 :description: {sstable-sideloader} has an automatic cleanup process.
 
 {description}
@@ -14,17 +14,20 @@ Cleaning up one migration doesn't affect other migrations associated with the sa
 A migration becomes idle if it is _not_ in `Initializing` or `ImportInProgress` status.
 If a migration remains continuously idle for one week, it hits the idle timeout and triggers the automatic migration cleanup process.
 
-A migration's idle timer is created when you initialize the migration, and it automatically resets when you xref:sideloader:migrate-sideloader.adoc#import-data[import data].
+A migration's idle timer starts when you initialize the migration, and it automatically restarts when you xref:sideloader:migrate-sideloader.adoc#import-data[import data].
+
+The idle time _doesn't_ restart when you upload snapshots or take any other action besides importing data.
 
 You can override the idle timer by manually starting or scheduling a cleanup.
 However, you cannot permanently prevent the cleanup process.
 
 [WARNING]
 ====
-If your migration could be idle, uploading snapshots, or importing data for more than a few days, {company} recommends that you manually reschedule the cleanup.
+{company} recommends that you <<reschedule-a-cleanup,reschedule the cleanup>> if your migration could be idle for several days.
+This includes time spent completely idle, as well as time required to upload snapshots or import data to the target database.
 
-For large migrations, it can take several days to upload snapshots or import data.
-Make sure you manually reschedule the cleanup to avoid automatic cleanup.
+For mutli-terabyte and cross-region migrations, it can take several days to upload snapshots or import data.
+Make sure you <<reschedule-a-cleanup,reschedule the cleanup>> to avoid automatic cleanup.
 ====
 
 == Manually start a cleanup
@@ -40,7 +43,7 @@ curl -X POST \
 ----
 +
 The cleanup process never runs on migrations in `ImportInProgress` status.
-If the request fails due to `ImportInProgress`, you must either wait for the import process to end, xref:sideloader:stop-restart-sideloader.adoc#abort-migration[abort the migration], or schedule the cleanup process for a later time.
+If the request fails due to `ImportInProgress`, you must either wait for the import process to end, xref:sideloader:stop-restart-sideloader.adoc#abort-migration[abort the migration], or <<reschedule-a-cleanup,reschedule the cleanup process for a later time>>.
 
 . Wait a few minutes, and then check the migration status:
 +
@@ -49,9 +52,20 @@ include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
 While the cleanup is running, the migration status is `CleaningUpFiles`.
 When complete, the migration status is `Closed`.
 
+[#reschedule-a-cleanup]
 == Reschedule a cleanup
 
-You can use the {devops-api} to schedule a migration cleanup for a specific date and time.
+[IMPORTANT]
+====
+If you reschedule a cleanup, the cleanup timer doesn't reset when you import data.
+
+Keep a record of your rescheduled cleanups so you can reschedule them again, if necessary.
+
+For example, you might need to reschedule a cleanup if your migration needs more time.
+Alternatively, if your migration is complete, you might reschedule the cleanup to minimize storage costs for the migration bucket.
+====
+
+You can use the {devops-api} to schedule a migration cleanup for a specific date and time:
 
 [source,curl,subs="+quotes"]
 ----
@@ -68,23 +82,11 @@ Replace the following:
 +
 This endpoint overrides the idle timeout for the specified migration ID only.
 
-* Replace `*CLEANUP_TIME*` with the date and time that you want the cleanup process to run in https://en.wikipedia.org/wiki/ISO_8601[ISO 8601] format (`YYYY-MM-DDTHH:MM:SSZ`), such as `option.cleanupTime=2025-03-31T14:30Z`.
+* Replace `*CLEANUP_TIME*` with the date and time that you want the cleanup process to run.
+You must use https://en.wikipedia.org/wiki/ISO_8601[ISO 8601] format (`YYYY-MM-DDTHH:MM:SSZ`), such as `option.cleanupTime=2025-03-31T14:30Z`.
 +
 Setting a cleanup time in the past immediately starts the cleanup process.
-+
-You can't indefinitely postpone a cleanup.
-You must provide a new time for the cleanup.
 
 At your scheduled time, the cleanup process runs on the specified migration ID.
 The cleanup process never runs on migrations in `ImportInProgress` status.
 If the migration is in `ImportInProgress` at the scheduled cleanup time, the cleanup process will start when the migration's status changes.
-
-[IMPORANT]
-====
-If you reschedule a cleanup, the cleanup timer doesn't reset when you import data.
-
-Keep a record of your rescheduled cleanups so you can reschedule them again, if necessary.
-
-For example, you might need to reschedule a cleanup if your migration needs more time.
-Alternatively, if your migration is complete, you might reschedule the cleanup to minimize storage costs for the migration bucket.
-====

@@ -9,14 +9,14 @@ Because it imports data directly, {sstable-sideloader} can offer several advanta
 == {sstable-sideloader} concepts
 
 Origin, origin cluster::
-In the context of {sstable-sideloader}, this refers to your existing {cass-short} or {dse-short} cluster.
+In the context of {sstable-sideloader}, this refers to your existing {cass-short}, {dse-short}, or {hcd-short} cluster.
 
 Target, target database::
 In the context of {sstable-sideloader}, this refers to the {astra-db} Serverless database where you will migrate your data.
 
 Administration server::
-A server where you can run the migration commands, including CLI commands and {astra-db} {devops-api} calls.
-This server must have SSH access to each node in your origin cluster.
+A server where you run the migration commands, including CLI commands and {astra-db} {devops-api} calls.
+It must have SSH access to each node in your origin cluster.
 
 Migration::
 A workflow that you initiate within {sstable-sideloader} that encompasses the lifecycle of uploading and importing snapshot backups of a specific set of keyspaces or CQL tables.
@@ -39,7 +39,7 @@ For more information, see xref:sideloader:prepare-sideloader.adoc[].
 
 === Create snapshot backups
 
-{sstable-sideloader} uses snapshot backup files to import SSTable data from your existing {cass-short} or {dse-short} cluster (origin).
+{sstable-sideloader} uses snapshot backup files to import SSTable data from your existing origin cluster.
 This is an ideal approach for database migrations because creating a snapshot has negligible performance impact on the origin cluster, and it preserves metadata like write timestamps and expiration times (TTLs).
 
 Each snapshot for each node in the origin cluster must include all the keyspaces and individual CQL tables that you want to migrate.
@@ -53,7 +53,7 @@ Because snapshots don't store schema definitions, you must pre-configure the sch
 For the migration to succeed, the schema in your target database must align with the schema in the origin cluster.
 However, you might need to modify your schema or data model to be compatible with {astra-db}.
 
-For specific requirements and more information, see xref:sideloader:migrate-sideloader.adoc#record-schema[Migrate data with {sstable-sideloader}:Configure the target database].
+For specific requirements and more information, see xref:sideloader:migrate-sideloader.adoc#record-schema[Migrate data with {sstable-sideloader}: Configure the target database].
 
 === Initialize a migration
 
