@@ -261,7 +261,7 @@ CREATE TABLE smart_home.sensor_readings (
 //However, {sstable-sideloader} can't import data to a xref:astra-db-serverless:databases:collection in a {db-serverless-vector} database.
 . Recreate the schemas in your target database:
 +
-.. In the {astra-ui-link} navigation menu, click *Databases*, and then click the *Name* of your {astra-db} database.
+.. In the {astra-ui-link} navigation menu, click *Databases*, and then click the name of your {astra-db} database.
 .. xref:astra-db-serverless:databases:manage-keyspaces.adoc#keyspaces[Create a keyspace] with the exact same name as your origin cluster's keyspace.
 .. In your database's xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL console], create tables with the exact same names and schemas as your origin cluster.
 +

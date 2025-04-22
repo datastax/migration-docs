@@ -54,7 +54,8 @@ This playbook restarts each proxy container one by one, without impacting the av
 .. If unsuccessful, it repeats the check for six times at 5-second intervals and eventually interrupts the whole process if the check still fails.
 .. If successful, it waits for a configurable interval and then moves on to the next container.
 
-The pause between the restart of each {product-proxy} instance defaults to 10 seconds. If you wish to change this value, you can edit `vars/zdm_playbook_internal_config.yml` (located in `zdm-proxy-automation/ansible/vars`) and set it to the desired number of seconds.
+The pause between the restart of each {product-proxy} instance defaults to 10 seconds.
+To change this value, you can set the desired number of seconds in `zdm-proxy-automation/ansible/vars/zdm_playbook_internal_config.yml`.
 
 [TIP]
 ====
@@ -130,9 +131,9 @@ When you are ready to use the target cluster as the primary cluster, revert `rea
 
 Other, rarely changed variables:
 
-* Origin username/password, in `vars/zdm_proxy_cluster_config.yml`
-* Target username/password, in `vars/zdm_proxy_cluster_config.yml`
-* Advanced configuration variables, located in `vars/zdm_proxy_advanced_config.yml`:
+* Origin username/password in `vars/zdm_proxy_cluster_config.yml`
+* Target username/password in `vars/zdm_proxy_cluster_config.yml`
+* Advanced configuration variables in `vars/zdm_proxy_advanced_config.yml`:
 ** `zdm_proxy_max_clients_connections`:
 *** Maximum number of client connections that the {product-proxy} should accept.
 Each client connection results in additional cluster connections and causes the allocation of several in-memory structures, so this variable can be tweaked to cap the total number on each instance.
@@ -210,7 +211,7 @@ Make sure you collect the logs prior to this operation if you want to keep them.
 .. If successful, it waits for 10 seconds and then moves on to the next container.
 
 The pause between the restart of each {product-proxy} instance defaults to 10 seconds.
-If you wish to change this value, you can edit `vars/zdm_playbook_internal_config.yml` (located in `zdm-proxy-automation/ansible/vars`) and set it to the desired number of seconds.
+To change this value, you can set the desired number of seconds in `zdm-proxy-automation/ansible/vars/zdm_playbook_internal_config.yml`.
 
 [NOTE]
 ====

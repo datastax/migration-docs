@@ -360,18 +360,19 @@ metadata service (Astra) returned not successful status code
 
 There are two possible causes for this:
 
-1. The credentials that the {product-proxy} is using for {astra-db} don't have sufficient permissions.
-2. The {astra-db} database is hibernated.
+* The credentials that the {product-proxy} is using for {astra-db} don't have sufficient permissions.
+* The {astra-db} database is hibernated or otherwise unavailable.
 
 === Solution or Workaround
 
-Start by opening the {astra-ui} and checking the `Status` of your database.
-If it is `Hibernated`, click the “Resume” button and wait for it to become `Active`.
-If it is `Active` already, then it is likely an issue with permissions.
+In the {astra-ui}, check the xref:astra-db-serverless:databases:database-statuses.adoc[database status].
 
-We recommend starting with a token that has the Database Administrator role in {astra} to confirm that it is a permissions issue.
-Refer to https://docs.datastax.com/en/astra/astra-db-vector/administration/manage-database-access.html[Manage user permissions].
-//TODO: xref:astra-db-serverless:administration:rbac.adoc[]
+If the database is not in *Active* status, you might need to take action or wait for the database to return to active status.
+For example, if the database is hibernated, xref:astra-db-serverless:databases:database-statuses.adoc#hibernated[reactivate the database].
+When the database is active again, retry the connection.
+
+If the database is in *Active* status, then the issue is likely due to the credentials permissions.
+Try using an xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token scoped to a database], specifically a token with the *Database Administrator* role for your target database.
 
 [[_async_read_timeouts_stream_id_map_exhausted]]
 == Async read timeouts / stream id map exhausted

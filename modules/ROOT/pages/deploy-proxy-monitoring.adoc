@@ -104,9 +104,11 @@ Leave blank if authentication is not enabled on the cluster.
 
 Save the file and exit the editor.
 
-.Example: zdm_proxy_cluster_config.yml for a migration from a self-managed origin cluster to an {astra-db} target cluster
+.Example: zdm_proxy_cluster_config.yml
 [%collapsible]
 ====
+The following example `zdm_proxy_cluster_config.yml` file shows the configuration for a migration from a self-managed origin cluster to an {astra-db} target.
+
 [source,yml]
 ----
 ##############################
@@ -155,8 +157,7 @@ For instructions, see xref:ROOT:tls.adoc[].
 [[_advanced_configuration_optional]]
 === Advanced configuration (optional)
 
-Here are some additional configuration variables that you may wish to review and change *at deployment time* in specific cases.
-All these variables are located in `vars/zdm_proxy_advanced_config.yml`.
+There are additional configuration variables in `vars/zdm_proxy_advanced_config.yml` that you might want to change _at deployment time_ in specific cases.
 
 All advanced configuration variables not listed here are considered mutable and can be changed later if needed (changes can be easily applied to existing deployments in a rolling fashion using the relevant Ansible playbook, as explained later, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable]).
 
@@ -165,10 +166,10 @@ All advanced configuration variables not listed here are considered mutable and 
 For multi-datacenter origin clusters, you will need to specify the name of the datacenter that the {product-proxy} should consider local. To do this, set the property `origin_local_datacenter` to the datacenter name.
 Likewise, for multi-datacenter target clusters you will need to set `target_local_datacenter` appropriately.
 
-These two variables are located in `vars/zdm_proxy_advanced_config.yml`.
+These two variables are stored in `vars/zdm_proxy_advanced_config.yml`.
 Note that this is not relevant for multi-region {astra-db} databases, where this is handled through region-specific Secure Connect Bundles.
 
-[[_ports]]
+[#ports]
 ==== Ports
 
 Each {product-proxy} instance listens on port 9042 by default, like a regular {cass-short} cluster.
@@ -209,10 +210,10 @@ It's often fine to simply submit the `readiness` check to return the proxy's sta
 
 The format:
 
-[source,bash]
+[source,plaintext,subs="+quotes"]
 ----
-http://<zdm proxy private ip>:<metrics port>/health/liveness
-http://<zdm proxy private ip>:<metrics port>/health/readiness
+http://**ZDM_PROXY_PRIVATE_IP**:**METRICS_PORT**/health/liveness
+http://**ZDM_PROXY_PRIVATE_IP**:**METRICS_PORT**/health/readiness
 ----
 
 Readiness expanded GET format:
@@ -222,26 +223,21 @@ Readiness expanded GET format:
 curl -G "http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:{{ metrics_port }}/health/readiness"
 ----
 
-The default port for metrics collection is `14001`. 
-Optionally, you may have overridden this port when you deployed the {product-proxy} specifying a custom, non-default port that was set by changing the value of the configuration variable `metrics_port`. 
-See xref:deploy-proxy-monitoring.adoc#_ports[this section] for more information.
+The default port for metrics collection is `14001`.
+You can override this port if you deploy the {product-proxy} with `metrics_port` set to a non-default port.
+For more information, see <<ports>>.
 
+Readiness example:
 
-[tabs]
-====
-Readiness example::
-+
---
 [source,bash]
 ----
 curl -G "http://172.18.10.40:14001/health/readiness"
 ----
---
-+
-Result::
-+
---
-[source,bash]
+
+.Result
+[%collapsible]
+====
+[source,json]
 ----
 {
    "OriginStatus":{
@@ -259,7 +255,6 @@ Result::
    "Status":"UP"
 }
 ----
---
 ====
 
 === Check {product-proxy} instances via docker logs
@@ -361,7 +356,7 @@ ubuntu@52772568517c:~$
 
 === Configure the Grafana credentials
 
-Edit the file `zdm_monitoring_config.yml`, located in `zdm-proxy-automation/ansible/vars`:
+Edit the file `zdm_monitoring_config.yml`, stored at `zdm-proxy-automation/ansible/vars`:
 
 * `grafana_admin_user`: leave unchanged (defaults to `admin`)
 * `grafana_admin_password`: set to the password of your choice

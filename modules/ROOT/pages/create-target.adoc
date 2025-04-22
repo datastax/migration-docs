@@ -62,26 +62,30 @@ scp -i <your_ssh_key> secure-connect-<target cluster name>.zip <linux user>@<pub
 
 === Create the client application schema on your {astra-db} database
 
-To complete the preparation work, create the client application schema in your newly created {astra-db} database.
+To complete the preparation work, create the client application schema in your new {astra-db} database.
 
 In the {astra-ui}, create each corresponding keyspace and table.
-The keyspace names, table names, and structure must be identical to the schema on the origin cluster, bearing in mind that:
+The keyspace names, table names, column names, data types, and primary keys must be identical to the schema on the origin cluster.
 
-* In {astra-db}, keyspaces must be created in the {astra-ui}.
-Keyspace creation through CQL is not supported.
-See https://docs.datastax.com/en/astra/astra-db-vector/databases/create-database.html[create your database], and https://docs.datastax.com/en/astra/astra-db-vector/databases/manage-keyspaces.html#add-keyspace[adding a new keyspace].
+Note the following limitations and exceptions for tables in {astra-db}:
 
-* Tables can be defined as usual in regular CQL, but the only table property that can be optionally set in {astra-db} is `default_time_to_live`.
-Please remove all other table properties (such as compaction strategy, `gc_grace_seconds` and so on).
+* In {astra-db}, you must create keyspaces in the {astra-ui} or with the {devops-api} because xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL for {astra-db}] doesn't support `CREATE KEYSPACE`.
+For instructions, see xref:astra-db-serverless:databases:manage-keyspaces.adoc[].
 
-* Materialized Views (MVs) and certain types of indexes are not supported in {astra-db}, and should be replaced with supported indexes. See https://docs.datastax.com/en/astra/astra-db-vector/databases/database-limits.html#fields[Serverless database limits] for more details.
+* You can use typical CQL statements to create tables in {astra-db}.
+However, the only optional table properties that {astra-db} supports are `default_time_to_live` and `comment`.
+As a best practice, omit unsupported table properties, such as compaction strategy and `gc_grace_seconds`, when creating tables in {astra-db}.
+For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc#unsupported-values-are-ignored[CQL for {astra-db}: Unsupported values are ignored].
 
-To aid you in preparing the schema from the DDL used in a {cass} or {dse-short} cluster, you may wish to consider the `generate-ddl` functionality in the link:https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator}]. Note that Materialized Views and indexes are not automatically converted by this tool.
+* {astra-db} doesn't support Materialized Views (MVs) and certain types of indexes.
+You must replace these with supported indexes.
+For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL for {astra-db}].
 
-Note that CQL statements, such as those used to reproduce the schema on the target database, can be executed in {astra-db} using two methods:
+To help you prepare the schema from the DDL in your origin cluster, consider using the `generate-ddl` functionality in the link:https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator}].
+However, this tool doesn't automatically convert MVs or indexes.
 
-. A CQL Console located directly https://docs.datastax.com/en/astra/astra-db-vector/cql/connect-cql-shell.html#embedded-cql-shell[in the {astra-ui}].
-. Any machine connected remotely using an {astra-db}-compatible https://docs.datastax.com/en/astra/astra-db-vector/cql/connect-cql-shell.html#standalone-cql-shell[standalone `cqlsh` client] (and provide the necessary connection secrets).
+CQL statements, such as those used to reproduce the schema on the target database, can be executed in {astra-db} using the built-in CQL shell or the standalone CQL shell.
+For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL for {astra-db}: CQL shell].
 
 == Using a generic CQL cluster as the target
 

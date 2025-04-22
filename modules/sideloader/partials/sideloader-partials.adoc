@@ -51,7 +51,7 @@ In the next phase of the migration process, you will upload your snapshots to th
 
 . Generates upload credentials that grant read/write access to the migration directory.
 +
-The credentials are formatted according to the cloud provider where your target database is located.
+The credentials are formatted according to the cloud provider where your target database is deployed.
 // end::initialize[]
 
 // tag::import[]
