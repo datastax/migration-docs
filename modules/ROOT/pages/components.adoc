@@ -101,7 +101,7 @@ Examples of databases that support CQL are {cass-reg}, {dse}, and {astra-db}.
 * Validate migration accuracy and performance using examples that provide a smaller, randomized data set.
 * Preserve internal `writetime` timestamps and Time To Live (TTL) values.
 * Take advantage of advanced data types (Sets, Lists, Maps, UDTs).
-* Filter records from the the origin cluster's data, using {cass-short}'s internal `writetime` timestamp.
+* Filter records from the origin cluster's data, using {cass-short}'s internal `writetime` timestamp.
 * Use SSL Support, including custom cipher algorithms.
 
 {cass-migrator} is designed to:

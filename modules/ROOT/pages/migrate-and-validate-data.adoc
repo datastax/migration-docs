@@ -49,6 +49,6 @@ For more information, see xref:ROOT:dsbulk-migrator.adoc[] and the https://githu
 
 Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like {dsbulk-migrator} and {cass-migrator}, including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
 
-{sstable-sideloader} uses the {astra-db} {devops-api}, your cloud provider's CLI, and `nodetool`.
+{sstable-sideloader} uses the {astra} {devops-api}, your cloud provider's CLI, and `nodetool`.
 
 For more information, see xref:sideloader:sideloader-overview.adoc[].

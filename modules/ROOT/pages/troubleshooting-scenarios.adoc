@@ -322,7 +322,7 @@ Restart the client application to force an immediate reconnect.
 
 If you expect {product-proxy} instances to go down frequently, change the reconnection policy on the driver so that the interval between reconnection attempts has a shorter limit.
 
-== Error with {astra-db} DevOps API when using the {product-automation}
+== Error with {astra} DevOps API when using the {product-automation}
 
 === Symptoms
 
@@ -337,7 +337,7 @@ Connection failure: Remote end closed connection without response", "redirected"
 
 === Cause
 
-The {astra-db} DevOps API is likely temporarily unavailable.
+The {astra} DevOps API is likely temporarily unavailable.
 
 === Solution or Workaround
 
@@ -369,8 +369,9 @@ Start by opening the {astra-ui} and checking the `Status` of your database.
 If it is `Hibernated`, click the “Resume” button and wait for it to become `Active`.
 If it is `Active` already, then it is likely an issue with permissions.
 
-We recommend starting with a token that has the Database Administrator role in {astra-db} to confirm that it is a permissions issue.
+We recommend starting with a token that has the Database Administrator role in {astra} to confirm that it is a permissions issue.
 Refer to https://docs.datastax.com/en/astra/astra-db-vector/administration/manage-database-access.html[Manage user permissions].
+//TODO: xref:astra-db-serverless:administration:rbac.adoc[]
 
 [[_async_read_timeouts_stream_id_map_exhausted]]
 == Async read timeouts / stream id map exhausted

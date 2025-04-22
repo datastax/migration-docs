@@ -88,7 +88,7 @@ The suite of {product} tools from {company} is free and open-sourced.
 
 == Is there support available if I have questions or issues during our migration?
 
-{product-proxy} and related software tools in the migration suite include technical assistance by {support-url}[{company} Support] for {dse-short} and Luna subscribers, and {astra-db} users who are on an Enterprise plan.
+{product-proxy} and related software tools in the migration suite include technical assistance by {support-url}[{company} Support] for {dse-short} and Luna subscribers, and {astra} users who are on an Enterprise plan.
 Free and Pay As You Go plan users do not have support access and must raise questions in the {astra-ui} chat.
 https://www.datastax.com/products/luna[Luna] is a subscription to the {cass} support and expertise at {company}.
 

@@ -27,6 +27,7 @@ asciidoc:
     hcd: 'Hyper-Converged Database (HCD)'
     hcd-short: 'HCD'
     astra-db: 'Astra DB'
+    astra: 'Astra'
     data-api: 'Data API'
     db-serverless: 'Serverless (Non-Vector)'
     db-serverless-vector: 'Serverless (Vector)'

@@ -85,7 +85,7 @@ The only direct access to these machines should be from the jumphost.
 The {product-proxy} machines must be able to connect to the origin and target cluster nodes:
 
 * For self-managed clusters ({cass} or {dse-short}), connectivity is needed to the {cass-short} native protocol port (typically 9042).
-* For {astra-db}, you will need to ensure outbound connectivity to the {astra-db} endpoint indicated in the Secure Connect Bundle.
+* For {astra-db}, you will need to ensure outbound connectivity to the {astra} endpoint indicated in the Secure Connect Bundle.
 Connectivity over Private Link is also supported.
 
 The connectivity requirements for the jumphost / monitoring machine are:

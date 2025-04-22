@@ -15,7 +15,7 @@ Target, target database::
 In the context of {sstable-sideloader}, this refers to the {astra-db} Serverless database where you will migrate your data.
 
 Administration server::
-A server where you run the migration commands, including CLI commands and {astra-db} {devops-api} calls.
+A server where you run the migration commands, including CLI commands and {astra} {devops-api} calls.
 It must have SSH access to each node in your origin cluster.
 
 Migration::

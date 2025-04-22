@@ -29,7 +29,7 @@ You can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-mi
 // end::validate[]
 
 // tag::initialize[]
-After you create snapshots on the origin cluster and pre-configure the schema on the target database, use the {astra-db} {devops-api} to initialize the migration.
+After you create snapshots on the origin cluster and pre-configure the schema on the target database, use the {astra} {devops-api} to initialize the migration.
 
 image::sideloader:data-importer-workflow.svg[]
 
@@ -40,7 +40,7 @@ When you initialize a migration, {sstable-sideloader} does the following:
 The migration bucket is only created during the first initialization.
 All subsequent migrations use different directories in the same migration bucket.
 +
-{company} owns the migration bucket, and it is located within the {astra-db} perimeter.
+{company} owns the migration bucket, and it is located within the {astra} perimeter.
 
 . Generates a migration ID that is unique to the new migration.
 

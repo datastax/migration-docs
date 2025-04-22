@@ -180,7 +180,7 @@ Using CQLSH to connect to a {product-proxy} instance is very easy:
 
 * Download CQLSH for free from https://downloads.datastax.com/#cqlsh[here] on a machine that has connectivity to the {product-proxy} instances:
 ** To connect to the {product-proxy}, any version is fine.
-** The {astra-db}-compatible version additionally supports connecting directly to an {astra-db} cluster by passing the cluster's Secure Connect Bundle and valid credentials.
+** The {astra}-compatible version additionally supports connecting directly to an {astra-db} cluster by passing the cluster's Secure Connect Bundle and valid credentials.
 * Install it by uncompressing the archive: `tar -xvf cqlsh-<...>.tar.gz`.
 * Navigate to the `cqlsh-<...>/bin` directory, for example `cd cqlsh-astra/bin`.
 * Launch CQLSH:

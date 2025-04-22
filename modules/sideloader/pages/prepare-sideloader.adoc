@@ -20,7 +20,7 @@ Make sure you understand how to securely store and use sensitive credentials whe
 
 == Target {astra-db} database requirements
 
-* Your {astra-db} organization must be on an *Enterprise* xref:astra-db-serverless:administration:subscription-plans.adoc[subscription plan].
+* Your {astra} organization must be on an *Enterprise* xref:astra-db-serverless:administration:subscription-plans.adoc[subscription plan].
 +
 {sstable-sideloader} is a premium feature that incurs costs based on usage:
 +
@@ -29,7 +29,7 @@ Make sure you understand how to securely store and use sensitive credentials whe
 
 +
 --
-For more information and specific rates, see the https://www.datastax.com/pricing/astra-db[{astra-db} Pricing page].
+For more information and specific rates, see the https://www.datastax.com/pricing/astra-db[{astra} Pricing page].
 
 [TIP]
 ====
@@ -180,7 +180,7 @@ Your administration server must have SSH access to each node in your origin clus
 {company} recommends that you install the following additional software on your administration server:
 
 * https://github.com/datastax/cassandra-data-migrator[{cass-short} Data Migrator (CDM)] to validate imported data and, in the context of {product}, reconcile it with the origin cluster.
-* https://jqlang.github.io/jq/[jq] to format JSON responses from the {astra-db} {devops-api}.
+* https://jqlang.github.io/jq/[jq] to format JSON responses from the {astra} {devops-api}.
 The {devops-api} commands in this guide use this tool.
 
 == Multi-region migration requirements
