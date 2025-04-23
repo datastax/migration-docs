@@ -183,7 +183,11 @@ Your administration server must have SSH access to each node in your origin clus
 * https://jqlang.github.io/jq/[jq] to format JSON responses from the {astra} {devops-api}.
 The {devops-api} commands in this guide use this tool.
 
-== Multi-region migration requirements
+== Additional preparation for specific migration scenarios
+
+The following information can help you prepare for specific migration scenarios, including multi-region migrations and multiple migrations to the same database.
+
+=== Multi-region migrations
 
 Multi-region migrations can include one or more of the following scenarios:
 
@@ -193,6 +197,105 @@ Multi-region migrations can include one or more of the following scenarios:
 
 It is difficult to provide a one-size-fits-all solution for multi-region migrations due to the potential complexity and variability of these scenarios.
 For assistance planning a multi-region migration, contact your {company} account representative or {support-url}[{company} Support].
+
+=== Multi-node migrations
+
+You can migrate data from any number of nodes in your origin cluster to the same target database or multiple target databases.
+
+When you xref:sideloader:migrate-sideloader.adoc[migrate data with {sstable-sideloader}], there is no difference in the core process when migrating from one node or multiple nodes.
+The following steps summarize the process and outline some considerations for migrating multiple nodes.
+
+[tabs]
+======
+Migrate multiple nodes to one database::
++
+--
+. On your origin cluster, make sure your data is valid and ready to migrate, as explained in <<origin-cluster-requirements>>.
+
+. From your origin cluster, create snapshots for all of the nodes that you want to migrate.
++
+Run `nodetool snapshot` as many times as necessary to capture all of your nodes.
+
+. On your target database, replicate the schemas for all tables that you want to migrate.
++
+This is critical for a successful migration.
+If the schemas don't match, the migration fails.
++
+You don't need to make any changes based on the number of nodes, as long as the keyspaces and table schemas are replicated in the target database.
+
+. Initialize the migration to prompt {sstable-sideloader} to create a migration bucket for your target database.
+
+. Upload all of your node snapshots to the migration bucket.
+
+. Use {sstable-sideloader} to import the data to your target database.
++
+{sstable-sideloader} imports snapshots from the migration bucket to your target database based on the matching schemas.
+The number of node snapshots that you uploaded to the migration bucket doesn't determine the success of the import.
+The success of the import depends primarily on the validity of the schemas and the data in the snapshots.
+
+. After the import, validate the migrated data to ensure that it matches the data in the origin cluster.
+For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator} ({cass-migrator-short}) in validation mode].
+--
+
+Migrate multiple nodes to multiple databases::
++
+--
+Orchestrating concurrent migrations from multiple nodes to multiple target databases can be complex.
+
+Consider focusing on one target database at a time, or create a migration plan to track origin nodes, target databases, migration bucket credentials, and timelines for each migration.
+
+. On your origin cluster, make sure your data is valid and ready to migrate, as explained in <<origin-cluster-requirements>>.
+
+. From your origin cluster, create snapshots for all of the nodes that you want to migrate.
++
+Run `nodetool snapshot` as many times as necessary to capture all of your nodes.
+
+. On each of your target databases, replicate the schemas for the tables that you want to migrate to each database.
++
+This is critical for a successful migration.
+If the schemas don't match, the migration fails.
++
+You don't need to make any changes based on the number of nodes, as long as the keyspaces and table schemas are replicated in the target databases.
++
+If you want to migrate the same data to multiple databases, you must recreate the schemas in each of those databases.
+{sstable-sideloader} requires a schema to be present in the target database in order to migrate data.
+
+. For each target database, initialize a migration to prompt {sstable-sideloader} to create migration buckets for each database.
++
+At minimum, you must initialize one migration for each database.
+
+. Upload the node snapshots to their corresponding migration buckets.
+
+. Use {sstable-sideloader} to import the data to your target databases.
++
+You can import data to multiple databases at once, but each import event must be triggered separately using the unique  migration ID.
++
+{sstable-sideloader} imports snapshots from the migration bucket to your target database based on the matching schemas.
+The number of node snapshots that you uploaded to the migration bucket doesn't determine the success of the import.
+The success of the import depends primarily on the validity of the schemas and the data in the snapshots.\
+
+. After the import, validate the migrated data to ensure that it matches the data in the origin cluster.
+For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator} ({cass-migrator-short}) in validation mode].
+--
+======
+
+=== Multiple migrations to the same database
+
+When you initialize a migration with {sstable-sideloader}, a unique migration ID is generated for that specific migration workflow.
+For each migration ID, there is a unique migration directory and migration directory credentials.
+
+If you initialize multiple migrations for the same database, you generate multiple migration IDs, each with its own migration directory and credentials.
+
+This can be useful for breaking large migrations into smaller batches.
+For example, if you have 100 snapshots, you could initialize 10 migrations, and then upload 10 different snapshots to each migration directory.
+
+You can upload snapshots to multiple migration directories at once.
+However, when you reach the import phase of the migration, {sstable-sideloader} can import from only one migration directory at a time per database.
+For example, if you have 10 migration IDs for the same database, you must run 10 separate import actions.
+Each import must completely finish before starting the next import.
+
+After all of the imports are complete, validate the migrated data in your target database to ensure that it matches the data in the origin cluster.
+For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator} ({cass-migrator-short}) in validation mode].
 
 == Next steps
 
