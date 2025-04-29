@@ -452,13 +452,6 @@ curl -X GET \
 Microsoft Azure::
 +
 --
-[IMPORTANT]
-====
-{sstable-sideloader} for Microsoft Azure is available only to qualified participants in the private preview release.
-Development is ongoing, and the features and functionality are subject to change.
-This private preview is governed by your Agreement and the https://www.datastax.com/legal/previewterms[{company} Preview Terms].
-====
-
 .MigrationStatus with Azure credentials
 [source,json]
 ----
@@ -692,12 +685,6 @@ gsutil -m rsync -r -d **CASSANDRA_DATA_DIR**/**KEYSPACE_NAME**/{asterisk}{asteri
 Microsoft Azure::
 +
 --
-[IMPORTANT]
-====
-{sstable-sideloader} for Microsoft Azure is available only to qualified participants in the private preview release.
-Development is ongoing, and the features and functionality are subject to change.
-This private preview is governed by your Agreement and the https://www.datastax.com/legal/previewterms[{company} Preview Terms].
-====
 //----
 //for dir in $(find "$CASSANDRA_DATA_DIR" -type d -path "*/snapshots/${SNAPSHOT_NAME}*"); do
 //       REL_PATH=${dir#"$CASSANDRA_DATA_DIR"}  # Remove the base path
