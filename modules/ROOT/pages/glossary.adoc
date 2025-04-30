@@ -1,7 +1,5 @@
 = Glossary
 :page-tag: migration,zdm,zero-downtime,glossary
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 Here are a few terms used throughout the {company} {product} documentation and code.
 
@@ -17,7 +15,8 @@ For details about the playbooks available in {product-automation}, see:
 [[_asynchronous_dual_reads]]
 == Asynchronous dual reads
 
-An optional testing phase in which reads are sent to both Origin and Target, enabling you to check that the intended Target of your migration can handle the full workload of reads and writes before finalizing the migration and moving off the {product-proxy} instances.
+An optional testing phase in which reads are sent to both the origin and target clusters.
+This lets you check that the target cluster/database can handle the full workload of reads and writes before you finalize the migration and moving off the {product-proxy} instances.
 For details, see xref:enable-async-dual-reads.adoc[].
 
 == CQL
@@ -28,7 +27,7 @@ For details, see https://docs.datastax.com/en/astra/astra-db-vector/cql/develop-
 
 == Dual-write logic
 
-{product-proxy} handles your client application's real-time write requests and forwards them to two {cass-short}-based clusters (Origin and Target) simultaneously.
+{product-proxy} handles your client application's real-time write requests and forwards them to two {cass-short}-based origin and target clusters simultaneously.
 The dual-write logic in {product-proxy} means that you do not need to modify your client application to perform dual writes manually during a migration: {product-proxy} takes care of it for you.
 See the diagram in the xref:introduction.adoc#migration-workflow[workflow introduction].
 
@@ -42,8 +41,8 @@ Your existing {cass-short}-based cluster, whether it's {cass-reg}, {dse}, or {as
 
 The cluster that is currently considered the "primary" source of truth.
 While writes are always sent to both clusters, the primary cluster is the one to which all synchronous reads are always sent, and their results are returned to the client application.
-During a migration, Origin is typically the primary cluster.
-Near the end of the migration, you'll shift the primary cluster to be Target.
+During a migration, the origin cluster is typically the primary cluster.
+Near the end of the migration, you shift the primary cluster to be the target cluster.
 
 For more, see <<secondary-cluster,Secondary cluster>>.
 
@@ -67,9 +66,9 @@ See xref:glossary.adoc#_asynchronous_dual_reads[Asynchronous dual reads].
 
 During a migration, the secondary cluster is the one that is currently **not** the source of truth. 
 
-When using the {product-proxy}, all writes are synchronously sent to both Origin and Target.
+When using the {product-proxy}, all writes are synchronously sent to both the origin and target clusters.
 Reads operate differently: with the default read mode, reads are only sent to the primary cluster (Origin by default).
-In Phase 3 of a migration, you may (optionally) want to temporarily send the reads to both clusters, to make sure that Target can handle the full workload of reads and writes. 
+In Phase 3 of a migration, you can optionally send the reads to both clusters temporarily if you want to verify that the target cluster can handle the full workload of reads and writes.
 
 If you set the proxy's read mode configuration variable (`read_mode`) to `DUAL_ASYNC_ON_SECONDARY`, then asynchronous dual reads are enabled.
 That change results in reads being additionally sent to the secondary cluster.

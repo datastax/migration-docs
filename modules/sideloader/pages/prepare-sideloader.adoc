@@ -1,0 +1,302 @@
+= Prepare to use {sstable-sideloader}
+:description: Before you use {sstable-sideloader}, review the requirements and prepare your target database, origin cluster, and administration server.
+
+{description}
+
+Due to the nature of the {sstable-sideloader} process and the tools involved, you need to be familiar with using the command line, including the following:
+
+* Installing and using CLI tools
+* Issuing curl commands
+* Basic scripting
+* Modifying example commands to fit your environment
+* Security best practices
+
+[IMPORTANT]
+====
+The {sstable-sideloader} process uses authentication credentials to write to the migration directory and your database.
+
+Make sure you understand how to securely store and use sensitive credentials when working on the command line.
+====
+
+== Target {astra-db} database requirements
+
+* Your {astra} organization must be on an *Enterprise* xref:astra-db-serverless:administration:subscription-plans.adoc[subscription plan].
++
+{sstable-sideloader} is a premium feature that incurs costs based on usage:
++
+** Total amount (GB) of data processed as part of the {sstable-sideloader} workload.
+** The amount of data stored in the migration bucket is metered at the standard {astra-db} storage rate.
+
++
+--
+For more information and specific rates, see the https://www.datastax.com/pricing/astra-db[{astra} Pricing page].
+
+[TIP]
+====
+Migration directories are automatically cleaned up after one week of idle time.
+
+To minimize costs, you can xref:sideloader:cleanup-sideloader.adoc[manually clean up migration directories] when you no longer need them.
+====
+--
+
+* Your target database must be an {astra-db} Serverless database.
++
+If you don't already have one, xref:astra-db-serverless:databases:create-database.adoc[create a database].
+You can use either a {db-serverless} or {db-serverless-vector} database.
++
+{db-serverless-vector} databases can store both vector and non-vector data.
+
+* Your target database must be in a xref:astra-db-serverless:administration:provisioned-capacity-units.adoc[Provisioned Capacity Unit (PCU) group].
+You can use either a flexible capacity PCU group or a committed capacity PCU group, depending on your long-term needs and other PCU group usage.
++
+[tabs]
+======
+Flexible capacity PCU group::
++
+--
+Because {sstable-sideloader} operations are typically short-term, resource-intensive events, you can create a flexible capacity PCU group exclusively to support your target database during the migration.
+
+{company} recommends the following flexible capacity PCU group configuration for {sstable-sideloader} migrations.
+For instructions, see xref:astra-db-serverless:administration:create-pcu.adoc#flexible-capacity[Create a flexible capacity PCU group].
+
+[tabs]
+====
+Target database is a {db-serverless} database::
++
+* Minimum capacity: One or more, depending on the scale of the migration.
+* Maximum capacity: Greater than the minimum by several units to allow autoscaling during resource intensive stages of the migration.
++
+For non-trivial migrations, consider setting the maximum to 10.
+For extremely large migrations, contact your {company} account representative or {support-url}[{company} Support] to request more than 10 units to support your migration.
+
+Target database is a {db-serverless-vector} database::
++
+By default, {db-serverless-vector} databases can have no more than one unit per PCU group.
+For any non-trivial migration, contact your {company} account representative or {support-url}[{company} Support] for assistance configuring a PCU group for your target {db-serverless-vector} database.
+====
+
+After the migration, you can move your target database out of the flexible capacity PCU group, and then park or delete the group.
+Don't park the PCU group during the {sstable-sideloader} process because databases in a parked PCU group are hibernated and unavailable for use.
+--
+
+Committed capacity PCU group::
++
+--
+If you plan to keep your target database in a PCU group after the migration, you can create a committed capacity PCU group for your target database.
+
+[IMPORTANT]
+====
+The {sstable-sideloader} process can be extremely resource intensive.
+If there are any other databases in the same PCU group, the migration process can affect their performance due to resource contention.
+
+If your PCU groups have multiple databases, consider using a flexible capacity PCU group to temporarily isolate your target database during the migration.
+====
+
+{company} recommends the following committed capacity PCU group configuration for {sstable-sideloader} migrations.
+For instructions, see xref:astra-db-serverless:administration:create-pcu.adoc#committed-capacity[Create a committed capacity PCU group].
+
+[tabs]
+====
+Target database is a {db-serverless} database::
++
+* Reserved capacity: One or more, depending on the PCU group's normal, long-term workload requirements.
++
+This is the amount of long-term capacity that you want the group to have after the migration is complete.
+
+* Minimum capacity: Equal to or greater than the reserved capacity.
++
+If the minimum is greater than the reserved capacity, the surplus capacity is prepared in advance, and there is no autoscaling required to access that capacity.
+
+* Maximum capacity: Greater than the minimum by several units to allow autoscaling during resource intensive stages of the migration.
++
+For non-trivial migrations, consider setting the maximum to 10.
+For extremely large migrations, contact your {company} account representative or {support-url}[{company} Support] to request more than 10 units to support your migration.
++
+After the migration, you can reduce the minimum and maximum capacity down to the levels required for normal database operations.
+
+Target database is a {db-serverless-vector} database::
++
+By default, {db-serverless-vector} databases can have no more than one unit per PCU group.
+For any non-trivial migration, contact your {company} account representative or {support-url}[{company} Support] for assistance configuring a PCU group for your target {db-serverless-vector} database.
+====
+--
+======
++
+For more information, see xref:astra-db-serverless:administration:provisioned-capacity-units.adoc[].
+
+[#origin-cluster-requirements]
+== Origin cluster requirements
+
+The following requirements, recommendations, and limitations apply to origin clusters.
+Review all of these to ensure that your cluster is compatible with {sstable-sideloader}.
+
+=== Cluster infrastructure
+
+* Your origin cluster can be hosted on premises or on any cloud provider.
+
+* Your origin cluster must run a supported database version:
++
+** {cass-reg} 3.11 or later
+** {dse-short} 5.1 or later
+** {hcd-short} 1.1 or later
+//Due to a potential occasional issue affecting SSTables generated by C* 3.0 / DSE 5.0. Until the fix is rolled out, we need to restrict the SSTable versions.
+
+* Your origin cluster must use the default https://cassandra.apache.org/doc/stable/cassandra/configuration/cass_yaml_file.html#partitioner[partitioner], `Murmur3Partitioner`.
++
+Older partitioners, such as `RandomPartitioner`, `ByteOrderedPartitioner`, and `OrderPreservingPartitioner`, are not supported.
+
+=== Cloud provider CLI
+
+To upload snapshots directly from the origin cluster, you must install your cloud provider's CLI on each node in the origin cluster.
+
+The tool you install depends on the region where your target {astra-db} database is deployed:
+
+* AWS: https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html[Install AWS CLI]
+* Google Cloud: https://cloud.google.com/sdk/docs/install-sdk[Install gcloud] and https://cloud.google.com/storage/docs/gsutil_install[install gsutil]
+* Microsoft Azure: https://learn.microsoft.com/en-us/cli/azure/install-azure-cli[Install Azure CLI]
+
+Alternatively, you can upload copies of the snapshots from a separate staging server that has the CLI installed, and you must coordinate this through the administration server.
+However, this process _isn't_ covered in this guide.
+The CLI commands in this guide assume you have installed your cloud provider's CLI on the nodes in the origin cluster.
+If you choose the alternative option, you must modify the commands accordingly for your environment.
+
+=== Incompatible data
+
+* *{astra-db} doesn't support materialized views*: You must replace these with SAI or an alternative data model design.
+
+* *{sstable-sideloader} doesn't support encrypted data*: If your origin cluster uses xref:6.9@dse:securing:transparent-data-encryption.adoc[{dse-short} Transparent Data Encryption], be aware that {sstable-sideloader} can't migrate these SSTables.
++
+If you have a mix of encrypted and unencrypted data, you can use {sstable-sideloader} to migrate the unencrypted data.
+After the initial migration, you can use another strategy to move the encrypted data, such as https://github.com/datastax/cassandra-data-migrator[{cass-short} Data Migrator (CDM)] or a manual export and reupload.
+
+* *{sstable-sideloader} doesn't support secondary indexes*: If you don't remove or replace these in your origin cluster, then you must manually remove these directories from your snapshots, as explained in xref:sideloader:migrate-sideloader.adoc#create-snapshots[Create snapshots].
+
+== Administration server requirements
+
+You need a server where you can run the {sstable-sideloader} commands.
+
+Your administration server must have SSH access to each node in your origin cluster.
+
+{company} recommends that you install the following additional software on your administration server:
+
+* https://github.com/datastax/cassandra-data-migrator[{cass-short} Data Migrator (CDM)] to validate imported data and, in the context of {product}, reconcile it with the origin cluster.
+* https://jqlang.github.io/jq/[jq] to format JSON responses from the {astra} {devops-api}.
+The {devops-api} commands in this guide use this tool.
+
+== Additional preparation for specific migration scenarios
+
+The following information can help you prepare for specific migration scenarios, including multi-region migrations and multiple migrations to the same database.
+
+=== Multi-region migrations
+
+Multi-region migrations can include one or more of the following scenarios:
+
+* Your origin cluster is deployed to multiple regions.
+* Your target database is, or will be, deployed to multiple regions.
+* You need to support multiple regions in a live migration scenario.
+
+It is difficult to provide a one-size-fits-all solution for multi-region migrations due to the potential complexity and variability of these scenarios.
+For assistance planning a multi-region migration, contact your {company} account representative or {support-url}[{company} Support].
+
+=== Multi-node migrations
+
+You can migrate data from any number of nodes in your origin cluster to the same target database or multiple target databases.
+
+When you xref:sideloader:migrate-sideloader.adoc[migrate data with {sstable-sideloader}], there is no difference in the core process when migrating from one node or multiple nodes.
+The following steps summarize the process and outline some considerations for migrating multiple nodes.
+
+[tabs]
+======
+Migrate multiple nodes to one database::
++
+--
+. On your origin cluster, make sure your data is valid and ready to migrate, as explained in <<origin-cluster-requirements>>.
+
+. From your origin cluster, create snapshots for all of the nodes that you want to migrate.
++
+Run `nodetool snapshot` as many times as necessary to capture all of your nodes.
+
+. On your target database, replicate the schemas for all tables that you want to migrate.
++
+This is critical for a successful migration.
+If the schemas don't match, the migration fails.
++
+You don't need to make any changes based on the number of nodes, as long as the keyspaces and table schemas are replicated in the target database.
+
+. Initialize the migration to prompt {sstable-sideloader} to create a migration bucket for your target database.
+
+. Upload all of your node snapshots to the migration bucket.
+
+. Use {sstable-sideloader} to import the data to your target database.
++
+{sstable-sideloader} imports snapshots from the migration bucket to your target database based on the matching schemas.
+The number of node snapshots that you uploaded to the migration bucket doesn't determine the success of the import.
+The success of the import depends primarily on the validity of the schemas and the data in the snapshots.
+
+. After the import, validate the migrated data to ensure that it matches the data in the origin cluster.
+For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator} ({cass-migrator-short}) in validation mode].
+--
+
+Migrate multiple nodes to multiple databases::
++
+--
+Orchestrating concurrent migrations from multiple nodes to multiple target databases can be complex.
+
+Consider focusing on one target database at a time, or create a migration plan to track origin nodes, target databases, migration bucket credentials, and timelines for each migration.
+
+. On your origin cluster, make sure your data is valid and ready to migrate, as explained in <<origin-cluster-requirements>>.
+
+. From your origin cluster, create snapshots for all of the nodes that you want to migrate.
++
+Run `nodetool snapshot` as many times as necessary to capture all of your nodes.
+
+. On each of your target databases, replicate the schemas for the tables that you want to migrate to each database.
++
+This is critical for a successful migration.
+If the schemas don't match, the migration fails.
++
+You don't need to make any changes based on the number of nodes, as long as the keyspaces and table schemas are replicated in the target databases.
++
+If you want to migrate the same data to multiple databases, you must recreate the schemas in each of those databases.
+{sstable-sideloader} requires a schema to be present in the target database in order to migrate data.
+
+. For each target database, initialize a migration to prompt {sstable-sideloader} to create migration buckets for each database.
++
+At minimum, you must initialize one migration for each database.
+
+. Upload the node snapshots to their corresponding migration buckets.
+
+. Use {sstable-sideloader} to import the data to your target databases.
++
+You can import data to multiple databases at once, but each import event must be triggered separately using the unique  migration ID.
++
+{sstable-sideloader} imports snapshots from the migration bucket to your target database based on the matching schemas.
+The number of node snapshots that you uploaded to the migration bucket doesn't determine the success of the import.
+The success of the import depends primarily on the validity of the schemas and the data in the snapshots.\
+
+. After the import, validate the migrated data to ensure that it matches the data in the origin cluster.
+For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator} ({cass-migrator-short}) in validation mode].
+--
+======
+
+=== Multiple migrations to the same database
+
+When you initialize a migration with {sstable-sideloader}, a unique migration ID is generated for that specific migration workflow.
+For each migration ID, there is a unique migration directory and migration directory credentials.
+
+If you initialize multiple migrations for the same database, you generate multiple migration IDs, each with its own migration directory and credentials.
+
+This can be useful for breaking large migrations into smaller batches.
+For example, if you have 100 snapshots, you could initialize 10 migrations, and then upload 10 different snapshots to each migration directory.
+
+You can upload snapshots to multiple migration directories at once.
+However, when you reach the import phase of the migration, {sstable-sideloader} can import from only one migration directory at a time per database.
+For example, if you have 10 migration IDs for the same database, you must run 10 separate import actions.
+Each import must completely finish before starting the next import.
+
+After all of the imports are complete, validate the migrated data in your target database to ensure that it matches the data in the origin cluster.
+For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator} ({cass-migrator-short}) in validation mode].
+
+== Next steps
+
+* xref:sideloader:migrate-sideloader.adoc[]

@@ -1,49 +1,322 @@
 = {cass-migrator}
-:page-aliases: cdm-parameters.adoc
+:page-aliases: cdm-parameters.adoc, ROOT:cdm-steps.adoc
 
-Use {cass-migrator} to migrate and validate tables between origin and target {cass-short} clusters, with available logging and reconciliation support.
+//This page was an exact duplicate of cdm-overview.adoc and the (now deleted) cdm-steps.adoc, they are just in different parts of the nav.
 
-[[cdm-prerequisites]]
-== {cass-migrator} prerequisites
+// tag::body[]
+You can use {cass-migrator} ({cass-migrator-short}) to migrate and validate tables between the origin and target {cass-short} clusters, with optional logging and reconciliation support.
 
-include::partial$cdm-prerequisites.adoc[]
+{cass-migrator-short} facilitates data transfer by creating multiple jobs that access the {cass-short} cluster concurrently, making it an ideal choice for migrating large datasets.
+It offers extensive configuration options, including logging, reconciliation, performance optimization, and more.
 
-[[cdm-install-as-container]]
-== Install {cass-migrator} as a Container
+//TODO: Bring over content from the page that introduces the 3 options, and the features, limitations, and performance recommendations in the README https://github.com/datastax/cassandra-data-migrator?tab=readme-ov-file#features
 
-include::partial$cdm-install-as-container.adoc[]
+== Install {cass-migrator}
 
-[[cdm-install-as-jar]]
-== Install {cass-migrator} as a JAR file
+{company} recommends that you always install the latest version of {cass-migrator-short} to get the latest features, dependencies, and bug fixes.
 
-include::partial$cdm-install-as-jar.adoc[]
+[tabs]
+======
+Install as a container::
++
+--
+Get the latest `cassandra-data-migrator` image that includes all dependencies from https://hub.docker.com/r/datastax/cassandra-data-migrator[DockerHub].
 
-[[cdm-build-jar-local]]
-== Build {cass-migrator} JAR for local development (optional)
+The container's `assets` directory includes all required migration tools: `cassandra-data-migrator`, `dsbulk`, and `cqlsh`.
+--
 
-include::partial$cdm-build-jar-local.adoc[]
+Install as a JAR file::
++
+--
+. Install Java 11 or later, which includes Spark binaries.
 
-[[cdm-steps]]
-== Use {cass-migrator}
+. Install https://spark.apache.org/downloads.html[Apache Spark(TM)] version 3.5.x with Scala 2.13 and Hadoop 3.3 and later.
++
+[tabs]
+====
+Single VM::
++
+For one-off migrations, you can install the Spark binary on a single VM where you will run the {cass-migrator-short} job.
++
+. Get the Spark tarball from the Apache Spark archive.
++
+[source,bash,subs="+quotes"]
+----
+wget https://archive.apache.org/dist/spark/spark-3.5.**PATCH**/spark-3.5.**PATCH**-bin-hadoop3-scala2.13.tgz
+----
++
+Replace `**PATCH**` with your Spark patch version.
++
+. Change to the directory where you want install Spark, and then extract the tarball:
++
+[source,bash,subs="+quotes"]
+----
+tar -xvzf spark-3.5.**PATCH**-bin-hadoop3-scala2.13.tgz
+----
++
+Replace `**PATCH**` with your Spark patch version.
 
-include::partial$use-cdm-migrator.adoc[]
+Spark cluster::
++
+For large (several terabytes) migrations, complex migrations, and use of {cass-migrator-short} as a long-term data transfer utility, {company} recommends that you use a Spark cluster or Spark Serverless platform.
++
+If you deploy CDM on a Spark cluster, you must modify your `spark-submit` commands as follows:
++
+* Replace `--master "local[*]"` with the host and port for your Spark cluster, as in `--master "spark://**MASTER_HOST**:**PORT**"`.
+* Remove parameters related to single-VM installations, such as `--driver-memory` and `--executor-memory`.
+====
 
-[[cdm-validation-steps]]
-== Use {cass-migrator} steps in validation mode 
+. Download the latest `cassandra-data-migrator` JAR file image:https://img.shields.io/github/v/release/datastax/cassandra-data-migrator?label=GitHub[alt="Latest cassandra-data-migrator release on GitHub",link="https://github.com/datastax/cassandra-data-migrator/packages"] from the https://github.com/datastax/cassandra-data-migrator[{cass-migrator-short} repository].
 
-include::partial$cdm-validation-steps.adoc[]
+. Add the `cassandra-data-migrator` dependency to `pom.xml`:
++
+[source,xml,subs="+quotes"]
+----
+<dependency>
+  <groupId>datastax.cdm</groupId>
+  <artifactId>cassandra-data-migrator</artifactId>
+  <version>**VERSION**</version>
+</dependency>
+----
++
+Replace `**VERSION**` with your {cass-migrator-short} version.
 
-[[cdm-partition-ranges]]
-== Migrate or validate specific partition ranges
+. Run `mvn install`.
 
-include::partial$cdm-partition-ranges.adoc[]
+If you need to build the JAR for local development or your environment only has Scala version 2.12.x, see the alternative installation instructions in the https://github.com/datastax/cassandra-data-migrator?tab=readme-ov-file[{cass-migrator-short} README].
+--
+======
 
-[[cdm-guardrail-checks]]
-== Perform large-field guardrail violation checks
+== Configure {cass-migrator-short}
 
-include::partial$cdm-guardrail-checks.adoc[]
+. Create a `cdm.properties` file.
++
+If you use a different name, make sure you specify the correct filename in your `spark-submit` commands.
 
-[[cdm-next-steps]]
-== Next steps
+. Configure the properties for your environment.
++
+In the {cass-migrator-short} repository, you can find a https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[sample properties file with default values], as well as a https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[fully annotated properties file].
++
+{cass-migrator-short} jobs process all uncommented parameters.
+Any parameters that are commented out are ignored or use default values.
++
+If you want to reuse a properties file created for a previous {cass-migrator-short} version, make sure it is compatible with the version you are currently using.
+Check the https://github.com/datastax/cassandra-data-migrator/releases[{cass-migrator-short} release notes] for possible breaking changes in interim releases.
+For example, the 4.x series of {cass-migrator-short} isn't backwards compatible with earlier properties files.
 
-For advanced operations, see documentation at https://github.com/datastax/cassandra-data-migrator[the repository].
+. Store your properties file where it can be accessed while running {cass-migrator-short} jobs using `spark-submit`.
+
+[#migrate]
+== Run a {cass-migrator-short} data migration job
+
+The following `spark-submit` command migrates one table from the origin to the target cluster, using the configuration in your properties file.
+The migration job is specified in the `--class` argument.
+
+[tabs]
+======
+Local installation::
++
+--
+[source,bash,subs="+quotes,+attributes"]
+----
+./spark-submit --properties-file cdm.properties \
+--conf spark.cdm.schema.origin.keyspaceTable="**KEYSPACE_NAME**.**TABLE_NAME**" \
+--master "local[{asterisk}]" --driver-memory 25G --executor-memory 25G \
+--class com.datastax.cdm.job.Migrate cassandra-data-migrator-**VERSION**.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+----
+
+Replace or modify the following, if needed:
+
+* `--properties-file cdm.properties`: If your properties file has a different name, specify the actual name of your properties file.
++
+Depending on where your properties file is stored, you might need to specify the full or relative file path.
+
+* `**KEYSPACE_NAME**.**TABLE_NAME**`: Specify the name of the table that you want to migrate and the keyspace that it belongs to.
++
+You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file using the same format of `**KEYSPACE_NAME**.**TABLE_NAME**`.
+
+* `--driver-memory` and `--executor-memory`: For local installations, specify the appropriate memory settings for your environment.
+
+* `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
+--
+
+Spark cluster::
++
+--
+[source,bash,subs="+quotes"]
+----
+./spark-submit --properties-file cdm.properties \
+--conf spark.cdm.schema.origin.keyspaceTable="**KEYSPACE_NAME**.**TABLE_NAME**" \
+--master "spark://**MASTER_HOST**:**PORT**" \
+--class com.datastax.cdm.job.Migrate cassandra-data-migrator-**VERSION**.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+----
+
+Replace or modify the following, if needed:
+
+* `--properties-file cdm.properties`: If your properties file has a different name, specify the actual name of your properties file.
++
+Depending on where your properties file is stored, you might need to specify the full or relative file path.
+
+* `**KEYSPACE_NAME**.**TABLE_NAME**`: Specify the name of the table that you want to migrate and the keyspace that it belongs to.
++
+You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file using the same format of `**KEYSPACE_NAME**.**TABLE_NAME**`.
+
+* `--master`: Provide the URL of your Spark cluster.
+
+* `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
+--
+======
+
+This command generates a log file (`logfile_name_**TIMESTAMP**.txt`) instead of logging output to the console.
+
+For additional modifications to this command, see <<advanced>>.
+
+[#cdm-validation-steps]
+== Run a {cass-migrator-short} data validation job
+
+After you migrate data, you can use {cass-migrator-short}'s data validation mode to find inconsistencies between the origin and target tables.
+
+. Use the following `spark-submit` command to run a data validation job using the configuration in your properties file.
+The data validation job is specified in the `--class` argument.
++
+[tabs]
+======
+Local installation::
++
+--
+[source,bash,subs="+quotes,+attributes"]
+----
+./spark-submit --properties-file cdm.properties \
+--conf spark.cdm.schema.origin.keyspaceTable="**KEYSPACE_NAME**.**TABLE_NAME**" \
+--master "local[{asterisk}]" --driver-memory 25G --executor-memory 25G \
+--class com.datastax.cdm.job.DiffData cassandra-data-migrator-**VERSION**.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+----
+
+Replace or modify the following, if needed:
+
+* `--properties-file cdm.properties`: If your properties file has a different name, specify the actual name of your properties file.
++
+Depending on where your properties file is stored, you might need to specify the full or relative file path.
+
+* `**KEYSPACE_NAME**.**TABLE_NAME**`: Specify the name of the table that you want to validate and the keyspace that it belongs to.
++
+You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file using the same format of `**KEYSPACE_NAME**.**TABLE_NAME**`.
+
+* `--driver-memory` and `--executor-memory`: For local installations, specify the appropriate memory settings for your environment.
+
+* `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
+--
+
+Spark cluster::
++
+--
+[source,bash,subs="+quotes"]
+----
+./spark-submit --properties-file cdm.properties \
+--conf spark.cdm.schema.origin.keyspaceTable="**KEYSPACE_NAME**.**TABLE_NAME**" \
+--master "spark://**MASTER_HOST**:**PORT**" \
+--class com.datastax.cdm.job.DiffData cassandra-data-migrator-**VERSION**.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
+----
+
+Replace or modify the following, if needed:
+
+* `--properties-file cdm.properties`: If your properties file has a different name, specify the actual name of your properties file.
++
+Depending on where your properties file is stored, you might need to specify the full or relative file path.
+
+* `**KEYSPACE_NAME**.**TABLE_NAME**`: Specify the name of the table that you want to validate and the keyspace that it belongs to.
++
+You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file using the same format of `**KEYSPACE_NAME**.**TABLE_NAME**`.
+
+* `--master`: Provide the URL of your Spark cluster.
+
+* `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
+--
+======
+
+. Allow the command some time to run, and then open the log file (`logfile_name_**TIMESTAMP**.txt`) and look for `ERROR` entries.
++
+The {cass-migrator-short} validation job records differences as `ERROR` entries in the log file, listed by primary key values.
+For example:
++
+[source,plaintext]
+----
+23/04/06 08:43:06 ERROR DiffJobSession: Mismatch row found for key: [key3] Mismatch: Target Index: 1 Origin: valueC Target: value999)
+23/04/06 08:43:06 ERROR DiffJobSession: Corrected mismatch row in target: [key3]
+23/04/06 08:43:06 ERROR DiffJobSession: Missing target row found for key: [key2]
+23/04/06 08:43:06 ERROR DiffJobSession: Inserted missing row in target: [key2]
+----
++
+When validating large datasets or multiple tables, you might want to extract the complete list of missing or mismatched records.
+There are many ways to do this.
+For example, you can grep for all `ERROR` entries in your {cass-migrator-short} log files or use the `log4j2` example provided in the https://github.com/datastax/cassandra-data-migrator?tab=readme-ov-file#steps-for-data-validation[{cass-migrator-short} repository].
+
+=== Run a validation job in AutoCorrect mode
+
+Optionally, you can run {cass-migrator-short} validation jobs in **AutoCorrect** mode, which offers the following functions:
+
+* `autocorrect.missing`: Add any missing records in the target with the value from the origin.
+
+* `autocorrect.mismatch`: Reconcile any mismatched records between the origin and target by replacing the target value with the origin value.
++
+[IMPORTANT]
+====
+`TIMESTAMP` has an effect on this function.
+
+If the `WRITETIME` of the origin record (determined with `.writetime.names`) is earlier than the `WRITETIME` of the target record, then the change doesn't appear in the target cluster.
+This comparative state can be challenging to troubleshoot if individual columns or cells were modified in the target cluster.
+====
+
+* `autocorrect.missing.counter`: By default, counter tables are not copied when missing, unless explicitly set.
+
+In your `cdm.properties` file, use the following properties to enable (`true`) or disable (`false`) autocorrect functions:
+
+[source,properties]
+----
+spark.cdm.autocorrect.missing                     false|true
+spark.cdm.autocorrect.mismatch                    false|true
+spark.cdm.autocorrect.missing.counter             false|true
+----
+
+The {cass-migrator-short} validation job never deletes records from either the origin or target.
+Data validation only inserts or updates data on the target.
+
+For an initial data validation, consider disabling AutoCorrect so that you can generate a list of data discrepancies, investigate those discrepancies, and then decide whether you want to rerun the validation with AutoCorrect enabled.
+
+[#advanced]
+== Additional {cass-migrator-short} options
+
+You can modify your properties file or append additional `--conf` arguments to your `spark-submit` commands to customize your {cass-migrator-short} jobs.
+For example, you can do the following:
+
+* Check for large field guardrail violations before migrating.
+* Use the `partition.min` and `partition.max` parameters to migrate or validate specific token ranges.
+* Use the `track-run` feature to monitor progress and rerun a failed migration or validation job from point of failure.
+
+For all options, see the https://github.com/datastax/cassandra-data-migrator[{cass-migrator-short} repository].
+Specifically, see the https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[fully annotated properties file].
+
+== Troubleshoot {cass-migrator-short}
+
+.Java NoSuchMethodError
+[%collapsible]
+====
+If you installed Spark as a JAR file, and your Spark and Scala versions aren't compatible with your installed version of {cass-migrator-short}, {cass-migrator-short} jobs can throw exceptions such a the following:
+
+[source,console]
+----
+Exception in thread "main" java.lang.NoSuchMethodError: 'void scala.runtime.Statics.releaseFence()'
+----
+
+Make sure that your Spark binary is compatible with your {cass-migrator-short} version.
+If you installed an earlier version of {cass-migrator-short}, you might need to install an earlier Spark binary.
+====
+
+.Rerun a failed or partially completed job
+[%collapsible]
+====
+You can use the `track-run` feature to track the progress of a migration or validation, and then, if necessary, use the `run-id` to rerun a failed job from the last successful migration or validation point.
+
+For more information, see the https://github.com/datastax/cassandra-data-migrator[{cass-migrator-short} repository] and the https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[fully annotated properties file].
+====
+// end::body[]

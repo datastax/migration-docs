@@ -1,8 +1,6 @@
 = Connect your client applications to {product-proxy}
 :navtitle: Connect client applications to {product-proxy}
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 The {product-proxy} is designed to be similar to a conventional {cass-reg} cluster.
 You communicate with it using the CQL query language used in your existing client applications.
@@ -13,7 +11,7 @@ On this page, we explain how to connect your client applications to a {cass-shor
 We then move on to discuss how this process changes when connecting to a {product-proxy}.
 We conclude by describing two sample client applications that serve as real-world examples of how to build a client application that works effectively with {product-proxy}.
 
-You can use the provided sample client applications, in addition to your own, as a quick way to validate that the deployed {product-proxy} is reading and writing data from the expected Origin and Target clusters.
+You can use the provided sample client applications, in addition to your own, as a quick way to validate that the deployed {product-proxy} is reading and writing data from the expected origin and target clusters.
 
 Finally, we will explain how to connect the `cqlsh` command-line client to the {product-proxy}.
 
@@ -103,19 +101,19 @@ This is disabled by default in all drivers, but if it was enabled in your client
 
 The credentials provided by the client application are used when forwarding its requests.
 However, the client application has no notion that there are two clusters involved: from its point of view, it talks to just one cluster as usual.
-For this reason, the {product-proxy} will only use the client application credentials when forwarding requests to one cluster (typically Target), and it will resort to using the credentials in its own configuration to forward requests to the other cluster (typically Origin).
+For this reason, the {product-proxy} will only use the client application credentials when forwarding requests to one cluster (typically the target), and it will resort to using the credentials in its own configuration to forward requests to the other cluster (typically the origin).
 
-This means that, if your {product-proxy} is configured with an Origin or Target cluster with **user authentication enabled**, your client application has to provide credentials when connecting to the proxy:
+This means that, if your {product-proxy} is configured with an origin or target cluster with **user authentication enabled**, your client application has to provide credentials when connecting to the proxy:
 
-* If both clusters require authentication, your client application must pass the credentials for Target.
-This is also the case if only Target requires authentication but Origin does not.
-* If Origin requires authentication but Target does not, your client application must supply credentials for Origin.
+* If both clusters require authentication, your client application must pass the credentials for the target.
+This is also the case if authentication is required by the target only, but not the origin.
+* If the origin requires authentication but the target does not, then your client application must supply credentials for the origin.
 * If neither cluster requires authentication, no credentials are needed.
 
 [cols="1,1,1"]
 |===
-|Auth enabled on Origin
-|Auth enabled on Target
+|Auth enabled on the origin
+|Auth enabled on the target
 |Client application credentials
 
 |Yes
@@ -141,14 +139,13 @@ image::zdm-proxy-credential-usage.png[{product-proxy} credentials usage, 550]
 
 === A note on the Secure Connect Bundle
 
-If your {product-proxy} is configured to use {astra-db} as an Origin or Target, your client application **does not need** to provide a Secure Connect Bundle (SCB) when connecting to the proxy.
+If your {product-proxy} is configured to use {astra-db} as the origin or target cluster, then your client application **does not need** to provide a Secure Connect Bundle (SCB) when connecting to the proxy.
 It will, however, have to supply an {astra-db} application token's client ID and client secret as a username and password (respectively).
-
 
 == Sample client applications
 
 The documentation for the {company} drivers provides information about how to connect these drivers to your {cass-short} cluster or {product-proxy} and how to use them to issue queries, update data and perform other actions.
-In addition to the smaller code samples provided in the documentation, we also provide a few sample client applications which demonstrate the use of the {company} Java driver to interact with {product-proxy} as well as Origin and Target for that proxy.
+In addition to the smaller code samples provided in the documentation, we also provide a few sample client applications which demonstrate the use of the {company} Java driver to interact with {product-proxy} as well as the origin and target for that proxy.
 
 === {product-demo}
 
@@ -162,9 +159,9 @@ You can find the details of building and running {product-demo} in the https://g
 
 https://github.com/absurdfarce/themis[Themis] is a Java command-line client application that allows you to insert randomly-generated data into some combination of these three sources:
 
-* Directly into Origin
-* Directly into Target
-* Into the {product-proxy}, and subsequently on to Origin and Target
+* Directly into the origin
+* Directly into the target
+* Into the {product-proxy}, and subsequently on to the origin and target
 
 The client application can then be used to query the inserted data.
 This allows you to validate that the {product-proxy} is reading and writing data from the expected sources.
@@ -183,7 +180,7 @@ Using CQLSH to connect to a {product-proxy} instance is very easy:
 
 * Download CQLSH for free from https://downloads.datastax.com/#cqlsh[here] on a machine that has connectivity to the {product-proxy} instances:
 ** To connect to the {product-proxy}, any version is fine.
-** The {astra-db}-compatible version additionally supports connecting directly to an {astra-db} cluster by passing the cluster's Secure Connect Bundle and valid credentials.
+** The {astra}-compatible version additionally supports connecting directly to an {astra-db} cluster by passing the cluster's Secure Connect Bundle and valid credentials.
 * Install it by uncompressing the archive: `tar -xvf cqlsh-<...>.tar.gz`.
 * Navigate to the `cqlsh-<...>/bin` directory, for example `cd cqlsh-astra/bin`.
 * Launch CQLSH:

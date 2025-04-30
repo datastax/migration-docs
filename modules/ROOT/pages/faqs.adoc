@@ -1,10 +1,10 @@
 = Frequently Asked Questions
 :navtitle: FAQs
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,faq
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 If you're new to the {company} {product} features, these FAQs are for you.
+
+//TODO: Eliminate redundancies in these FAQs and the Glossary.
 
 == What is meant by {product}?
 
@@ -27,13 +27,11 @@ However, it is important to emphasize that the {product-proxy} can be freely use
 
 See the diagrams of the {product-short} xref:introduction.adoc#_migration_phases[migration phases].
 
-== Do you offer an interactive self-guided lab to help me learn about {product-short} migrations at my own pace?
+== Do you have a demo of {product-short}?
 
-Yes! Here's a fun way to learn.
+Yes, you can use the {product-short} interactive lab to see how the migration process works.
 
-include::partial$interactive-lab.adoc[]
-
-The interactive lab spans the pre-migration prerequisites and each of the five key migration phases.
+For more information, see xref:ROOT:introduction.adoc#lab[{product} interactive lab].
 
 == What components are provided with {product-short}?
 
@@ -45,10 +43,10 @@ To simplify its setup, the suite includes the {product-utility}.
 This interactive utility creates a Docker container acting as the Ansible Control Host.
 The Ansible playbooks constitute the {product-automation}.
 * **{cass-migrator}** is designed to:
-** Connect to your clusters and compare the data between Origin and Target.
+** Connect to your clusters and compare the data between the origin and target clusters.
 ** Report differences in a detailed log file.
-** Reconcile any missing records and fix any data inconsistencies between Origin and Target by enabling `autocorrect` in a configuration file.
-* **{dsbulk-migrator}** is provided to migrate smaller amounts of data from Origin to Target.
+** Use AutoCorrect mode to reconcile any missing records and fix any data inconsistencies between the origin and target.
+* **{dsbulk-migrator}** is provided to migrate smaller amounts of data from the origin to the target.
 * Well-defined steps in this migration documentation, organized as a sequence of phases.
 
 == What exactly is {product-proxy}?
@@ -68,9 +66,9 @@ Bottom line: You want to migrate your critical database infrastructure without r
 
 == Which releases of {cass-short} or {dse-short} are supported for migrations?
 
-include::partial$supported-releases.adoc[]
+include::ROOT:partial$supported-releases.adoc[]
 
-include::partial$migration-scenarios.adoc[]
+include::ROOT:partial$migration-scenarios.adoc[]
 
 == Does {product-short} migrate clusters?
 
@@ -90,7 +88,7 @@ The suite of {product} tools from {company} is free and open-sourced.
 
 == Is there support available if I have questions or issues during our migration?
 
-{product-proxy} and related software tools in the migration suite include technical assistance by {support-url}[{company} Support] for {dse-short} and Luna subscribers, and {astra-db} users who are on an Enterprise plan.
+{product-proxy} and related software tools in the migration suite include technical assistance by {support-url}[{company} Support] for {dse-short} and Luna subscribers, and {astra} users who are on an Enterprise plan.
 Free and Pay As You Go plan users do not have support access and must raise questions in the {astra-ui} chat.
 https://www.datastax.com/products/luna[Luna] is a subscription to the {cass} support and expertise at {company}.
 
@@ -134,8 +132,9 @@ For TLS details, see xref:tls.adoc[].
 == How does {product-proxy} handle Lightweight Transactions (LWTs)?
 
 {product-proxy} handles LWTs as write operations.
-The proxy sends the LWT to Origin and Target clusters concurrently, and waits for a response from both.
-{product-proxy} will return a `success` status to the client if both Origin and Target send successful acknowledgements, or otherwise will return a `failure` status if one or both do not return an acknowledgement.
+The proxy sends the LWT to the origin and target clusters concurrently, and waits for a response from both.
+{product-proxy} will return a `success` status to the client if both the origin and target clusters send successful acknowledgements.
+Otherwise, it will return a `failure` status if one or both do not return an acknowledgement.
 
 What sets LWTs apart from regular writes is that they are conditional. For important details, including the client context for a returned `applied` flag, see xref:feasibility-checklists.adoc#_lightweight_transactions_and_the_applied_flag[Lightweight Transactions and the `applied` flag].
 
@@ -152,7 +151,7 @@ This way, each client application instance can connect to all {product-proxy} in
 
 This deployment model gives maximum resilience and failure tolerance guarantees and allows the client application driver to continue using the same load balancing and retry mechanisms that it would normally use.
 
-Conversely, deploying a single {product-proxy} instance would undermine this resilience mechanism and create a single point of failure, which could affect the client applications if one or more nodes of the underlying clusters (Origin or Target) go offline.
+Conversely, deploying a single {product-proxy} instance would undermine this resilience mechanism and create a single point of failure, which could affect the client applications if one or more nodes of the underlying origin or target clusters go offline.
 In a sidecar deployment, each client application instance would be connecting to a single {product-proxy} instance, and would therefore be exposed to this risk.
 
 For more information, see xref:deployment-infrastructure.adoc#_choosing_where_to_deploy_the_proxy[Choosing where to deploy the proxy].

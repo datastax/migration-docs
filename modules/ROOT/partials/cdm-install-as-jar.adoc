@@ -1,8 +1,0 @@
-Download the *latest* JAR file from the {cass-migrator} https://github.com/datastax/cassandra-data-migrator/packages/1832128[GitHub repo].
-image:https://img.shields.io/github/v/release/datastax/cassandra-data-migrator?color=green[Latest release]
-
-[NOTE]
-====
-Version 4.x of {cass-migrator} is not backward-compatible with `*.properties` files created in previous versions, and package names have changed.
-If you're starting new, use the latest released version if possible.
-====

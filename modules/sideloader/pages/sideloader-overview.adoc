@@ -1,0 +1,121 @@
+= About {sstable-sideloader}
+:page-aliases: data-importer:data-importer-overview.adoc, astra-db-serverless:sideloader:sideloader-overview.adoc
+:description: {sstable-sideloader} lets you migrate data from an {cass-reg} or {dse} cluster into {astra-db} without impacting the origin cluster or your {astra-db} Serverless database.
+
+{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-reg}, {dse}, or {hcd} cluster.
+
+Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like xref:dsbulk:overview:dsbulk-about.adoc[{company} Bulk Loader (DSBulk)] and xref:ROOT:cassandra-data-migrator.adoc[{cass-short} Data Migrator (CDM)], including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
+
+== {sstable-sideloader} concepts
+
+Origin, origin cluster::
+In the context of {sstable-sideloader}, this refers to your existing {cass-short}, {dse-short}, or {hcd-short} cluster.
+
+Target, target database::
+In the context of {sstable-sideloader}, this refers to the {astra-db} Serverless database where you will migrate your data.
+
+Administration server::
+A server where you run the migration commands, including CLI commands and {astra} {devops-api} calls.
+It must have SSH access to each node in your origin cluster.
+
+Migration::
+A workflow that you initiate within {sstable-sideloader} that encompasses the lifecycle of uploading and importing snapshot backups of a specific set of keyspaces or CQL tables.
++
+This process produces artifacts and parameters including migration buckets, migration IDs, migration directories, and upload credentials.
+You use these components throughout the migration workflow.
+
+[#sideloader-process]
+== The {sstable-sideloader} process
+
+Transferring data with {sstable-sideloader} is a multi-phase process.
+Before you use {sstable-sideloader}, learn about the events, outcomes, warnings, and requirements of each phase:
+
+=== Prepare your infrastructure
+
+There are requirements for using {sstable-sideloader} that you must consider before you start a migration.
+Additionally, you must take steps to prepare your target database, origin cluster, and administration server before you begin the migration.
+
+For more information, see xref:sideloader:prepare-sideloader.adoc[].
+
+=== Create snapshot backups
+
+{sstable-sideloader} uses snapshot backup files to import SSTable data from your existing origin cluster.
+This is an ideal approach for database migrations because creating a snapshot has negligible performance impact on the origin cluster, and it preserves metadata like write timestamps and expiration times (TTLs).
+
+Each snapshot for each node in the origin cluster must include all the keyspaces and individual CQL tables that you want to migrate.
+
+For more information, see xref:sideloader:migrate-sideloader.adoc#create-snapshots[Migrate data with {sstable-sideloader}: Create snapshots].
+
+=== Prepare the target database
+
+Because snapshots don't store schema definitions, you must pre-configure the schema definition in your target {astra-db} database so that it matches the origin cluster's schema.
+
+For the migration to succeed, the schema in your target database must align with the schema in the origin cluster.
+However, you might need to modify your schema or data model to be compatible with {astra-db}.
+
+For specific requirements and more information, see xref:sideloader:migrate-sideloader.adoc#record-schema[Migrate data with {sstable-sideloader}: Configure the target database].
+
+=== Initialize a migration
+
+include::sideloader:partial$sideloader-partials.adoc[tags=initialize]
+
+For instructions and more information, see xref:sideloader:migrate-sideloader.adoc#initialize-migration[Migrate data with {sstable-sideloader}: Initialize the migration].
+
+=== Upload snapshots
+
+When initialization is complete, use your cloud provider's CLI to xref:sideloader:migrate-sideloader.adoc#upload-snapshots-to-migration-directory[upload your snapshots to the migration directory].
+
+To upload snapshots directly from the origin cluster, you must install your cloud provider's CLI on each node in the origin cluster.
+While it is possible to orchestrate this process through a staging server, the commands given in this documentation assume you are uploading snapshots directly from the origin cluster.
+
+The time required to upload the snapshots depends on the size of your dataset and the network throughput between the origin cluster and the migration bucket:
+
+[cols="10,30,60"]
+|===
+|Speed |Migration type |Description
+
+|Fastest
+|Inter-datacenter
+|All else equal, snapshots take the least time to upload when the origin cluster is in the same cloud provider and region as the target database.
+
+|Fast
+|Cross-datacenter, co-located
+|Uploads are slower by default when they must exit the local datacenter.
+The delay increases relative to the physical distance between the datacenters.
+
+For example, all else equal, uploading from AWS `us-east-1` (Dulles, VA, USA) to AWS `ca-central-1` (Montréal, QC, Canada) is faster than uploading from `us-east-1` to `us-west-2` (The Dalles, OR, USA) because Oregon is significantly further from Virginia than Montréal.
+
+|Variable
+|Cross-provider, co-located
+|If the target database is in a different cloud provider than the origin cluster, the upload can be slower as the data passes from one provider's infrastructure to another.
+
+This is considered a cross-datacenter transfer, and the delay increases relative to the physical distance between the datacenters.
+
+|Slowest
+|Transoceanic
+|The slowest uploads happen when the data must travel over transoceanic cables.
+If the data must also change cloud providers, there can be additional delays.
+
+In this case, consider creating your target database in a co-located datacenter, and then xref:astra-db-serverless:databases:manage-regions.adoc[deploy your database to other regions] after the migration.
+|===
+
+=== Import data
+
+include::sideloader:partial$sideloader-partials.adoc[tags=import]
+
+For instructions and more information, see xref:sideloader:migrate-sideloader.adoc#import-data[Migrate data with {sstable-sideloader}: Import data]
+
+=== Validate imported data
+
+include::sideloader:partial$sideloader-partials.adoc[tags=validate]
+
+== Use {sstable-sideloader} with {product-short}
+
+If you need to migrate a live database, you can use {sstable-sideloader} instead of DSBulk or {cass-short} Data Migrator during of xref:ROOT:migrate-and-validate-data.adoc[Phase 2 of {product} ({product-short})].
+
+.Use {sstable-sideloader} in the context of {product}.
+image::sideloader:data-importer-zdm.svg[]
+
+== Next steps
+
+* xref:sideloader:prepare-sideloader.adoc[]

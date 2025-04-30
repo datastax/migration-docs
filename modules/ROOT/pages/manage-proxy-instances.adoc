@@ -1,7 +1,5 @@
 = Manage your {product-proxy} instances
 :page-tag: migration,zdm,zero-downtime,zdm-proxy
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 In this topic, we'll learn how to perform simple operations on your {product-proxy} deployment with no interruption to its availability:
 
@@ -56,19 +54,22 @@ This playbook restarts each proxy container one by one, without impacting the av
 .. If unsuccessful, it repeats the check for six times at 5-second intervals and eventually interrupts the whole process if the check still fails.
 .. If successful, it waits for a configurable interval and then moves on to the next container.
 
-The pause between the restart of each {product-proxy} instance defaults to 10 seconds. If you wish to change this value, you can edit `vars/zdm_playbook_internal_config.yml` (located in `zdm-proxy-automation/ansible/vars`) and set it to the desired number of seconds.
+The pause between the restart of each {product-proxy} instance defaults to 10 seconds.
+To change this value, you can set the desired number of seconds in `zdm-proxy-automation/ansible/vars/zdm_playbook_internal_config.yml`.
 
 [TIP]
 ====
 To check the state of your {product-proxy} instances, you have a couple of options.
-See xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[Indications of success on Origin and Target clusters].
+See xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[Indications of success on origin and target clusters].
 ====
 
+[#access-the-proxy-logs]
 == Access the proxy logs
 
 To confirm that the {product-proxy} instances are operating normally, or investigate any issue, you can view or collect their logs.
 
-[[_view_the_logs]]
+You can view the logs for a single proxy instance, or you can use a playbook to systematically retrieve logs from all instances and package them in a zip archive for later inspection.
+
 === View the logs
 
 The {product-proxy} runs as a Docker container on each proxy host.
@@ -81,7 +82,6 @@ docker container logs zdm-proxy-container
 
 To leave the logs open and continuously output the latest log messages, append the `--follow` (or `-f`) option to the command above.
 
-[[_collect_the_logs]]
 === Collect the logs
 
 You can easily retrieve the logs of all {product-proxy} instances using a dedicated playbook (`collect_zdm_proxy_logs.yml`).
@@ -114,8 +114,8 @@ Commonly changed variables, located in `vars/zdm_proxy_core_config.yml`:
 
 * `primary_cluster`:
 ** This variable determines which cluster is currently considered the xref:glossary.adoc#_primary_cluster[primary cluster].
-At the start of the migration, the primary cluster is Origin, as it contains all the data.
-In Phase 4 of the migration, once all the existing data has been transferred and any validation/reconciliation step has been successfully executed, you can switch the primary cluster to be Target.
+At the start of the migration, the primary cluster is the origin cluster because it contains all of the data.
+In Phase 4 of the migration, once all the existing data has been transferred and any validation/reconciliation step has been successfully executed, you can switch the primary cluster to be the target cluster.
 ** Valid values: `ORIGIN`, `TARGET`.
 * `read_mode`:
 ** This variable determines how reads are handled by the {product-proxy}.
@@ -124,16 +124,16 @@ In Phase 4 of the migration, once all the existing data has been transferred and
 *** `DUAL_ASYNC_ON_SECONDARY`: reads are sent synchronously to the primary cluster and also asynchronously to the secondary cluster.
 See xref:enable-async-dual-reads.adoc[].
 ** Typically, when choosing `DUAL_ASYNC_ON_SECONDARY` you will want to ensure that `primary_cluster` is still set to `ORIGIN`.
-When you are ready to use Target as the primary cluster, you should revert `read_mode` to `PRIMARY_ONLY`.
+When you are ready to use the target cluster as the primary cluster, revert `read_mode` to `PRIMARY_ONLY`.
 * `log_level`:
 ** Defaults to `INFO`.
 ** Only set to `DEBUG` if necessary and revert to `INFO` as soon as possible, as the extra logging can have a slight performance impact.
 
 Other, rarely changed variables:
 
-* Origin username/password, in `vars/zdm_proxy_cluster_config.yml`)
-* Target username/password, in `vars/zdm_proxy_cluster_config.yml`)
-* Advanced configuration variables, located in `vars/zdm_proxy_advanced_config.yml`:
+* Origin username/password in `vars/zdm_proxy_cluster_config.yml`
+* Target username/password in `vars/zdm_proxy_cluster_config.yml`
+* Advanced configuration variables in `vars/zdm_proxy_advanced_config.yml`:
 ** `zdm_proxy_max_clients_connections`:
 *** Maximum number of client connections that the {product-proxy} should accept.
 Each client connection results in additional cluster connections and causes the allocation of several in-memory structures, so this variable can be tweaked to cap the total number on each instance.
@@ -153,7 +153,7 @@ Note that, in this case, the {product-proxy} will not return any result or error
 *** Defaults to `10000` ms.
 If your client application has a higher client-side timeout because it is expected to generate requests that take longer to complete, you need to increase this timeout accordingly.
 ** `origin_connection_timeout_ms` and `target_connection_timeout_ms`:
-*** Timeout (in ms) when attempting to establish a connection from the proxy to Origin or Target.
+*** Timeout (in ms) when attempting to establish a connection from the proxy to the origin or the target.
 *** Defaults to `30000` ms.
 ** `async_handshake_timeout_ms`:
 *** Timeout (in ms) when performing the initialization (handshake) of a proxy-to-secondary cluster connection that will be used solely for asynchronous dual reads.
@@ -161,7 +161,7 @@ If your client application has a higher client-side timeout because it is expect
 This has no impact on the handling of synchronous requests: the {product-proxy} will continue to handle all synchronous reads and writes normally.
 *** Defaults to `4000` ms.
 ** `heartbeat_interval_ms`:
-*** Frequency (in ms) with which heartbeats will be sent on cluster connections (i.e. all control and request connections to Origin and Target).
+*** Frequency (in ms) with which heartbeats will be sent on cluster connections (i.e. all control and request connections to the origin and the target).
 Heartbeats keep idle connections alive.
 *** Defaults to `30000` ms.
 ** `metrics_enabled`:
@@ -180,9 +180,9 @@ If you have a custom driver configuration with a higher value, you should change
 Deprecated variables, which will be removed in a future {product-proxy} release:
 
 * `forward_client_credentials_to_origin`:
-** Whether the credentials provided by the client application are for Origin.
+** Whether the credentials provided by the client application are for the origin  cluster.
 ** Boolean value.
-Defaults to `false` (the client application is expected to pass Target credentials), can be set to `true` if the client passes credentials for Origin instead.
+Defaults to `false` (the client application is expected to pass the target credentials), can be set to `true` if the client passes credentials for the origin cluster instead.
 
 To change any of these variables, edit the desired values in `vars/zdm_proxy_core_config.yml`, `vars/zdm_proxy_cluster_config.yml` (credentials only) and/or `vars/zdm_proxy_advanced_config.yml` (mutable variables only, as listed above).
 
@@ -211,7 +211,7 @@ Make sure you collect the logs prior to this operation if you want to keep them.
 .. If successful, it waits for 10 seconds and then moves on to the next container.
 
 The pause between the restart of each {product-proxy} instance defaults to 10 seconds.
-If you wish to change this value, you can edit `vars/zdm_playbook_internal_config.yml` (located in `zdm-proxy-automation/ansible/vars`) and set it to the desired number of seconds.
+To change this value, you can set the desired number of seconds in `zdm-proxy-automation/ansible/vars/zdm_playbook_internal_config.yml`.
 
 [NOTE]
 ====
@@ -251,16 +251,16 @@ To perform an upgrade, change the version tag number to the desired version in `
 
 [source,bash]
 ----
-zdm_proxy_image::{imagesprefix} datastax/zdm-proxy:x.y.z
+zdm_proxy_image: datastax/zdm-proxy:x.y.z
 ----
 
-Replace x.y.z with the version you would like to upgrade to. 
+Replace `x.y.z` with the version you would like to upgrade to.
 
 {product-proxy} example:
 
 [source,bash]
 ----
-zdm_proxy_image::{imagesprefix} datastax/zdm-proxy:2.1.0
+zdm_proxy_image: datastax/zdm-proxy:2.1.0
 ----
 
 Then run the same playbook as above, with the following command:

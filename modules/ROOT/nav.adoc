@@ -19,7 +19,6 @@
 ** xref:migrate-and-validate-data.adoc[]
 ** xref:cassandra-data-migrator.adoc[{cass-migrator}]
 ** xref:dsbulk-migrator.adoc[{dsbulk-migrator}]
-** https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[{dsbulk-loader}]
 * Phase 3
 ** xref:enable-async-dual-reads.adoc[]
 * Phase 4
@@ -27,26 +26,50 @@
 * Phase 5
 ** xref:connect-clients-to-target.adoc[]
 * References
-** Troubleshooting
-*** xref:troubleshooting.adoc[]
-*** xref:troubleshooting-tips.adoc[]
-*** xref:troubleshooting-scenarios.adoc[]
+** xref:troubleshooting-tips.adoc[]
+** xref:troubleshooting-scenarios.adoc[]
 ** xref:contributions.adoc[]
 ** xref:faqs.adoc[]
 ** xref:glossary.adoc[]
-** xref:release-notes.adoc[]
+** https://github.com/datastax/zdm-proxy/releases[{product-proxy} release notes]
+** https://github.com/datastax/zdm-proxy-automation/releases[{product-automation} release notes]
 
 .{cass-migrator}
-* xref:cdm-overview.adoc[{cass-migrator-short} overview]
-* xref:cdm-steps.adoc[Use {cass-migrator-short} to migrate data]
+* xref:cdm-overview.adoc[{cass-migrator}]
+* https://github.com/datastax/cassandra-data-migrator/releases[{cass-migrator-short} release notes]
 
 .{dsbulk-loader}
-* https://docs.datastax.com/en/dsbulk/overview/dsbulk-about.html[{dsbulk-loader}]
-* https://docs.datastax.com/en/dsbulk/installing/install.html[Installing {dsbulk-loader}]
+* xref:dsbulk:overview:dsbulk-about.adoc[{dsbulk-loader}]
+* xref:dsbulk:installing:install.adoc[Installing {dsbulk-loader}]
 * Loading and unloading data
-** https://docs.datastax.com/en/dsbulk/getting-started/simple-load.html[Loading data without a configuration file]
-** https://docs.datastax.com/en/dsbulk/getting-started/simple-unload.html[Unloading data without a configuration file]
-** https://docs.datastax.com/en/dsbulk/developing/loading-unloading-vector-data.html[Loading and unloading vector data]
-** https://docs.datastax.com/en/dsbulk/reference/load.html[Loading data examples]
-** https://docs.datastax.com/en/dsbulk/reference/unload.html[Unloading data examples]
-* https://docs.datastax.com/en/dsbulk/reference/dsbulk-cmd.html#escaping-and-quoting-command-line-arguments[Escaping and quoting command line arguments]
+** xref:dsbulk:getting-started:simple-load.adoc[Loading data without a configuration file]
+** xref:dsbulk:getting-started:simple-unload.adoc[Unloading data without a configuration file]
+** xref:dsbulk:developing:loading-unloading-vector-data.adoc[Loading and unloading vector data]
+** xref:dsbulk:reference:load.adoc[Loading data examples]
+** xref:dsbulk:reference:unload.adoc[Unloading data examples]
+* xref:dsbulk:reference:dsbulk-cmd.adoc#escaping-and-quoting-command-line-arguments[Escaping and quoting command line arguments]
+* https://github.com/datastax/dsbulk/releases[{dsbulk-loader} release notes]
+
+.{sstable-sideloader}
+* xref:sideloader:sideloader-overview.adoc[]
+* xref:sideloader:prepare-sideloader.adoc[]
+* xref:sideloader:migrate-sideloader.adoc[]
+* xref:sideloader:stop-restart-sideloader.adoc[]
+* xref:sideloader:cleanup-sideloader.adoc[]
+* xref:sideloader:troubleshoot-sideloader.adoc[]
+
+.Product-specific migration paths
+* {astra-db}
+** xref:astra-db-serverless:databases:migration-path-serverless.adoc[]
+* {dse}
+** {dse-short} 6.9
+*** xref:6.9@dse:tooling:migration-path-dse.adoc[{dse-short} 6.9 migration tools]
+*** xref:6.9@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 6.9]
+** {dse-short} 6.8
+*** xref:6.8@dse:tooling:migration-path-dse.adoc[{dse-short} 6.8 migration tools]
+*** xref:6.8@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 6.8]
+** {dse-short} 5.1
+*** xref:5.1@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 5.1]
+* {mc}
+** xref:mission-control:migrate:oss-cass-to-mission-control.adoc[Migrate {cass-short} clusters to {mc-short}]
+** xref:mission-control:migrate:dse-to-mission-control.adoc[[Migrate {cass-short} clusters to {dse-short}]

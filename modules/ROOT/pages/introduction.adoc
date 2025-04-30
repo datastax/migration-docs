@@ -1,114 +1,102 @@
 = Introduction to {product}
 :navtitle: Introduction
+:description: Before you begin, learn about migration concepts, software components, and the sequence of operations.
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,introduction
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
-{product} provides a simple and reliable way for you to migrate applications from any CQL-based cluster (https://cassandra.apache.org/_/index.html[{cass-reg}], https://www.datastax.com/products/datastax-enterprise[{dse}], https://www.datastax.com/products/datastax-astra[{astra-db}], or any type of CQL-based database) to any other CQL-based cluster, without any interruption of service to the client applications and data.
+{product} provides a simple and reliable way for you to migrate applications from a CQL-based cluster to another CQL-based cluster with little or no downtime and minimal interruption of service to your client applications and data.
 
-* You can move your application to {astra-db}, {dse-short}, or {cass-short} with no downtime and with minimal configuration changes.
-* Your clusters are kept in sync at all times by a dual-write logic configuration.
-* You can xref:rollback.adoc[roll back] at any point, for complete peace of mind.
+include::ROOT:partial$supported-releases.adoc[]
 
-include::partial$note-downtime.adoc[]
+{product-short} keeps your clusters in sync at all times by a dual-write logic configuration, and you can xref:rollback.adoc[roll back] at any point.
 
-[TIP]
+[IMPORTANT]
 ====
-The {product} process requires you to be able to perform rolling restarts of your client applications during the migration.
+* True zero downtime migration is only possible if your database meets the xref:ROOT:feasibility-checklists.adoc[minimum requirements].
+If your database doesn't meet these requirements, you can still complete the migration, but downtime might be necessary to finish the migration.
 
-This is standard practice for client applications that are deployed over multiple instances and is a widely used approach to roll out releases and configuration changes.
+* The {product} process requires you to be able to perform rolling restarts of your client applications during the migration.
+This is standard practice for client applications that are deployed over multiple instances, and it is a widely used approach to roll out releases and configuration changes.
 ====
-
-== Supported releases
-
-include::partial$supported-releases.adoc[]
 
 == Migration scenarios
 
-include::partial$migration-scenarios.adoc[]
-
-[TIP]
-====
-An important migration prerequisite is that you already have the matching schema on Target.
-A CQL statement that your client application sends to {product-proxy} must be able to succeed on both Origin and Target clusters.
-This means that any keyspace that your client application uses must exist on both Origin and Target with the same name.
-Table names must also match.
-For more, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
-====
+include::ROOT:partial$migration-scenarios.adoc[]
 
 == Migration phases
 
-First, a couple of key terms used throughout the {product-short} documentation and software components:
+A migration project includes preparation for the migration and five migration phases.
 
-* **Origin:** This cluster is your existing {cass-short}-based environment, whether it's {cass}, {dse-short}, or {astra-db}.
+The following sections describe the major events in each phase and how your client applications perform read and write operations on your origin and target clusters during each phase.
 
-* **Target:** This cluster is the new environment to which you want to migrate client applications and data.
+The _origin_ is is your existing {cass-short}-based environment, which can be {cass}, {dse-short}, or {astra-db}.
+The _target_ is your new {cass-short}-based environment where you want to migrate your data and client applications.
 
-=== Migration diagram
-
-Discover the migration concepts, software components, and sequence of operations.
-
-Your migration project occurs through a sequence of phases, which matches the structure of the {product} documentation.
-
-The highlighted components in each phase emphasize how your client applications perform read and write operations on  your Origin and Target clusters.
-
-==== Pre-migration client application operations
+=== Pre-migration client application operations
 
 Here's a look at a pre-migration from a high-level view.
 At this point, your client applications are performing read/write operations with an existing CQL-compatible database such as {cass}, {dse-short}, or {astra-db}.
 
 image:pre-migration0ra9.png["Pre-migration environment."]
 
-'''
+[TIP]
+====
+For the migration to succeed, the origin and target clusters must have matching schemas.
 
-==== Phase 1: Deploy {product-proxy} and connect client applications
+A CQL statement that your client application sends to {product-proxy} must be able to succeed on both the origin and target clusters.
+
+This means that any keyspace that your client application uses must exist on both the origin and target clusters with the same name.
+The table names, column names, and data types must also match.
+For more information, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
+====
+
+=== Phase 1: Deploy {product-proxy} and connect client applications
 
 In this first phase, deploy the {product-proxy} instances and connect client applications to the proxies.
 This phase activates the dual-write logic.
-Writes are bifurcated (sent to both Origin and Target), while reads are executed on Origin only.
+Writes are bifurcated (sent to both the origin and target), while reads are executed on the origin only.
 
 image:migration-phase1ra9.png["Migration Phase 1."]
 
-'''
-
-==== Phase 2: Migrate data
+=== Phase 2: Migrate data
 
 In this phase, migrate existing data using {cass-migrator} or {dsbulk-loader}.
 Validate that the migrated data is correct, while continuing to perform dual writes.
 
 image:migration-phase2ra9a.png["Migration Phase 2."]
 
-'''
-
-==== Phase 3: Enable asynchronous dual reads
+=== Phase 3: Enable asynchronous dual reads
 
 In this phase, you can optionally enable asynchronous dual reads.
-The idea is to test performance and verify that Target can handle your application's live request load before cutting over from Origin to Target.
+The idea is to test performance and verify that the target cluster can handle your application's live request load before cutting over from the origin to the target permanently.
 
 image:migration-phase3ra9.png["Migration Phase 3."]
 
-'''
+=== Phase 4: Route reads to the target cluster
 
-==== Phase 4: Route reads to Target
+In this phase, read routing on the {product-proxy} is switched to teh target cluster so that all reads are executed on the target.
+Writes are still sent to both clusters.
 
-In this phase, read routing on the {product-proxy} is switched to Target so that all reads are executed on it, while writes are still sent to both clusters.
-In other words, Target becomes the primary cluster.
+At this point, the target becomes the primary cluster.
 
 image:migration-phase4ra9.png["Migration Phase 4."]
 
-'''
+=== Phase 5: Connect directly to the target cluster
 
-==== Phase 5: Connect directly to Target
+In this phase, move your client applications off the {product-proxy} and connect them directly to the target cluster.
 
-In this phase, move your client applications off the {product-proxy} and connect the apps directly to Target.
-Once that happens, the migration is complete.
+Once this happens, the migration is complete, and you now exclusively use the target cluster.
 
 image:migration-phase5ra9.png["Migration Phase 5."]
 
-'''
+[#lab]
+== {product} interactive lab
 
-== A fun way to learn: {product} Interactive Lab
+As a companion to the {product-short} documentation, you can use the https://www.datastax.com/dev/zdm[{product} interactive lab] to try the entire migration process in a demo environment.
 
-include::partial$interactive-lab.adoc[]
+The lab only requires a GitHub account and a supported browser.
+All browsers are supported except Safari.
 
-The interactive lab spans the pre-migration prerequisites and each of the five key migration phases illustrated above.
+You don't need to install anything because the lab uses a pre-configured GitPod environment.
+
+This lab provides an interactive, detailed walkthrough of the migration process, including pre-migration preparation and each of the five migration phases.
+The lab describes and demonstrates all steps and automation required to prepare for and complete a migration from any supported origin database to any supported target database.

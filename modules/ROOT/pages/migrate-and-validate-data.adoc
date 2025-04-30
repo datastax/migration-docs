@@ -1,90 +1,54 @@
 = Phase 2: Migrate and validate data
 :page-tag: migration,zdm,zero-downtime,validate-data
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
-This topic introduces two open-source data migration tools that you can use during Phase 2 of your migration project.
+In Phase 2 of data migration, you migrate data from the origin to the target, and then validate the migrated data.
 
-For full details, see these topics:
-
-* xref:cassandra-data-migrator.adoc[{cass-migrator}]
-* xref:dsbulk-migrator.adoc[{dsbulk-migrator}]
-
-These tools provide sophisticated features that help you migrate your data from any {cass-short} **Origin** ({cass}, {dse-short}, or {astra-db}) to any {cass-short} **Target** ({cass}, {dse-short}, or {astra-db}).
-
-//include::partial$lightbox-tip.adoc[]
-
-image::{imagesprefix}migration-phase2ra.png[Phase 2 diagram shows using tools to migrate data from Origin to Target.]
+image::migration-phase2ra.png[In ZDM Phase 2, you migrate data from the origin cluster to the target cluster.]
 
 //For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
-== What's the difference between these data migration tools?
+This topic introduces data migration tools that you can use during Phase 2 of your migration project:
 
-In general:
+{cass-migrator} ({cass-migrator-short})::
+Best for migrating large amounts of data and for migrations that need support for detailed logging, data verification, table column renaming, and reconciliation.
 
-* {cass-migrator} ({cass-migrator-short}) is the best choice to migrate large data quantities, and where detailed logging, data verifications, table column renaming (if needed), and reconciliation options are provided. 
+{dsbulk-migrator}::
+Extends {dsbulk-loader} with migration-specific commands. Best for simple migration of smaller amounts of data quantities, and migrations that don't require support for data validation during the migration.
 
-* {dsbulk-migrator} leverages {dsbulk-loader} to perform the data migration, and provides new commands specific to migrations. {dsbulk-migrator} is ideal for simple migration of smaller data quantities, and where data validation (other than post-migration row counts) is not necessary.
-
-== Open-source repos with essential data migration tools
-
-Refer to the following GitHub repos:
-
-* https://github.com/datastax/cassandra-data-migrator[{cass-migrator}] repo.
-
-* https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator}] repo.
-
-A number of helpful assets are provided in each repo. 
-
-In particular, the {cass-migrator-short} repo provides two configuration templates, with embedded comments and default values, which you can customize to match your data migration's requirements:
-
-* https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[cdm.properties] provides a subset of configuration options with commonly required settings.
-
-* https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[cdm-detailed.properties] with all available options.
+{sstable-sideloader}::
+Exclusively for migrations from a {cass-reg}, {dse}, or {hcd} cluster to an {astra-db} database.
+You can use {cass-migrator-short} to validate data after the migration.
 
 [[cass-migrator-key-features]]
-== {cass-migrator} features
+== {cass-migrator}
 
-{cass-migrator-short} offers functionalities like bulk export, import, data conversion, mapping of column names between Origin and Target, and validation. 
-The {cass-migrator-short} capabilities are extensive:
+{cass-migrator-short} offers extensive functionality and configuration options to support large and complex migrations as well as post-migration data validation.
 
-* Automatic detection of each table's schema - column names, types, keys, collections, UDTs, and other schema items.
-* Validation - Log partitions range-level exceptions, use the exceptions file as input for rerun operations.
-* Supports migration of Counter tables.
-* Preserves writetimes and Time To Live (TTL).
-* Validation of advanced data types - Sets, Lists, Maps, UDTs.
-* Filter records from Origin using writetimes, and/or CQL conditions, and/or a list of token ranges.
-* Guardrail checks, such as identifying large fields.
-* Fully containerized support - Docker and Kubernetes friendly.
-* SSL support - including custom cipher algorithms.
-* Migration/validation from and to Azure Cosmos {cass-short}.
-* Validate migration accuracy and performance using a smaller randomized data-set.
-* Support for adding custom fixed writetime.
-
-With new or enhanced capabilities in recent https://github.com/datastax/cassandra-data-migrator/packages/1832128[{cass-migrator-short} v4.x releases].
-
-* Column names can differ between Origin and Target.
-* UDTs can be migrated from Origin to Target, even when the keyspace names differ.
-* Predefined Codecs allow for data type conversion between Origin and Target; you can add custom Codecs.
-* Separate Writetime and TTL configuration supported. Writetime columns can differ from TTL columns.
-* A subset of columns can be specified with Writetime and TTL: Not all eligible columns need to be used to compute the Origin value.
-* Automatic `RandomPartitioner` min/max: Partition min/max values no longer need to be manually configured.
-* You can populate Target columns with constant values: New columns can be added to the Target table, and populated with constant values.
-* Expand Origin Map Column into Target rows: A Map in Origin can be expanded into multiple rows in Target when the Map key is part of the Target primary key.
-
-For extensive usage and reference details, see xref:cassandra-data-migrator.adoc[{cass-migrator}]. 
+For more information, see xref:ROOT:cassandra-data-migrator.adoc[] and the https://github.com/datastax/cassandra-data-migrator[{cass-migrator} repository].
 
 [[dsbulk-migrator-key-features]]
-== {dsbulk-migrator} features
+== {dsbulk-migrator}
 
-{dsbulk-migrator}, which is based on {dsbulk-loader}, is best for migrating smaller amounts of data, and/or when you can shard data from table rows into more manageable quantities.  
+{dsbulk-migrator}, which is based on {dsbulk-loader}, is best for migrating smaller amounts of data or when you can shard data from table rows into more manageable quantities.
 
 {dsbulk-migrator} provides the following commands:
 
-* `migrate-live` starts a live data migration using a pre-existing {dsbulk-loader} installation, or alternatively, the embedded {dsbulk-loader} version. A "live" migration means that the data migration will start immediately and will be performed by this migrator tool through the desired {dsbulk-loader} installation.
+* `migrate-live`: Start a live data migration using the embedded version of {dsbulk-loader} or your own {dsbulk-loader} installation.
+A live migration means that the data migration starts immediately and is performed by this migrator tool through the specified {dsbulk-loader} installation.
 
-* `generate-script` generates a migration script that, once executed, will perform the desired data migration, using a pre-existing {dsbulk-loader} installation. Please note: this command does not actually migrate the data; it only generates the migration script.
+* `generate-script`: Generate a migration script that you can execute to perform a data migration with a your own {dsbulk-loader} installation.
+This command _doesn't_ trigger the migration; it only generates the migration script that you must then execute.
 
-* `generate-ddl` reads the schema from Origin and generates CQL files to recreate it in an {astra-db} cluster used as Target.
+* `generate-ddl`: Read the schema from origin, and then generate CQL files to recreate it in your target {astra-db} database.
 
-For extensive usage and reference details, see xref:dsbulk-migrator.adoc[{dsbulk-migrator}].
+For more information, see xref:ROOT:dsbulk-migrator.adoc[] and the https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator} repository].
+
+== {sstable-sideloader}
+
+{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-short}, {dse-short}, or {hcd-short} cluster.
+
+Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like {dsbulk-migrator} and {cass-migrator}, including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
+
+{sstable-sideloader} uses the {astra} {devops-api}, your cloud provider's CLI, and `nodetool`.
+
+For more information, see xref:sideloader:sideloader-overview.adoc[].

@@ -1,7 +1,5 @@
 = Leverage metrics provided by {product-proxy}
 :page-tag: migration,zdm,zero-downtime,metrics
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
 This topic provides detailed information about the metrics captured by the {product-proxy} and explains how to interpret the metrics. 
 
@@ -29,7 +27,7 @@ There are three groups of metrics in this dashboard:
 * Node level metrics
 * Asynchronous read requests metrics
 
-image::{imagesprefix}zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of {product-short} metrics for the proxy.]
+image::zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of {product-short} metrics for the proxy.]
 
 === Proxy-level metrics
 
@@ -57,9 +55,9 @@ You can set the interval in the `Error Rate interval` dashboard variable at the 
 ** Read Failure Rate: one `cluster` label with two settings, `origin` and `target`.
 The label that contains data depends on which cluster is currently considered the primary, the same as the latency and throughput metrics explained above.
 ** Write Failure Rate: one `failed_on` label with three settings, `origin`, `target`, and `both`.
-*** `failed_on=origin`: the write request failed on Origin ONLY.
-*** `failed_on=target`: the write request failed on Target ONLY.
-*** `failed_on=both`: the write request failed on BOTH clusters.
+*** `failed_on=origin`: the write request failed on the origin only.
+*** `failed_on=target`: the write request failed on the target only.
+*** `failed_on=both`: the write request failed on both the origin and target clusters.
 
 * Request Failure Counters: Number of total request failures (resets when the {product-proxy} instance is restarted)
 ** Connect Failure Counters: the same labels as the connect failure rate.
@@ -72,17 +70,17 @@ To see error metrics by error type, see the node-level error metrics on the next
 === Node-level metrics
 
 * Latency: metrics on this bucket are not split by request type like the proxy level latency metrics so writes and reads are mixed together:
-** Origin: latency measured by the {product-proxy} up to the point it received a response from the Origin connection.
-** Target: latency measured by the {product-proxy} up to the point it received a response from the Target connection.
+** Origin: latency measured by the {product-proxy} up to the point it received a response from the origin connection.
+** Target: latency measured by the {product-proxy} up to the point it received a response from the target connection.
 
 * Throughput: same as node level latency metrics, reads and writes are mixed together.
 
-* Number of connections per Origin node and per Target node.
+* Number of connections per origin node and per target node.
 
 * Number of Used Stream Ids:
-** Tracks the total number of used xref:manage-proxy-instances.adoc#zdm_proxy_max_stream_ids[stream ids] ("request ids") per connection type (Origin, Target and Async).
+** Tracks the total number of used xref:manage-proxy-instances.adoc#zdm_proxy_max_stream_ids[stream ids] ("request ids") per connection type (`Origin`, `Target`, and `Async`).
 
-* Number of errors per error type per Origin node and per Target node.
+* Number of errors per error type per origin node and per target node.
 Possible values for the `error` type label:
 +
 ** `error=client_timeout`
@@ -104,8 +102,8 @@ These metrics track:
 
 * Latency.
 * Throughput.
-* Number of dedicated connections per node for async reads: whether it's Origin or Target connections depends on the {product-proxy} configuration.
-That is, if the primary cluster is Origin, then the asynchronous reads are sent to Target.
+* Number of dedicated connections per node for async reads: whether it's origin or target connections depends on the {product-proxy} configuration.
+That is, if the primary cluster is the origin cluster, then the asynchronous reads are sent to the target cluster.
 * Number of errors per error type per node.
 
 === Insights via the {product-proxy} metrics
@@ -121,7 +119,7 @@ Some examples of problems manifesting on these metrics:
 This dashboard in Grafana is not as important as the {product-proxy} dashboard. However, it may be useful to troubleshoot performance issues.
 Here you can see memory usage, Garbage Collection (GC) duration, open fds (file descriptors - useful to detect leaked connections), and the number of goroutines:
 
-image::{imagesprefix}zdm-golang-dashboard.png[Golang metrics dashboard example is shown.]
+image::zdm-golang-dashboard.png[Golang metrics dashboard example is shown.]
 
 Some examples of problem areas on these Go runtime metrics:
 

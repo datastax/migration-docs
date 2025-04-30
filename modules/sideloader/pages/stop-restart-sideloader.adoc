@@ -1,0 +1,66 @@
+= Stop or restart an {sstable-sideloader} migration
+:description: If necessary, you can pause, cancel, or restart an {sstable-sideloader} migration.
+
+{description}
+
+== Pause a migration
+
+Use the {devops-api} to pause a migration:
+
+[source,bash]
+----
+curl -X POST \
+    -H "Authorization: Bearer ${token}" \
+    https://api.astra.datastax.com/v2/databases/${dbID}/migrations/${migrationID}/pause \
+    | jq .
+----
+
+A paused migration retains its current state and progress.
+
+Any in-progress jobs will complete, but no new jobs will start.
+
+=== Resume a migration
+
+Resume a previously-paused migration from the point at which it was paused:
+
+[source,bash]
+----
+curl -X POST \
+    -H "Authorization: Bearer ${token}" \
+    https://api.astra.datastax.com/v2/databases/${dbID}/migrations/${migrationID}/resume \
+    | jq .
+----
+
+You can only resume an active migration that has been paused.
+Running this command against migrations in other statuses, such as idle migrations that were automatically cleaned up, has no effect.
+
+[#abort-migration]
+== Abort a migration
+
+Abort a migration only if you want to abandon it completely.
+
+. Abort a migration and remove all migration progress:
++
+[source,bash]
+----
+curl -X POST \
+    -H "Authorization: Bearer ${token}" \
+    https://api.astra.datastax.com/v2/databases/${dbID}/migrations/${migrationID}/abort \
+    | jq .
+----
++
+include::sideloader:partial$sideloader-partials.adoc[tags=no-return]
+For more information about what happens during each phase of a migration and the point of no return, see xref:sideloader:sideloader-overview.adoc[].
+
+. Wait a few minutes, and then check the migration status to confirm that the migration stopped:
++
+include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
+
+== Retry a failed migration
+
+For information about reattempting a failed migration, see xref:sideloader:troubleshoot-sideloader.adoc[].
+
+== See also
+
+* xref:sideloader:cleanup-sideloader.adoc[]
+* xref:sideloader:troubleshoot-sideloader.adoc[]

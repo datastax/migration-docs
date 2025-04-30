@@ -1,8 +1,7 @@
 = Contribution guidelines
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,contributions
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
 
+//TODO: remove this. There is a contribution guide on GH. https://github.com/datastax/zdm-proxy/blob/main/CONTRIBUTING.md 
 {company} {product} ({product-short}) provides a simple and reliable way for users to migrate an existing {cass-reg} or {dse} cluster to {astra-db}, or to any {cass-short} or {dse-short} cluster, without any interruption of service to the client applications and data.
 
 The {product-proxy} is open source software (OSS). We welcome contributions from the developer community via Pull Requests on a fork, for evaluation by the {product-short} team.
@@ -26,8 +25,7 @@ Refer to the https://cla.datastax.com/[CLA terms] and, if you agree, indicate yo
 
 The overall procedure:
 
-. Start on the open-source public repo, https://github.com/datastax/zdm-proxy/.
-. Fork the repo by clicking the Fork button in the GitHub UI.
+. Fork the https://github.com/datastax/zdm-proxy/[{product-proxy} open-source public repo].
 . Make your changes locally on your fork. Git commit and push only to your fork.
 . Wait for CI to run successfully in GitHub Actions before submitting a PR.
 . Submit a Pull Request (PR) with your forked updates.

@@ -1,47 +1,77 @@
 = Troubleshooting tips
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,troubleshooting
-ifdef::env-github,env-browser,env-vscode[:imagesprefix: ../images/]
-ifndef::env-github,env-browser,env-vscode[:imagesprefix: ]
+:page-aliases: ROOT:troubleshooting.adoc
+:description: Get help with {product}.
 
-Refer to the tips on this page for information that can help you troubleshoot issues with your migration.
+This page provides general troubleshooting advice and describes some common issues you might encounter with {product}.
 
-== How to retrieve the {product-proxy} log files
+For specific error messages, see xref:troubleshooting-scenarios.adoc[].
 
-Depending on how you deployed {product-proxy}, there may be different ways to access
-the logs.
-If you used the {product-automation}, see xref:manage-proxy-instances.adoc#_view_the_logs[View the logs] for a quick way
-to view the logs of a single proxy instance.
-Follow the instructions on xref:manage-proxy-instances.adoc#_collect_the_logs[Collect the logs] for a playbook that systematically retrieves all logs by all instances and packages them in a zip archive for later inspection.
+You can also contact your {company} account representative or {support-url}[{company} Support], if you have a https://www.datastax.com/products/luna[Luna service contract].
 
-If you did not use the {product-automation}, you might have to access the logs differently.
-If Docker is used, enter the following command to export the logs of a container to a file:
+[#proxy-logs]
+== {product-proxy} logs
+
+The {product-proxy} logs can help you troubleshoot issues with {product}.
+
+=== Set the {product-proxy} log level
+
+Set the {product-proxy} log level to print the messages that you need.
+
+The default log level is `INFO`, which is adequate for most logging.
+
+If you need more detail for temporary troubleshooting, you can set the log level to `DEBUG`.
+However, this can slightly degrade performance, and {company} recommends that you revert to `INFO` logging as soon as possible.
+
+How you set the log level depends on how you deployed the {product-proxy}:
+
+* If you used {product-automation} to deploy the {product-proxy}, set `log_level` in `vars/zdm_proxy_core_config.yml`.
++
+You can change this value in a rolling fashion by editing the variable and running the `rolling_update_zdm_proxy.yml` playbook.
+For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
+
+* If you didn't use {product-automation} to deploy the {product-proxy}, set the `ZDM_LOG_LEVEL` environment variable on each proxy instance, and then restart each instance.
+
+=== Retrieve the {product-proxy} log files
+
+//TODO: Reconcile with manage-proxy-instance.adoc content.
+
+If you used the {product-automation} to deploy {product-proxy}, then you can get logs for a single proxy instance, and you can use a playbook to retrieve logs for all instances.
+For instructions and more information, see xref:ROOT:manage-proxy-instances.adoc#access-the-proxy-logs[Access the proxy logs].
+
+If you did not use the {product-automation} to deploy {product-proxy}, you might have to access the logs another way.
+For example, if you used Docker, you can use the following command to export a container's logs to a `log.txt` file:
 
 [source,bash]
 ----
 docker logs my-container > log.txt
 ----
 
-[TIP]
-====
-Keep in mind that docker logs are deleted if the container is recreated.
-====
+Keep in mind that Docker logs are deleted if the container is recreated.
 
-== What to look for in the logs
+=== Message levels
 
-Make sure that the log level of the {product-proxy} is set to the appropriate value:
+Some log messages contain text that sounds like an error, but they are not errors.
+The message's `level` typically indicates severity:
 
-* If you deployed the {product-proxy} through the {product-automation}, the log level is determined by the variable `log_level` in `vars/zdm_proxy_core_config.yml`.
-This value can be changed in a rolling fashion by editing this variable and running the playbook `rolling_update_zdm_proxy.yml`.
-For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
+* `level=debug` and `level=info`: Expected and normal messages that are typically not errors.
+However, if you enable `DEBUG` logging, `debug` messages can help you find the source of a problem.
 
-* If you did not use the {product-automation} to deploy the {product-proxy}, change the environment variable `ZDM_LOG_LEVEL` on each proxy instance and restart it.
+* `level=warn`: Reports an event that wasn't fatal to the overall process, but could indicate an issue with an individual request or connection.
 
-Here are the most common messages you'll find in the proxy logs:
+* `level=error`: Indicates an issue with the {product-proxy}, client application, or clusters.
+These messages require further examination.
 
-=== {product-proxy} startup message
+If the meaning of a `warn` or `error` message isn't clear, you can submit an issue in the https://github.com/datastax/zdm-proxy/issues[{product-proxy} GitHub repository].
 
-Assuming the Log Level is not filtering out `INFO` entries, you can look for the following type of log message in order to verify that the {product-proxy} is starting up correctly.
-Example:
+=== Common log messages
+
+Here are the most common messages in the {product-proxy} logs.
+
+==== {product-proxy} startup message
+
+If the log level doesn't filter out `info` entries, you can look for a `Proxy started` log message to verify that the {product-proxy} started correctly.
+For example:
 
 [source,json]
 ----
@@ -50,41 +80,30 @@ msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
 \"\n","stream":"stderr","time":"2023-01-13T11:50:48.522097083Z"}
 ----
 
-=== {product-proxy} configuration
+==== {product-proxy} configuration message
 
-The first few lines of the {product-proxy} log file contains all the configuration variables and values.
-They are printed in a long JSON string format.
-You can copy/paste the string into a JSON formatter/viewer to make it easier to read.
-Example log message:
+If the log level doesn't filter out `info` entries, the first few lines of a {product-proxy} log file contain all configuration variables and values in a long JSON string.
+
+For example, this log message has been truncated for readability:
 
 [source,json]
 ----
 {"log":"time=\"2023-01-13T11:50:48Z\" level=info
 msg=\"Parsed configuration: {\\\"ProxyIndex\\\":1,\\\"ProxyAddresses\\\":"...",
-[remaining of json string removed for simplicity]
+...TRUNCATED...
 ","stream":"stderr","time":"2023-01-13T11:50:48.339225051Z"}
 ----
 
-Seeing the configuration settings is useful while troubleshooting issues.
-However, remember to check the log level variable to ensure you're viewing the intended types of messages.
-Setting the log level setting to `DEBUG` might cause a slight performance degradation.
+Configuration settings can help with troubleshooting.
 
-=== Be aware of current log level
+To make this message easier to read, pass it through a JSON formatter or paste it into a text editor that can reformat JSON.
 
-When you find a log message that looks like an error, the most important thing is to check the **log level** of that message.
+==== Protocol log messages
 
-* A log message with `level=debug` or `level=info` is very likely not an error, but something expected and normal.
+There are cases where protocol errors are fatal, and they will kill an active connection that was being used to serve requests.
+However, it is also possible to get normal protocol log messages that contain wording that sounds like an error.
 
-* Log messages with `level=error` must be examined as they usually indicate an issue with the proxy, the client application, or the clusters.
-
-* Log messages with `level=warn` are usually related to events that are not fatal to the overall running workload, but may cause issues with individual requests or connections.
-
-* In general, log messages with `level=error` or `level=warn` should be brought to the attention of {company}, if the meaning is not clear.
-In the {product-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue] to ask questions about log messages of type `error` or `warn` that are unclear.
-
-=== Protocol log messages
-
-Here's an example of a log message that looks like an error, but it's actually an expected and normal message:
+For example, the following `DEBUG` message contains the phrases `force a downgrade` and `unsupported protocol version`, which can sound like errors:
 
 [source,json]
 ----
@@ -94,24 +113,25 @@ to the client to force a downgrade: PROTOCOL (code=Code Protocol [0x0000000A],
 msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":"2023-01-13T12:02:12.379287735Z"}
 ----
 
-There are cases where protocol errors are fatal so they will kill an active connection that was being used to serve requests.
-However, if you find a log message similar to the example above with log level `debug`, then it's likely not an issue.
-Instead, it's more likely an expected part of the handshake process during the connection initialization; that is, the normal protocol version negotiation.
+However, `level=debug` indicates that this is not an error.
+Instead, this is a normal part of protocol version negotiation (handshake) during connection initialization.
 
-[[_how_to_identify_the_zdm_proxy_version]]
-== How to identify the {product-proxy} version
+[#check-version]
+== Check your {product-proxy} version
 
-In the {product-proxy} logs, the first message contains the version string (just before the message that shows the configuration):
-
+//TODO: Possibly duplicated on manage-proxy-instances.html#_upgrade_the_proxy_version
+In the {product-proxy} logs, the first message contains the version string:
 
 [source,console]
 ----
 time="2023-01-13T13:37:28+01:00" level=info msg="Starting ZDM proxy version 2.1.0"
-time="2023-01-13T13:37:28+01:00" level=info msg="Parsed configuration: {removed for simplicity}"
+time="2023-01-13T13:37:28+01:00" level=info msg="Parsed configuration: ..."
 ----
 
-You can also provide a `-version` command line parameter to the {product-proxy} and it will only print the version.
-Example:
+This message is logged immediately before the long `Parsed configuration` string.
+
+You can also pass the `-version` flag to the {product-proxy} to print the version.
+For example, you can use the following Docker command:
 
 [source,bash]
 ----
@@ -119,43 +139,65 @@ docker run --rm datastax/zdm-proxy:2.x -version
 ZDM proxy version 2.1.0
 ----
 
-[TIP]
+[IMPORTANT]
 ====
-Do not use `--rm` when actually launching the {product-proxy} otherwise you will not be able to access the logs when it stops (or crashes).
+Don't use `--rm` when you launch the {product-proxy} container.
+This flag will prevent you from accessing the logs when {product-proxy} stops or crashes.
 ====
 
-[#how-to-leverage-metrics]
-== How to leverage the metrics provided by {product-proxy}
+== Report an issue
 
-See xref:metrics.adoc[].
+To report an issue or get additional support, submit an issue in the {product-short} component GitHub repositories:
 
-== Reporting an issue
+* https://github.com/datastax/zdm-proxy/issues[{product-proxy} repository]
+* https://github.com/datastax/zdm-proxy-automation/issues[{product-automation} repository] (includes {product-automation} and the {product-utility})
+* https://github.com/datastax/cassandra-data-migrator/issues[{cass-migrator} repository]
+* https://github.com/datastax/dsbulk-migrator/issues[{dsbulk-migrator} repository]
 
-If you encounter a problem during your migration, please contact us.
-In the {product-proxy} GitHub repo, submit a https://github.com/datastax/zdm-proxy/issues[GitHub Issue].
-Only to the extent that the issue's description does not contain **your proprietary or private** information, please include the following:
+[IMPORTANT]
+====
+These repositories are public.
 
-* {product-proxy} version (see xref:_how_to_identify_the_zdm_proxy_version[here]).
-* {product-proxy} logs: ideally at `debug` level if you can reproduce the issue easily and can tolerate a restart of the proxy instances to apply the configuration change.
-* Version of database software on the Origin and Target clusters (relevant for {dse-short} and {cass} deployments only).
-* If {astra-db} is being used, please let us know in the issue description.
-* Screenshots of the {product-proxy} metrics dashboards from Grafana or whatever visualization tool you use.
-If you can provide a way for us to access those metrics directly that would be even better.
-* Application/Driver logs.
-* Driver and version that the client application is using.
+Don't include any proprietary or private information in issues, pull requests, or comments that you make in these repositories.
+====
 
-=== Reporting a performance issue
+In the issue description, include as much of the following information as possible, and make sure to remove all proprietary and private information before submitting the issue:
 
-If the issue is related to performance, troubleshooting can be more complicated and dynamic.
-Because of this we request additional information to be provided which usually comes down to the answers to a few questions (in addition to the information from the prior section):
+* Your <<check-version,{product-proxy} version>>.
 
-* Which statement types are being used: simple, prepared, batch?
-* If batch statements are being used, which driver API is being used to create these batches?
-Are you passing a `BEGIN BATCH` cql query string to a simple/prepared statement?
-Or are you using the actual batch statement objects that drivers allow you to create?
+* <<proxy-logs,{product-proxy} logs>>, ideally at `DEBUG` level, if you can easily reproduce the issue and tolerate restarting the proxy instances to apply the log level configuration change.
+
+* Database deployment type ({dse-short}, {hcd-short}, {cass-short}, or {astra-db}) and version for the origin and target clusters.
+The version isn't required for {astra-db}.
+
+* Screenshots of the xref:ROOT:metrics.adoc[{product-proxy} metrics] dashboards from Grafana or your chosen visualization tool.
++
+Direct read access to your metrics dashboard is preferred, if permitted by your security policy.
+This is particularly helpful for performance-related issues.
+
+* Client application and driver logs.
+
+* The driver language and version that the client application is using.
+
+For performance-related issues, provide the following additional information:
+
+* Which statement types (simple, prepared, batch) do you use?
+
+* If you use batch statements:
++
+** Which driver API do you use to create these batches?
+** Are you passing a `BEGIN BATCH` CQL query string to a simple/prepared statement, or do you use the actual batch statement objects that the drivers allow you to create?
+
 * How many parameters does each statement have?
+
 * Is CQL function replacement enabled?
-You can see if this feature is enabled by looking at the value of the Ansible advanced configuration variable `replace_cql_functions` if using the automation, or the environment variable `ZDM_REPLACE_CQL_FUNCTIONS` otherwise.
-CQL function replacement is disabled by default.
-* If permissible within your security rules, please provide us access to the {product-proxy} metrics dashboard.
-Screenshots are fine but for performance issues it is more helpful to have access to the actual dashboard so the team can use all the data from these metrics in the troubleshooting process.
+This feature is disabled by default.
+To determine if this feature is enabled, check the following variables:
++
+** If you use {product-automation}, check the Ansible advanced configuration variable `replace_cql_functions`.
+** If you don't use {product-automation}, check the environment variable `ZDM_REPLACE_CQL_FUNCTIONS`.
+
+== See also
+
+* xref:ROOT:troubleshooting-scenarios.adoc[]
+* xref:ROOT:metrics.adoc[]
