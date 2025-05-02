@@ -4,11 +4,6 @@
 
 {company} has developed a set of thoroughly-tested self-service tools that can help you migrate your data from any {cass-short} origin cluster to any {cass-short}-compatible target with little or no downtime.
 
-Compatible origin and target clusters include {cass-reg}, {dse}, {hcd}, and {astra-db}.
-
-When the migration is complete, the data is present in the new database, and you can update your client applications to connect exclusively to the new database.
-The old database becomes obsolete and can be removed.
-
 [.[&>h2]:!hidden]
 == {empty}
 

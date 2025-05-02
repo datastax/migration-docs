@@ -7,7 +7,10 @@
 
 include::ROOT:partial$supported-releases.adoc[]
 
-{product-short} keeps your clusters in sync at all times by a dual-write logic configuration, and you can xref:rollback.adoc[roll back] at any point.
+{product-short} keeps your clusters in sync at all times by a dual-write logic configuration, and you can xref:rollback.adoc[rollback] at any point.
+
+When the migration is complete, the data is present in the new database, and you can update your client applications to connect exclusively to the new database.
+The old database becomes obsolete and can be removed.
 
 [IMPORTANT]
 ====

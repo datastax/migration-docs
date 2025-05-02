@@ -1,3 +1,16 @@
-You can use {product-proxy} to migrate from a cluster running https://cassandra.apache.org/_/index.html[{cass-reg}] version 2.1.6 and later or https://www.datastax.com/products/datastax-enterprise[{dse}] version 4.7.1 and later.
+Compatible origin and target clusters include {cass-reg}, {dse}, {hcd}, and {astra-db}.
 
-You can migrate to https://www.datastax.com/products/datastax-astra[{astra-db}] or a cluster running the same or later version of {cass-short} or {dse-short}
+You can use {product-proxy} for the following migration paths:
+
+* *Origin cluster*: Migrate from a cluster running one of the following:
++
+** https://cassandra.apache.org/_/index.html[{cass-reg}] version 2.1.6 and later
+** https://www.datastax.com/products/datastax-enterprise[{dse}] version 4.7.1 and later
+
+* *Target cluster*: Migrate to one of the following:
++
+** https://www.datastax.com/products/hyper-converged-database-hcd[{hcd}]
+** A cluster running the same or later version of {cass-short} or {dse-short}
+** https://www.datastax.com/products/datastax-astra[{astra-db}]
++
+For more {astra-db} migration paths, see xref:ROOT:astra-migration-paths.adoc[].

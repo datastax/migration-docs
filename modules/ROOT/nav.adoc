@@ -62,6 +62,7 @@
 * {astra-db}
 ** xref:astra-db-serverless:databases:migration-path-serverless.adoc[]
 ** https://www.datastax.com/products/datastax-astra/migration-toolkit[{astra} Migration Toolkit]
+** xref:ROOT:astra-migration-paths.adoc[]
 * {dse}
 ** {dse-short} 6.9
 *** xref:6.9@dse:tooling:migration-path-dse.adoc[{dse-short} 6.9 migration tools]
