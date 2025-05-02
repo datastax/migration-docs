@@ -81,6 +81,7 @@ For details, see:
 
 * xref:setup-ansible-playbooks.adoc[]
 * xref:deploy-proxy-monitoring.adoc[]
+* https://github.com/datastax/zdm-proxy-automation[{product-automation} GitHub repository]
 
 == Data migration tools
 

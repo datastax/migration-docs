@@ -1,6 +1,8 @@
 = Deployment and infrastructure considerations
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,deploy,infrastructure
 
+As part of planning your migration, you need to prepare your infrastructure.
+
 == Choosing where to deploy the proxy
 
 A typical {product-proxy} deployment is made up of multiple proxy instances.
@@ -153,3 +155,7 @@ Likewise, connecting to any {product-proxy} instance is as easy as this (replaci
 ----
 ssh -F zdm_ssh_config zdm-proxy-0
 ----
+
+== Next steps
+
+* xref:ROOT:create-target.adoc[]

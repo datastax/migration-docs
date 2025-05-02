@@ -13,7 +13,7 @@ Use {dsbulk-migrator} to perform simple migration of smaller data quantities, wh
 [[building-dsbulk-migrator]]
 == Building {dsbulk-migrator}
 
-Building {dsbulk-migrator} is accomplished with Maven. First, clone the git repo to your local machine.
+Building {dsbulk-migrator} is accomplished with Maven. First, clone the https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator} repository] to your local machine.
 Example:
 
 [source,bash]

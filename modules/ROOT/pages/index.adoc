@@ -12,37 +12,16 @@ The old database becomes obsolete and can be removed.
 
 Available migration tools include:
 
-* xref:ROOT:introduction.adoc[{product}] ({product-short}): Comprised of {product-proxy}, {product-proxy}, and{product-automation}, you can continue to run your current application and migrate data from the origin to the target database without any downtime.
+* xref:ROOT:introduction.adoc[{product} ({product-short})]: Comprised of {product-proxy}, {product-utility}, and {product-automation}, you can continue to run your current application and migrate data from the origin to the target database without any downtime.
 {product-proxy} helps to manage the activity in transition.
+//{product-automation} 2.3.0, which enables ansible scripts and terraform to work with both Ubuntu and RedHat-family Linux distributions.
 
-* xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator}]: It can be used in conjunction with the {product-proxy} for a migration with zero downtime. It can also be used on its own for migrations with acceptable downtime.
+* xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator}]: You can use {cass-migrator-short} with {product-proxy} for zero-downtime migrations, or you can use {cass-migrator-short} alone for migrations with some downtime.
+You can also use {cass-migrator-short} for data validation.
 
-* xref:ROOT:dsbulk-migrator.adoc[{dsbulk-migrator}]: {dsbulk-migrator} is an extension of {dsbulk-loader}.
-In addition to loading and unloading CSV and JSON data, {dsbulk-migrator} can transfer data between databases.
+* xref:ROOT:dsbulk-migrator.adoc[{dsbulk-migrator}]: This is an extension of {dsbulk-loader}.
+In addition to loading and unloading CSV and JSON data, you can use {dsbulk-migrator} to transfer data between databases.
 It can read data from a table from your origin database and write it to a table in your target database.
 It can be used as an alternative to {cass-migrator} ({cass-migrator-short}).
 
 * xref:sideloader:sideloader-overview.adoc[{sstable-sideloader}]: {sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-reg}, {dse}, or {hcd} cluster.
-
-////
-* https://github.com/datastax/zdm-proxy-automation[{product-automation}] repo for Ansible-based {product-proxy} automation.
-//{product-automation} 2.3.0, which enables ansible scripts and terraform to work with both Ubuntu and RedHat-family Linux distributions.
-
-* https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator}] repo for migration of smaller data quantities.
-
-* https://github.com/datastax/cassandra-data-migrator[{cass-migrator}] repo for migration of larger data quantities and where detailed verifications and reconciliation options are needed.
-////
-
-////
-Possible related content:
-
-https://docs.datastax.com/en/dse/6.8/tooling/migration-path-dse.html
-
-https://docs.datastax.com/en/dse/6.9/tooling/migration-path-dse.html
-
-MC only:
-
-https://docs.datastax.com/en/mission-control/migrate/oss-cass-to-mission-control.html
-
-https://docs.datastax.com/en/mission-control/migrate/dse-to-mission-control.html
-////

@@ -129,3 +129,7 @@ Make sure that all keyspaces and tables being migrated are identical to the corr
 * To copy the schema, you can run CQL `describe` on the origin cluster to get the schema that is being migrated, and then run the output on your new cluster.
 Bear in mind that, if you are migrating from an old version, you may need to adapt some CQL clauses that are no longer supported in newer versions (e.g. `COMPACT STORAGE`).
 Please refer to the documentation of the relevant versions for more information.
+
+== Next steps
+
+* xref:ROOT:rollback.adoc[]

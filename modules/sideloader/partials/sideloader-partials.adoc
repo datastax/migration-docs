@@ -31,7 +31,8 @@ You can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-mi
 // tag::initialize[]
 After you create snapshots on the origin cluster and pre-configure the schema on the target database, use the {astra} {devops-api} to initialize the migration.
 
-image::sideloader:data-importer-workflow.svg[]
+.{sstable-sideloader} moves data from the migration bucket to {astra-db}.
+svg::sideloader:data-importer-workflow.svg[]
 
 When you initialize a migration, {sstable-sideloader} does the following:
 

@@ -2,7 +2,6 @@
 * xref:introduction.adoc[]
 * xref:components.adoc[]
 * Planning
-** xref:preliminary-steps.adoc[]
 ** xref:feasibility-checklists.adoc[]
 ** xref:deployment-infrastructure.adoc[]
 ** xref:create-target.adoc[]
@@ -61,6 +60,7 @@
 .Product-specific migration paths
 * {astra-db}
 ** xref:astra-db-serverless:databases:migration-path-serverless.adoc[]
+** https://www.datastax.com/products/datastax-astra/migration-toolkit[{astra} Migration Toolkit]
 * {dse}
 ** {dse-short} 6.9
 *** xref:6.9@dse:tooling:migration-path-dse.adoc[{dse-short} 6.9 migration tools]

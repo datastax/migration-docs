@@ -49,6 +49,15 @@ The table names, column names, and data types must also match.
 For more information, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
 ====
 
+=== Migration planning
+
+Before you begin the migration, plan and prepare for the migration:
+
+* xref:ROOT:feasibility-checklists.adoc[]
+* xref:ROOT:deployment-infrastructure.adoc[]
+* xref:ROOT:create-target.adoc[]
+* xref:ROOT:rollback.adoc[]
+
 === Phase 1: Deploy {product-proxy} and connect client applications
 
 In this first phase, deploy the {product-proxy} instances and connect client applications to the proxies.

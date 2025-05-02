@@ -1,5 +1,6 @@
 = Feasibility checks
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,feasibility
+:page-aliases: ROOT:preliminary-steps.adoc
 
 Before starting your migration, refer to the following considerations to ensure that your client application workload and xref:glossary.adoc#origin[**Origin**] are suitable for this {product} process.
 
@@ -245,3 +246,7 @@ The default retry policy retries all requests in case of a connection error *reg
 Prior to version 2.5.0, this driver did *NOT* retry any requests after they have been written to the socket, it was up to the client application to handle these and retry them if they are suitable for a retry.
 
 With the release of 2.5.0, the driver retries requests that are set as `idempotent`. See this C++ 2.x https://docs.datastax.com/en/developer/cpp-driver/2.16/topics/configuration/#query-idempotence[query idempotence documentation section].
+
+== Next steps
+
+* xref:ROOT:deployment-infrastructure.adoc[]
