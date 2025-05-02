@@ -5,7 +5,7 @@ The https://www.datastax.com/products/datastax-astra/migration-toolkit[{astra} M
 
 Use this matrix to choose a tool that is compatible with your current database provider or service.
 
-[cols="5"]
+[cols="2,1,1,1,1"]
 |===
 |Origin |{sstable-sideloader} |{cass-migrator} |{product-proxy} |{dsbulk-loader}
 
