@@ -64,7 +64,7 @@ svg::sideloader:astra-migration-toolkit.svg[]
   </div>
   <div class="grid gap-4">
 
-    svg:ROOT:icons/loading-data-int-astra-db.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
+    svg:ROOT:icons/loading-data-into-astra-db.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
     <h3 class="discrete !text-h2 !m-0">{cass-migrator} ({cass-migrator-short})</h3>
 

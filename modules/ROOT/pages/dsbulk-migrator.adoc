@@ -1,6 +1,20 @@
-= {dsbulk-migrator}
+= Use {dsbulk-migrator} with {product-short}
+:navtitle: Use {dsbulk-migrator}
+:description: Use {dsbulk-migrator} to migrate data with {product-short}.
 
 Use {dsbulk-migrator} to perform simple migration of smaller data quantities, where data validation (other than post-migration row counts) is not necessary.
+
+//when you can shard data from table rows into more manageable quantities.
+
+{dsbulk-migrator} provides the following commands:
+
+* `migrate-live`: Start a live data migration using the embedded version of {dsbulk-loader} or your own {dsbulk-loader} installation.
+A live migration means that the data migration starts immediately and is performed by this migrator tool through the specified {dsbulk-loader} installation.
+
+* `generate-script`: Generate a migration script that you can execute to perform a data migration with a your own {dsbulk-loader} installation.
+This command _doesn't_ trigger the migration; it only generates the migration script that you must then execute.
+
+* `generate-ddl`: Read the schema from origin, and then generate CQL files to recreate it in your target {astra-db} database.
 
 [[prereqs-dsbulk-migrator]]
 == {dsbulk-migrator} prerequisites
