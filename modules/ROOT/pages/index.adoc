@@ -17,8 +17,8 @@
     <p class="!mb-2">Bulk-load terabytes while shifting traffic with little or no downtime, securely and reliably.</p>
 
     <div class="flex gap-2 !mt-4">
-      https://www.datastax.com/products/datastax-astra/migration-toolkit[{astra} Migration Toolkit,role="btn btn-primary btn-solid"]
-      xref:ROOT:introduction.adoc[Get started with {product-short},role="btn btn-neutral btn-outlined"]
+      xref:ROOT:introduction.adoc[Get started with {product},role="btn btn-primary btn-solid"]
+      https://www.datastax.com/products/datastax-astra/migration-toolkit[{astra} Migration Toolkit,role="btn btn-neutral btn-outlined"]
     </div>
 
   </div>
@@ -49,11 +49,7 @@ svg::sideloader:astra-migration-toolkit.svg[]
     <p>Comprised of {product-proxy}, {product-utility}, and {product-automation}, you can continue to run your current application and migrate data from the origin to the target database without any downtime. {product-proxy} helps to manage the activity in transition.</p>
 
     <div class="landing-a">
-        xref:ROOT:introduction.adoc[]
-    </div>
-
-    <div class="landing-a">
-        xref:ROOT:components.adoc[]
+        xref:ROOT:introduction.adoc[Get started with {product-short}]
     </div>
 
   </div>
@@ -66,7 +62,7 @@ svg::sideloader:astra-migration-toolkit.svg[]
     <p>You can use {cass-migrator-short} with {product-proxy} for zero-downtime migrations, or you can use {cass-migrator-short} alone for migrations with some downtime. You can also use {cass-migrator-short} for data validation.</p>
 
     <div class="landing-a">
-        xref:ROOT:cassandra-data-migrator.adoc[]
+        xref:ROOT:cdm-overview.adoc[Get started with {cass-migrator-short}]
     </div>
 
   </div>
@@ -79,7 +75,7 @@ svg::sideloader:astra-migration-toolkit.svg[]
     <p>This is an extension of {dsbulk-loader}. In addition to loading and unloading CSV and JSON data, you can use {dsbulk-migrator} to transfer data between databases. It can read data from a table from your origin database and write it to a table in your target database. It can be used as an alternative to {cass-migrator-short}.</p>
 
     <div class="landing-a">
-        xref:ROOT:dsbulk-migrator.adoc[]
+        xref:ROOT:dsbulk-migrator.adoc[Get started with {dsbulk-migrator}]
     </div>
 
   </div>
@@ -92,7 +88,7 @@ svg::sideloader:astra-migration-toolkit.svg[]
     <p>{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-reg}, {dse}, or {hcd} cluster.</p>
 
     <div class="landing-a">
-        xref:sideloader:sideloader-overview.adoc[]
+        xref:sideloader:sideloader-overview.adoc[Get started with {sstable-sideloader}]
     </div>
 
   </div>

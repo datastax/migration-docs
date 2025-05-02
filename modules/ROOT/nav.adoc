@@ -60,9 +60,9 @@
 
 .Product-specific migration paths
 * {astra-db}
-** xref:astra-db-serverless:databases:migration-path-serverless.adoc[]
-** https://www.datastax.com/products/datastax-astra/migration-toolkit[{astra} Migration Toolkit]
 ** xref:ROOT:astra-migration-paths.adoc[]
+** https://www.datastax.com/products/datastax-astra/migration-toolkit[{astra} Migration Toolkit]
+** xref:astra-db-serverless:databases:migration-path-serverless.adoc[Migrate to {astra-db}]
 * {dse}
 ** {dse-short} 6.9
 *** xref:6.9@dse:tooling:migration-path-dse.adoc[{dse-short} 6.9 migration tools]
@@ -74,4 +74,4 @@
 *** xref:5.1@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 5.1]
 * {mc}
 ** xref:mission-control:migrate:oss-cass-to-mission-control.adoc[Migrate {cass-short} clusters to {mc-short}]
-** xref:mission-control:migrate:dse-to-mission-control.adoc[[Migrate {cass-short} clusters to {dse-short}]
+** xref:mission-control:migrate:dse-to-mission-control.adoc[Migrate {cass-short} clusters to {dse-short}]

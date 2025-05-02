@@ -1,0 +1,34 @@
+= {astra-db} migration paths
+:description: Learn which migration tools are compatible with your origin cluster.
+
+The https://www.datastax.com/products/datastax-astra/migration-toolkit[{astra} Migration Toolkit] is designed to help you migrate your data to {astra-db}.
+
+Use this matrix to choose a tool that is compatible with your current database provider or service.
+
+[cols="1,1,1,1"]
+|===
+|Origin cluster |{sstable-sideloader} |{cass-migrator} |{product-proxy} |Notes
+
+
+|===
+
+
+|===
+|Provider / Service (source) |Sideloader AMT Bulk Import |CDM Cassandra Data Migrator |ZDM Proxy Query‑duplication |DS Bulk Loader CQL/REST copy |Key Notes & Caveats
+
+|DSE 5.1 or greater |✅ |✅ |✅ |✅ |Full feature parity.
+|DSE 5.0 or lower |❌ |✅ |✅ |✅ |Full feature parity.
+|Apache Cassandra® OSS 3.11 or greater |✅ |✅ |✅ |✅ |Full feature parity.
+|Apache Cassandra® OSS 3.10 or lower |❌ |✅ |✅ |✅ |Full feature parity.
+|K8ssandra (self‑managed) |✅ |✅ |✅ |✅ |Same as OSS; Sideloader via Medusa snapshot to bucket.
+|Amazon Keyspaces |❌ |✅ |✅ |✅ |No physical files, but driver connects over TLS; throughput quotas may throttle bulk writes.
+|Azure Cosmos DB (Cassandra API) |❌ |✅ |✅ |✅ |Same as Keyspaces; be mindful of RU limits & batch size caps.
+|Azure Managed Instance for Apache Cassandra |✅ |✅ |✅ |✅ |Snapshots enable Sideloader; all driver‑level tools fully supported.
+|Instaclustr Managed Cassandra |✅ |✅ |✅ |✅ |Sideloader via snapshot download; Instaclustr exposes native ports for driver traffic.
+|Aiven for Cassandra |✅ |✅ |✅ |✅ |Backups allow Sideloader; service sunset by Dec 2025.
+|Scylla Cloud |❌ |✅ |✅ |✅ |CQL wire‑protocol compatible; shard‑aware extensions ignored by CDM/ZDM.
+|Yugabyte Aeon (YCQL) |❌ |✅ |✅ |✅ |Driver works; semantic differences (strong consistency, JSON) require schema & query review.
+|Scylla OSS / Enterprise |❌ |✅ |✅ |✅ |Same constraints as Scylla Cloud.
+|Yugabyte OSS / Anywhere |❌ |✅ |✅ |✅ |Same as Aeon.
+
+|===
