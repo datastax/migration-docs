@@ -7,7 +7,7 @@ Use this matrix to choose a tool that is compatible with your current database p
 
 [cols="2,1,1,1,1"]
 |===
-|Origin |{sstable-sideloader} |{cass-migrator} |{product-proxy} |{dsbulk-loader}
+|Origin |{sstable-sideloader} |{cass-migrator} |{product-proxy} |{dsbulk-migrator}/{dsbulk-loader}
 
 |Aiven for {cass-short}
 |✅

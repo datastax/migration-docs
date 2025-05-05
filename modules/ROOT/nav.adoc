@@ -48,17 +48,8 @@
 * xref:ROOT:cdm-overview.adoc[]
 * https://github.com/datastax/cassandra-data-migrator/releases[{cass-migrator-short} release notes]
 
-.{dsbulk-loader}
-* xref:dsbulk:overview:dsbulk-about.adoc[{dsbulk-loader}]
-* xref:dsbulk:installing:install.adoc[Installing {dsbulk-loader}]
-* Loading and unloading data
-** xref:dsbulk:getting-started:simple-load.adoc[Loading data without a configuration file]
-** xref:dsbulk:getting-started:simple-unload.adoc[Unloading data without a configuration file]
-** xref:dsbulk:developing:loading-unloading-vector-data.adoc[Loading and unloading vector data]
-** xref:dsbulk:reference:load.adoc[Loading data examples]
-** xref:dsbulk:reference:unload.adoc[Unloading data examples]
-* xref:dsbulk:reference:dsbulk-cmd.adoc#escaping-and-quoting-command-line-arguments[Escaping and quoting command line arguments]
-* https://github.com/datastax/dsbulk/releases[{dsbulk-loader} release notes]
+.{dsbulk-migrator}
+* xref:ROOT:dsbulk-migrator-overview.adoc[]
 
 .Product-specific migration paths
 * {astra-db}
