@@ -38,7 +38,7 @@ It is best for smaller migrations or migrations that don't require data validati
 In addition to loading and unloading CSV and JSON data, you can use {dsbulk-migrator} to transfer data between databases.
 It can read data from a table in your origin database, and then write that data to a table in your target database.
 
-You can use {desbulk-migrator} alone or in the context of {product-short}.
+You can use {dsbulk-migrator} alone or in the context of {product-short}.
 
 For more information, see xref:ROOT:dsbulk-migrator.adoc[].
 
