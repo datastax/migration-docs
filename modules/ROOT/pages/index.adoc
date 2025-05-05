@@ -42,7 +42,7 @@ svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-
 <div class="grid gap-6 lg:grid-cols-4">
   <div class="grid gap-4">
 
-    svg:common:ROOT:icons/cloud-backup-restore.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
+    svg:common:ROOT:icons/datastax/cloud-backup-restore.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
     <h3 class="discrete !text-h2 !m-0">{product-proxy}</h3>
 
@@ -54,7 +54,7 @@ svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-
   </div>
   <div class="grid gap-4">
 
-    svg:common:ROOT:icons/cloud-db.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
+    svg:common:ROOT:icons/datastax/cloud-db.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
     <h3 class="discrete !text-h2 !m-0">{sstable-sideloader}</h3>
 
@@ -67,7 +67,7 @@ svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-
   </div>
   <div class="grid gap-4">
 
-    svg:common:ROOT:icons/insert-data.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
+    svg:common:ROOT:icons/datastax/insert-data.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
     <h3 class="discrete !text-h2 !m-0">{cass-migrator} ({cass-migrator-short})</h3>
 
@@ -80,7 +80,7 @@ svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-
   </div>
   <div class="grid gap-4">
 
-    svg:common:ROOT:icons/migrate.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
+    svg:common:ROOT:icons/datastax/migrate.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
     <h3 class="discrete !text-h2 !m-0">{dsbulk-migrator}</h3>
 
