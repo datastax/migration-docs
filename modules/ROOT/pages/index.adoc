@@ -1,8 +1,8 @@
-= {company} Migration Tools
-:navtitle: Data Migration
+= {company} migration tools
+:navtitle: Data migration
 :page-layout: landing
 
-{company} has developed a set of thoroughly-tested self-service tools that can help you migrate your data from any origin cluster based on {cass-reg} to any {cass-short}-compatible target with little or no downtime.
+{company} has developed a set of thoroughly tested self-service tools that can help you migrate your data from any origin cluster based on {cass-reg} to any {cass-short}-compatible target with little or no downtime.
 
 [.[&>h2]:!hidden]
 == {empty}
@@ -18,14 +18,14 @@
 
     <div class="flex gap-2 !mt-4">
       xref:ROOT:introduction.adoc[Get started with {product},role="btn btn-primary btn-solid"]
-      https://www.datastax.com/products/datastax-astra/migration-toolkit[{astra} Migration Toolkit,role="btn btn-neutral btn-outlined"]
+      xref:ROOT:components.adoc[Compare tools,role="btn btn-neutral btn-outlined"]
     </div>
 
   </div>
   <div class="hidden lg:block flex basis-1/2 relative">
 ++++
 
-svg::sideloader:astra-migration-toolkit.svg[]
+svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-y-1/2 right-0 w-full"]
 
 ++++
 </div>
@@ -44,12 +44,24 @@ svg::sideloader:astra-migration-toolkit.svg[]
 
     svg:common:ROOT:icons/cloud-backup-restore.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
-    <h3 class="discrete !text-h2 !m-0">{product} ({product-short})</h3>
+    <h3 class="discrete !text-h2 !m-0">{product-proxy}</h3>
 
-    <p>Comprised of {product-proxy}, {product-utility}, and {product-automation}, you can continue to run your current application and migrate data from the origin to the target database without any downtime. {product-proxy} helps to manage the activity in transition.</p>
-
+    <p>To support live migrations, {product-proxy} orchestrates activity-in-transition on your clusters, allowing your applications to run while you migrate data.</p>
     <div class="landing-a">
         xref:ROOT:introduction.adoc[Get started with {product-short}]
+    </div>
+
+  </div>
+  <div class="grid gap-4">
+
+    svg:common:ROOT:icons/cloud-db.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
+
+    <h3 class="discrete !text-h2 !m-0">{sstable-sideloader}</h3>
+
+    <p>{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshots of your existing {cass-short}-based cluster.</p>
+
+    <div class="landing-a">
+        xref:sideloader:sideloader-overview.adoc[Get started with {sstable-sideloader}]
     </div>
 
   </div>
@@ -59,7 +71,7 @@ svg::sideloader:astra-migration-toolkit.svg[]
 
     <h3 class="discrete !text-h2 !m-0">{cass-migrator} ({cass-migrator-short})</h3>
 
-    <p>You can use {cass-migrator-short} with {product-proxy} for zero-downtime migrations, or you can use {cass-migrator-short} alone for migrations with some downtime. You can also use {cass-migrator-short} for data validation.</p>
+    <p>{cass-migrator-short} can migrate and validate data between {cass-short}-based clusters, with optional logging and reconciliation support.</p>
 
     <div class="landing-a">
         xref:ROOT:cdm-overview.adoc[Get started with {cass-migrator-short}]
@@ -72,23 +84,10 @@ svg::sideloader:astra-migration-toolkit.svg[]
 
     <h3 class="discrete !text-h2 !m-0">{dsbulk-migrator}</h3>
 
-    <p>This is an extension of {dsbulk-loader}. In addition to loading and unloading CSV and JSON data, you can use {dsbulk-migrator} to transfer data between databases. It can read data from a table from your origin database and write it to a table in your target database. It can be used as an alternative to {cass-migrator-short}.</p>
+    <p>{dsbulk-migrator} is an extension of {dsbulk-loader}.</p>
 
     <div class="landing-a">
         xref:ROOT:dsbulk-migrator.adoc[Get started with {dsbulk-migrator}]
-    </div>
-
-  </div>
-  <div class="grid gap-4">
-
-    svg:common:ROOT:icons/cloud-db.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
-
-    <h3 class="discrete !text-h2 !m-0">{sstable-sideloader}</h3>
-
-    <p>{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass}, {dse}, or {hcd} cluster.</p>
-
-    <div class="landing-a">
-        xref:sideloader:sideloader-overview.adoc[Get started with {sstable-sideloader}]
     </div>
 
   </div>

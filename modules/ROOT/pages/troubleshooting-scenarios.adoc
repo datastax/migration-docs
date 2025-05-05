@@ -26,7 +26,7 @@ This is by design: immutable configuration variables should not be changed after
 
 To change the value of configuration variables that are considered immutable, simply run the `deploy_zdm_proxy.yml` playbook again.
 This playbook can be run as many times as necessary and will just recreate the entire {product-proxy} deployment from scratch with the provided configuration.
-Please note that this does not happen in a rolling fashion: the existing {product-proxy} instances will be torn down all at the same time prior to being recreated, resulting in a brief window in which the whole {product-proxy} deployment will become unavailable.
+This doesn't happen in a rolling fashion: the existing {product-proxy} instances are torn down all at the same time prior to being recreated, resulting in a brief window in which the whole {product-proxy} deployment will become unavailable.
 
 
 == Unsupported protocol version error on the client application
@@ -409,7 +409,7 @@ Starting in version 2.1.0, you can now tune the maximum number of stream ids ava
 You can increase it to match your driver configuration through the xref:manage-proxy-instances.adoc#zdm_proxy_max_stream_ids[zdm_proxy_max_stream_ids] property.
 
 If these errors are being constantly written to the log files (for minutes or even hours) then it is likely that only an application OR {product-proxy} restart will fix it.
-If you find an issue like this please submit an https://github.com/datastax/zdm-proxy/issues[Issue] in our GitHub repo.
+If you find an issue like this, submit a https://github.com/datastax/zdm-proxy/issues[GitHub issue].
 
 == Client application closed connection errors every 10 minutes when migrating to {astra-db}
 

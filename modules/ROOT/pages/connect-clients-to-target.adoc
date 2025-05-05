@@ -22,7 +22,7 @@ image::migration-phase5ra.png[In Phase 5, your apps no longer using the proxy an
 == Configuring your driver to connect to a generic CQL cluster
 
 If your target cluster is a generic CQL cluster, such as {cass-short} or {dse-short}, then you can connect your client application to it in a similar way as you previously connected it to the origin cluster, but with the appropriate contact points and any additional configuration that your target cluster may require.
-For further information, please refer to the documentation of the driver language and version that you are using.
+For further information, see the documentation for your driver language and version.
 
 == Configuring your driver to connect to {astra-db}
 

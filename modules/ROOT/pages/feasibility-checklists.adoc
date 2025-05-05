@@ -4,43 +4,52 @@
 
 Before starting your migration, refer to the following considerations to ensure that your client application workload and xref:glossary.adoc#origin[**Origin**] are suitable for this {product} process.
 
+True zero downtime migration is only possible if your database meets the minimum requirements described on this page.
+If your database doesn't meet these requirements, you can still complete the migration, but downtime might be necessary to finish the migration.
+
 == {cass-short} Native Protocol version and cluster version support
 
 {product-proxy} supports protocol versions `v3`, `v4`, `DSE_V1`, and `DSE_V2`.
 
-[NOTE]
-====
-include::ROOT:partial$supported-releases.adoc[]
-====
-
+//TODO: Verify v5 status
 {product-proxy} technically doesn't support `v5`.
 If `v5` is requested, the proxy handles protocol negotiation so that the client application properly downgrades the protocol version to `v4`.
 This means that any client application using a recent driver that supports protocol version `v5` can be migrated using the {product-proxy} (as long as it does not use v5-specific functionality).
 
-[IMPORTANT]
-====
-*Thrift is not supported by {product-proxy}.*
+=== Thrift is not supported by {product-proxy}
 
 If you are using a very old driver or cluster version that only supports Thrift, you need to change your client application to use CQL and potentially upgrade your cluster before starting the migration process.
-====
 
-This means that {product-proxy} supports migrations of the following cluster versions (Origin/Target):
+=== Supported cluster versions and migration paths
 
-* {cass-reg} 2.1 and higher versions, up to (and including) {cass-short} 4.x. 
+include::ROOT:partial$migration-scenarios.adoc[]
+
+////
+TODO: Need to verify as these are in conflict with other information in this guide:
+
+{product-proxy} supports migrations to and from the following cluster versions:
+
+* {cass-reg} 2.1 and later, including {cass-short} 4.x.
++
 {cass-short} 2.0 migration support may be introduced when protocol version v2 is supported.
-* {dse} 4.7.1+ and higher versions. 
+
+* {dse} 4.7.1 and later.
++
 {dse-short} 4.6 migration support may be introduced when protocol version v2 is supported.
-* {company} {astra-db} (Serverless and Classic).
+
+* {astra-db}.
+////
 
 [TIP]
 ====
-Ensure that you test your client application on the target (connected directly, without the {product-proxy}) before the migration process begins.
+Before you begin the migration process, test directly connecting your client application to your target cluster, without {product-proxy}.
+This ensures that you know the connection will work when you disconnect {product-proxy} at the end of the migration.
 ====
 
 == Schema/keyspace compatibility
 
 {product-proxy} does not modify or transform CQL statements besides the optional feature that replaces `now()` functions with timestamp literals.
-See <<cql-function-replacement,this section>> for more information about this feature.
+See <<cql-function-replacement>> for more information about this feature.
 
 A CQL statement that your client application sends to {product-proxy} must be able to succeed on both clusters.
 This means that any keyspace that your client application uses must exist on both the origin and target clusters with the same name (although they can have different replication strategies and durable writes settings).
@@ -55,7 +64,7 @@ For example, if your compound primary key is `PRIMARY KEY (A, B)` and you always
 == Considerations for {astra-db} migrations
 
 {astra-db} implements guardrails and sets limits to ensure good practices, foster availability, and promote optimal configurations for your databases.
-Please check the list of https://docs.datastax.com/en/astra-serverless/docs/plan/planning.html#_astra_db_database_guardrails_and_limits[guardrails and limits] and make sure your application workload can be successful within these limits.
+Check the list of https://docs.datastax.com/en/astra-serverless/docs/plan/planning.html#_astra_db_database_guardrails_and_limits[guardrails and limits] to make sure that your application workload can be successful within these limits.
 
 If you need to make changes to the application or data model to ensure that your workload can run successfully in {astra-db}, then you need to do these changes before you start the migration process.
 
@@ -102,7 +111,7 @@ Examples of non-idempotent operations in CQL are:
 * Collection updates with `+=` and `-=` operators
 * Non-deterministic functions like `now()` and `uuid()`
 
-For more information on how to handle non-deterministic functions please refer to <<cql-function-replacement,Server-side non-deterministic functions in the primary key>>.
+For more information on how to handle non-deterministic functions, see <<cql-function-replacement>>.
 
 Given that there are two separate clusters involved, the state of each cluster may be different.
 For conditional writes, this may create a divergent state for a time.
@@ -206,10 +215,16 @@ To enable this feature, set the configuration variable `replace_cql_function` to
 For more, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
 
 If you find that the performance is not acceptable when this feature is enabled, or the feature doesn't cover a particular function that your client application is using, then you will have to make a change to your client application so that the value is computed locally (at client application level) before the statement is sent to the database.
-Most drivers have utility methods that help you compute these values locally, please refer to the documentation of the driver you are using.
-
+Most drivers have utility methods that help you compute these values locally.
+For more information, see your driver's documentation.
 
 == Driver retry policy and query idempotence
+
+[IMPORTANT]
+====
+The {product-short} process requires you can perform rolling restarts of your client applications during the migration.
+This is standard practice for client applications that are deployed over multiple instances, and it is a widely used approach to roll out releases and configuration changes.
+====
 
 As part of the normal migration process, the {product-proxy} instances will have to be restarted in between phases to apply configuration changes.
 From the point of view of the client application, this is a similar behavior to a {dse-short} or {cass-short} cluster going through a rolling restart in a non-migration scenario.

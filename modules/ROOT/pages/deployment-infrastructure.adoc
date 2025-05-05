@@ -135,7 +135,7 @@ Host <private_IP_address_of_proxy_instance_2> zdm-proxy-2
 
 Host *
     User <linux user>
-    IdentityFile < Filename (with absolute path) of the locally-generated key pair for the ZDM infrastructure. Example ~/.ssh/zdm-key-XXX >
+    IdentityFile < Filename (with absolute path) of the locally generated key pair for the ZDM infrastructure. Example ~/.ssh/zdm-key-XXX >
     IdentitiesOnly yes
     StrictHostKeyChecking no
     GlobalKnownHostsFile /dev/null

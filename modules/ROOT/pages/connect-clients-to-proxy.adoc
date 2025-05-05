@@ -157,7 +157,7 @@ You can find the details of building and running {product-demo} in the https://g
 [[_themis_client]]
 === Themis client
 
-https://github.com/absurdfarce/themis[Themis] is a Java command-line client application that allows you to insert randomly-generated data into some combination of these three sources:
+https://github.com/absurdfarce/themis[Themis] is a Java command-line client application that allows you to insert randomly generated data into some combination of these three sources:
 
 * Directly into the origin
 * Directly into the target

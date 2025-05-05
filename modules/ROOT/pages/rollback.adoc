@@ -2,7 +2,7 @@
 :navtitle: Understand rollback options
 :page-tag: migration,zdm,zero-downtime,rollback
 
-At any point from Phase 1 through Phase 4, if you hit any unexpected issue and need to stop or rollback the migration, you can revert your client applications to connect directly to the origin cluster.
+At any point from Phase 1 through Phase 4, if you encounter an unexpected issue and need to stop or roll back the migration, you can revert your client applications to connect directly to the origin cluster.
 
 After addressing the issue, you can restart the migration from the beginning.
 

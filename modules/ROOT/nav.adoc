@@ -1,6 +1,8 @@
+.Get started
+* xref:ROOT:components.adoc[]
+
 .{product}
 * xref:ROOT:introduction.adoc[]
-* xref:ROOT:components.adoc[]
 * Planning
 ** xref:ROOT:feasibility-checklists.adoc[]
 ** xref:ROOT:deployment-infrastructure.adoc[]
@@ -16,9 +18,9 @@
 ** xref:ROOT:manage-proxy-instances.adoc[]
 * Phase 2
 ** xref:ROOT:migrate-and-validate-data.adoc[]
+** xref:sideloader:sideloader-zdm.adoc[]
 ** xref:ROOT:cassandra-data-migrator.adoc[]
 ** xref:ROOT:dsbulk-migrator.adoc[]
-** xref:sideloader:sideloader-zdm.adoc[]
 * Phase 3
 ** xref:ROOT:enable-async-dual-reads.adoc[]
 * Phase 4
@@ -33,6 +35,14 @@
 ** xref:ROOT:glossary.adoc[]
 ** https://github.com/datastax/zdm-proxy/releases[{product-proxy} release notes]
 ** https://github.com/datastax/zdm-proxy-automation/releases[{product-automation} release notes]
+
+.{sstable-sideloader}
+* xref:sideloader:sideloader-overview.adoc[]
+* xref:sideloader:prepare-sideloader.adoc[]
+* xref:sideloader:migrate-sideloader.adoc[]
+* xref:sideloader:stop-restart-sideloader.adoc[]
+* xref:sideloader:cleanup-sideloader.adoc[]
+* xref:sideloader:troubleshoot-sideloader.adoc[]
 
 .{cass-migrator}
 * xref:ROOT:cdm-overview.adoc[]
@@ -49,14 +59,6 @@
 ** xref:dsbulk:reference:unload.adoc[Unloading data examples]
 * xref:dsbulk:reference:dsbulk-cmd.adoc#escaping-and-quoting-command-line-arguments[Escaping and quoting command line arguments]
 * https://github.com/datastax/dsbulk/releases[{dsbulk-loader} release notes]
-
-.{sstable-sideloader}
-* xref:sideloader:sideloader-overview.adoc[]
-* xref:sideloader:prepare-sideloader.adoc[]
-* xref:sideloader:migrate-sideloader.adoc[]
-* xref:sideloader:stop-restart-sideloader.adoc[]
-* xref:sideloader:cleanup-sideloader.adoc[]
-* xref:sideloader:troubleshoot-sideloader.adoc[]
 
 .Product-specific migration paths
 * {astra-db}

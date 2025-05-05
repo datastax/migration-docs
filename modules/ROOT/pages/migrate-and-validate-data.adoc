@@ -1,20 +1,48 @@
 = Phase 2: Migrate and validate data
 :page-tag: migration,zdm,zero-downtime,validate-data
 
-In Phase 2 of data migration, you migrate data from the origin to the target, and then validate the migrated data.
+In Phase 2 of {product}, you migrate data from the origin to the target, and then validate the migrated data.
 
-image::migration-phase2ra.png[In ZDM Phase 2, you migrate data from the origin cluster to the target cluster.]
+image::migration-phase2ra.png[In {product-short} Phase 2, you migrate data from the origin cluster to the target cluster.]
 
 //For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
 
-There are three data migration tools that you can use during Phase 2 of your migration project:
+To move and validate data, you can use a dedicated data migration tool, such as {sstable-sideloader}, {cass-migrator}, or {dsbulk-migrator}, or your can create your own custom data migration script.
 
-* xref:ROOT:cassandra-data-migrator.adoc[**{cass-migrator} ({cass-migrator-short})**]: Best for migrating large amounts of data and for migrations that need support for detailed logging, data verification, table column renaming, and reconciliation.
-+
+// tag::migration-tool-summaries[]
+== {sstable-sideloader}
+
+{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshots of your existing {cass-short}-based cluster.
+This tool is exclusively for migrations that move data to {astra-db}.
+
+You can use {sstable-sideloader} alone or in the context of {product-short}.
+
+For more information, see xref:sideloader:sideloader-zdm.adoc[].
+
+== {cass-migrator}
+
+You can use {cass-migrator} ({cass-migrator-short}) to migrate and validate tables between {cass-short}-based clusters.
+It is best for migrating large amounts of data and for migrations that need support for detailed logging, data verification, table column renaming, and reconciliation.
+
 {cass-migrator-short} offers extensive functionality and configuration options to support large and complex migrations as well as post-migration data validation.
-For a complete list of features, see the https://github.com/datastax/cassandra-data-migrator[{cass-migrator} repository]
 
-* xref:ROOT:dsbulk-migrator.adoc[**{dsbulk-migrator}**]: Extends {dsbulk-loader} with migration-specific commands. Best for small migrations and migrations that don't require support for data validation during the migration.
+You can use {cass-migrator-short} by itself, in the context of {product-short}, or for data validation after using another migration tool, such as {sstable-sideloader}.
 
-* xref:sideloader:sideloader-zdm.adoc[**{sstable-sideloader}**]: Exclusively for migrations from a {cass-reg}, {dse}, or {hcd} cluster to an {astra-db} database.
-You can use {cass-migrator-short} to validate data after the migration.
+For more information, see xref:ROOT:cassandra-data-migrator.adoc[].
+
+== {dsbulk-migrator}
+
+{dsbulk-migrator} is an extension of {dsbulk-loader}.
+It is best for smaller migrations or migrations that don't require data validation during the migration process.
+
+In addition to loading and unloading CSV and JSON data, you can use {dsbulk-migrator} to transfer data between databases.
+It can read data from a table in your origin database, and then write that data to a table in your target database.
+
+You can use {desbulk-migrator} alone or in the context of {product-short}.
+
+For more information, see xref:ROOT:dsbulk-migrator.adoc[].
+
+== Custom data migration processes
+
+If you want to write your own custom data migration processes, you can use a tool like Apache Spark(TM).
+// end::migration-tool-summaries[]

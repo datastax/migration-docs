@@ -36,7 +36,7 @@ Assign your preferred values for the serverless database:
 When the {astra-db} database reaches **Active** status, create an application token in the {astra-ui} with the *Read/Write User* role.
 This role will be used by the client application, the {product-proxy}, and the {product-automation}.
 
-Save the generate token and credentials (Client ID, Client Secret, and Token) in a clearly-named secure file.
+Save the generate token and credentials (Client ID, Client Secret, and Token) in a clearly named secure file.
 
 === Get the Secure Connect Bundle and upload to client instances
 
@@ -127,8 +127,8 @@ Make sure that all keyspaces and tables being migrated are identical to the corr
 ====
 
 * To copy the schema, you can run CQL `describe` on the origin cluster to get the schema that is being migrated, and then run the output on your new cluster.
-Bear in mind that, if you are migrating from an old version, you may need to adapt some CQL clauses that are no longer supported in newer versions (e.g. `COMPACT STORAGE`).
-Please refer to the documentation of the relevant versions for more information.
+If you are migrating from an old version, you might need to edit CQL clauses that are no longer supported in newer versions, such as `COMPACT STORAGE`.
+For specific changes in each version, see your driver's changelog or release notes.
 
 == Next steps
 

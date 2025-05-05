@@ -58,15 +58,13 @@ The Ansible playbooks constitute the {product-automation}.
 Migrating client applications between clusters is a need that arises in many scenarios. For example, you may want to:
 
 * Move to a cloud-native, managed service such as {astra-db}.
-* Migrate your client application to a brand new cluster, on a more recent version and perhaps on new infrastructure, or even a different CQL database entirely, without intermediate upgrade steps and ensuring that you always have an easy way to rollback in case of issues.
+* Migrate your client application to a brand new cluster, on a more recent version and perhaps on new infrastructure, or even a different CQL database entirely, without intermediate upgrade steps and ensuring that you always have an easy way to roll back in case of issues.
 * Separate out a client application from a shared cluster to a dedicated one.
 * Consolidate client applications, currently running on separate clusters, into fewer clusters or even a single one.
 
 Bottom line: You want to migrate your critical database infrastructure without risk or concern that your users' experiences will be affected.
 
 == Which releases of {cass-short} or {dse-short} are supported for migrations?
-
-include::ROOT:partial$supported-releases.adoc[]
 
 include::ROOT:partial$migration-scenarios.adoc[]
 
@@ -167,3 +165,13 @@ Ranging from large enterprises to small teams, IT managers, operators, and devel
 
 A CNDB like {astra-db} is a different environment.
 Running on proven cloud providers like AWS, Google Cloud, and Azure, {astra-db} greatly reduces complexity and increases convenience by surfacing a subset of configurable settings, providing a UI (the {astra-ui}) and APIs and CLI tools to interact with your {astra-db} organizations and databases.
+
+//TODO: Content to incorporate somewhere:
+
+////
+Zero-Downtime Migration (ZDM) Proxy is a proxy that mirrors traffic between the origin and target database. The requests are CQL-oriented - effectively, any database that uses the Cassandra drivers can use the proxy. Therefore, it can be used with Apache Cassandra, DataStax Enterprise (including Search and Graph through the driver), ScyllaDB, Instaclutsr, Amazon Keyspaces, Microsoft CosmosDB, Aiven’s Cassandra, Yugabyte, and anything else that the drivers can connect to. A matrix of what we’ve tested is found here: CQL databases tested with ZDM Proxy.
+
+Cassandra Data Migrator migrates historical data and does validation and reconciliation. It uses the CQL interface to do its work. Therefore, it can be used to migrate data from any origin database that speaks CQL.
+
+Astra DB Sideloader is able to import native Cassandra data (sstables) such as backups from an origin database and load them directly into the Astra Serverless data plane. Because it takes native Cassandra data, we can only import data from (specific versions of) native Cassandra databases such as Apache Cassandra, DataStax Enterprise, Hyper-Converged Database, Instaclustr, and Aiven. Sideloader cannot import data from databases that are simply Cassandra compatible, such as ScyllaDB, Keyspaces, CosmosDB, or Yugabyte, which don’t have the same native Cassandra format. In such cases, customers can use the Cassandra Data Migrator, which uses CQL.
+////

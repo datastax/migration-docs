@@ -2,14 +2,13 @@
 :navtitle: Use {dsbulk-migrator}
 :description: Use {dsbulk-migrator} to migrate data with {product-short}.
 
-Use {dsbulk-migrator} to perform simple migration of smaller data quantities, where data validation (other than post-migration row counts) is not necessary.
+Use {dsbulk-migrator} to perform small or simple migrations that don't require data validation other than post-migration row counts.
+This tool is also an option for migrations where you can shard data from large tables into more manageable quantities
 
-//when you can shard data from table rows into more manageable quantities.
-
-{dsbulk-migrator} provides the following commands:
+{dsbulk-migrator} extends {dsbulk-loader} with the following commands:
 
 * `migrate-live`: Start a live data migration using the embedded version of {dsbulk-loader} or your own {dsbulk-loader} installation.
-A live migration means that the data migration starts immediately and is performed by this migrator tool through the specified {dsbulk-loader} installation.
+A live migration means that the data migration starts immediately and is performed by the migrator tool through the specified {dsbulk-loader} installation.
 
 * `generate-script`: Generate a migration script that you can execute to perform a data migration with a your own {dsbulk-loader} installation.
 This command _doesn't_ trigger the migration; it only generates the migration script that you must then execute.
@@ -27,7 +26,8 @@ This command _doesn't_ trigger the migration; it only generates the migration sc
 [[building-dsbulk-migrator]]
 == Building {dsbulk-migrator}
 
-Building {dsbulk-migrator} is accomplished with Maven. First, clone the https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator} repository] to your local machine.
+Building {dsbulk-migrator} is accomplished with Maven.
+First, clone the https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator} repository] to your local machine.
 Example:
 
 [source,bash]

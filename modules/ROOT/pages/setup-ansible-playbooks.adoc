@@ -25,13 +25,13 @@ image::docker-container-and-zdm-utility.png[{product-proxy} connections from Doc
 . You must have already provisioned the {product-short} infrastructure, which means you must have the server machines ready, and know their IP addresses.
 These can be in the cloud provider of your choice or on-premise.
 . Docker needs to be installed on the machine that will be running the Ansible Control Host container.
-For comprehensive installation instructions, please refer to the https://docs.docker.com/engine/install/#server[official Docker documentation].
+For comprehensive installation instructions, see the https://docs.docker.com/engine/install/#server[Docker documentation].
 . The `docker` command must not require superuser privileges.
 The instructions to do this can be found https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[here].
 
 [NOTE]
 ====
-Please note that the manual, non-superuser installation of Docker described above is to be done on the machine that will run the Ansible Control Host.
+The manual, non-superuser installation of Docker described above is to be done on the machine that will run the Ansible Control Host.
 From that point, the automation will take care of installing Docker on the {product-proxy} machines without further intervention.
 ====
 
