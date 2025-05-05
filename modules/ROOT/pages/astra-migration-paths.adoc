@@ -1,9 +1,11 @@
 = {astra-db} migration paths
 :description: Learn which migration tools are compatible with your origin cluster.
 
-The https://www.datastax.com/products/datastax-astra/migration-toolkit[{astra} Migration Toolkit] is designed to help you migrate your data to {astra-db}.
+The {astra} Migration Toolkit includes all xref:ROOT:components.adoc[{company} migration tools] that are designed to help you migrate your data to {astra-db}.
 
-Use this matrix to choose a tool that is compatible with your current database provider or service.
+== Migration tool compatibility
+
+Use the following table to learn which tools are compatible with your current database provider or service:
 
 [cols="2,1,1,1,1"]
 |===
@@ -95,4 +97,10 @@ Use this matrix to choose a tool that is compatible with your current database p
 
 |===
 
+== Get support for your migration
+
 If you have questions about migrating from a specific source to {astra-db}, contact your {company} account representative, {support-url}[{company} Support], or an https://www.datastax.com/products/datastax-astra/migration-toolkit[{astra} Migration Toolkit expert].
+
+== See also
+
+* xref:astra-db-serverless:databases:migration-path-serverless.adoc[Migrate to {astra-db}]
