@@ -42,7 +42,7 @@ svg::sideloader:astra-migration-toolkit.svg[]
 <div class="grid gap-6 lg:grid-cols-4">
   <div class="grid gap-4">
 
-    svg:ROOT:icons/astra-db-cloud-backup-restores.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
+    svg:common:ROOT:icons/cloud-backup-restore.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
     <h3 class="discrete !text-h2 !m-0">{product} ({product-short})</h3>
 
@@ -55,7 +55,7 @@ svg::sideloader:astra-migration-toolkit.svg[]
   </div>
   <div class="grid gap-4">
 
-    svg:ROOT:icons/loading-data-into-astra-db.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
+    svg:common:ROOT:icons/insert-data.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
     <h3 class="discrete !text-h2 !m-0">{cass-migrator} ({cass-migrator-short})</h3>
 
@@ -68,7 +68,7 @@ svg::sideloader:astra-migration-toolkit.svg[]
   </div>
   <div class="grid gap-4">
 
-    svg:ROOT:icons/migrating-apps.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
+    svg:common:ROOT:icons/migrate.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
     <h3 class="discrete !text-h2 !m-0">{dsbulk-migrator}</h3>
 
@@ -81,7 +81,7 @@ svg::sideloader:astra-migration-toolkit.svg[]
   </div>
   <div class="grid gap-4">
 
-    svg:ROOT:icons/what-is-astra-db.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
+    svg:common:ROOT:icons/cloud-db.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
     <h3 class="discrete !text-h2 !m-0">{sstable-sideloader}</h3>
 
