@@ -2,7 +2,7 @@
 :navtitle: Data Migration
 :page-layout: landing
 
-{company} has developed a set of thoroughly-tested self-service tools that can help you migrate your data from any {cass-short} origin cluster to any {cass-short}-compatible target with little or no downtime.
+{company} has developed a set of thoroughly-tested self-service tools that can help you migrate your data from any origin cluster based on {cass-reg} to any {cass-short}-compatible target with little or no downtime.
 
 [.[&>h2]:!hidden]
 == {empty}
@@ -85,7 +85,7 @@ svg::sideloader:astra-migration-toolkit.svg[]
 
     <h3 class="discrete !text-h2 !m-0">{sstable-sideloader}</h3>
 
-    <p>{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-reg}, {dse}, or {hcd} cluster.</p>
+    <p>{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass}, {dse}, or {hcd} cluster.</p>
 
     <div class="landing-a">
         xref:sideloader:sideloader-overview.adoc[Get started with {sstable-sideloader}]
