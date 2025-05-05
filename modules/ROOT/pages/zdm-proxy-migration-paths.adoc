@@ -1,0 +1,6 @@
+= Cluster compatibility for {product}
+:description: Learn which sources and targets are eligible for {product}.
+
+include::ROOT:partial$migration-scenarios.adoc[]
+
+For more {product} requirements, see xref:ROOT:feasibility-checklists.adoc[].

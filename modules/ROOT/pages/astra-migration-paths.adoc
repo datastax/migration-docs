@@ -1,4 +1,4 @@
-= {astra-db} migration paths
+= {astra} Migration Toolkit
 :description: Learn which migration tools are compatible with your origin cluster.
 
 The {astra} Migration Toolkit includes all xref:ROOT:components.adoc[{company} migration tools] that are designed to help you migrate your data to {astra-db}.

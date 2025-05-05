@@ -24,6 +24,7 @@ asciidoc:
     cass-migrator-short: 'CDM'
     dse: 'DataStax Enterprise (DSE)'
     dse-short: 'DSE'
+    dse-brief: 'DataStax Enterprise'
     hcd: 'Hyper-Converged Database (HCD)'
     hcd-short: 'HCD'
     astra-db: 'Astra DB'
@@ -40,5 +41,6 @@ asciidoc:
     support-url: 'https://support.datastax.com'
     mc: 'Mission Control (MC)'
     mc-short: 'MC'
+    mc-brief: 'Mission Control'
 
 #TODO: Bring SCB attributes

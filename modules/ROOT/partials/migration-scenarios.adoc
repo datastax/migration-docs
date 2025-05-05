@@ -1,4 +1,4 @@
-You can use {product-proxy} to migrate from {cass-reg}, {dse}, {hcd}, {astra-db}, and other {cass-short}-based databases to any other {cass-short}-based database of the equivalent type or version:
+You can use {product-proxy} to support migrations from {cass-reg}, {dse}, {hcd}, {astra-db}, and other {cass-short}-based databases to any other {cass-short}-based database of the equivalent type or version:
 
 Compatible origin clusters::
 Migrate from one of the following:
