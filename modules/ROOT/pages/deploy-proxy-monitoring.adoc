@@ -92,7 +92,7 @@ Leave blank if authentication is not enabled on the cluster.
 ... Specify its path in `*_astra_secure_connect_bundle_path`.
 .. Otherwise, if you wish the automation to download the cluster's Secure Connect Bundle for you, just specify the two following variables:
 ... `*_astra_db_id`: the cluster's https://docs.datastax.com/en/astra/astra-db-vector/faqs.html#where-do-i-find-the-organization-id-database-id-or-region-id[database id].
-... `*_astra_token`: the token value from an {astra-db} application token with the *Read/Write User* role, prefixed by `AstraCS:`.
+... `*_astra_token`: the token value from an {astra-db} application token with the **Read/Write User** role, prefixed by `AstraCS:`.
 
 Save the file and exit the editor.
 
