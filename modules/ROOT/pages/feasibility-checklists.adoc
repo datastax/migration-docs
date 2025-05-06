@@ -222,7 +222,7 @@ For more information, see your driver's documentation.
 
 [IMPORTANT]
 ====
-The {product-short} process requires you can perform rolling restarts of your client applications during the migration.
+The {product-short} process requires you to perform rolling restarts of your client applications during the migration.
 This is standard practice for client applications that are deployed over multiple instances, and it is a widely used approach to roll out releases and configuration changes.
 ====
 

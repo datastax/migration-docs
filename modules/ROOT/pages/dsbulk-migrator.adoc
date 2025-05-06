@@ -6,7 +6,7 @@
 
 // tag::body[]
 Use {dsbulk-migrator} to perform small or simple migrations that don't require data validation other than post-migration row counts.
-This tool is also an option for migrations where you can shard data from large tables into more manageable quantities
+This tool is also an option for migrations where you can shard data from large tables into more manageable quantities.
 
 {dsbulk-migrator} extends {dsbulk-loader} with the following commands:
 
@@ -25,7 +25,7 @@ This command _doesn't_ trigger the migration; it only generates the migration sc
 
 * https://maven.apache.org/download.cgi[Maven] 3.9.x
 
-* Optional: If you don't want to use the embedded {dsbulk-loader} that is bundled with {dsbulk-migrator}, xref:dsbulk:installing:install.adoc[install {dsbulk-loader}] before installing {dsbulk-migrator}
+* Optional: If you don't want to use the embedded {dsbulk-loader} that is bundled with {dsbulk-migrator}, xref:dsbulk:installing:install.adoc[install {dsbulk-loader}] before installing {dsbulk-migrator}.
 
 == Build {dsbulk-migrator}
 
@@ -85,8 +85,7 @@ The role and availability of the options depends on the command you run:
 the clusters.
 
 * When generating a migration script, most options become default values in the generated scripts.
-However, even when generating scripts, {dsbulk-migrator} still needs to access the origin cluster
-to gather metadata about the tables to migrate.
+However, even when generating scripts, {dsbulk-migrator} still needs to access the origin cluster to gather metadata about the tables to migrate.
 
 * When generating a DDL file, import options and {dsbulk-loader}-related options are ignored.
 However, {dsbulk-migrator} still needs to access the origin cluster to gather metadata about the keyspaces and tables for the DDL statements.
