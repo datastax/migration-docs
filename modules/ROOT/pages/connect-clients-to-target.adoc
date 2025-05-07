@@ -26,14 +26,14 @@ For further information, see the documentation for your driver language and vers
 
 == Configuring your driver to connect to {astra-db}
 
-//TODO: You can use an AstraCS token and the literal string `token` instead of clientID and client secret.
+To connect to {astra-db}, you need the following:
 
-To connect to {astra-db}, you need:
-
-* The ClientID and Client Secret from an {astra-db} application token with *Organization Administrator* permissions for the organization to which your {astra-db} database belongs.
+* The xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token] credentials that you used to xref:ROOT:connect-clients-to-proxy.adoc[connect your applications to the {product-proxy}].
 +
-You will already have used these credentials when you configured the {product-proxy} to connect to your {astra-db} database as the target cluster.
-For more information on creating credentials (tokens), see xref:astra-db-serverless:administration:manage-application-tokens.adoc[].
+As before, you can use either of the following sets of credentials to connect to your {astra-db} database:
++
+** Token-only authentication: Set `username` to the literal string `token`, and set `password` to your {astra-db} application token.
+** Client ID and secret authentication (legacy): Set `username` to the `clientId` generated with your application token, and then set `password` to the `secret` generated with your application token.
 
 * Your {astra-db} database's Secure Connect Bundle (SCB).
 +
@@ -44,7 +44,7 @@ For more information, see xref:astra-db-serverless:drivers:secure-connect-bundle
 [IMPORTANT]
 ====
 The SCB contains sensitive information that establishes a connection to your database, including key pairs and certificates.
-Treat is as you would any other sensitive values, such as passwords or tokens.
+Treat it as you would any other sensitive values, such as passwords or tokens.
 ====
 
 * Recommended: A driver language and version that is compatible with {astra-db}.

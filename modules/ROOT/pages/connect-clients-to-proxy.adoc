@@ -137,10 +137,14 @@ This is also the case if authentication is required by the target only, but not 
 .How different sets of credentials are used by the {product-proxy} when authentication is enabled on both clusters
 image::zdm-proxy-credential-usage.png[{product-proxy} credentials usage, 550]
 
-=== A note on the Secure Connect Bundle
+=== {astra-db} credentials
 
-If your {product-proxy} is configured to use {astra-db} as the origin or target cluster, then your client application **does not need** to provide a Secure Connect Bundle (SCB) when connecting to the proxy.
-It will, however, have to supply an {astra-db} application token's client ID and client secret as a username and password (respectively).
+If your {product-proxy} is configured to use {astra-db} as the origin or target cluster, then your client application doesn't need to provide a Secure Connect Bundle (SCB) when connecting to the proxy.
+
+As an alternative to providing the SCB directly, you can xref:astra-db-serverless:administration:manage-application-tokens.adoc[generate an application token] with the *Organization Administrator* role, and then specify one of the following sets of credentials generated with the token:
+
+* Token-only authentication: Set `username` to the literal string `token`, and set `password` to your {astra-db} application token.
+* Client ID and secret authentication (legacy): Set `username` to the `clientId` generated with your application token, and then set `password` to the `secret` generated with your application token.
 
 == Sample client applications
 

@@ -57,7 +57,7 @@ Use `scp` to copy the SCB to your client application instance:
 
 [source,bash]
 ----
-scp -i <your_ssh_key> secure-connect-<target cluster name>.zip <linux user>@<public IP of client application instance>:
+scp -i <your_ssh_key> /path/to/scb.zip <linux user>@<public IP of client application instance>:
 ----
 
 === Create the client application schema on your {astra-db} database
