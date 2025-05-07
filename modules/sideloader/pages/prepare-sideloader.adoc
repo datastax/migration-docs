@@ -187,6 +187,22 @@ The {devops-api} commands in this guide use this tool.
 
 The following information can help you prepare for specific migration scenarios, including multi-region migrations and multiple migrations to the same database.
 
+[#minimum-migration-scope]
+=== Minimum migration scope
+
+To minimize data reconciliation issues, the recommended minimum migration scope is one CQL table across all nodes.
+
+This means that a single migration process, from start to finish, should encapsulate the data for one CQL table as it exists on all of your origin nodes.
+For example, if you are migrating one table, you need to upload snapshots of all SSTables from all nodes for that CQL table.
+
+Avoid breaking one table into multiple migrations because migrating a subset of SSTables for one CQL table will likely result in data loss, corruption, or resurrection of previously deleted data.
+
+Each migration is performed separately, and each migration has no awareness of prior migrations.
+This means that data from later migrations can be incorrectly applied to the table.
+For example, if your first migration includes tombstones, that data could be resurrected if it is present in a subsequent migration from another node.
+
+In contrast, if you use a single large migration to migrate all SSTables for a CQL table across all nodes, {astra-db} can reconcile the data across all nodes, ensuring that your migration is accurate and complete.
+
 === Multi-region migrations
 
 Multi-region migrations can include one or more of the following scenarios:
@@ -215,6 +231,8 @@ Migrate multiple nodes to one database::
 . From your origin cluster, create snapshots for all of the nodes that you want to migrate.
 +
 Run `nodetool snapshot` as many times as necessary to capture all of your nodes.
++
+For important warnings about multi-node migrations, see <<minimum-migration-scope>>.
 
 . On your target database, replicate the schemas for all tables that you want to migrate.
 +
@@ -249,6 +267,8 @@ Consider focusing on one target database at a time, or create a migration plan t
 . From your origin cluster, create snapshots for all of the nodes that you want to migrate.
 +
 Run `nodetool snapshot` as many times as necessary to capture all of your nodes.
++
+For important warnings about multi-node migrations, see <<minimum-migration-scope>>.
 
 . On each of your target databases, replicate the schemas for the tables that you want to migrate to each database.
 +
@@ -288,6 +308,7 @@ If you initialize multiple migrations for the same database, you generate multip
 
 This can be useful for breaking large migrations into smaller batches.
 For example, if you have 100 snapshots, you could initialize 10 migrations, and then upload 10 different snapshots to each migration directory.
+However, don't break one CQL table into multiple migrations, as explained in <<minimum-migration-scope>>.
 
 You can upload snapshots to multiple migration directories at once.
 However, when you reach the import phase of the migration, {sstable-sideloader} can import from only one migration directory at a time per database.
