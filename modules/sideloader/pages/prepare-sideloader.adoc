@@ -164,7 +164,7 @@ If you choose the alternative option, you must modify the commands accordingly f
 
 * *{astra-db} doesn't support materialized views*: You must replace these with SAI or an alternative data model design.
 
-* *{sstable-sideloader} doesn't support encrypted data*: If your origin cluster uses xref:6.9@dse:securing:transparent-data-encryption.adoc[{dse-short} Transparent Data Encryption], be aware that {sstable-sideloader} can't migrate these SSTables.
+* *{sstable-sideloader} doesn't support encrypted data*: If your origin cluster uses xref:6.9@dse:securing:transparent-data-encryption.adoc[{dse-short} Transparent Data Encryption], be aware that {sstable-sideloader} cannot migrate these SSTables.
 +
 If you have a mix of encrypted and unencrypted data, you can use {sstable-sideloader} to migrate the unencrypted data.
 After the initial migration, you can use another strategy to move the encrypted data, such as https://github.com/datastax/cassandra-data-migrator[{cass-short} Data Migrator (CDM)] or a manual export and reupload.
