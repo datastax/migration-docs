@@ -15,24 +15,18 @@ You can use the provided sample client applications, in addition to your own, as
 
 Finally, we will explain how to connect the `cqlsh` command-line client to the {product-proxy}.
 
-== {company} drivers
+== {company}-compatible drivers
 
-You can use {company} drivers to connect your client applications to {cass-short}, {dse-short}, and {astra-db}:
+You can use {cass-short} drivers to connect your client applications to {cass-short}, {dse-short}, {hcd-short}, and {astra-db}.
+With drivers, you can allow execute queries, iterate through results, access metadata about your cluster, and perform other related activities.
 
-* https://github.com/datastax/java-driver[{company} Java driver]
-* https://github.com/datastax/python-driver[{company} Python driver]
-* https://github.com/datastax/csharp-driver[{company} C# driver]
-* https://github.com/datastax/cpp-driver[{company} C/{cpp} driver]
-* https://github.com/datastax/nodejs-driver[{company} Node.js driver]
-
-These drivers provide a native implementation of the messaging protocols used to communicate with a {cass-short} cluster, {dse-short} cluster, or {astra-db}.
-They allow you to execute queries, iterate through results, access metadata about your cluster, and perform other related activities.
+For available drivers and driver documentation, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
 
 [[_connecting_company_drivers_to_cassandra]]
-== Connecting {company} drivers to {cass-short}
+== Connect drivers to {cass-short}
 
-Perhaps the simplest way to demonstrate how to use the {company} drivers to connect your client application to a {cass-short} cluster is an example in the form of some sample code.
-But there's a bit of a problem: the {company} drivers are independent projects implemented natively in the relevant programming language.
+Perhaps the simplest way to demonstrate how to use the drivers to connect your client application to a {cass-short} cluster is an example in the form of some sample code.
+But there's a bit of a problem: the drivers are independent projects implemented natively in the relevant programming language.
 
 This approach offers the benefit of allowing each project to provide an API that makes the most sense for the language or platform on which it's implemented.
 Unfortunately it also means there is some variation between languages.
@@ -70,10 +64,11 @@ Client programs create a Session directly.
 
 The details may vary but you'll still see the same general pattern described in the pseudocode in each of the drivers.
 
-This topic does not describe details or APIs for any of the {company} drivers mentioned above.
+This topic does not describe details or APIs for any of the drivers mentioned above.
 All the drivers come with a complete set of documentation for exactly this task.
 The following links provide some good starting points for learning about the interfaces for each specific driver:
 
+//TODO: Move this to the driver docs and replace this whole list with a link to the connect page.
 * The https://docs.datastax.com/en/developer/java-driver/latest/manual/core/[core driver section] of the Java driver manual.
 * The https://docs.datastax.com/en/developer/python-driver/latest/getting_started/[getting started guide] for the Python driver.
 * The https://docs.datastax.com/en/developer/csharp-driver/latest/index.html#basic-usage[basic usage section] of the C# driver documentation.
@@ -86,10 +81,10 @@ The links above lead to the documentation for the most recent version of each dr
 You can find the documentation for earlier versions by selecting the appropriate version number from the drop-down menu in the upper right.
 ====
 
-== Connecting {company} drivers to {product-proxy}
+== Connect drivers to {product-proxy}
 
 We mentioned above that connecting to a {product-proxy} should be almost indistinguishable from connecting directly to your {cass-short} cluster.
-This design decision means there isn't much to say here; everything we discussed in the section above also applies when connecting your {company} driver to a {product-proxy}.
+This design decision means there isn't much to say here; everything we discussed in the section above also applies when connecting your driver to {product-proxy}.
 There are a few extra considerations to keep in mind, though, when using the proxy.
 
 === Client-side compression
@@ -137,10 +132,14 @@ This is also the case if authentication is required by the target only, but not 
 .How different sets of credentials are used by the {product-proxy} when authentication is enabled on both clusters
 image::zdm-proxy-credential-usage.png[{product-proxy} credentials usage, 550]
 
-=== A note on the Secure Connect Bundle
+=== {astra-db} credentials
 
-If your {product-proxy} is configured to use {astra-db} as the origin or target cluster, then your client application **does not need** to provide a Secure Connect Bundle (SCB) when connecting to the proxy.
-It will, however, have to supply an {astra-db} application token's client ID and client secret as a username and password (respectively).
+If your {product-proxy} is configured to use {astra-db} as the origin or target cluster, then your client application doesn't need to provide a {scb} when connecting to the proxy.
+
+As an alternative to providing the {scb-short} directly, you can xref:astra-db-serverless:administration:manage-application-tokens.adoc[generate an application token] with the *Organization Administrator* role, and then specify one of the following sets of credentials generated with the token:
+
+* Token-only authentication: Set `username` to the literal string `token`, and set `password` to your {astra-db} application token.
+* Client ID and secret authentication (legacy): Set `username` to the `clientId` generated with your application token, and then set `password` to the `secret` generated with your application token.
 
 == Sample client applications
 
@@ -157,7 +156,7 @@ You can find the details of building and running {product-demo} in the https://g
 [[_themis_client]]
 === Themis client
 
-https://github.com/absurdfarce/themis[Themis] is a Java command-line client application that allows you to insert randomly-generated data into some combination of these three sources:
+https://github.com/absurdfarce/themis[Themis] is a Java command-line client application that allows you to insert randomly generated data into some combination of these three sources:
 
 * Directly into the origin
 * Directly into the target
@@ -180,7 +179,7 @@ Using CQLSH to connect to a {product-proxy} instance is very easy:
 
 * Download CQLSH for free from https://downloads.datastax.com/#cqlsh[here] on a machine that has connectivity to the {product-proxy} instances:
 ** To connect to the {product-proxy}, any version is fine.
-** The {astra}-compatible version additionally supports connecting directly to an {astra-db} cluster by passing the cluster's Secure Connect Bundle and valid credentials.
+** The {astra}-compatible version additionally supports connecting directly to an {astra-db} cluster by passing the cluster's {scb-short} and valid credentials.
 * Install it by uncompressing the archive: `tar -xvf cqlsh-<...>.tar.gz`.
 * Navigate to the `cqlsh-<...>/bin` directory, for example `cd cqlsh-astra/bin`.
 * Launch CQLSH:

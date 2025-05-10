@@ -45,18 +45,6 @@ This is always required.
 * `zdm_proxy_advanced_config.yml`: Contains advanced configuration that is required in some scenarios, but often left to the default values.
 * `zdm_proxy_custom_tls_config.yml`: Configures TLS encryption, if needed.
 
-////
-Starting in version 2.2.0 of the {product-automation}, we added the `zdm_proxy_cluster_config.yml` file to contain all the configuration variables for the origin and target clustesr.
-Prior to version 2.2.0, the variables were in the `zdm_proxy_core_config.yml` file.
-
-[TIP]
-====
-This change is backward compatible.
-If you previously populated the variables in `zdm_proxy_core_config.yml`, these variables will be honored and take precedence over any variables in `zdm_proxy_cluster_config.yml`, if both files are present.
-====
-
-If you are using a {product-automation} version up to and including 2.1.0, please use `zdm_proxy_core_config.yml` to configure access to your clusters.
-////
 === Container configuration
 The first step of the proxy container configuration is to open the `zdm_proxy_container_config.yml` file.
 Configure the desired {product-proxy} version and create a strategy to inject configuration parameters. 
@@ -66,48 +54,66 @@ Starting with {product-short} 2.3.0, you can inject the configuration with the Y
 === Cluster and core configuration
 
 The next step is to edit the `zdm_proxy_cluster_config.yml` file in the Docker container.
-You'll want to enter your {cass-short}/{dse-short} username, password, and other variables.
+You will need to provide values like your {cass-short}/{dse-short} username, password, and other connection credentials.
 
-In the container shell, `cd` to `~/zdm-proxy-automation/ansible/vars` and edit `zdm_proxy_cluster_config.yml`.
+. Get connection credentials for your origin and target clusters.
++
+* Self-managed clusters with authentication enabled: You need a valid username and password for the cluster.
+* {astra-db} databases: xref:astra-db-serverless:administration:manage-application-tokens.adoc[Generate an application token] with a role that can read and write to your database, such as the *Database Administrator* role, and then store the token values (`clientId`, `secret`, and `token`) securely.
+
+. In the container shell, `cd` to `~/zdm-proxy-automation/ansible/vars` and edit `zdm_proxy_cluster_config.yml`.
 The `vi` and `nano` text editors are available in the container.
-
-[NOTE]
-====
-Starting in version 2.2.0 of the {product-automation}, we added the `zdm_proxy_cluster_config.yml` file to contain all the configuration variables for the origin and target clusters.
-Prior to version 2.2.0, the variables were in the `zdm_proxy_core_config.yml` file.
-
-If you are using an automation version up to and including 2.1.0, please use `zdm_proxy_core_config.yml` to configure access to your clusters.
-====
-
-There are two sets of variables that you use to configure the {product-proxy} connection to the origin and target clusters.
-The variables for the origin cluster are prefixed with `origin`, and the variables for the target cluster are prefixed with `target`.
-
-These two sections are always required.
-
-Uncomment and provide values for the appropriate variables in each section for the respective cluster, as follows:
-
-. Cluster credentials:
-.. If it is a self-managed cluster, `*_username` and `*_password` must be valid credentials for it.
-Leave blank if authentication is not enabled on the cluster.
-.. If it is an {astra-db} database, authentication is always enabled: `*_username` must be the Client ID and `*_password` the Client Secret of a valid {astra-db} set of credentials with the `R/W User` role.
-. Contact points and port (only relevant for self-managed clusters, leave unset for {astra-db})
-.. `*_contact points`: comma-separated list of IP addresses of the cluster's seed nodes.
-.. `*_port`: port on which the cluster listens for client connections. Defaults to 9042.
-. For {astra-db}, choose one of the following options and leave unset the other (leave both unset for self-managed clusters):
-.. If you wish to manually provide the cluster's Secure Connect Bundle:
-... Download it from the {astra-ui} and place it on the jumphost
-... Copy it to the container. Open a new shell on the jumphost, run `docker cp <your_scb.zip> zdm-ansible-container:/home/ubuntu`
-... Specify its path in `*_astra_secure_connect_bundle_path`.
-.. Otherwise, if you wish the automation to download the cluster's Secure Connect Bundle for you, just specify the two following variables:
-... `*_astra_db_id`: the cluster's https://docs.datastax.com/en/astra/astra-db-vector/faqs.html#where-do-i-find-the-organization-id-database-id-or-region-id[database id].
-... `*_astra_token`: the token value from an {astra-db} application token with the **Read/Write User** role, prefixed by `AstraCS:`.
-
-Save the file and exit the editor.
-
-.Example: zdm_proxy_cluster_config.yml
++
+.If you are on {product-automation} version 2.1.0 or earlier
 [%collapsible]
 ====
-The following example `zdm_proxy_cluster_config.yml` file shows the configuration for a migration from a self-managed origin cluster to an {astra-db} target.
+Starting in version 2.2.0 of the {product-automation}, all origin and target cluster configuration variables are stored in `zdm_proxy_cluster_config.yml`.
+In earlier versions, these variables are in the `zdm_proxy_core_config.yml` file.
+
+This change is backward compatible.
+If you previously populated the variables in `zdm_proxy_core_config.yml`, these variables are honored and take precedence over any variables in `zdm_proxy_cluster_config.yml`, if both files are present.
+However, consider updating your configuration to use the new file to take advantage of new features in later releases.
+====
+
+. In the `ORIGIN CONFIGURATION` and `TARGET CONFIGURATION` sections, uncomment and configure all variables that are required for {product-proxy} to connect to the origin and target clusters.
++
+The variables for the origin cluster are prefixed with `origin`, and the variables for the target cluster are prefixed with `target`.
+You must provide connection details in both sections, otherwise {product-proxy} won't be able to connect to both clusters.
++
+* `*_username` and `*_password`:
+** For a self-managed cluster with authentication enabled, provide valid username and password values to access the cluster.
+** For a self-managed cluster without authentication, leave both values unset.
+** For an {astra-db} database, use the values generated with your application token.
+Either set `username` to the `clientId` and `password` to the `secret`, or set `username` to the literal string `token` and set `password` to the `token` value, which is prefixed by `AstraCS:`.
+* `*_contact_points`:
+** For a self-managed cluster, provide a comma-separated list of IP addresses for the cluster's seed nodes.
+** For an {astra-db} database, leave this unset.
+* `*_port`:
+** For a self-managed cluster, provide the port on which the cluster listens for client connections.
+The default is 9042.
+** For an {astra-db} database, leave this unset.
+* `*_astra_secure_connect_bundle_path`, `*_astra_db_id`, and `*_astra_token`:
+** For a self-managed cluster, leave all of these unset.
+** For an {astra-db} database, provide either `*_astra_secure_connect_bundle_path` _or both_ `*_astra_db_id` and `*_astra_token`.
+*** If you want {product-automation} to automatically download your database's {scb}, use `*_astra_db_id` and `*_astra_token`.
+Set `*_astra_db_id` to your xref:astra-db-serverless:databases:create-database.adoc#get-db-id[database's ID], and set `*_astra_token` to your application token, which is prefixed by `AstraCS:`.
+*** If you want to manually upload your database's {scb-short} to the jumphost, use `*_astra_secure_connect_bundle_path`.
++
+.Manually upload the {scb-short} to the jumphost
+[%collapsible]
+====
+. xref:astra-db-serverless:databases:secure-connect-bundle.adoc[Download your database's {scb-short}].
+. Upload it to the jumphost.
+. Open a new shell on the jumpost, and then run `docker cp /path/to/scb.zim zdm-ansible-container:/home/ubuntu` to copy the {scb-short} to the container.
+. Set `*_astra_secure_connect_bundle_path` to the path to the {scb-short} on the jumphost.
+====
+*** Make sure that you leave the unused credential unset.
+For example, if you use `target_astra_db_id` and `target_astra_token`, leave `target_astra_secure_connect_bundle_path` unset.
++
+.Example: Cluster configuration variables
+[%collapsible]
+====
+The following example `zdm_proxy_cluster_config.yml` file shows the configuration for a migration from a self-managed origin cluster to an {astra-db} target:
 
 [source,yml]
 ----
@@ -131,23 +137,25 @@ origin_port: 9042
 target_username: "dqhg...NndY"
 target_password: "Yc+U_2.gu,9woy0w...9JpAZGt+CCn5"
 
-## Set the following two parameters only if the target is an Astra DB database and you would like the automation to download the Secure Connect Bundle automatically
+## Set the following two parameters only if the target is an Astra DB database
+## and you want the automation to download the Secure Connect Bundle for you
 target_astra_db_id: "d425vx9e-f2...c871k"
 target_astra_token: "AstraCS:dUTGnRs...jeiKoIqyw:01...29dfb7"
 ----
 ====
 
-The other file you need to be aware of is `zdm_proxy_core_config.yml`.
-This file contains some global variables that will be used in subsequent steps during the migration.
-It is good to familiarize yourself with this file, although these configuration variables do not need changing at this time:
+. Save and close the file.
 
-. `primary_cluster`: which cluster is going to be the primary source of truth.
-This should be left set to its default value of `ORIGIN` at the start of the migration, and will be changed to `TARGET` after migrating all existing data.
-. `read_mode`: leave to its default value of `PRIMARY_ONLY`.
-See xref:enable-async-dual-reads.adoc[] for more information on this variable.
-. `log_level`: leave to its default of `INFO`.
-
-Leave all these variables to their defaults for now.
+. Open the `zdm_proxy_core_config.yml` file in the same directory.
+This file contains some global variables that are used in subsequent steps during the migration.
+Familiarize yourself with these values, but don't change any of them yet:
++
+* `primary_cluster`: The cluster that serves as the primary source of truth for read requests during the migration.
+For the majority of the migration, leave this set to the default value of `ORIGIN`.
+At the end of the migration, when you're preparing to switch over to the target cluster permanently, you can change it to `TARGET` after migrating all data from the origin cluster.
+* `read_mode`: Leave this set to the default value of `PRIMARY_ONLY`.
+For more information, see xref:enable-async-dual-reads.adoc[].
+* `log_level`: Leave this set to the default value of `INFO`.
 
 === Enable TLS encryption (optional)
 
@@ -167,7 +175,7 @@ For multi-datacenter origin clusters, you will need to specify the name of the d
 Likewise, for multi-datacenter target clusters you will need to set `target_local_datacenter` appropriately.
 
 These two variables are stored in `vars/zdm_proxy_advanced_config.yml`.
-Note that this is not relevant for multi-region {astra-db} databases, where this is handled through region-specific Secure Connect Bundles.
+Note that this is not relevant for multi-region {astra-db} databases, where this is handled through region-specific {scb-brief}s.
 
 [#ports]
 ==== Ports
@@ -314,7 +322,7 @@ With the exception of the origin credentials, target credentials, and the `prima
 If you wish to change any of the cluster connection configuration variables (other than credentials and `primary_cluster`) on an existing deployment, you will need to re-run the `deploy_zdm_proxy.yml` playbook.
 This playbook can be run as many times as necessary.
 
-Please note that running the `deploy_zdm_proxy.yml` playbook will result in a brief window of unavailability of the whole {product-proxy} deployment while all the {product-proxy} instances are torn down and recreated.
+Be aware that running the `deploy_zdm_proxy.yml` playbook results in a brief window of unavailability of the whole {product-proxy} deployment while all the {product-proxy} instances are torn down and recreated.
 ====
 
 [[_setting_up_the_monitoring_stack]]

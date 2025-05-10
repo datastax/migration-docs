@@ -11,7 +11,7 @@ This section covers in detail the steps to prepare an {astra-db} Serverless data
 If you intend to use {astra-db} as the target for the migration, you will need to:
 
 * Create an {astra-db} Serverless database.
-* Retrieve its Secure Connect Bundle (SCB) and upload it to the application instances.
+* Retrieve its {scb} and upload it to the application instances.
 * Create {astra-db} access credentials for your database.
 * Create the client application schema.
 
@@ -36,28 +36,26 @@ Assign your preferred values for the serverless database:
 When the {astra-db} database reaches **Active** status, create an application token in the {astra-ui} with the *Read/Write User* role.
 This role will be used by the client application, the {product-proxy}, and the {product-automation}.
 
-Save the generate token and credentials (Client ID, Client Secret, and Token) in a clearly-named secure file.
+Save the generate token and credentials (Client ID, Client Secret, and Token) in a clearly named secure file.
 
-=== Get the Secure Connect Bundle and upload to client instances
+=== Get the {scb-brief} and upload to client instances
 
-//TODO: Bring SCB attributes
-
-xref:astra-db-serverless:drivers:secure-connect-bundle.adoc[Download your {astra-db} database's Secure Connect Bundle (SCB)].
-The SCB is a zip file that contains TLS encryption certificates and other metadata required to connect to your database.
+xref:astra-db-serverless:drivers:secure-connect-bundle.adoc[Download your {astra-db} database's {scb}].
+The {scb-short} is a zip file that contains TLS encryption certificates and other metadata required to connect to your database.
 
 [IMPORTANT]
 ====
-The SCB contains sensitive information that establishes a connection to your database, including key pairs and certificates.
+The {scb-short} contains sensitive information that establishes a connection to your database, including key pairs and certificates.
 Treat is as you would any other sensitive values, such as passwords or tokens.
 ====
 
-Your client application uses the SCB to connect directly to {astra-db} near the end of the migration, and {cass-migrator} or {dsbulk-migrator} use the SCB to migrate and validate data in {astra-db}.
+Your client application uses the {scb-short} to connect directly to {astra-db} near the end of the migration, and {cass-migrator} or {dsbulk-migrator} use the {scb-short} to migrate and validate data in {astra-db}.
 
-Use `scp` to copy the SCB to your client application instance:
+Use `scp` to copy the {scb-short} to your client application instance:
 
 [source,bash]
 ----
-scp -i <your_ssh_key> secure-connect-<target cluster name>.zip <linux user>@<public IP of client application instance>:
+scp -i <your_ssh_key> /path/to/scb.zip <linux user>@<public IP of client application instance>:
 ----
 
 === Create the client application schema on your {astra-db} database
@@ -81,7 +79,7 @@ For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc#uns
 You must replace these with supported indexes.
 For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL for {astra-db}].
 
-To help you prepare the schema from the DDL in your origin cluster, consider using the `generate-ddl` functionality in the link:https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator}].
+To help you prepare the schema from the DDL in your origin cluster, consider using the `generate-ddl` functionality in the {dsbulk-migrator-repo}[{dsbulk-migrator}].
 However, this tool doesn't automatically convert MVs or indexes.
 
 CQL statements, such as those used to reproduce the schema on the target database, can be executed in {astra-db} using the built-in CQL shell or the standalone CQL shell.
@@ -127,5 +125,9 @@ Make sure that all keyspaces and tables being migrated are identical to the corr
 ====
 
 * To copy the schema, you can run CQL `describe` on the origin cluster to get the schema that is being migrated, and then run the output on your new cluster.
-Bear in mind that, if you are migrating from an old version, you may need to adapt some CQL clauses that are no longer supported in newer versions (e.g. `COMPACT STORAGE`).
-Please refer to the documentation of the relevant versions for more information.
+If you are migrating from an old version, you might need to edit CQL clauses that are no longer supported in newer versions, such as `COMPACT STORAGE`.
+For specific changes in each version, see your driver's changelog or release notes.
+
+== Next steps
+
+* xref:ROOT:rollback.adoc[]

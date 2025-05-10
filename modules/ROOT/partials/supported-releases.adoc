@@ -1,3 +1,0 @@
-You can use {product-proxy} to migrate from a cluster running https://cassandra.apache.org/_/index.html[{cass-reg}] version 2.1.6 and later or https://www.datastax.com/products/datastax-enterprise[{dse}] version 4.7.1 and later.
-
-You can migrate to https://www.datastax.com/products/datastax-astra[{astra-db}] or a cluster running the same or later version of {cass-short} or {dse-short}

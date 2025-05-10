@@ -1,48 +1,95 @@
-= Introduction to data migration
-:page-tag: migration,zdm,zero-downtime,zdm-proxy, introduction
+= {company} migration tools
+:navtitle: Data migration
+:page-layout: landing
 
-Enterprises today want to reliably migrate mission-critical client applications and data across environments with little or no downtime during the migration.
+{company} has developed a set of thoroughly tested self-service tools that can help you migrate your data from any origin cluster based on {cass-reg} to any {cass-short}-compatible target with little or no downtime.
 
-{company} has developed a set of thoroughly-tested self-service tools that can help you migrate your data from any {cass-short} origin cluster to any {cass-short}-compatible target.
+[.[&>h2]:!hidden]
+== {empty}
 
-Compatible origin and target clusters include {cass-reg}, {dse}, {hcd}, and {astra-db}.
+[subs="macros,attributes"]
+++++
+<div class="flex rounded bg-level1 p-6 gap-4">
+  <div class="flex flex-col lg:basis-1/2 gap-2">
 
-When the migration is complete, the data is present in the new database, and you can update your client applications to connect exclusively to the new database.
-The old database becomes obsolete and can be removed.
+    <h2 class="discrete !text-h1 !m-0 !mb-4">Secure, reliable migrations</h2>
 
-Available migration tools include:
+    <p class="!mb-2">Bulk-load terabytes while shifting traffic with little or no downtime, securely and reliably.</p>
 
-* xref:ROOT:introduction.adoc[{product}] ({product-short}): Comprised of {product-proxy}, {product-proxy}, and{product-automation}, you can continue to run your current application and migrate data from the origin to the target database without any downtime.
-{product-proxy} helps to manage the activity in transition.
+    <div class="flex gap-2 !mt-4">
+      xref:ROOT:introduction.adoc[Get started with {product},role="btn btn-primary btn-solid"]
+      xref:ROOT:components.adoc[Compare tools,role="btn btn-neutral btn-outlined"]
+    </div>
 
-* xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator}]: It can be used in conjunction with the {product-proxy} for a migration with zero downtime. It can also be used on its own for migrations with acceptable downtime.
+  </div>
+  <div class="hidden lg:block flex basis-1/2 relative">
+++++
 
-* xref:ROOT:dsbulk-migrator.adoc[{dsbulk-migrator}]: {dsbulk-migrator} is an extension of {dsbulk-loader}.
-In addition to loading and unloading CSV and JSON data, {dsbulk-migrator} can transfer data between databases.
-It can read data from a table from your origin database and write it to a table in your target database.
-It can be used as an alternative to {cass-migrator} ({cass-migrator-short}).
+svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-y-1/2 right-0 w-full"]
 
-* xref:sideloader:sideloader-overview.adoc[{sstable-sideloader}]: {sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-reg}, {dse}, or {hcd} cluster.
+++++
+</div>
+++++
 
-////
-* https://github.com/datastax/zdm-proxy-automation[{product-automation}] repo for Ansible-based {product-proxy} automation.
-//{product-automation} 2.3.0, which enables ansible scripts and terraform to work with both Ubuntu and RedHat-family Linux distributions.
+[.[&>h2]:!hidden]
+== {empty}
 
-* https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator}] repo for migration of smaller data quantities.
+[subs="macros,attributes"]
+++++
 
-* https://github.com/datastax/cassandra-data-migrator[{cass-migrator}] repo for migration of larger data quantities and where detailed verifications and reconciliation options are needed.
-////
+<h2 class="discrete !text-h1 !mt-12 !mb-6">Migration tools</h2>
 
-////
-Possible related content:
+<div class="grid gap-6 lg:grid-cols-4">
+  <div class="grid gap-4">
 
-https://docs.datastax.com/en/dse/6.8/tooling/migration-path-dse.html
+    svg:common:ROOT:icons/datastax/cloud-backup-restore.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
-https://docs.datastax.com/en/dse/6.9/tooling/migration-path-dse.html
+    <h3 class="discrete !text-h2 !m-0">{product-proxy}</h3>
 
-MC only:
+    <p>To support live migrations, {product-proxy} orchestrates activity-in-transition on your clusters, allowing your applications to run while you migrate data.</p>
+    <div class="landing-a">
+        xref:ROOT:introduction.adoc[Get started with {product-short}]
+    </div>
 
-https://docs.datastax.com/en/mission-control/migrate/oss-cass-to-mission-control.html
+  </div>
+  <div class="grid gap-4">
 
-https://docs.datastax.com/en/mission-control/migrate/dse-to-mission-control.html
-////
+    svg:common:ROOT:icons/datastax/cloud-db.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
+
+    <h3 class="discrete !text-h2 !m-0">{sstable-sideloader}</h3>
+
+    <p>{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshots of your existing {cass-short}-based cluster.</p>
+
+    <div class="landing-a">
+        xref:sideloader:sideloader-overview.adoc[Get started with {sstable-sideloader}]
+    </div>
+
+  </div>
+  <div class="grid gap-4">
+
+    svg:common:ROOT:icons/datastax/insert-data.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
+
+    <h3 class="discrete !text-h2 !m-0">{cass-migrator} ({cass-migrator-short})</h3>
+
+    <p>{cass-migrator-short} can migrate and validate data between {cass-short}-based clusters, with optional logging and reconciliation support.</p>
+
+    <div class="landing-a">
+        xref:ROOT:cdm-overview.adoc[Get started with {cass-migrator-short}]
+    </div>
+
+  </div>
+  <div class="grid gap-4">
+
+    svg:common:ROOT:icons/datastax/migrate.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
+
+    <h3 class="discrete !text-h2 !m-0">{dsbulk-migrator}</h3>
+
+    <p>{dsbulk-migrator} is an extension of {dsbulk-loader}.</p>
+
+    <div class="landing-a">
+        xref:ROOT:dsbulk-migrator.adoc[Get started with {dsbulk-migrator}]
+    </div>
+
+  </div>
+</div>
+++++

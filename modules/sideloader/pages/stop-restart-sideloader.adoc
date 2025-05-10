@@ -21,7 +21,7 @@ Any in-progress jobs will complete, but no new jobs will start.
 
 === Resume a migration
 
-Resume a previously-paused migration from the point at which it was paused:
+Resume a previously paused migration from the point at which it was paused:
 
 [source,bash]
 ----

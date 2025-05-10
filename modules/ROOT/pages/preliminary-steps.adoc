@@ -1,9 +1,0 @@
-= Preliminary steps
-:page-tag: migration,zdm,zero-downtime,preliminary-steps
-
-Before starting your migration, verify that you met the prerequisites and performed the preliminary tasks as documented in:
-
-* xref:feasibility-checklists.adoc[Feasibility checks]
-* xref:deployment-infrastructure.adoc[Deployment and infrastructure considerations]
-* xref:create-target.adoc[Create target environment for migration]
-* xref:rollback.adoc[Understand rollback options]

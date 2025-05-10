@@ -1,31 +1,17 @@
-There are many reasons why you may decide to migrate your data and client applications from one cluster to another, for example:
+You can use {product-proxy} to support migrations from {cass-reg}, {dse}, {hcd}, {astra-db}, and other {cass-short}-based databases to any other {cass-short}-based database of the equivalent type or version:
 
-* Moving to a different type of CQL database, for example an on-demand cloud-based proposition such as {astra-db}.
+Compatible origin clusters::
+Migrate from one of the following:
++
+* https://www.datastax.com/products/datastax-enterprise[{dse}] version 4.7.1 and later
+* https://cassandra.apache.org/_/index.html[{cass-reg}] version 2.1.6 and later
+* Other {cass-short}-based databases that are based on a compatible {cass-short} version, such as {astra-db} Classic, ScyllaDB, and Yugabyte.
 
-* Upgrading a cluster to a newer version, or newer infrastructure, in as little as one step while leaving your existing cluster untouched throughout the process.
-
-* Moving one or more client applications out of a shared cluster and onto a dedicated one, in order to manage and configure each cluster independently.
-
-* Consolidating client applications, which may be currently running on separate clusters, onto a shared one in order to reduce overall database footprint and maintenance overhead.
-
-Here are just a few examples of migration scenarios that are supported when moving from one type of CQL-based database to another:
-
-* From an existing self-managed {cass-reg} or {dse-short} cluster to cloud-native {astra-db}. For example:
-
-** {cass} 2.1.6+, 3.11.x, 4.0.x, or 4.1.x to {astra-db}.
-
-** {dse-short} 4.7.1+, 4.8.x, 5.1.x, 6.7.x or 6.8.x to {astra-db}.
-
-* From an existing {cass-short} or {dse-short} cluster to another {cass-short} or {dse-short} cluster. For example:
-
-** {cass-short} 2.1.6+ or 3.11.x to {cass-short} 4.0.x or 4.1.x.
-
-** {dse-short} 4.7.1+, 4.8.x, 5.1.x or 6.7.x to {dse-short} 6.8.x.
-
-** {cass-short} 2.1.6+, 3.11.x, 4.0.x, or 4.1.x to {dse-short} 6.8.x.
-
-** {dse-short} 4.7.1+ or 4.8.x to {cass-short} 4.0.x or 4.1.x.
-
-* From https://docs.datastax.com/en/astra-classic/docs[{astra-db} Classic] to https://docs.datastax.com/en/astra/astra-db-vector/[{astra-db} Serverless].
-
-* From any CQL-based database type/version to the equivalent CQL-based database type/version.
+Compatible target clusters::
+Migrate to one of the following:
++
+* https://www.datastax.com/products/hyper-converged-database-hcd[{hcd}]
+* A cluster running the same or later version of {cass-short} or {dse-short}
+* https://www.datastax.com/products/datastax-astra[{astra-db}]
++
+For more {astra-db} migration paths, see xref:ROOT:astra-migration-paths.adoc[].
