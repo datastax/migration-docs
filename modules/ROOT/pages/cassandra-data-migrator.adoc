@@ -20,7 +20,7 @@ It offers extensive configuration options, including logging, reconciliation, pe
 * Filter records from the origin cluster's data, using {cass-short}'s internal `writetime` timestamp.
 * Use SSL Support, including custom cipher algorithms.
 
-For more features and information, see the https://github.com/datastax/cassandra-data-migrator?tab=readme-ov-file#features[{cass-migrator-short} GitHub repository].
+For more features and information, see the {cass-migrator-repo}?tab=readme-ov-file#features[{cass-migrator-short} GitHub repository].
 
 == {cass-migrator} requirements
 
@@ -81,7 +81,7 @@ If you deploy CDM on a Spark cluster, you must modify your `spark-submit` comman
 * Remove parameters related to single-VM installations, such as `--driver-memory` and `--executor-memory`.
 ====
 
-. Download the latest `cassandra-data-migrator` JAR file image:https://img.shields.io/github/v/release/datastax/cassandra-data-migrator?label=GitHub[alt="Latest cassandra-data-migrator release on GitHub",link="https://github.com/datastax/cassandra-data-migrator/packages"] from the https://github.com/datastax/cassandra-data-migrator[{cass-migrator-short} repository].
+. Download the latest {cass-migrator-repo}/packages[cassandra-data-migrator JAR file] {cass-migrator-shield}.
 
 . Add the `cassandra-data-migrator` dependency to `pom.xml`:
 +
@@ -98,7 +98,7 @@ Replace `**VERSION**` with your {cass-migrator-short} version.
 
 . Run `mvn install`.
 
-If you need to build the JAR for local development or your environment only has Scala version 2.12.x, see the alternative installation instructions in the https://github.com/datastax/cassandra-data-migrator?tab=readme-ov-file[{cass-migrator-short} README].
+If you need to build the JAR for local development or your environment only has Scala version 2.12.x, see the alternative installation instructions in the {cass-migrator-repo}?tab=readme-ov-file[{cass-migrator-short} README].
 --
 ======
 
@@ -110,13 +110,13 @@ If you use a different name, make sure you specify the correct filename in your 
 
 . Configure the properties for your environment.
 +
-In the {cass-migrator-short} repository, you can find a https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm.properties[sample properties file with default values], as well as a https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[fully annotated properties file].
+In the {cass-migrator-short} repository, you can find a {cass-migrator-repo}/blob/main/src/resources/cdm.properties[sample properties file with default values], as well as a {cass-migrator-repo}/blob/main/src/resources/cdm-detailed.properties[fully annotated properties file].
 +
 {cass-migrator-short} jobs process all uncommented parameters.
 Any parameters that are commented out are ignored or use default values.
 +
 If you want to reuse a properties file created for a previous {cass-migrator-short} version, make sure it is compatible with the version you are currently using.
-Check the https://github.com/datastax/cassandra-data-migrator/releases[{cass-migrator-short} release notes] for possible breaking changes in interim releases.
+Check the {cass-migrator-repo}/releases[{cass-migrator-short} release notes] for possible breaking changes in interim releases.
 For example, the 4.x series of {cass-migrator-short} isn't backwards compatible with earlier properties files.
 
 . Store your properties file where it can be accessed while running {cass-migrator-short} jobs using `spark-submit`.
@@ -264,7 +264,7 @@ For example:
 +
 When validating large datasets or multiple tables, you might want to extract the complete list of missing or mismatched records.
 There are many ways to do this.
-For example, you can grep for all `ERROR` entries in your {cass-migrator-short} log files or use the `log4j2` example provided in the https://github.com/datastax/cassandra-data-migrator?tab=readme-ov-file#steps-for-data-validation[{cass-migrator-short} repository].
+For example, you can grep for all `ERROR` entries in your {cass-migrator-short} log files or use the `log4j2` example provided in the {cass-migrator-repo}?tab=readme-ov-file#steps-for-data-validation[{cass-migrator-short} repository].
 
 === Run a validation job in AutoCorrect mode
 
@@ -308,8 +308,8 @@ For example, you can do the following:
 * Use the `partition.min` and `partition.max` parameters to migrate or validate specific token ranges.
 * Use the `track-run` feature to monitor progress and rerun a failed migration or validation job from point of failure.
 
-For all options, see the https://github.com/datastax/cassandra-data-migrator[{cass-migrator-short} repository].
-Specifically, see the https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[fully annotated properties file].
+For all options, see the {cass-migrator-repo}[{cass-migrator-short} repository].
+Specifically, see the {cass-migrator-repo}/blob/main/src/resources/cdm-detailed.properties[fully annotated properties file].
 
 == Troubleshoot {cass-migrator-short}
 
@@ -332,6 +332,6 @@ If you installed an earlier version of {cass-migrator-short}, you might need to 
 ====
 You can use the `track-run` feature to track the progress of a migration or validation, and then, if necessary, use the `run-id` to rerun a failed job from the last successful migration or validation point.
 
-For more information, see the https://github.com/datastax/cassandra-data-migrator[{cass-migrator-short} repository] and the https://github.com/datastax/cassandra-data-migrator/blob/main/src/resources/cdm-detailed.properties[fully annotated properties file].
+For more information, see the {cass-migrator-repo}[{cass-migrator-short} repository] and the {cass-migrator-repo}/blob/main/src/resources/cdm-detailed.properties[fully annotated properties file].
 ====
 // end::body[]

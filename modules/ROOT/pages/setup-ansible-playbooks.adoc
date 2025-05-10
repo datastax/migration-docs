@@ -100,40 +100,28 @@ Now connect to the jumphost.
 ssh -F <path to zdm_ssh_config> jumphost
 ----
 
-== Running the {product-utility}
+== Run the {product-utility}
 
-From the jumphost, download the {product-utility} executable.
-Releases are available https://github.com/datastax/zdm-proxy-automation/releases[here].
-
-The downloadable archive name format is `zdm-util-<platform>-<version>`.
-
-The latest version: 
-
-image:https://img.shields.io/github/v/release/datastax/zdm-proxy-automation?color=green&display_name=tag[GitHub release, latest by date]
-
+. From the jumphost, download the latest {product-utility} executable from the {product-automation-repo}/releases[{product-automation} GitHub repository] {product-automation-shield}.
++
+The package filename format is `zdm-util-**PLATFORM**-**VERSION***.tgz`.
+The following example downloads {product-utility} version 2.3.0 for Linux amd64.
+To download a different package, change the version and package filename accordingly.
++
 [source,bash]
 ----
-wget https://github.com/datastax/zdm-proxy-automation/releases/download/<version>/zdm-util-linux-amd64-<version>.tgz 
+wget https://github.com/datastax/zdm-proxy-automation/releases/download/v2.3.0/zdm-util-linux-amd64-v2.3.0.tgz
 ----
 
-Here's an example to wget {product-utility} 2.3.0:
-
-[source,bash]
-----
-wget https://github.com/datastax/zdm-proxy-automation/releases/download/v2.3.0/zdm-util-linux-amd64-v2.3.0.tgz 
-----
-
-Once downloaded, unzip it.
-Here's an example with {product-proxy} 2.3.0:
-
+. Extract the archive:
++
 [source,bash]
 ----
 tar -xvf zdm-util-linux-amd64-v2.3.0.tgz
 ----
 
-Run the {product-utility}.
-Here's an example with {product-utility} 2.3.0:
-
+. Run the {product-utility}:
++
 [source,bash]
 ----
 ./zdm-util-v2.3.0
@@ -148,9 +136,7 @@ If you run the utility again, it will detect the file  and ask you if you wish t
 If the configuration is not fully valid, you will be prompted for the missing or invalid parameters only.
 
 You can also pass a custom configuration file to the {product-utility} with the optional command-line parameter `-utilConfigFile`.
-Example:
-
-Here's an example with {product-utility} 2.3.0:
+For example:
 
 [source,bash]
 ----
@@ -167,16 +153,14 @@ You have five attempts to enter valid variables.
 You can always run the {product-utility} again, if necessary.
 ====
 
-. Enter the path to, and name of, the SSH private key to access the proxy hosts.
-Example:
+. Enter the path to, and name of, the SSH private key to access the proxy hosts:
 +
 [source,bash]
 ----
 ~/my-zdm-key
 ----
 
-. Enter the common prefix of the private IP addresses of the proxy hosts.
-Example:
+. Enter the common prefix of the private IP addresses of the proxy hosts:
 +
 [source,bash]
 ----
@@ -223,10 +207,10 @@ For details about the metrics you can observe in these preconfigured Grafana das
 ====
 +
 You can choose to deploy the monitoring stack on the jumphost or on a different machine, as long as it can connect to the {product-proxy} instances over TCP on ports 9100 (to collect host-level metrics) and on the port on which the {product-proxy} exposes its own metrics, typically 14001.
-
++
 In this example, we'll enter the same IP of the Ansible control host (the jumphost machine on which we're running the {product-utility}).
 Example:
-
++
 [source,bash]
 ----
 172.18.100.128

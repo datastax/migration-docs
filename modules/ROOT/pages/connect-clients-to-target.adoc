@@ -35,25 +35,25 @@ As before, you can use either of the following sets of credentials to connect to
 ** Token-only authentication: Set `username` to the literal string `token`, and set `password` to your {astra-db} application token.
 ** Client ID and secret authentication (legacy): Set `username` to the `clientId` generated with your application token, and then set `password` to the `secret` generated with your application token.
 
-* Your {astra-db} database's Secure Connect Bundle (SCB).
+* Your {astra-db} database's {scb}.
 +
-The SCB is a zip file that contains TLS encryption certificates and other metadata required to connect to your database.
-Databases can have one or more SCBs.
+The {scb-short} is a zip file that contains TLS encryption certificates and other metadata required to connect to your database.
+Databases can have one or more {scb-short}s.
 For more information, see xref:astra-db-serverless:drivers:secure-connect-bundle.adoc[].
 +
 [IMPORTANT]
 ====
-The SCB contains sensitive information that establishes a connection to your database, including key pairs and certificates.
+The {scb-short} contains sensitive information that establishes a connection to your database, including key pairs and certificates.
 Treat it as you would any other sensitive values, such as passwords or tokens.
 ====
 
 * Recommended: A driver language and version that is compatible with {astra-db}.
 For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
 
-If your client application uses an old version of a driver without built-in SCB support, {company} strongly recommends upgrading to a compatible driver to simplify configuration and get the latest features and bug fixes.
-However, you can still connect to {astra-db} for this migration by using https://github.com/datastax/cql-proxy[CQL Proxy] or extracting the SCB archive and using the individual files to enable mTLS in your driver's configuration.
+If your client application uses an old version of a driver without built-in {scb-short} support, {company} strongly recommends upgrading to a compatible driver to simplify configuration and get the latest features and bug fixes.
+However, you can still connect to {astra-db} for this migration by using https://github.com/datastax/cql-proxy[CQL Proxy] or extracting the {scb-short} archive and using the individual files to enable mTLS in your driver's configuration.
 
-// The SCB support was made available beginning the following versions in the drivers:
+// The {scb-short} support was made available beginning the following versions in the drivers:
 //
 // * https://docs.datastax.com/en/developer/cpp-driver/latest/changelog/#2-14-0[Beginning `2.14.0` of {company} C++ Driver].
 //
@@ -67,7 +67,7 @@ However, you can still connect to {astra-db} for this migration by using https:/
 //
 // Based on this, follow the instructions in the relevant section below.
 
-If your driver has built-in support for the {astra-db} Secure Connect Bundle (SCB), the changes to enable your application to connect to {astra-db} are minimal.
+If your driver has built-in support for the {astra-db} {scb-short}, the changes to enable your application to connect to {astra-db} are minimal.
 
 //Recalling the xref:connect-clients-to-proxy.adoc#_connecting_company_drivers_to_cassandra[pseudocode to enable your client application to connect to the proxy], here it is how your code needs to change to connect directly to {astra-db}:
 

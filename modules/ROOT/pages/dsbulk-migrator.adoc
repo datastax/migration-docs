@@ -29,7 +29,7 @@ This command _doesn't_ trigger the migration; it only generates the migration sc
 
 == Build {dsbulk-migrator}
 
-. Clone the https://github.com/datastax/dsbulk-migrator[{dsbulk-migrator} repository]:
+. Clone the {dsbulk-migrator-repo}[{dsbulk-migrator} repository]:
 +
 [source,bash]
 ----
@@ -193,7 +193,7 @@ Options `--export-username` and `--export-password` must be provided together, o
 
 | 
 | `--import-bundle=PATH`
-| The path to a Secure Connect Bundle to connect to a target {astra-db} cluster.
+| The path to a {scb} to connect to a target {astra-db} cluster.
 Options `--import-host` and `--import-bundle` are mutually exclusive.
 
 | 

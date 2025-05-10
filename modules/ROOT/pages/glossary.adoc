@@ -79,7 +79,7 @@ For more, see xref:glossary.adoc#_primary_cluster[Primary cluster].
 Also see xref:enable-async-dual-reads.adoc[].
 
 [[_secure_connect_bundle_scb]]
-== Secure Connect Bundle (SCB)
+== {scb}
 
 A ZIP file that contains connection metadata and TLS encryption certificates (but not the database credentials) for your {astra-db} database.
 For more information, see xref:astra-db-serverless:databases:secure-connect-bundle.adoc[].

@@ -22,7 +22,7 @@ One-way TLS and Mutual TLS are both supported and can be enabled depending on ea
 One-way TLS and Mutual TLS are both supported.
 
 * When the {product-proxy} connects to {astra-db}, it always implicitly uses Mutual TLS.
-This is done through the Secure Connect Bundle (SCB) and does not require any extra configuration.
+This is done through the {scb} and does not require any extra configuration.
 
 [[_retrieving_files_from_a_jks_keystore]]
 == Retrieving files from a JKS keystore

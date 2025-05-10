@@ -13,7 +13,7 @@
 *** xref:5.1@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 5.1]
 ** {mc-brief} migrations
 *** xref:mission-control:migrate:oss-cass-to-mission-control.adoc[Migrate {cass-short} clusters to {mc-short}]
-*** xref:mission-control:migrate:dse-to-mission-control.adoc[Migrate {cass-short} clusters to {dse-short}]
+*** xref:mission-control:migrate:dse-to-mission-control.adoc[Migrate {dse-short} clusters to {mc-short}]
 
 .{product}
 * xref:ROOT:introduction.adoc[]
@@ -47,8 +47,8 @@
 ** xref:ROOT:contributions.adoc[]
 ** xref:ROOT:faqs.adoc[]
 ** xref:ROOT:glossary.adoc[]
-** https://github.com/datastax/zdm-proxy/releases[{product-proxy} release notes]
-** https://github.com/datastax/zdm-proxy-automation/releases[{product-automation} release notes]
+** {product-proxy-repo}/releases[{product-proxy} release notes]
+** {product-automation-repo}/releases[{product-automation} release notes]
 
 .{sstable-sideloader}
 * xref:sideloader:sideloader-overview.adoc[]
@@ -60,7 +60,7 @@
 
 .{cass-migrator}
 * xref:ROOT:cdm-overview.adoc[]
-* https://github.com/datastax/cassandra-data-migrator/releases[{cass-migrator-short} release notes]
+* {cass-migrator-repo}/releases[{cass-migrator-short} release notes]
 
 .{dsbulk-migrator}
 * xref:ROOT:dsbulk-migrator-overview.adoc[]

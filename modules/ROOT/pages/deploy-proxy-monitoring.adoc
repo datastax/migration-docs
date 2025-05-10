@@ -95,17 +95,17 @@ The default is 9042.
 * `*_astra_secure_connect_bundle_path`, `*_astra_db_id`, and `*_astra_token`:
 ** For a self-managed cluster, leave all of these unset.
 ** For an {astra-db} database, provide either `*_astra_secure_connect_bundle_path` _or both_ `*_astra_db_id` and `*_astra_token`.
-*** If you want {product-automation} to automatically download your database's SCB, use `*_astra_db_id` and `*_astra_token`.
+*** If you want {product-automation} to automatically download your database's {scb}, use `*_astra_db_id` and `*_astra_token`.
 Set `*_astra_db_id` to your xref:astra-db-serverless:databases:create-database.adoc#get-db-id[database's ID], and set `*_astra_token` to your application token, which is prefixed by `AstraCS:`.
-*** If you want to manually upload your database's SCB to the jumphost, use `*_astra_secure_connect_bundle_path`.
+*** If you want to manually upload your database's {scb-short} to the jumphost, use `*_astra_secure_connect_bundle_path`.
 +
-.Manually upload the SCB to the jumphost
+.Manually upload the {scb-short} to the jumphost
 [%collapsible]
 ====
-. xref:astra-db-serverless:databases:secure-connect-bundle.adoc[Download your database's SCB].
+. xref:astra-db-serverless:databases:secure-connect-bundle.adoc[Download your database's {scb-short}].
 . Upload it to the jumphost.
-. Open a new shell on the jumpost, and then run `docker cp /path/to/scb.zim zdm-ansible-container:/home/ubuntu` to copy the SCB to the container.
-. Set `*_astra_secure_connect_bundle_path` to the path to the SCB on the jumphost.
+. Open a new shell on the jumpost, and then run `docker cp /path/to/scb.zim zdm-ansible-container:/home/ubuntu` to copy the {scb-short} to the container.
+. Set `*_astra_secure_connect_bundle_path` to the path to the {scb-short} on the jumphost.
 ====
 *** Make sure that you leave the unused credential unset.
 For example, if you use `target_astra_db_id` and `target_astra_token`, leave `target_astra_secure_connect_bundle_path` unset.
@@ -175,7 +175,7 @@ For multi-datacenter origin clusters, you will need to specify the name of the d
 Likewise, for multi-datacenter target clusters you will need to set `target_local_datacenter` appropriately.
 
 These two variables are stored in `vars/zdm_proxy_advanced_config.yml`.
-Note that this is not relevant for multi-region {astra-db} databases, where this is handled through region-specific Secure Connect Bundles.
+Note that this is not relevant for multi-region {astra-db} databases, where this is handled through region-specific {scb-brief}s.
 
 [#ports]
 ==== Ports
