@@ -179,35 +179,7 @@ nodetool listsnapshots
 +
 Snapshots have a specific directory structure, such as `*KEYSPACE_NAME*/*TABLE_NAME*/snapshots/*SNAPSHOT_NAME*/...`.
 {sstable-sideloader} relies on this fixed structure to properly interpret the SSTable components.
-**With the exception of secondary index directories (as explained in the following step), don't modify the snapshot's directory structure.**
-
-. If your origin cluster has xref:dse-5.1@cql:develop:indexing/2i/2i-concepts.adoc[secondary indexes (2i)], remove all directories related to those indexes from all snapshots before you xref:sideloader:migrate-sideloader.adoc#upload-snapshots-to-migration-directory[upload the snapshots].
-+
-[WARNING]
-====
-Secondary indexes defined in the origin cluster are ignored by {astra-db}, but they will cause the migration to fail.
-To avoid errors, you must remove all secondary index directories from your snapshots before you upload them.
-====
-+
-You can find secondary index directories in the table's snapshot directory:
-+
-[source,plaintext,subs="+quotes"]
-----
-**NODE_UUID**/**KEYSPACE_NAME**/**TABLE_NAME**-**TABLE_UUID**/snapshots/**SNAPSHOT_NAME**/.**INDEX_NAME**
-----
-+
-For example, given the following table schema, the index directory is found at `*NODE_UUID*/smart_home/sensor_readings-*TABLE_UUID*/snapshots/*SNAPSHOT_NAME*/.roomidx`:
-+
-[source,cql]
-----
-CREATE TABLE IF NOT EXISTS smart_home.sensor_readings (
-    device_id UUID,
-    room_id UUID,
-    reading_type TEXT,
-    PRIMARY KEY ((device_id))
-);
-CREATE INDEX IF NOT EXISTS roomidx ON smart_home.sensor_readings(room_id);
-----
+**Don't modify the snapshot's directory structure; this can cause your migration to fail.**
 
 [#record-schema]
 == Configure the target database

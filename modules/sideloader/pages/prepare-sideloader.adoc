@@ -169,7 +169,7 @@ If you choose the alternative option, you must modify the commands accordingly f
 If you have a mix of encrypted and unencrypted data, you can use {sstable-sideloader} to migrate the unencrypted data.
 After the initial migration, you can use another strategy to move the encrypted data, such as {cass-migrator-repo}[{cass-short} Data Migrator (CDM)] or a manual export and reupload.
 
-* *{sstable-sideloader} doesn't support secondary indexes*: If you don't remove or replace these in your origin cluster, then you must manually remove these directories from your snapshots, as explained in xref:sideloader:migrate-sideloader.adoc#create-snapshots[Create snapshots].
+* *{sstable-sideloader} doesn't support secondary indexes*: If you don't remove or replace these in your origin cluster, {sstable-sideloader} ignores these directories when importing the data to your {astra-db} database.
 
 == Administration server requirements
 
