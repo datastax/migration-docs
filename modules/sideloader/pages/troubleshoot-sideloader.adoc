@@ -38,7 +38,7 @@ The two most common errors are as follows:
 To resolve this error, you can <<relaunch,align the schemas and relaunch the migration>>.
 
 * *Invalid data in migration directory*: The data uploaded to the migration directory is invalid or improperly formatted.
-Common causes include data corruption, incomplete upload due to a timeout, malformed file paths, and the presence of invalid data such as secondary index directories.
+Common causes include data corruption, incomplete upload due to a timeout, malformed file paths, and the presence of invalid data.
 +
 When this type of failure occurs, you must abandon the failed migration and restart the entire migration process.
 For more information, see <<restart>>.
@@ -79,7 +79,7 @@ When a migration fails due to a problem with the data uploaded to the migration 
 This is because you can't change the data in the migration directory after you upload it.
 For example, if your snapshots contain corrupt data, you have to restart the migration with new snapshots and a new migration directory.
 
-. Review the xref:sideloader:prepare-sideloader.adoc#origin-cluster-requirements[origin cluster requirements] to ensure that your snapshot doesn't contain invalid data, including materialized views, encrypted data, and secondary indexes.
+. Review the xref:sideloader:prepare-sideloader.adoc#origin-cluster-requirements[origin cluster requirements] to ensure that your snapshot doesn't contain invalid data, including materialized views and encrypted data.
 
 . If necessary, xref:sideloader:migrate-sideloader.adoc#create-snapshots[create new snapshots] of any invalid snapshots.
 +
