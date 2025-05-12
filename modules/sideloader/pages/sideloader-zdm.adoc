@@ -1,0 +1,14 @@
+= Use {sstable-sideloader} with {product-short}
+:navtitle: Use {sstable-sideloader}
+:description: Use {sstable-sideloader} to migrate data with {product-short}.
+
+{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {dse-short}, {hcd-short}, or other compatible {cass-short} cluster.
+For compatible origin clusters, see xref:ROOT:astra-migration-paths.adoc[].
+
+Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like {dsbulk-migrator} and {cass-migrator}, including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
+
+{sstable-sideloader} uses the {astra} {devops-api}, your cloud provider's CLI, and `nodetool`.
+
+include::sideloader:partial$sideloader-partials.adoc[tags=sideloader-zdm]
+
+For more information, see xref:sideloader:sideloader-overview.adoc[].

@@ -190,7 +190,7 @@ To prepare your target database for the migration, you must record the schema fo
 ====
 For the migration to succeed, your target database must meet the schema requirements described in this section.
 Additionally, your snapshots must contain compatible data and directories, as described in xref:sideloader:prepare-sideloader.adoc#origin-cluster-requirements[Origin cluster requirements] and xref:sideloader:migrate-sideloader.adoc#create-snapshots[Create snapshots].
-For example, {astra-db} doesn't support materialized views, and {sstable-sideloader} can't migrate encrypted data.
+For example, {astra-db} doesn't support materialized views, and {sstable-sideloader} cannot migrate encrypted data.
 
 However, indexes don't need to match.
 You can define indexes in your target database independently from the origin cluster because {sstable-sideloader} ignores Storage Attached Indexes (SAI) defined on the origin cluster.
@@ -230,7 +230,7 @@ CREATE TABLE smart_home.sensor_readings (
     PRIMARY KEY (device_id, room_id, reading_timestamp)
 ) WITH CLUSTERING ORDER BY (room_id ASC, reading_timestamp DESC);
 ----
-//However, {sstable-sideloader} can't import data to a xref:astra-db-serverless:databases:collection in a {db-serverless-vector} database.
+//However, {sstable-sideloader} cannot import data to a xref:astra-db-serverless:databases:collection in a {db-serverless-vector} database.
 . Recreate the schemas in your target database:
 +
 .. In the {astra-ui-link} navigation menu, click *Databases*, and then click the name of your {astra-db} database.

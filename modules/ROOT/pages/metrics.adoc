@@ -17,7 +17,7 @@ For this reason, we strongly encourage you to monitor the {product-proxy}, eithe
 {product-automation} can deploy Prometheus and Grafana, configuring them automatically, as explained xref:deploy-proxy-monitoring.adoc#_setting_up_the_monitoring_stack[here].
 The Grafana dashboards are ready to go with metrics that are being scraped from the {product-proxy} instances.
 
-If you already have a Grafana deployment then you can import the dashboards from the two {product-short} dashboard files from this https://github.com/datastax/zdm-proxy-automation/tree/main/grafana-dashboards[{product-automation} GitHub location].
+If you already have a Grafana deployment then you can import the dashboards from the two {product-short} dashboard files from this {product-automation-repo}/tree/main/grafana-dashboards[{product-automation} GitHub location].
  
 == Grafana dashboard for {product-proxy} metrics
 

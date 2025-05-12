@@ -1,24 +1,40 @@
-= Introduction to {product}
-:navtitle: Introduction
+= Phases of the {product} process
+:navtitle: About the {product-short} process
 :description: Before you begin, learn about migration concepts, software components, and the sequence of operations.
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,introduction
 
-{product} provides a simple and reliable way for you to migrate applications from a CQL-based cluster to another CQL-based cluster with little or no downtime and minimal interruption of service to your client applications and data.
+With {product}, your applications can continue to run while you migrate data from one {cass-short}-based cluster to another, resulting in little or no downtime and minimal service interruptions.
 
-include::ROOT:partial$supported-releases.adoc[]
-
-{product-short} keeps your clusters in sync at all times by a dual-write logic configuration, and you can xref:rollback.adoc[roll back] at any point.
-
-[IMPORTANT]
+.Why migrate?
+[%collapsible]
 ====
-* True zero downtime migration is only possible if your database meets the xref:ROOT:feasibility-checklists.adoc[minimum requirements].
+There are many reasons that you might need to migrate data and applications.
+For example:
+
+* You want to move to a different database provider.
+For example, you might move from self-managed clusters to a cloud-based Database-as-a-Service (DBaaS), such as {astra-db}.
+
+* You need to upgrade a cluster to a newer version or infrastructure.
+
+* You want to move client applications from shared clusters to dedicated clusters for greater control over individual configurations.
+
+* You want to consolidate client applications running on separate clusters onto one shared cluster to minimize sprawl and maintenance.
+====
+
+{product-short} is comprised of {product-proxy}, {product-utility}, and {product-automation}, which orchestrate activity-in-transition on your clusters.
+To move and validate data, you use {sstable-sideloader}, {cass-migrator}, or {dsbulk-migrator}.
+{product-proxy} keeps your clusters in sync at all times by a dual-write logic configuration, which means you can stop the migration or xref:rollback.adoc[roll back] at any point.
+For more information about these tools, see xref:ROOT:components.adoc[].
+
+When the migration is complete, the data is present in the new database, and you can update your client applications to connect exclusively to the new database.
+The old database becomes obsolete and can be removed.
+
+== {product-short} requirements
+
+True zero downtime migration is only possible if your database meets the minimum requirements described in xref:ROOT:feasibility-checklists.adoc[].
 If your database doesn't meet these requirements, you can still complete the migration, but downtime might be necessary to finish the migration.
 
-* The {product} process requires you to be able to perform rolling restarts of your client applications during the migration.
-This is standard practice for client applications that are deployed over multiple instances, and it is a widely used approach to roll out releases and configuration changes.
-====
-
-== Migration scenarios
+=== Supported migration paths
 
 include::ROOT:partial$migration-scenarios.adoc[]
 
@@ -49,6 +65,15 @@ The table names, column names, and data types must also match.
 For more information, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
 ====
 
+=== Migration planning
+
+Before you begin the migration, plan and prepare for the migration:
+
+* xref:ROOT:feasibility-checklists.adoc[]
+* xref:ROOT:deployment-infrastructure.adoc[]
+* xref:ROOT:create-target.adoc[]
+* xref:ROOT:rollback.adoc[]
+
 === Phase 1: Deploy {product-proxy} and connect client applications
 
 In this first phase, deploy the {product-proxy} instances and connect client applications to the proxies.
@@ -59,8 +84,10 @@ image:migration-phase1ra9.png["Migration Phase 1."]
 
 === Phase 2: Migrate data
 
-In this phase, migrate existing data using {cass-migrator} or {dsbulk-loader}.
-Validate that the migrated data is correct, while continuing to perform dual writes.
+In this phase, migrate existing data using {sstable-sideloader}, {cass-migrator}, or {dsbulk-migrator}.
+For information about these tools, see xref:ROOT:components.adoc[].
+
+{product-proxy} will continue to perform dual writes while you move data and validate that the migrated data is correct.
 
 image:migration-phase2ra9a.png["Migration Phase 2."]
 

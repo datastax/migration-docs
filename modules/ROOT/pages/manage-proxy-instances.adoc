@@ -220,7 +220,7 @@ All configuration variables that are not listed in this section are considered i
 If you wish to change any of the immutable configuration variables on an existing deployment, you will need to re-run the deployment playbook (`deploy_zdm_proxy.yml`, as documented in xref:deploy-proxy-monitoring.adoc[this page]).
 This playbook can be run as many times as necessary.
 
-Please note that running the `deploy_zdm_proxy.yml` playbook will result in a brief window of unavailability of the whole {product-proxy} deployment while all the {product-proxy} instances are torn down and recreated.
+Be aware that running the `deploy_zdm_proxy.yml` playbook results in a brief window of unavailability of the whole {product-proxy} deployment while all the {product-proxy} instances are torn down and recreated.
 ====
 
 [[_upgrade_the_proxy_version]]

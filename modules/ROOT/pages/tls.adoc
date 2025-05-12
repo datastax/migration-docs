@@ -22,7 +22,7 @@ One-way TLS and Mutual TLS are both supported and can be enabled depending on ea
 One-way TLS and Mutual TLS are both supported.
 
 * When the {product-proxy} connects to {astra-db}, it always implicitly uses Mutual TLS.
-This is done through the Secure Connect Bundle (SCB) and does not require any extra configuration.
+This is done through the {scb} and does not require any extra configuration.
 
 [[_retrieving_files_from_a_jks_keystore]]
 == Retrieving files from a JKS keystore
@@ -45,7 +45,7 @@ To extract a file from a JKS keystore:
 keytool -exportcert -keystore <path_to_jks_store> -alias <file_alias> -file <path_to_destination_file> -rfc
 ----
 
-Please note the `-rfc` option, which extracts the files in non-binary PEM format.
+The `-rfc` option extracts the files in non-binary PEM format.
 
 For more details, see the https://docs.oracle.com/javase/8/docs/technotes/tools/windows/keytool.html[keytool syntax documentation].
 
@@ -119,7 +119,7 @@ For Mutual TLS only, leave unset otherwise.
 == Application-to-proxy TLS
 
 Here are the steps to enable TLS between your client application and the {product-proxy} if required.
-Please bear in mind that in this case your client application is the TLS client and the {product-proxy} is the TLS server.
+In this case, your client application is the TLS client and the {product-proxy} is the TLS server.
 
 The files required by the proxy to configure application-to-proxy TLS are:
 

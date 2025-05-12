@@ -76,7 +76,7 @@ TODO: Add to this page and stop-restart page.
 
 When a migration fails due to a problem with the data uploaded to the migration directory, you must completely restart the migration.
 
-This is because you can't change the data in the migration directory after you upload it.
+This is because you cannot change the data in the migration directory after you upload it.
 For example, if your snapshots contain corrupt data, you have to restart the migration with new snapshots and a new migration directory.
 
 . Review the xref:sideloader:prepare-sideloader.adoc#origin-cluster-requirements[origin cluster requirements] to ensure that your snapshot doesn't contain invalid data, including materialized views and encrypted data.

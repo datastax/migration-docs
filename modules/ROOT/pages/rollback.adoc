@@ -2,11 +2,13 @@
 :navtitle: Understand rollback options
 :page-tag: migration,zdm,zero-downtime,rollback
 
-At any point during the migration process until the very last phase, if you hit any unexpected issue and need to (in effect) "rollback" the migration, you can always easily revert your client applications to connect directly to the origin cluster.
+At any point from Phase 1 through Phase 4, if you encounter an unexpected issue and need to stop or roll back the migration, you can revert your client applications to connect directly to the origin cluster.
 
-The migration can be started from scratch once the issue has been addressed.
+After addressing the issue, you can restart the migration from the beginning.
 
 image::migration-all-phases.png[Migration phases from start to finish.]
+
+== Phase 5 is the point of no return
 
 After moving your client applications off the {product-proxy} instances (Phase 5), writes are no longer sent to both the origin and target clusters.
 The data on origin cluster is no longer kept up-to-date, and you lose this seamless rollback option.
@@ -15,3 +17,7 @@ The {product-proxy} deployment can be destroyed, and the origin cluster is no lo
 
 However, should you decide to move back to the origin cluster later, or if you want to move to a new cluster entirely, you can rerun the same migration process.
 In this case, you use your original target cluster as the new origin cluster, and you set the new target cluster to whatever cluster you want to migrate to (which could even be the original ancestor origin cluster).
+
+== Next steps
+
+* xref:ROOT:phase1.adoc[]

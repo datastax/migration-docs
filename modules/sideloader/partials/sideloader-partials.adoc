@@ -31,7 +31,8 @@ You can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-mi
 // tag::initialize[]
 After you create snapshots on the origin cluster and pre-configure the schema on the target database, use the {astra} {devops-api} to initialize the migration.
 
-image::sideloader:data-importer-workflow.svg[]
+.{sstable-sideloader} moves data from the migration bucket to {astra-db}.
+svg::sideloader:data-importer-workflow.svg[]
 
 When you initialize a migration, {sstable-sideloader} does the following:
 
@@ -96,3 +97,10 @@ If all steps finish successfully, the migration is complete and you can access t
 You can abort a migration up until the point at which {sstable-sideloader} starts importing SSTable metadata.
 After this point, you must wait for the migration to finish, and then you can use the CQL shell to drop the keyspace/table in your target database before repeating the entire migration procedure.
 // end::no-return[]
+
+// tag::sideloader-zdm[]
+If you need to migrate a live database, you can use {sstable-sideloader} instead of DSBulk or {cass-short} Data Migrator during of xref:ROOT:migrate-and-validate-data.adoc[Phase 2 of {product} ({product-short})].
+
+.Use {sstable-sideloader} in the context of {product}.
+svg::sideloader:astra-migration-toolkit.svg[]
+// end::sideloader-zdm[]

@@ -62,7 +62,7 @@ However, if you enable `DEBUG` logging, `debug` messages can help you find the s
 * `level=error`: Indicates an issue with the {product-proxy}, client application, or clusters.
 These messages require further examination.
 
-If the meaning of a `warn` or `error` message isn't clear, you can submit an issue in the https://github.com/datastax/zdm-proxy/issues[{product-proxy} GitHub repository].
+If the meaning of a `warn` or `error` message isn't clear, you can submit an issue in the {product-proxy-repo}/issues[{product-proxy} GitHub repository].
 
 === Common log messages
 
@@ -149,10 +149,10 @@ This flag will prevent you from accessing the logs when {product-proxy} stops or
 
 To report an issue or get additional support, submit an issue in the {product-short} component GitHub repositories:
 
-* https://github.com/datastax/zdm-proxy/issues[{product-proxy} repository]
-* https://github.com/datastax/zdm-proxy-automation/issues[{product-automation} repository] (includes {product-automation} and the {product-utility})
-* https://github.com/datastax/cassandra-data-migrator/issues[{cass-migrator} repository]
-* https://github.com/datastax/dsbulk-migrator/issues[{dsbulk-migrator} repository]
+* {product-proxy-repo}/issues[{product-proxy} repository]
+* {product-automation-repo}/issues[{product-automation} repository] (includes {product-automation} and the {product-utility})
+* {cass-migrator-repo}/issues[{cass-migrator} repository]
+* {dsbulk-migrator-repo}/issues[{dsbulk-migrator} repository]
 
 [IMPORTANT]
 ====

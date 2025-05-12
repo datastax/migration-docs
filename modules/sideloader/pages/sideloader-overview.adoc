@@ -111,10 +111,7 @@ include::sideloader:partial$sideloader-partials.adoc[tags=validate]
 
 == Use {sstable-sideloader} with {product-short}
 
-If you need to migrate a live database, you can use {sstable-sideloader} instead of DSBulk or {cass-short} Data Migrator during of xref:ROOT:migrate-and-validate-data.adoc[Phase 2 of {product} ({product-short})].
-
-.Use {sstable-sideloader} in the context of {product}.
-image::sideloader:data-importer-zdm.svg[]
+include::sideloader:partial$sideloader-partials.adoc[tags=sideloader-zdm]
 
 == Next steps
 
