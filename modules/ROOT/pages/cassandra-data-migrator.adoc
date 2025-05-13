@@ -81,7 +81,7 @@ If you deploy CDM on a Spark cluster, you must modify your `spark-submit` comman
 * Remove parameters related to single-VM installations, such as `--driver-memory` and `--executor-memory`.
 ====
 
-. Download the latest {cass-migrator-repo}/packages[cassandra-data-migrator JAR file] {cass-migrator-shield}.
+. Download the latest {cass-migrator-repo}/packages/1832128/versions[cassandra-data-migrator JAR file] {cass-migrator-shield}.
 
 . Add the `cassandra-data-migrator` dependency to `pom.xml`:
 +
