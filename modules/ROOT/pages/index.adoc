@@ -40,19 +40,19 @@ svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-
 <h2 class="discrete !text-h1 !mt-12 !mb-6">Migration tools</h2>
 
 <div class="grid gap-6 lg:grid-cols-4">
-  <div class="grid gap-4">
+  <div class="flex flex-col gap-4">
 
     svg:common:ROOT:icons/datastax/cloud-backup-restore.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
     <h3 class="discrete !text-h2 !m-0">{product-proxy}</h3>
 
     <p>To support live migrations, {product-proxy} orchestrates activity-in-transition on your clusters, allowing your applications to run while you migrate data.</p>
-    <div class="landing-a">
+    <div class="landing-a mt-auto">
         xref:ROOT:introduction.adoc[Get started with {product-short}]
     </div>
 
   </div>
-  <div class="grid gap-4">
+  <div class="flex flex-col gap-4">
 
     svg:common:ROOT:icons/datastax/cloud-db.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
@@ -60,12 +60,12 @@ svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-
 
     <p>{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshots of your existing {cass-short}-based cluster.</p>
 
-    <div class="landing-a">
+    <div class="landing-a mt-auto">
         xref:sideloader:sideloader-overview.adoc[Get started with {sstable-sideloader}]
     </div>
 
   </div>
-  <div class="grid gap-4">
+  <div class="flex flex-col gap-4">
 
     svg:common:ROOT:icons/datastax/insert-data.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
@@ -73,12 +73,12 @@ svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-
 
     <p>{cass-migrator-short} can migrate and validate data between {cass-short}-based clusters, with optional logging and reconciliation support.</p>
 
-    <div class="landing-a">
+    <div class="landing-a mt-auto">
         xref:ROOT:cdm-overview.adoc[Get started with {cass-migrator-short}]
     </div>
 
   </div>
-  <div class="grid gap-4">
+  <div class="flex flex-col gap-4">
 
     svg:common:ROOT:icons/datastax/migrate.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
@@ -86,7 +86,7 @@ svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-
 
     <p>{dsbulk-migrator} is an extension of {dsbulk-loader}.</p>
 
-    <div class="landing-a">
+    <div class="landing-a mt-auto">
         xref:ROOT:dsbulk-migrator.adoc[Get started with {dsbulk-migrator}]
     </div>
 
