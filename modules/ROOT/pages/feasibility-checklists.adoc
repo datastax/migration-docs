@@ -164,21 +164,23 @@ See <<non-idempotent-operations,this section>> for more information about non-id
 
 === Search
 
-Read-only Search workloads can be moved directly from the origin to the target without {product-proxy} being involved.
-If your client application uses Search and also issues writes, or if you need the read routing capabilities from {product-proxy}, then you can connect your search workloads to it as long as you are using the {company} drivers to submit these queries.
+Read-only {dse-short} Search workloads can be moved directly from the origin to the target without {product-proxy} being involved.
+If your client application uses Search and also issues writes, or if you need the read routing capabilities from {product-proxy}, then you can connect your Search workloads to it as long as you are using xref:datastax-drivers:compatibility:driver-matrix.adoc[{company}-compatible drivers] to submit these queries.
 This approach means the queries are regular CQL `SELECT` statements, so {product-proxy} handles them as regular read requests.
 
 If you use the HTTP API then you can either modify your applications to use the CQL API instead or you will have to move those applications directly from the origin to the target when the migration is complete if that is acceptable.
 
 == Client compression
 
-The binary protocol used by {cass-short}, {dse-short}, and {astra-db} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
+The binary protocol used by {cass-short}, {dse-short}, {hcd-short}, and {astra-db} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
 
-{product-proxy} doesn't support protocol compression at this time.
-This kind of compression is disabled by default on all of our {company} drivers so if you enabled it on your client application then you will need to disable it before starting the migration process.
+{product-proxy} doesn't support protocol compression.
 
-This is *NOT* related to storage compression which you can configure on a table by table basis with the `compression` table property.
-Storage/table compression does not affect the client application or {product-proxy} in any way.
+This kind of compression is disabled by default in {company}-compatible drivers.
+If this is enabled on your client application, then you need to disable it before starting the migration process.
+
+This isn't related to storage compression, which you can configure on specific tables with the `compression` table property.
+Storage/table compression doesn't affect the client application or {product-proxy} in any way.
 
 == Authenticator and Authorizer configuration
 
@@ -233,34 +235,13 @@ If your application already tolerates rolling restarts of your current cluster t
 
 To ensure that your client application retries requests when a database connection is closed you should check the section of your driver's documentation related to retry policies.
 
-Most {company} drivers require a statement to be marked as `idempotent` in order to retry it in case of a connection error (such as the termination of a database connection).
-This means that these drivers treat statements as *non-idempotent* by default and will *not* retry them in the case of a connection error unless action is taken.
-Whether you need to take action or not depends on what driver you are using.
-In this section we outline the default behavior of some of these drivers and provide links to the relevant documentation sections.
+Most {company}-compatible drivers require a statement to be marked as `idempotent` in order to retry it in case of a connection error (such as the termination of a database connection).
+This means that, by default, these drivers treat statements as non-idempotent, and the drivers don't automatically retry them in the event of a connection error.
 
-=== {company} Java Driver 4.x
+For more information, see the following driver documentation:
 
-The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically. See this Java 4.x https://docs.datastax.com/en/developer/java-driver/latest/manual/core/idempotence/[query idempotence documentation section].
-
-=== {company} Java Driver 3.x
-
-The default retry policy takes idempotence in consideration and the query builder tries to infer idempotence automatically. See this Java 3.x https://docs.datastax.com/en/developer/java-driver/3.11/manual/idempotence/[query idempotence documentation section].
-
-This behavior was introduced in version 3.1.0 so prior to this version the default retry policy retried all requests regardless of idempotence.
-
-=== {company} Nodejs Driver 4.x
-
-The default retry policy takes idempotence in consideration. See this Nodejs 4.x https://docs.datastax.com/en/developer/nodejs-driver/latest/features/speculative-executions/#query-idempotence[query idempotence documentation section].
-
-=== {company} C# Driver 3.x and {company} Python Driver 3.x
-
-The default retry policy retries all requests in case of a connection error *regardless of idempotence*. There are retry policies that are idempotency aware but these are not the default policies. Keep in mind that the plan is to make the default retry policy idempotency aware in a future release.
-
-=== {company} C++ Driver 2.x
-
-Prior to version 2.5.0, this driver did *NOT* retry any requests after they have been written to the socket, it was up to the client application to handle these and retry them if they are suitable for a retry.
-
-With the release of 2.5.0, the driver retries requests that are set as `idempotent`. See this C++ 2.x https://docs.datastax.com/en/developer/cpp-driver/2.16/topics/configuration/#query-idempotence[query idempotence documentation section].
+* xref:datastax-drivers:developing:query-idempotence.adoc[]
+* xref:datastax-drivers:connecting:retry-policies.adoc[]
 
 == Next steps
 
