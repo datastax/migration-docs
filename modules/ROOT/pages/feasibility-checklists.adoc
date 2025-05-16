@@ -176,8 +176,8 @@ The binary protocol used by {cass-short}, {dse-short}, {hcd-short}, and {astra-d
 
 {product-proxy} doesn't support protocol compression.
 
-This kind of compression is disabled by default in {company}-compatible drivers.
-If this is enabled on your client application, then you need to disable it before starting the migration process.
+This compression type is disabled by default in {company}-compatible drivers.
+If it is enabled in your client application, you must disable it before starting the migration process.
 
 This isn't related to storage compression, which you can configure on specific tables with the `compression` table property.
 Storage/table compression doesn't affect the client application or {product-proxy} in any way.

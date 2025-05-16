@@ -237,7 +237,7 @@ The driver might also have it enabled for {astra-db} depending on what server ve
 
 === Solution or Workaround
 
-These log messages are harmless but if your need to get rid of them, you can disable {dse-short} Insights in the driver configuration.
+These log messages are harmless, but if you need to remove them, you can disable {dse-short} Insights in the driver configuration.
 For example, in the Java driver, you can set `https://github.com/apache/cassandra-java-driver/blob/4.x/core/src/main/resources/reference.conf#L1365[advanced.monitor-reporting]` to `false`.
 
 == Default Grafana credentials don't work
