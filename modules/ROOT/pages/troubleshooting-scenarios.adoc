@@ -33,7 +33,7 @@ This doesn't happen in a rolling fashion: the existing {product-proxy} instances
 
 === Symptoms
 
-In the Java 4.x driver logs, the following issues can manifest during session initialization, or after initialization.
+In the logs for the Java driver 4.x series, the following issues can manifest during session initialization, or after initialization.
 
 [source,log]
 ----
@@ -59,8 +59,10 @@ If you are using spring boot and/or spring-data-cassandra then an upgrade of the
 Alternatively, you can force the protocol version on the driver to the max supported version by both clusters.
 V4 is a good recommendation that usually fits all but if the user is migrating from {dse-short} to {dse-short} then DSE_V1 should be used for {dse-short} 5.x and DSE_V2 should be used for {dse-short} 6.x.
 
-To force the protocol version on the Java driver, check this section of the https://docs.datastax.com/en/developer/java-driver/3.11/manual/native_protocol/#controlling-the-protocol-version[driver manual].
-We don't believe this issue affects Java driver 3.x, but here are the https://docs.datastax.com/en/developer/java-driver/3.11/manual/native_protocol/#controlling-the-protocol-version[instructions] on how to force the version on 3.x, if necessary.
+To force the protocol version on the Java driver, see the documentation for your version of the Java driver:
+
+* https://github.com/apache/cassandra-java-driver/tree/4.x/manual/core/native_protocol[{cass-reg} Java driver 4.18 and later: Controlling the protocol version]
+* https://docs.datastax.com/en/developer/java-driver/latest/manual/core/native_protocol/index.html#controlling-the-protocol-version[{company} Java driver 4.17 and earlier: Controlling the protocol version]
 
 == Protocol errors in the proxy logs but clients can connect successfully
 
@@ -230,15 +232,13 @@ at input 'CALL' ([CALL]...))\"\n","stream":"stderr","time":"2022-07-20T13:10:47.
 The log message indicates that the server doesn't recognize the word “CALL” in the query string which most likely means that it is an RPC (remote procedure call).
 From the proxy logs alone, it is not possible to see what method is being called by the query but it's very likely the RPC that the drivers use to send {dse-short} Insights data to the server.
 
-Most {company} drivers have {dse-short} Insights reporting enabled by default when they detect a server version that supports it (regardless of whether the feature is enabled on the server side or not).
+Most {company}-compatible drivers have {dse-short} Insights reporting enabled by default when they detect a server version that supports it (regardless of whether the feature is enabled on the server side or not).
 The driver might also have it enabled for {astra-db} depending on what server version {astra-db} is returning for queries involving the `system.local` and `system.peers` tables.
 
 === Solution or Workaround
 
-These log messages are harmless but if your need to get rid of them, you can disable the {dse-short} Insights driver feature through the driver configuration.
-Refer to https://github.com/apache/cassandra-java-driver/blob/65d2c19c401175dcc6c370560dd5f783d05b05b9/core/src/main/resources/reference.conf#L1328[this property] for Java driver 4.x.
-
-
+These log messages are harmless, but if you need to remove them, you can disable {dse-short} Insights in the driver configuration.
+For example, in the Java driver, you can set `https://github.com/apache/cassandra-java-driver/blob/4.x/core/src/main/resources/reference.conf#L1365[advanced.monitor-reporting]` to `false`.
 
 == Default Grafana credentials don't work
 

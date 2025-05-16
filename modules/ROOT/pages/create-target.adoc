@@ -40,7 +40,7 @@ Save the generate token and credentials (Client ID, Client Secret, and Token) in
 
 === Get the {scb-brief} and upload to client instances
 
-xref:astra-db-serverless:drivers:secure-connect-bundle.adoc[Download your {astra-db} database's {scb}].
+xref:astra-db-serverless:databases:secure-connect-bundle.adoc[Download your {astra-db} database's {scb}].
 The {scb-short} is a zip file that contains TLS encryption certificates and other metadata required to connect to your database.
 
 [IMPORTANT]

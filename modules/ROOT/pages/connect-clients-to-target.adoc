@@ -22,7 +22,10 @@ image::migration-phase5ra.png[In Phase 5, your apps no longer using the proxy an
 == Configuring your driver to connect to a generic CQL cluster
 
 If your target cluster is a generic CQL cluster, such as {cass-short} or {dse-short}, then you can connect your client application to it in a similar way as you previously connected it to the origin cluster, but with the appropriate contact points and any additional configuration that your target cluster may require.
-For further information, see the documentation for your driver language and version.
+For connection details, see the documentation for your driver language and version.
+
+Make sure that your driver version is compatible with your target cluster.
+For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
 
 == Configuring your driver to connect to {astra-db}
 
@@ -39,7 +42,7 @@ As before, you can use either of the following sets of credentials to connect to
 +
 The {scb-short} is a zip file that contains TLS encryption certificates and other metadata required to connect to your database.
 Databases can have one or more {scb-short}s.
-For more information, see xref:astra-db-serverless:drivers:secure-connect-bundle.adoc[].
+For more information, see xref:astra-db-serverless:databases:secure-connect-bundle.adoc[].
 +
 [IMPORTANT]
 ====
@@ -52,20 +55,6 @@ For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc
 
 If your client application uses an old version of a driver without built-in {scb-short} support, {company} strongly recommends upgrading to a compatible driver to simplify configuration and get the latest features and bug fixes.
 However, you can still connect to {astra-db} for this migration by using https://github.com/datastax/cql-proxy[CQL Proxy] or extracting the {scb-short} archive and using the individual files to enable mTLS in your driver's configuration.
-
-// The {scb-short} support was made available beginning the following versions in the drivers:
-//
-// * https://docs.datastax.com/en/developer/cpp-driver/latest/changelog/#2-14-0[Beginning `2.14.0` of {company} C++ Driver].
-//
-// * https://docs.datastax.com/en/developer/csharp-driver/latest/changelog/\#3-12-0[Beginning `3.12.0` of {company} C# Driver]
-//
-// * https://docs.datastax.com/en/developer/java-driver/latest/changelog/#3-8-0[Beginning `3.8.0` & `4.3.0` of {company} Java Driver].
-//
-// * https://github.com/datastax/nodejs-driver/blob/master/CHANGELOG.md#440[Beginning `4.4.0` of {company} Nodejs Driver].
-//
-// * https://docs.datastax.com/en/developer/python-dse-driver/latest/CHANGELOG/#id24[Beginning `2.11.0` & `3.20.0` of {company} Python Driver].
-//
-// Based on this, follow the instructions in the relevant section below.
 
 If your driver has built-in support for the {astra-db} {scb-short}, the changes to enable your application to connect to {astra-db} are minimal.
 

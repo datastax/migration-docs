@@ -75,12 +75,6 @@ The following links provide some good starting points for learning about the int
 * The https://docs.datastax.com/en/developer/cpp-driver/latest/topics/[getting started section] of the C/C++ driver documentation.
 * The https://docs.datastax.com/en/developer/nodejs-driver/latest/#basic-usage[basic usage section] of the Node.js driver documentation.
 
-[TIP]
-====
-The links above lead to the documentation for the most recent version of each driver.
-You can find the documentation for earlier versions by selecting the appropriate version number from the drop-down menu in the upper right.
-====
-
 == Connect drivers to {product-proxy}
 
 We mentioned above that connecting to a {product-proxy} should be almost indistinguishable from connecting directly to your {cass-short} cluster.
@@ -143,8 +137,15 @@ As an alternative to providing the {scb-short} directly, you can xref:astra-db-s
 
 == Sample client applications
 
-The documentation for the {company} drivers provides information about how to connect these drivers to your {cass-short} cluster or {product-proxy} and how to use them to issue queries, update data and perform other actions.
-In addition to the smaller code samples provided in the documentation, we also provide a few sample client applications which demonstrate the use of the {company} Java driver to interact with {product-proxy} as well as the origin and target for that proxy.
+[IMPORTANT]
+====
+These sample applications are for demonstration purposes only.
+They are not intended for production use.
+====
+
+The following sample client applications demonstrate how to use the Java driver with {product-proxy} and the origin and target for that proxy.
+
+See your driver's documentation for code samples that are specific to your chosen driver, including cluster connection examples and statement execution examples.
 
 === {product-demo}
 
