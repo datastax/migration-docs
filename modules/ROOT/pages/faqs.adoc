@@ -5,6 +5,7 @@
 If you're new to the {company} {product} features, these FAQs are for you.
 
 //TODO: Eliminate redundancies in these FAQs and the Glossary.
+//FAQs in ZDM-proxy repo: https://github.com/datastax/zdm-proxy/blob/main/faq.md#what-versions-of-apache-cassandra-or-cql-compatible-data-stores-does-the-zdm-proxy-support 
 
 == What is meant by {product}?
 
@@ -66,7 +67,7 @@ Bottom line: You want to migrate your critical database infrastructure without r
 
 == Which releases of {cass-short} or {dse-short} are supported for migrations?
 
-include::ROOT:partial$migration-scenarios.adoc[]
+See xref:ROOT:zdm-proxy-migration-paths.adoc[].
 
 == Does {product-short} migrate clusters?
 
@@ -127,12 +128,14 @@ For TLS details, see xref:tls.adoc[].
 
 == How does {product-proxy} handle Lightweight Transactions (LWTs)?
 
+//TODO: Compare and replace with link to LWT section on feasibility-checklists.adoc
+
 {product-proxy} handles LWTs as write operations.
 The proxy sends the LWT to the origin and target clusters concurrently, and waits for a response from both.
 {product-proxy} will return a `success` status to the client if both the origin and target clusters send successful acknowledgements.
 Otherwise, it will return a `failure` status if one or both do not return an acknowledgement.
 
-What sets LWTs apart from regular writes is that they are conditional. For important details, including the client context for a returned `applied` flag, see xref:feasibility-checklists.adoc#_lightweight_transactions_and_the_applied_flag[Lightweight Transactions and the `applied` flag].
+What sets LWTs apart from regular writes is that they are conditional. For important details, including the client context for a returned `applied` flag, see xref:feasibility-checklists.adoc#_lightweight_transactions_and_the_applied_flag[Lightweight transactions and the applied flag].
 
 == Can {product-proxy} be deployed as a sidecar?
 
@@ -173,3 +176,6 @@ Cassandra Data Migrator migrates historical data and does validation and reconci
 
 Astra DB Sideloader is able to import native Cassandra data (sstables) such as backups from an origin database and load them directly into the Astra Serverless data plane. Because it takes native Cassandra data, we can only import data from (specific versions of) native Cassandra databases such as Apache Cassandra, DataStax Enterprise, Hyper-Converged Database, Instaclustr, and Aiven. Sideloader cannot import data from databases that are simply Cassandra compatible, such as ScyllaDB, Keyspaces, CosmosDB, or Yugabyte, which don’t have the same native Cassandra format. In such cases, customers can use the Cassandra Data Migrator, which uses CQL.
 ////
+
+
+ZDM-590, ZDM-545, ZDM-535, ZDM-401, ZDM-403, ZDM-536, ZDM-388, ZDM-280, ZDM-498, ZDM-576, ZDM-583, ZDM-601, ZDM-605, ZDM-613, ZDM-614, doc-4121

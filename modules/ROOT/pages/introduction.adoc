@@ -52,6 +52,7 @@ At this point, your client applications are performing read/write operations wit
 
 image:pre-migration0ra9.png["Pre-migration environment."]
 
+//The text from this note is duplicated on the feasibility checks page.
 [TIP]
 ====
 For the migration to succeed, the origin and target clusters must have matching schemas.
