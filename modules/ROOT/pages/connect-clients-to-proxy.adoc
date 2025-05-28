@@ -150,7 +150,11 @@ As an alternative to providing the {scb-short} directly, you can xref:astra-db-s
 [IMPORTANT]
 ====
 These sample applications are for demonstration purposes only.
-They are not intended for production use.
+They are not intended for production use or for production-scale performance testing.
+
+To test your target cluster's ability to handle production workloads, you can xref:ROOT:enable-async-dual-reads.adoc[enable Asynchronous Dual Reads].
+
+To assess the performance of {product-proxy}, {company} recommends http://docs.nosqlbench.io/getting-started/[NoSQLBench].
 ====
 
 The following sample client applications demonstrate how to use the Java driver with {product-proxy} and the origin and target for that proxy.
