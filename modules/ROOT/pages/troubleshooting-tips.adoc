@@ -145,6 +145,34 @@ Don't use `--rm` when you launch the {product-proxy} container.
 This flag will prevent you from accessing the logs when {product-proxy} stops or crashes.
 ====
 
+== Query system.peers and system.local to check for {product-proxy} configuration issues
+
+Querying `system.peers` and `system.local` can help you investigate {product-proxy} configuration issues:
+
+. xref:ROOT:connect-clients-to-proxy.adoc#connecting-cqlsh-to-the-zdm-proxy[Connect CQL shell to a {product-proxy} instance.]
+
+. Query `system.peers`:
++
+[source,cql]
+----
+SELECT * FROM system.peers
+----
+
+. Query `system.local`:
++
+[source,cql]
+----
+SELECT * FROM system.local
+----
+
+. Repeat for each of your {product-proxy} instances.
++
+Because `system.peers` and `system.local` reflect the local {product-proxy} instance's configuration, you need to query all instances to get all information and identify potential misconfigurations.
+
+. Inspect the results for values related to an error that you are troubleshooting, such as IP addresses or tokens.
++
+For example, you might compare `cluster_name` to ensure that all instances are connected to the same cluster, rather than mixing contact points from different clusters.
+
 == Report an issue
 
 To report an issue or get additional support, submit an issue in the {product-short} component GitHub repositories:

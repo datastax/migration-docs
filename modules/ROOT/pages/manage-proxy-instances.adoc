@@ -336,3 +336,8 @@ Remove an instance::
 . On all {product-proxy} instances, remove the unused instance's address from the `ZDM_PROXY_TOPOLOGY_ADDRESSES` environment variable.
 . Perform a rolling restart of all remaining {product-proxy} instances.
 . Clean up resources used by the removed instance, such as the container or VM.
+
+== See also
+
+* xref:ROOT:troubleshooting-tips.adoc[]
+* xref:ROOT:troubleshooting-scenarios.adoc[]
