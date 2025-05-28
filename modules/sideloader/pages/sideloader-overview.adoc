@@ -40,9 +40,11 @@ For more information, see xref:sideloader:prepare-sideloader.adoc[].
 === Create snapshot backups
 
 {sstable-sideloader} uses snapshot backup files to import SSTable data from your existing origin cluster.
-This is an ideal approach for database migrations because creating a snapshot has negligible performance impact on the origin cluster, and it preserves metadata like write timestamps and expiration times (TTLs).
-
 Each snapshot for each node in the origin cluster must include all the keyspaces and individual CQL tables that you want to migrate.
+
+These snapshots are ideal for database migrations because creating snapshots has a negligible performance impact on the origin cluster, and the snapshots preserve metadata like write timestamps and expiration times (TTLs).
+
+When using {sstable-sideloader} with {product-proxy}, the preserved timestamps ensure that new, real-time writes accurately take precedence over historical writes.
 
 For more information, see xref:sideloader:migrate-sideloader.adoc#create-snapshots[Migrate data with {sstable-sideloader}: Create snapshots].
 

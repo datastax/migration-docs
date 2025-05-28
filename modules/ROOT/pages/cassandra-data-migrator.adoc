@@ -14,11 +14,19 @@ It offers extensive configuration options, including logging, reconciliation, pe
 
 {cass-migrator-short} features include the following:
 
-* Validate migration accuracy and performance using examples that provide a smaller, randomized data set.
-* Preserve internal `writetime` timestamps and Time To Live (TTL) values.
-* Use advanced data types, including sets, lists, maps, and UDTs.
-* Filter records from the origin cluster's data, using {cass-short}'s internal `writetime` timestamp.
-* Use SSL Support, including custom cipher algorithms.
+* Validate migration accuracy and performance with a smaller, randomized data set.
+
+* Preserve internal `writetime` timestamps and Time To Live (TTL) values to maintain chronological write history.
++
+When using {cass-migrator-short} with {product-proxy}, the preserved timestamps ensure that new, real-time writes accurately take precedence over historical writes.
++
+You can also add custom fixed `writetime` and `ttl` values.
+
+* Support for advanced data types, including sets, lists, maps, and UDTs.
+
+* Option to filter records from the origin cluster based `writetime`, partition/token ranges, or CQL conditions.
+
+* Support for SSL, including custom cipher algorithms.
 
 For more features and information, see the {cass-migrator-repo}?tab=readme-ov-file#features[{cass-migrator-short} GitHub repository].
 
@@ -276,9 +284,10 @@ Optionally, you can run {cass-migrator-short} validation jobs in **AutoCorrect**
 +
 [IMPORTANT]
 ====
-`TIMESTAMP` has an effect on this function.
+Timestamps have an effect on this function.
 
-If the `WRITETIME` of the origin record (determined with `.writetime.names`) is earlier than the `WRITETIME` of the target record, then the change doesn't appear in the target cluster.
+If the `writetime` of the origin record (determined with `.writetime.names`) is before the `writetime` of the corresponding target record, then the original write won't appear in the target cluster.
+
 This comparative state can be challenging to troubleshoot if individual columns or cells were modified in the target cluster.
 ====
 

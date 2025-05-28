@@ -94,13 +94,13 @@ Connect to the Ansible Control Host container as explained above and run:
 ansible-playbook collect_zdm_proxy_logs.yml -i zdm_ansible_inventory
 ----
 
-This playbook creates a single zip file, called `zdm_proxy_logs_<current_timestamp>.zip`, containing the logs from all proxy instances, and stores it on the Ansible Control Host Docker container in the directory `/home/ubuntu/zdm_proxy_archived_logs`.
+This playbook creates a single zip file, called `zdm_proxy_logs_**TIMESTAMP**.zip`, containing the logs from all proxy instances, and stores it on the Ansible Control Host Docker container in the directory `/home/ubuntu/zdm_proxy_archived_logs`.
 
 To copy the zip file from the container to the jumphost, open a shell on the jumphost and run the following command:
 
-[source,bash]
+[source,bash,subs="+quotes"]
 ----
-docker cp zdm-ansible-container:/home/ubuntu/zdm_proxy_archived_logs/<zdm_proxy_logs zip archive name> <destination_directory_on_jumphost>
+docker cp zdm-ansible-container:/home/ubuntu/zdm_proxy_archived_logs/**ZDM_PROXY_LOGS_ARCHIVE_NAME** **DESTINATION_DIRECTORY_ON_JUMPHOST**
 ----
 
 The archive will be copied to the specified destination directory on the jumphost.
