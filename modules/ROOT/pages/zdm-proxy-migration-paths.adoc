@@ -1,6 +1,20 @@
 = Cluster compatibility for {product}
 :description: Learn which sources and targets are eligible for {product}.
 
+True zero downtime migration is only possible if your database meets the minimum requirements described in xref:ROOT:feasibility-checklists.adoc[], including compatibility of the source and target clusters.
+
+== Compatible source and target clusters for migrations with zero downtime
+
 include::ROOT:partial$migration-scenarios.adoc[]
 
-For more {product} requirements, see xref:ROOT:feasibility-checklists.adoc[].
+== Incompatible clusters and migrations with some downtime
+
+If you don't want to use {product-proxy} or your databases don't meet the zero-downtime requirements, you can still complete the migration, but some downtime might be necessary to finish the migration.
+
+If your clusters are incompatible, you might be able to use data migration tools such as xref:ROOT:dsbulk-migrator-overivew.adoc[{dsbulk-migrator}] or a custom data migration script.
+Make sure you transform or prepare the data to comply with the target cluster's schema.
+
+== See also
+
+* xref:ROOT:components.adoc[]
+* xref:ROOT:feasibility-checklists.adoc[]

@@ -29,14 +29,12 @@ For more information about these tools, see xref:ROOT:components.adoc[].
 When the migration is complete, the data is present in the new database, and you can update your client applications to connect exclusively to the new database.
 The old database becomes obsolete and can be removed.
 
-== {product-short} requirements
+== Requirements for zero downtime
 
-True zero downtime migration is only possible if your database meets the minimum requirements described in xref:ROOT:feasibility-checklists.adoc[].
+True zero downtime migration is only possible if your database meets the minimum requirements, including cluster compatibility, described in xref:ROOT:feasibility-checklists.adoc[]
 If your database doesn't meet these requirements, you can still complete the migration, but downtime might be necessary to finish the migration.
 
-=== Supported migration paths
-
-include::ROOT:partial$migration-scenarios.adoc[]
+For more information, see xref:ROOT:feasibility-checklists.adoc[]
 
 == Migration phases
 
