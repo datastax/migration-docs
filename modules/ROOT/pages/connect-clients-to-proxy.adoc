@@ -126,6 +126,16 @@ This is also the case if authentication is required by the target only, but not 
 .How different sets of credentials are used by the {product-proxy} when authentication is enabled on both clusters
 image::zdm-proxy-credential-usage.png[{product-proxy} credentials usage, 550]
 
+=== Token-aware routing with {product-proxy}
+
+Token-aware routing isn't enforced when connecting through {product-proxy} because these instances don't hold actual token ranges in the same way as database nodes.
+Instead, each {product-proxy} instance has a unique, non-overlapping set of synthetic tokens that simulate token ownership and enable balanced load distribution across the instances.
+
+Upon receiving a request, a {product-proxy} instance routes the request to appropriate source and target database nodes, independent of token ownership.
+
+If your clients have token-aware routing enabled, you don't need to disable this behavior while using {product-proxy}.
+Clients can continue to operate with token-aware routing enabled without negative impacts to functionality or performance.
+
 === {astra-db} credentials
 
 If your {product-proxy} is configured to use {astra-db} as the origin or target cluster, then your client application doesn't need to provide a {scb} when connecting to the proxy.
