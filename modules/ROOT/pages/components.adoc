@@ -65,7 +65,7 @@ This behavior is expected because this feature is designed to mimic the full rea
 This allows you to judge the target cluster's performance and make any adjustments before permanently switching to the target cluster at the end of the migration process.
 
 You can dynamically enable and disable Asynchronous Dual Reads by modifying the configuration of your {product-proxy} instances, and then performing a rolling restart of your {product-proxy} instances.
-For more information, see xref:ROOT:enabled-async-dual-reads.adoc[].
+For more information, see xref:ROOT:enable-async-dual-reads.adoc[].
 
 After enabling Asynchronous Dual Reads, observe the target cluster's read latency and throughput to determine how well the target cluster performs under the expected production workload.
 

@@ -335,7 +335,7 @@ Remove an instance::
 . Perform a rolling restart of all remaining {product-proxy} instances.
 . Clean up resources used by the removed instance, such as the container or VM.
 
-=== Purpose of proxy topology addresses
+== Purpose of proxy topology addresses
 
 When you configure a {product-proxy} deployment, either through {product-automation} or manually-managed {product-proxy} instances, you specify the addresses of your instances.
 These are populated in the `ZDM_PROXY_TOPOLOGY_ADDRESSES` variable, either manually or automatically depending on how you manage your instances.
