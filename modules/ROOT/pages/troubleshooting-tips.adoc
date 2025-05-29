@@ -149,7 +149,7 @@ This flag will prevent you from accessing the logs when {product-proxy} stops or
 
 Querying `system.peers` and `system.local` can help you investigate {product-proxy} configuration issues:
 
-. xref:ROOT:connect-clients-to-proxy.adoc#connecting-cqlsh-to-the-zdm-proxy[Connect CQL shell to a {product-proxy} instance.]
+. xref:ROOT:connect-clients-to-proxy.adoc#connect-the-cql-shell-to-zdm-proxy[Connect CQL shell to a {product-proxy} instance.]
 
 . Query `system.peers`:
 +

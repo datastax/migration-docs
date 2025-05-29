@@ -185,34 +185,47 @@ Details are in the https://github.com/absurdfarce/themis/blob/main/README.md[REA
 In addition to any utility as a validation tool, Themis also serves as an example of a larger client application which uses the Java driver to connect to a {product-proxy} -- as well as directly to {cass-short} clusters or {astra-db} -- and perform operations.
 The configuration logic as well as the cluster and session management code have been cleanly separated into distinct packages to make them easy to understand.
 
-== Connecting CQLSH to the {product-proxy}
+== Connect the CQL shell to {product-proxy}
 
-https://downloads.datastax.com/#cqlsh[CQLSH] is a simple, command-line client that is able to connect to any CQL cluster, enabling you to interactively send CQL requests to it.
-CQLSH comes pre-installed on any {cass-short} or {dse-short} node, or it can be downloaded and run as a standalone client on any machine able to connect to the desired cluster.
+CQL shell (`cqlsh`) is a command-line tool that you can use to send {cass-short} Query Language (CQL) statements to your {cass-short}-based clusters, including {astra-db}, {dse-short}, {hcd-short}, and {cass} databases.
 
-Using CQLSH to connect to a {product-proxy} instance is very easy:
+You can use your database's included version of CQL shell, or you can download and run the standalone CQL shell.
 
-* Download CQLSH for free from https://downloads.datastax.com/#cqlsh[here] on a machine that has connectivity to the {product-proxy} instances:
-** To connect to the {product-proxy}, any version is fine.
-** The {astra}-compatible version additionally supports connecting directly to an {astra-db} cluster by passing the cluster's {scb-short} and valid credentials.
-* Install it by uncompressing the archive: `tar -xvf cqlsh-<...>.tar.gz`.
-* Navigate to the `cqlsh-<...>/bin` directory, for example `cd cqlsh-astra/bin`.
-* Launch CQLSH:
-** Specify the IP of a {product-proxy} instance.
-** Specify the port on which the {product-proxy} listens for client connections, if different to `9042`.
-** Use the appropriate credentials for the {product-proxy}, as explained xref:_client_application_credentials[above].
-
-For example, if one of your {product-proxy} instances has IP Address `172.18.10.34` and listens on port `14002`, the command would look like:
-[source,bash]
-----
-./cqlsh 172.18.10.34 14002 -u <my_creds_user> -p <my_creds_password>
-----
-
-If the {product-proxy} listens on port `9042`, you can omit the port from the command above.
-If credentials are not required, just omit the `-u` and `-p` options.
-
-[TIP]
-====
 Your origin and target clusters must have a common `cql_version` between them.
-If there is no CQL version that is compatible with both clusters, CQL shell won't be able to connect to {product-proxy}
-====
+If there is no CQL version that is compatible with both clusters, CQL shell won't be able to connect to {product-proxy}.
+
+To connect CQL shell to a {product-proxy} instance, do the following:
+
+. On a machine that can connect to your {product-proxy} instance, https://downloads.datastax.com/#cqlsh[download CQL shell].
++
+Any version of CQL shell can connect to {product-proxy}, but some clusters require a specific CQL shell version.
+
+. Install CQL shell by extracting the downloaded archive:
++
+[source,shell,subs="+quotes"]
+----
+tar -xvf **CQLSH_ARCHIVE**
+----
++
+Replace `**CQLSH_ARCHIVE**` with the file name of the downloaded CQL shell archive, such as `cqlsh-astra-20210304-bin.tar.gz`.
+
+. Change to the `bin` directory in your CQL shell installation directory.
+For example, if you installed CQL shell for {astra-db}, you would run `cd cqlsh-astra/bin`.
+
+. Launch CQL shell:
++
+[source,shell,subs="+quotes"]
+----
+./cqlsh **ZDM_PROXY_IP** **PORT** -u **CLIENT_USERNAME** -p **CLIENT_PASSWORD**
+----
++
+Replace the following:
++
+* `**ZDM_PROXY_IP**`: The IP address of your {product-proxy} instance.
+* `**PORT**`: The port on which the {product-proxy} instance listens for client connections.
+If you are using the default port, 9042, you can omit this argument.
+* `**CLIENT_USERNAME**` and `**CLIENT_PASSWORD**`: The required xref:_client_application_credentials[{product-proxy} credentials].
+If user authentication isn't enabled for your {product-proxy} instance, you can omit these arguments.
++
+If your origin or target cluster is an {astra-db} database, don't use the {scb-short} when attempting to connect CQL shell to {product-proxy}.
+If you include the {scb-short}, CQL shell ignores all other connection arguments and connects exclusively to your {astra-db} database instead of {product-proxy}.
