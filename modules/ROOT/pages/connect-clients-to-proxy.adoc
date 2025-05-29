@@ -210,3 +210,9 @@ For example, if one of your {product-proxy} instances has IP Address `172.18.10.
 
 If the {product-proxy} listens on port `9042`, you can omit the port from the command above.
 If credentials are not required, just omit the `-u` and `-p` options.
+
+[TIP]
+====
+Your origin and target clusters must have a common `cql_version` between them.
+If there is no CQL version that is compatible with both clusters, CQL shell won't be able to connect to {product-proxy}
+====
