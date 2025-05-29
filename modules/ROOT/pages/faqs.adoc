@@ -176,6 +176,3 @@ Cassandra Data Migrator migrates historical data and does validation and reconci
 
 Astra DB Sideloader is able to import native Cassandra data (sstables) such as backups from an origin database and load them directly into the Astra Serverless data plane. Because it takes native Cassandra data, we can only import data from (specific versions of) native Cassandra databases such as Apache Cassandra, DataStax Enterprise, Hyper-Converged Database, Instaclustr, and Aiven. Sideloader cannot import data from databases that are simply Cassandra compatible, such as ScyllaDB, Keyspaces, CosmosDB, or Yugabyte, which don’t have the same native Cassandra format. In such cases, customers can use the Cassandra Data Migrator, which uses CQL.
 ////
-
-
-ZDM-590, ZDM-545, ZDM-535, ZDM-401, ZDM-403, ZDM-536, ZDM-388, ZDM-280, ZDM-498, ZDM-576, ZDM-583, ZDM-601, ZDM-605, ZDM-613, ZDM-614, doc-4121

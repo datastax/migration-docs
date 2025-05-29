@@ -274,8 +274,6 @@ ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
 
 {product-automation} doesn't provide a way to scale operations up or down in a rolling fashion.
 If you are using {product-automation} and you need a larger {product-proxy} deployment, you have two options:
-* Add more instances to the existing deployment.
-
 
 Recommended: Create a new deployment::
 This is the recommended way to scale your {product-proxy} deployment because it requires no downtime.
@@ -336,6 +334,19 @@ Remove an instance::
 . On all {product-proxy} instances, remove the unused instance's address from the `ZDM_PROXY_TOPOLOGY_ADDRESSES` environment variable.
 . Perform a rolling restart of all remaining {product-proxy} instances.
 . Clean up resources used by the removed instance, such as the container or VM.
+
+=== Purpose of proxy topology addresses
+
+When you configure a {product-proxy} deployment, either through {product-automation} or manually-managed {product-proxy} instances, you specify the addresses of your instances.
+These are populated in the `ZDM_PROXY_TOPOLOGY_ADDRESSES` variable, either manually or automatically depending on how you manage your instances.
+
+{cass-short} drivers look up nodes on a cluster by querying the `system.peers` table.
+{product-proxy} uses the topology addresses to effectively respond to the driver's request for connection nodes.
+If there are no topology addresses specified, {product-proxy} defaults to a single-instance configuration.
+This means that driver connections will use only that one {product-proxy} instance, rather than all instances in your {product-proxy} deployment.
+
+If that one instance goes down, {product-proxy} won't know that there are other instances available, and your application can experience an outage.
+Additionally, if you need to restart {product-proxy} instances, and there is only one instance specified in the topology addresses, your migration will have downtime while that one instance restarts.
 
 == See also
 
