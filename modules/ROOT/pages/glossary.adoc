@@ -42,7 +42,11 @@ Your existing {cass-short}-based cluster, whether it's {cass-reg}, {dse}, or {as
 == Primary cluster
 
 The cluster that is currently considered the "primary" source of truth.
-While writes are always sent to both clusters, the primary cluster is the one to which all synchronous reads are always sent, and their results are returned to the client application.
+While writes are always sent to both clusters, reads are sent to the designated primary cluster only.
+The result of the read, based on the data on the primary cluster, is returned to the client application.
+
+The primary cluster is set by {product-automation} through the `primary_cluster` variable, or you can set it directly through the `ZDM_PRIMARY_CLUSTER` environment variable for {product-proxy}.
+
 During a migration, the origin cluster is typically the primary cluster.
 Near the end of the migration, you shift the primary cluster to be the target cluster.
 

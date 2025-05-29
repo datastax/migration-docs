@@ -18,7 +18,7 @@ For this reason, we strongly encourage you to monitor the {product-proxy}, eithe
 The Grafana dashboards are ready to go with metrics that are being scraped from the {product-proxy} instances.
 
 If you already have a Grafana deployment then you can import the dashboards from the two {product-short} dashboard files from this {product-automation-repo}/tree/main/grafana-dashboards[{product-automation} GitHub location].
- 
+
 == Grafana dashboard for {product-proxy} metrics
 
 There are three groups of metrics in this dashboard:
@@ -29,13 +29,16 @@ There are three groups of metrics in this dashboard:
 
 image::zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of {product-short} metrics for the proxy.]
 
+[#proxy-level-metrics]
 === Proxy-level metrics
 
-* Latency:
-** Read Latency: total latency measured by the {product-proxy} (including post-processing like response aggregation) for read requests.
-This metric has two labels (`reads_origin` and `reads_target`): the label that has data will depend on which cluster is receiving the reads, i.e. which cluster is currently considered the xref:glossary.adoc#_primary_cluster[primary cluster].
-This is configured by the {product-automation} through the variable `primary_cluster`, or directly through the environment variable `ZDM_PRIMARY_CLUSTER` of the {product-proxy}.
-** Write Latency: total latency measured by the {product-proxy} (including post-processing like response aggregation) for write requests.
+* Latency
++
+** Read Latency: Total latency measured by the {product-proxy} per read request, including post-processing, such as response aggregation.
+This metric has two labels: `reads_origin` and `reads_target`.
+The label that has data depends on which cluster is receiving the reads, which is the current xref:glossary.adoc#_primary_cluster[primary cluster].
+** Write Latency: Total latency measured by the {product-proxy} per write request, including post-processing, such as response aggregation.
+This metric is measured as the total latency across both clusters for a single xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[bifurcated write request].
 
 * Throughput (same structure as the previous latency metrics):
 ** Read Throughput
@@ -69,9 +72,11 @@ To see error metrics by error type, see the node-level error metrics on the next
 [[_node_level_metrics]]
 === Node-level metrics
 
-* Latency: metrics on this bucket are not split by request type like the proxy level latency metrics so writes and reads are mixed together:
-** Origin: latency measured by the {product-proxy} up to the point it received a response from the origin connection.
-** Target: latency measured by the {product-proxy} up to the point it received a response from the target connection.
+* Latency: Node-level latency metrics report combined read and write latency per cluster, not per request.
+For latency by request type, see <<proxy-level-metrics>>.
++
+** Origin: Latency, as measured by {product-proxy}, up to the point that it received a response from the origin connection.
+** Target: latency, as measured by {product-proxy}, up to the point it received a response from the target connection.
 
 * Throughput: same as node level latency metrics, reads and writes are mixed together.
 

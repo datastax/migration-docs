@@ -27,6 +27,7 @@ You decide when you want to switch permanently to the target cluster.
 
 After migration your data, migrating your application code can be as minimal as changing the connection string, depending on your client's compatibility with your origin and target clusters.
 
+[#how-zdm-proxy-handles-reads-and-writes]
 === How {product-proxy} handles reads and writes
 
 {company} created {product-proxy} to orchestrate requests between a client application and both the origin and target clusters.
