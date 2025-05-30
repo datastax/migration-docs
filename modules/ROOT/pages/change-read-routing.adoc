@@ -15,16 +15,12 @@ This operation is a configuration change that can be carried out as explained xr
 
 [TIP]
 ====
-If you performed the optional steps described in the prior topic, xref:enable-async-dual-reads.adoc[] -- to verify that your target cluster was ready and tuned appropriately to handle the production read load -- be sure to disable async dual reads when you're done testing.
-If you haven't already, revert `read_mode` in `vars/zdm_proxy_core_config.yml` to `PRIMARY_ONLY` when switching sync reads to the target cluster.
-Example:
+If you xref:enable-async-dual-reads.adoc[enabled asynchronous dual reads] to test your target cluster's performance, make sure that you disable asynchronous dual reads when you're done testing.
 
-[source,yml]
-----
-read_mode: PRIMARY_ONLY
-----
+To do this, edit the `vars/zdm_proxy_core_config.yml` file, and then set the `read_mode` variable  to `PRIMARY_ONLY`.
 
-If you don't disable async dual reads, {product-proxy} instances continue to send async reads to the origin, which, although harmless, is unnecessary.
+If you don't disable asynchronous dual reads, {product-proxy} instances send asynchronous, duplicate read requests to your origin cluster.
+This is harmless but unnecessary.
 ====
 
 == Changing the read routing configuration

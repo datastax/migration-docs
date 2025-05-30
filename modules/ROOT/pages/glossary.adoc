@@ -17,9 +17,11 @@ For details about the playbooks available in {product-automation}, see:
 [[_asynchronous_dual_reads]]
 == Asynchronous dual reads
 
-An optional testing phase in which reads are sent to both the origin and target clusters.
-This lets you check that the target cluster/database can handle the full workload of reads and writes before you finalize the migration and moving off the {product-proxy} instances.
-For details, see xref:enable-async-dual-reads.adoc[].
+An optional feature that is designed to test the target cluster's ability to handle a production workload before you permanently switch to the target cluster at the end of the migration process.
+
+When enabled, {product-proxy} sends asynchronous read requests to the secondary cluster (typically the target cluster) in addition to the synchronous read requests that are sent to the primary cluster by default.
+
+For more information, see xref:ROOT:enable-async-dual-reads.adoc[].
 
 == CQL
 
@@ -36,21 +38,21 @@ See the diagram in the xref:introduction.adoc#migration-workflow[workflow introd
 [[origin]]
 == Origin
 
-Your existing {cass-short}-based cluster, whether it's {cass-reg}, {dse}, or {astra-db}.
+Your existing {cass-short}-based database that you are migrating away from.
+It is the opposite of the <<target>>.
 
 [[_primary_cluster]]
 == Primary cluster
 
-The cluster that is currently considered the "primary" source of truth.
-While writes are always sent to both clusters, reads are sent to the designated primary cluster only.
-The result of the read, based on the data on the primary cluster, is returned to the client application.
+The database that is designated as the source of truth for read requests.
+It is the opposite of the <<secondary-cluster>>.
 
 The primary cluster is set by {product-automation} through the `primary_cluster` variable, or you can set it directly through the `ZDM_PRIMARY_CLUSTER` environment variable for {product-proxy}.
 
-During a migration, the origin cluster is typically the primary cluster.
-Near the end of the migration, you shift the primary cluster to be the target cluster.
+For the majority of the migration process, the <<origin,origin database>> is typically the primary cluster.
+Near the end of the migration, you shift the primary cluster to the <<target,target database>>.
 
-For more, see <<secondary-cluster,Secondary cluster>>.
+For information about which cluster receives reads and writes during the migration process, see xref:components.adoc#how-zdm-proxy-handles-reads-and-writes[How {product-proxy} handles reads and writes].
 
 == Playbooks
 
@@ -65,22 +67,18 @@ In our context here, see <<zdm-proxy,{product-proxy}>>.
 
 == Read mirroring
 
-See xref:glossary.adoc#_asynchronous_dual_reads[Asynchronous dual reads].
+See <<_asynchronous_dual_reads>>.
 
 [[secondary-cluster]]
 == Secondary cluster
 
-During a migration, the secondary cluster is the one that is currently **not** the source of truth. 
+The database that isn't designated as the source of truth for read requests.
+It is the opposite of the <<_primary_cluster>>.
 
-When using the {product-proxy}, all writes are synchronously sent to both the origin and target clusters.
-Reads operate differently: with the default read mode, reads are only sent to the primary cluster (Origin by default).
-In Phase 3 of a migration, you can optionally send the reads to both clusters temporarily if you want to verify that the target cluster can handle the full workload of reads and writes.
+For the majority of the migration process, the secondary cluster is the <<Target,target database>>.
+Near the end of the migration, the target database becomes the <<_primary_cluster>>, and then the <<origin,origin database>> becomes the secondary cluster.
 
-If you set the proxy's read mode configuration variable (`read_mode`) to `DUAL_ASYNC_ON_SECONDARY`, then asynchronous dual reads are enabled.
-That change results in reads being additionally sent to the secondary cluster.
-
-For more, see xref:glossary.adoc#_primary_cluster[Primary cluster].
-Also see xref:enable-async-dual-reads.adoc[].
+For information about which cluster receives reads and writes during the migration process, see xref:components.adoc#how-zdm-proxy-handles-reads-and-writes[How {product-proxy} handles reads and writes].
 
 [[_secure_connect_bundle_scb]]
 == {scb}
@@ -91,7 +89,8 @@ For more information, see xref:astra-db-serverless:databases:secure-connect-bund
 [[target]]
 == Target
 
-The new cluster to which you want to migrate client applications and data with zero downtime.
+The database to which you are migrating your data and applications.
+It is the opposite of the <<origin>>.
 
 [[zdm-automation]]
 == {product-automation}
