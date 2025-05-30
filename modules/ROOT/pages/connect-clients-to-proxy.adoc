@@ -75,58 +75,82 @@ The following links provide some good starting points for learning about the int
 * The https://docs.datastax.com/en/developer/cpp-driver/latest/topics/[getting started section] of the C/C++ driver documentation.
 * The https://docs.datastax.com/en/developer/nodejs-driver/latest/#basic-usage[basic usage section] of the Node.js driver documentation.
 
-== Connect drivers to {product-proxy}
+== Connect applications to {product-proxy}
 
 We mentioned above that connecting to a {product-proxy} should be almost indistinguishable from connecting directly to your {cass-short} cluster.
 This design decision means there isn't much to say here; everything we discussed in the section above also applies when connecting your driver to {product-proxy}.
 There are a few extra considerations to keep in mind, though, when using the proxy.
 
-=== Client-side compression
-Client applications must not enable client-side compression when connecting through the {product-proxy}, as this is not currently supported.
-This is disabled by default in all drivers, but if it was enabled in your client application configuration it will have to be temporarily disabled when connecting to the {product-proxy}.
-
 [[_client_application_credentials]]
 === Client application credentials
 
-The credentials provided by the client application are used when forwarding its requests.
-However, the client application has no notion that there are two clusters involved: from its point of view, it talks to just one cluster as usual.
-For this reason, the {product-proxy} will only use the client application credentials when forwarding requests to one cluster (typically the target), and it will resort to using the credentials in its own configuration to forward requests to the other cluster (typically the origin).
+Client applications provide cluster credentials to authenticate requests.
 
-This means that, if your {product-proxy} is configured with an origin or target cluster with **user authentication enabled**, your client application has to provide credentials when connecting to the proxy:
+Client applications connect to {product-proxy} in the same way that they connect to a cluster: by providing a set of credentials.
 
-* If both clusters require authentication, your client application must pass the credentials for the target.
-This is also the case if authentication is required by the target only, but not the origin.
-* If the origin requires authentication but the target does not, then your client application must supply credentials for the origin.
-* If neither cluster requires authentication, no credentials are needed.
+Clients have no awareness of the {product-proxy} architecture or the existence of the two separate clusters (the origin and target).
+Therefore, a client only provides a single set of credentials when connecting to {product-proxy}, the same as it would when connecting directly to a cluster.
 
-[cols="1,1,1"]
-|===
-|Auth enabled on the origin
-|Auth enabled on the target
-|Client application credentials
+{product-proxy} uses the credentials provided by the client to forward requests to the cluster that corresponds with those credentials, which is usually the target cluster.
+If necessary, {product-proxy} uses the credentials defined in `xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[zdm_proxy_cluster_config.yml]` to forward requests to the other cluster, which is usually the origin cluster.
 
-|Yes
-|Yes
-|Target
+.Credential usage by {product-proxy} when authentication is required for both clusters
+image::zdm-proxy-credential-usage.png[{product-proxy} credentials usage when authentication is required for both clusters, 550]
 
-|No
-|Yes
-|Target
+==== Determine which credentials to provide
 
-|Yes
-|No
-|Origin
+The credentials your client must provide depend on the authentication requirements of the origin and target clusters:
 
-|No
-|No
-|No credentials
+* *Authentication required for both clusters*: Your client application must supply credentials for the target cluster.
+* *Authentication required for target cluster only*: Your client application must supply credentials for the target cluster.
+* *Authentication required for origin cluster only*: Your client application must supply credentials for the origin cluster.
+* *No authentication required for either cluster*: Your client application doesn't need to supply any cluster credentials.
 
-|===
+==== Expected authentication credentials for self-managed clusters
 
-.How different sets of credentials are used by the {product-proxy} when authentication is enabled on both clusters
-image::zdm-proxy-credential-usage.png[{product-proxy} credentials usage, 550]
+For a self-managed clusters that require authentication, your client application must provide valid `username` and `password` values to access the cluster.
 
-=== Token-aware routing with {product-proxy}
+For information about self-managed cluster credentials in your {product-proxy} configuration, see xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[Cluster and core configuration].
+
+[#expected-authentication-credentials-for-astra-db]
+==== Expected authentication credentials for {astra-db}
+
+For {astra-db} databases, your client application can provide either application token credentials or a {scb}.
+
+[tabs]
+======
+Application token::
++
+--
+For token-based authentication, do the following:
+
+. xref:astra-db-serverless:administration:manage-application-tokens.adoc[Generate an application token] with the *Organization Administrator* role.
++
+The token has three values: `clientId`, `secret`, and `token`.
+
+. Specify one of the following sets of credentials in your client application:
+
+* Recommended: Set `username` to the literal string `token`, and set `password` to the {astra-db} `token` value (`AstraCS:...`).
+* Legacy applications and older drivers: Set `username` to the `clientId` value, and set `password` to the `secret` value.
+--
+
+{scb-short}::
++
+--
+For information about downloading the {scb-short}, see xref:astra-db-serverless:databases:secure-connect-bundle.adoc[].
+
+For information about using a {scb-short} with a driver, see your driver's documentation.
+--
+======
+
+For information about {astra-db} credentials in your {product-proxy} configuration, see xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[Cluster and core configuration].
+
+=== Disable client-side compression with {product-proxy}
+
+Client applications must not enable client-side compression when connecting through the {product-proxy}, as this is not currently supported.
+This is disabled by default in all drivers, but if it was enabled in your client application configuration it will have to be temporarily disabled when connecting to the {product-proxy}.
+
+=== {product-proxy} ignores token-aware routing
 
 Token-aware routing isn't enforced when connecting through {product-proxy} because these instances don't hold actual token ranges in the same way as database nodes.
 Instead, each {product-proxy} instance has a unique, non-overlapping set of synthetic tokens that simulate token ownership and enable balanced load distribution across the instances.
@@ -135,15 +159,6 @@ Upon receiving a request, a {product-proxy} instance routes the request to appro
 
 If your clients have token-aware routing enabled, you don't need to disable this behavior while using {product-proxy}.
 Clients can continue to operate with token-aware routing enabled without negative impacts to functionality or performance.
-
-=== {astra-db} credentials
-
-If your {product-proxy} is configured to use {astra-db} as the origin or target cluster, then your client application doesn't need to provide a {scb} when connecting to the proxy.
-
-As an alternative to providing the {scb-short} directly, you can xref:astra-db-serverless:administration:manage-application-tokens.adoc[generate an application token] with the *Organization Administrator* role, and then specify one of the following sets of credentials generated with the token:
-
-* Token-only authentication: Set `username` to the literal string `token`, and set `password` to your {astra-db} application token.
-* Client ID and secret authentication (legacy): Set `username` to the `clientId` generated with your application token, and then set `password` to the `secret` generated with your application token.
 
 == Sample client applications
 
@@ -224,8 +239,18 @@ Replace the following:
 * `**ZDM_PROXY_IP**`: The IP address of your {product-proxy} instance.
 * `**PORT**`: The port on which the {product-proxy} instance listens for client connections.
 If you are using the default port, 9042, you can omit this argument.
-* `**USERNAME**` and `**PASSWORD**`: The required xref:_client_application_credentials[{product-proxy} credentials], depending on authentication requirements for your origin and target clusters.
-//If user authentication isn't enabled for your {product-proxy} instance, you can omit these arguments.
+* `**USERNAME**` and `**PASSWORD**`: Valid xref:_client_application_credentials[client connection credentials], depending on the authentication requirements for your origin and target clusters:
 +
-If your origin or target cluster is an {astra-db} database, don't use the {scb-short} when attempting to connect CQL shell to {product-proxy}.
+** *Authentication required for both clusters*: Provide credentials for the target cluster.
+** *Authentication required for target cluster only*: Provide credentials for the target cluster.
+** *Authentication required for origin cluster only*: Provide credentials for the origin cluster.
+** *No authentication required for either cluster*: Omit the `-u` and `-p` arguments.
+
++
+[IMPORTANT]
+====
+If you need to provide credentials for an {astra-db} database, don't use the {scb-short} when attempting to connect CQL shell to {product-proxy}.
+Instead, use the token-based authentication option explained in <<expected-authentication-credentials-for-astra-db>>.
+
 If you include the {scb-short}, CQL shell ignores all other connection arguments and connects exclusively to your {astra-db} database instead of {product-proxy}.
+====
