@@ -459,9 +459,8 @@ Whether this performance hit is expected or not depends on the difference betwee
 Writes in {product-short} require successful acknowledgement from both clusters, while reads only require the result from the primary cluster, which is typically the origin cluster.
 This means that if the origin cluster has better performance than the target cluster, then {product-short} will have worse write performance.
 
-From {company}'s testing benchmarks, it is typical for latency to double with {product-proxy}.
-
-To minimize performance degradation, note the following:
+It is typical for latency to increase with {product-proxy}.
+To minimize performance degradation with {product-proxy}, note the following:
 
 * Make sure your {product-proxy} infrastructure or configuration doesn't unnecessarily increase latency.
 For example, make sure your {product-proxy} instances are in the same availability zone (AZ) as your origin cluster or application instances.
