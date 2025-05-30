@@ -25,7 +25,8 @@ Instead, you use a data migration tool, like {sstable-sideloader}, {cass-migrato
 {product-proxy} reduces risks to upgrades and migrations by decoupling the origin cluster from the target cluster and maintaining consistency between both clusters.
 You decide when you want to switch permanently to the target cluster.
 
-After migration your data, migrating your application code can be as minimal as changing the connection string, depending on your client's compatibility with your origin and target clusters.
+After migrating your data, changes to your application code are usually minimal, depending on your client's compatibility with the origin and target clusters.
+Typically, you only need to update the connection string.
 
 [#how-zdm-proxy-handles-reads-and-writes]
 === How {product-proxy} handles reads and writes
@@ -42,8 +43,8 @@ Towards the end of the migration process, when you are ready to read from your t
 {product-proxy} sends every write operation (`INSERT`, `UPDATE`, `DELETE`) synchronously to both clusters at the requested consistency level:
 
 * If the write is acknowledged in both clusters at the requested consistency level, then the operation returns a successful write acknowledgement to the client that issued the request.
-* If the write fails in either cluster, then the primary cluster passes a write failure back to the client.
-The client can then execute its retry policy and reissue the request, if applicable.
+* If the write fails in either cluster, then {product-proxy} passes a write failure, originating from the primary cluster, back to the client.
+The client can then retry the request, if appropriate, based on the client's retry policy.
 
 This design ensures that new data is always written to both clusters, and that any failure on either cluster is always made visible to the client application.
 
@@ -53,21 +54,14 @@ For information about how {product-proxy} handles lightweight transactions (LWTs
 
 By default, {product-proxy} sends all reads to the primary cluster, and then returns the result to the client application.
 
-//TODO: Compare Async Dual Writes content with enable-async-dual-reads.adoc.
+If you enable _asynchronous dual reads_, {product-proxy} sends asynchronous read requests to the secondary cluster (typically the target cluster) in addition to the synchronous read requests that are sent to the primary cluster.
 
-Optionally, you can configure {product-proxy} to read asynchronously from both the origin and target clusters.
-This is known as **Asynchronous Dual Reads** or **Read Mirroring**, and it allows you to test the target cluster's ability to handle a production workload.
+This feature is designed to test the target cluster's ability to handle a production workload before you permanently switch to the target cluster at the end of the migration process.
 
-* Results from the asynchronous reads executed on the target cluster aren't sent back to the client application.
-* This design implies that a failure on asynchronous reads from the target cluster won't cause an error on the client application.
-* With Asynchronous Dual Reads, the additional read load on the target cluster can impact its ability to execute writes.
-This behavior is expected because this feature is designed to mimic the full read and write workload on the target cluster.
-This allows you to judge the target cluster's performance and make any adjustments before permanently switching to the target cluster at the end of the migration process.
+With or without asynchronous dual reads, the client application only receives the result from the synchronous read on the primary cluster.
+The results of the asynchronous reads aren't returned to the client because asynchronous reads are for testing purposes only.
 
-You can dynamically enable and disable Asynchronous Dual Reads by modifying the configuration of your {product-proxy} instances, and then performing a rolling restart of your {product-proxy} instances.
 For more information, see xref:ROOT:enable-async-dual-reads.adoc[].
-
-After enabling Asynchronous Dual Reads, observe the target cluster's read latency and throughput to determine how well the target cluster performs under the expected production workload.
 
 === High availability and multiple {product-proxy} instances
 

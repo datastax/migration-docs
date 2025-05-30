@@ -100,16 +100,14 @@ Possible values for the `error` type label:
 [[_asynchronous_read_requests_metrics]]
 === Asynchronous read requests metrics
 
-These metrics are specific to asynchronous reads, so they are only populated if asynchronous dual reads are enabled.
-This is done by setting the {product-automation} variable `read_mode`, or its equivalent environment variable `ZDM_READ_MODE`, to `DUAL_ASYNC_ON_SECONDARY` as explained xref:enable-async-dual-reads.adoc[here].
+These metrics are only recorded if you xref:ROOT:enable-async-dual-reads.adoc[enable asynchronous dual reads].
 
-These metrics track:
+These metrics track the following information for asynchronous read requests:
 
-* Latency.
-* Throughput.
-* Number of dedicated connections per node for async reads: whether it's origin or target connections depends on the {product-proxy} configuration.
-That is, if the primary cluster is the origin cluster, then the asynchronous reads are sent to the target cluster.
-* Number of errors per error type per node.
+* Latency
+* Throughput
+* Number of dedicated connections per node for the cluster receiving the asynchronous read requests
+* Number of errors per node, separated by error type
 
 === Insights via the {product-proxy} metrics
 

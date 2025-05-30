@@ -152,7 +152,7 @@ As an alternative to providing the {scb-short} directly, you can xref:astra-db-s
 These sample applications are for demonstration purposes only.
 They are not intended for production use or for production-scale performance testing.
 
-To test your target cluster's ability to handle production workloads, you can xref:ROOT:enable-async-dual-reads.adoc[enable Asynchronous Dual Reads].
+To test your target cluster's ability to handle production workloads, you can xref:ROOT:enable-async-dual-reads.adoc[enable asynchronous dual reads].
 
 To assess the performance of {product-proxy}, {company} recommends http://docs.nosqlbench.io/getting-started/[NoSQLBench].
 ====
@@ -216,7 +216,7 @@ For example, if you installed CQL shell for {astra-db}, you would run `cd cqlsh-
 +
 [source,shell,subs="+quotes"]
 ----
-./cqlsh **ZDM_PROXY_IP** **PORT** -u **CLIENT_USERNAME** -p **CLIENT_PASSWORD**
+./cqlsh **ZDM_PROXY_IP** **PORT** -u **USERNAME** -p **PASSWORD**
 ----
 +
 Replace the following:
@@ -224,8 +224,8 @@ Replace the following:
 * `**ZDM_PROXY_IP**`: The IP address of your {product-proxy} instance.
 * `**PORT**`: The port on which the {product-proxy} instance listens for client connections.
 If you are using the default port, 9042, you can omit this argument.
-* `**CLIENT_USERNAME**` and `**CLIENT_PASSWORD**`: The required xref:_client_application_credentials[{product-proxy} credentials].
-If user authentication isn't enabled for your {product-proxy} instance, you can omit these arguments.
+* `**USERNAME**` and `**PASSWORD**`: The required xref:_client_application_credentials[{product-proxy} credentials], depending on authentication requirements for your origin and target clusters.
+//If user authentication isn't enabled for your {product-proxy} instance, you can omit these arguments.
 +
 If your origin or target cluster is an {astra-db} database, don't use the {scb-short} when attempting to connect CQL shell to {product-proxy}.
 If you include the {scb-short}, CQL shell ignores all other connection arguments and connects exclusively to your {astra-db} database instead of {product-proxy}.

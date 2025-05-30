@@ -6,33 +6,31 @@
 //This page was an exact duplicate of cdm-overview.adoc and the (now deleted) cdm-steps.adoc, they are just in different parts of the nav.
 
 // tag::body[]
-You can use {cass-migrator} ({cass-migrator-short}) to migrate and validate tables between {cass-short}-based clusters.
-It is designed to connect to your target cluster, compare it with the origin cluster, log any differences, and, optionally, automatically reconcile inconsistencies and missing data.
+You can use {cass-migrator} ({cass-migrator-short}) for data migration and validation between {cass-reg}-based databases.
+It supports important {cass} features and offers extensive configuration options:
 
-{cass-migrator-short} facilitates data transfer by creating multiple jobs that access the {cass-short} cluster concurrently, making it an ideal choice for migrating large datasets.
-It offers extensive configuration options, including logging, reconciliation, performance optimization, and more.
+* Logging and run tracking
+* Automatic reconciliation
+* Performance tuning
+* Record filtering
+* Support for advanced data types, including sets, lists, maps, and UDTs
+* Support for SSL, including custom cipher algorithms
+* Use `writetime` timestamps to maintain chronological write history
+* Use Time To Live (TTL) values to maintain data lifecycles
 
-{cass-migrator-short} features include the following:
-
-* Validate migration accuracy and performance with a smaller, randomized data set.
-
-* Preserve internal `writetime` timestamps and Time To Live (TTL) values to maintain chronological write history.
-+
-When using {cass-migrator-short} with {product-proxy}, the preserved timestamps ensure that new, real-time writes accurately take precedence over historical writes.
-+
-You can also add custom fixed `writetime` and `ttl` values.
-
-* Support for advanced data types, including sets, lists, maps, and UDTs.
-
-* Option to filter records from the origin cluster based `writetime`, partition/token ranges, or CQL conditions.
-
-* Support for SSL, including custom cipher algorithms.
-
-For more features and information, see the {cass-migrator-repo}?tab=readme-ov-file#features[{cass-migrator-short} GitHub repository].
+For more information and a complete list of features, see the {cass-migrator-repo}?tab=readme-ov-file#features[{cass-migrator-short} GitHub repository].
 
 == {cass-migrator} requirements
 
-To use {cass-migrator-short} successfully, your origin and target clusters must have matching schemas.
+To use {cass-migrator-short} successfully, your origin and target clusters must be {cass-short}-based databases with matching schemas.
+
+== {cass-migrator} with {product-proxy}
+
+When using {cass-migrator-short} with {product-proxy}, {cass-short}'s last-write-wins semantics ensure that new, real-time writes accurately take precedence over historical writes.
+
+Last-write-wins compares the `writetime` of conflicting records, and then retains the most recent write.
+
+For example, if a new write occurs in your target cluster with a `writetime` of `2023-10-01T12:05:00Z`, and then {cass-migrator-short} migrates a record against the same row with a `writetime` of `2023-10-01T12:00:00Z`, the target cluster retains the data from the new write because it has the most recent `writetime`.
 
 == Install {cass-migrator}
 
@@ -132,6 +130,10 @@ For example, the 4.x series of {cass-migrator-short} isn't backwards compatible 
 [#migrate]
 == Run a {cass-migrator-short} data migration job
 
+A data migration job copies data from a table in your origin cluster to a table with the same schema in your target cluster.
+
+To optimize large-scale migrations, {cass-migrator-short} can run multiple concurrent migration jobs on the same table.
+
 The following `spark-submit` command migrates one table from the origin to the target cluster, using the configuration in your properties file.
 The migration job is specified in the `--class` argument.
 
@@ -197,7 +199,9 @@ For additional modifications to this command, see <<advanced>>.
 [#cdm-validation-steps]
 == Run a {cass-migrator-short} data validation job
 
-After you migrate data, you can use {cass-migrator-short}'s data validation mode to find inconsistencies between the origin and target tables.
+After migrating data, use {cass-migrator-short}'s data validation mode to identify any inconsistencies between the origin and target tables, such as missing or mismatched records.
+
+Optionally, {cass-migrator-short} can automatically correct discrepancies in the target cluster during validation.
 
 . Use the following `spark-submit` command to run a data validation job using the configuration in your properties file.
 The data validation job is specified in the `--class` argument.
