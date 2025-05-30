@@ -104,7 +104,7 @@ ssh -F <path to zdm_ssh_config> jumphost
 
 . From the jumphost, download the latest {product-utility} executable from the {product-automation-repo}/releases[{product-automation} GitHub repository] {product-automation-shield}.
 +
-The package filename format is `zdm-util-**PLATFORM**-**VERSION***.tgz`.
+The package filename format is `zdm-util-**PLATFORM**-**VERSION**.tgz`.
 The following example downloads {product-utility} version 2.3.0 for Linux amd64.
 To download a different package, change the version and package filename accordingly.
 +

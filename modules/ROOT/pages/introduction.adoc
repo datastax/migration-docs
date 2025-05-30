@@ -29,14 +29,12 @@ For more information about these tools, see xref:ROOT:components.adoc[].
 When the migration is complete, the data is present in the new database, and you can update your client applications to connect exclusively to the new database.
 The old database becomes obsolete and can be removed.
 
-== {product-short} requirements
+== Requirements for zero downtime
 
-True zero downtime migration is only possible if your database meets the minimum requirements described in xref:ROOT:feasibility-checklists.adoc[].
+True zero downtime migration is only possible if your database meets the minimum requirements, including cluster compatibility, described in xref:ROOT:feasibility-checklists.adoc[]
 If your database doesn't meet these requirements, you can still complete the migration, but downtime might be necessary to finish the migration.
 
-=== Supported migration paths
-
-include::ROOT:partial$migration-scenarios.adoc[]
+For more information, see xref:ROOT:feasibility-checklists.adoc[]
 
 == Migration phases
 
@@ -54,6 +52,7 @@ At this point, your client applications are performing read/write operations wit
 
 image:pre-migration0ra9.png["Pre-migration environment."]
 
+//The text from this note is duplicated on the feasibility checks page.
 [TIP]
 ====
 For the migration to succeed, the origin and target clusters must have matching schemas.
@@ -93,10 +92,13 @@ image:migration-phase2ra9a.png["Migration Phase 2."]
 
 === Phase 3: Enable asynchronous dual reads
 
-In this phase, you can optionally enable asynchronous dual reads.
-The idea is to test performance and verify that the target cluster can handle your application's live request load before cutting over from the origin to the target permanently.
+In this optional phase, you can enable the _asynchronous dual reads_ feature to test the target cluster's ability to handle a production workload before you permanently switch your applications to the target cluster at the end of the migration process.
 
-image:migration-phase3ra9.png["Migration Phase 3."]
+When enabled, {product-proxy} sends asynchronous read requests to the secondary cluster in addition to the synchronous read requests that are sent to the primary cluster by default.
+
+For more information, see xref:ROOT:enable-async-dual-reads.adoc[] and xref:ROOT:components.adoc#how_zdm_proxy_handles_reads_and_writes[How {product-proxy} handles reads and writes].
+
+image:migration-phase3ra.png["Migration Phase 3."]
 
 === Phase 4: Route reads to the target cluster
 
