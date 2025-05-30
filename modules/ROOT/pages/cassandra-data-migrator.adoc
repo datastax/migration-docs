@@ -24,7 +24,9 @@ For more information and a complete list of features, see the {cass-migrator-rep
 
 To use {cass-migrator-short} successfully, your origin and target clusters must be {cass-short}-based databases with matching schemas.
 
-== {cass-migrator} with {product-proxy}
+== {cass-migrator-short} with {product-proxy}
+
+You can use {cass-migrator-short} alone or with {product-proxy}.
 
 When using {cass-migrator-short} with {product-proxy}, {cass-short}'s last-write-wins semantics ensure that new, real-time writes accurately take precedence over historical writes.
 

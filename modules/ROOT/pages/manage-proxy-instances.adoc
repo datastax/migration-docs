@@ -8,60 +8,60 @@ In this topic, we'll learn how to perform simple operations on your {product-pro
 * Change a mutable configuration variable
 * Upgrade the {product-proxy} version
 
-All these operations can be easily done by running Ansible playbooks.
+With {product-automation}, you can use Ansible playbooks for all of these operations.
 
-Make sure you are connected to the Ansible Control Host Docker container. As explained before, you can do so from the jumphost machine by running:
+== Perform a rolling restart of the proxies
 
+Rolling restarts of the {product-proxy} instances are useful to apply configuration changes or to upgrade the {product-proxy} version without impacting the availability of the deployment.
+
+[tabs]
+======
+With {product-automation}::
+--
+If you use {product-automation} to manage your {product-proxy} deployment, you can use a dedicated playbook to perform rolling restarts of all {product-proxy} instances in a deployment:
+
+. Connect to the Ansible Control Host Docker container.
+You can do this from the jumphost machine by running the following command:
++
 [source,bash]
 ----
 docker exec -it zdm-ansible-container bash
 ----
-
-You will see a prompt like:
-
++
+.Result
+[%collapsible]
+====
 [source,bash]
 ----
 ubuntu@52772568517c:~$
 ----
+====
 
-== Perform a rolling restart of the proxies
-
-Although this operation is not required in any particular step of the migration, you may still find it convenient in some circumstances. 
-For this reason, there is a specific playbook that performs this operation.
-
-Connect to the Ansible Control Host Docker container as explained above and run:
-
+. Run the rolling restart playbook:
++
 [source,bash]
 ----
-ansible-playbook rolling_restart_zdm_proxy.yml -i zdm_ansible_inventory
+ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
 ----
++
+While running, this playbook gracefully stops one container and waits for it to shut down before restarting the container.
+Then, it calls the xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[readiness endpoint] to check the container's status:
++
+* If the check fails, the playbook repeats the check every five seconds for a maximum of six attempts.
+If all six attempts fail, the playbook interrupts the entire rolling restart process.
+* If the check succeeds, the playbook waits before proceeding to the next container.
++
+The default pause between containers is 10 seconds.
+You can change the pause duration in `zdm-proxy-automation/ansible/vars/zdm_playbook_internal_config.yml`.
+--
 
-This is all that is needed.
+Without {product-automation}::
+--
+If you don't use {product-automation}, you must manually restart each instance.
 
-[NOTE]
-====
-This playbook simply restarts the existing {product-proxy} containers.
-It does **not** apply any configuration change or change the version.
-
-If you wish to xref:change-mutable-config-variable[apply configuration changes] or xref:_upgrade_the_proxy_version[perform version upgrades] in a rolling fashion, follow the instructions in the respective sections.
-====
-
-This playbook restarts each proxy container one by one, without impacting the availability of the {product-proxy} deployment. It automates the following steps:
-
-. It stops one container gracefully, waiting for it to shut down.
-. It starts the container again.
-. It checks that the container has come up successfully by checking the readiness endpoint:
-.. If unsuccessful, it repeats the check for six times at 5-second intervals and eventually interrupts the whole process if the check still fails.
-.. If successful, it waits for a configurable interval and then moves on to the next container.
-
-The pause between the restart of each {product-proxy} instance defaults to 10 seconds.
-To change this value, you can set the desired number of seconds in `zdm-proxy-automation/ansible/vars/zdm_playbook_internal_config.yml`.
-
-[TIP]
-====
-To check the state of your {product-proxy} instances, you have a couple of options.
-See xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[Indications of success on origin and target clusters].
-====
+To avoid downtime, wait for each instance to fully restart and begin receiving traffic before restarting the next instance.
+--
+======
 
 [#access-the-proxy-logs]
 == Access the proxy logs
@@ -84,26 +84,48 @@ To leave the logs open and continuously output the latest log messages, append t
 
 === Collect the logs
 
-You can easily retrieve the logs of all {product-proxy} instances using a dedicated playbook (`collect_zdm_proxy_logs.yml`).
-You can view the playbook's configuration values in `vars/zdm_proxy_log_collection_config.yml`, but no changes to it are required.
+{product-automation} has a dedicated playbook, `collect_zdm_proxy_logs.yml`, that you can use to collect logs for all {product-proxy} instances in a deployment.
 
-Connect to the Ansible Control Host container as explained above and run:
+You can view the playbook's configuration in `vars/zdm_proxy_log_collection_config.yml`, but no changes are required to run it.
 
+. Connect to the Ansible Control Host Docker container.
+You can do this from the jumphost machine by running the following command:
++
+[source,bash]
+----
+docker exec -it zdm-ansible-container bash
+----
++
+.Result
+[%collapsible]
+====
+[source,bash]
+----
+ubuntu@52772568517c:~$
+----
+====
+
+. Run the log collection playbook:
++
 [source,bash]
 ----
 ansible-playbook collect_zdm_proxy_logs.yml -i zdm_ansible_inventory
 ----
++
+This playbook creates a single zip file, `zdm_proxy_logs_**TIMESTAMP**.zip`, that contains the logs from all proxy instances.
+This archive is stored on the Ansible Control Host Docker container at `/home/ubuntu/zdm_proxy_archived_logs`.
 
-This playbook creates a single zip file, called `zdm_proxy_logs_**TIMESTAMP**.zip`, containing the logs from all proxy instances, and stores it on the Ansible Control Host Docker container in the directory `/home/ubuntu/zdm_proxy_archived_logs`.
-
-To copy the zip file from the container to the jumphost, open a shell on the jumphost and run the following command:
-
+. To copy the archive from the container to the jumphost, open a shell on the jumphost, and then run the following command:
++
 [source,bash,subs="+quotes"]
 ----
-docker cp zdm-ansible-container:/home/ubuntu/zdm_proxy_archived_logs/**ZDM_PROXY_LOGS_ARCHIVE_NAME** **DESTINATION_DIRECTORY_ON_JUMPHOST**
+docker cp zdm-ansible-container:/home/ubuntu/zdm_proxy_archived_logs/zdm_proxy_logs_**TIMESTAMP**.zip **DESTINATION_DIRECTORY_ON_JUMPHOST**
 ----
-
-The archive will be copied to the specified destination directory on the jumphost.
++
+Replace the following:
++
+* `**TIMESTAMP**`: The timestamp from the name of your log file archive
+* `**DESTINATION_DIRECTORY_ON_JUMPHOST**`: The path to the directory where you want to copy the archive
 
 [[change-mutable-config-variable]]
 == Change a mutable configuration variable
@@ -352,3 +374,4 @@ Additionally, if you need to restart {product-proxy} instances, and there is onl
 
 * xref:ROOT:troubleshooting-tips.adoc[]
 * xref:ROOT:troubleshooting-scenarios.adoc[]
+* xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[Indications of success on origin and target clusters]

@@ -58,8 +58,8 @@ If you enable _asynchronous dual reads_, {product-proxy} sends asynchronous read
 
 This feature is designed to test the target cluster's ability to handle a production workload before you permanently switch to the target cluster at the end of the migration process.
 
-With or without asynchronous dual reads, the client application only receives the result from the synchronous read on the primary cluster.
-The results of the asynchronous reads aren't returned to the client because asynchronous reads are for testing purposes only.
+With or without asynchronous dual reads, the client application only receives results from synchronous reads on the primary cluster.
+The results of asynchronous reads aren't returned to the client because asynchronous reads are for testing purposes only.
 
 For more information, see xref:ROOT:enable-async-dual-reads.adoc[].
 

@@ -1,4 +1,4 @@
-= Phase 4: Route reads to the target
+= Route reads to the target
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,read-routing
 
 This topic explains how you can configure the {product-proxy} to route all reads to the target cluster instead of the origin cluster.

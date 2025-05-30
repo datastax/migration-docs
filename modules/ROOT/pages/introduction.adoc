@@ -92,13 +92,13 @@ image:migration-phase2ra9a.png["Migration Phase 2."]
 
 === Phase 3: Enable asynchronous dual reads
 
-In this phase, you can enable the optional _asynchronous dual reads_ feature to test the target cluster's ability to handle a production workload before you permanently switch your applications to the target cluster and end the migration process.
+In this optional phase, you can enable the _asynchronous dual reads_ feature to test the target cluster's ability to handle a production workload before you permanently switch your applications to the target cluster at the end of the migration process.
 
 When enabled, {product-proxy} sends asynchronous read requests to the secondary cluster in addition to the synchronous read requests that are sent to the primary cluster by default.
 
-For more information, see xref:ROOT:enable-async-dual-reads.adoc[].
+For more information, see xref:ROOT:enable-async-dual-reads.adoc[] and xref:ROOT:components.adoc#how_zdm_proxy_handles_reads_and_writes[How {product-proxy} handles reads and writes].
 
-image:migration-phase3ra9.png["Migration Phase 3."]
+image:migration-phase3ra.png["Migration Phase 3."]
 
 === Phase 4: Route reads to the target cluster
 
