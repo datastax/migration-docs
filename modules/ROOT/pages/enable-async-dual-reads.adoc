@@ -61,6 +61,7 @@ read_mode: PRIMARY_ONLY
 [tabs]
 ======
 With {product-automation}::
++
 --
 If you use {product-automation} to manage your {product-proxy} deployment, run the following command:
 
@@ -71,6 +72,7 @@ ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
 --
 
 Without {product-automation}::
++
 --
 If you don't use {product-automation}, you must manually restart each instance.
 

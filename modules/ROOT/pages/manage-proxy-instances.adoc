@@ -17,6 +17,7 @@ Rolling restarts of the {product-proxy} instances are useful to apply configurat
 [tabs]
 ======
 With {product-automation}::
++
 --
 If you use {product-automation} to manage your {product-proxy} deployment, you can use a dedicated playbook to perform rolling restarts of all {product-proxy} instances in a deployment:
 
@@ -56,6 +57,7 @@ You can change the pause duration in `zdm-proxy-automation/ansible/vars/zdm_play
 --
 
 Without {product-automation}::
++
 --
 If you don't use {product-automation}, you must manually restart each instance.
 
