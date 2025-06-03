@@ -154,7 +154,7 @@ None.
 
 Credentials are incorrect or have insufficient permissions.
 
-There are three sets of credentials in play with {product-short}:
+There are three sets of credentials in play with {product-proxy}:
 
 * Target: credentials that you set in the proxy configuration through the `ZDM_TARGET_USERNAME` and `ZDM_TARGET_PASSWORD` settings.
 

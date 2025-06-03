@@ -113,7 +113,7 @@ For instructions and more information, see xref:sideloader:migrate-sideloader.ad
 
 include::sideloader:partial$sideloader-partials.adoc[tags=validate]
 
-== Use {sstable-sideloader} with {product-short}
+== Use {sstable-sideloader} with {product-proxy}
 
 include::sideloader:partial$sideloader-partials.adoc[tags=sideloader-zdm]
 
