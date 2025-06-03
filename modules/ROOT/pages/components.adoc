@@ -17,63 +17,68 @@ The main component of the {company} {product} toolkit is {product-proxy}, which 
 {product-proxy} is open-source software that is available from the {product-proxy-repo}[zdm-proxy GitHub repo].
 This project is open for public contributions.
 
-The {product-proxy} is an orchestrator for monitoring application activity and keeping multiple clusters in sync through dual writes.
+The {product-proxy} is an orchestrator for monitoring application activity and keeping multiple clusters (databases) in sync through dual writes.
 {product-proxy} isn't linked to the actual migration process.
 It doesn't perform data migrations and it doesn't have awareness of ongoing migrations.
 Instead, you use a data migration tool, like {sstable-sideloader}, {cass-migrator}, or {dsbulk-migrator}, to perform the data migration and validate migrated data.
 
-=== How {product-proxy} works
+{product-proxy} reduces risks to upgrades and migrations by decoupling the origin cluster from the target cluster and maintaining consistency between both clusters.
+You decide when you want to switch permanently to the target cluster.
 
-{company} created {product-proxy} to function between the application and both the origin and target databases.
-The databases can be any CQL-compatible data store, such as {cass-reg}, {dse}, and {astra-db}.
-The proxy always sends every write operation (Insert, Update, Delete) synchronously to both clusters at the desired Consistency Level:
+After migrating your data, changes to your application code are usually minimal, depending on your client's compatibility with the origin and target clusters.
+Typically, you only need to update the connection string.
 
-* If the write is successful in both clusters, it returns a successful acknowledgement to the client application.
-* If the write fails on either cluster, the failure is passed back to the client application so that it can retry it as appropriate, based on its own retry policy.
+[#how-zdm-proxy-handles-reads-and-writes]
+=== How {product-proxy} handles reads and writes
+
+{company} created {product-proxy} to orchestrate requests between a client application and both the origin and target clusters.
+These clusters can be any CQL-compatible data store, such as {cass-reg}, {dse}, and {astra-db}.
+
+During the migration process, you designate one cluster as the _primary cluster_, which serves as the source of truth for reads.
+For the majority of the migration process, this is typically the origin cluster.
+Towards the end of the migration process, when you are ready to read from your target cluster, you set the target cluster as the primary cluster.
+
+==== Writes
+
+{product-proxy} sends every write operation (`INSERT`, `UPDATE`, `DELETE`) synchronously to both clusters at the requested consistency level:
+
+* If the write is acknowledged in both clusters at the requested consistency level, then the operation returns a successful write acknowledgement to the client that issued the request.
+* If the write fails in either cluster, then {product-proxy} passes a write failure, originating from the primary cluster, back to the client.
+The client can then retry the request, if appropriate, based on the client's retry policy.
 
 This design ensures that new data is always written to both clusters, and that any failure on either cluster is always made visible to the client application.
-{product-proxy} also sends all reads to the primary cluster, and then returns the result to the client application.
-The primary cluster is initially the origin cluster, and you change it to the target cluster at the end of the migration process.
 
-{product-proxy} is designed to be highly available. It can be scaled horizontally, so typical deployments are made up of a minimum of 3 servers.
-{product-proxy} can be restarted in a rolling fashion, for example, to change configuration for different phases of the migration.
+For information about how {product-proxy} handles lightweight transactions (LWTs), see xref:feasibility-checklists.adoc#_lightweight_transactions_and_the_applied_flag[Lightweight Transactions and the applied flag].
 
-=== Key features of {product-proxy}
+==== Reads
 
-* Allows you to lift-and-shift existing application code from your origin cluster to your target cluster by changing only the connection string, if all else is compatible.
+By default, {product-proxy} sends all reads to the primary cluster, and then returns the result to the client application.
 
-* Reduces risks to upgrades and migrations by decoupling the origin cluster from the target cluster.
-You can determine an explicit cut-over point once you're ready to commit to using the target cluster permanently.
+If you enable _asynchronous dual reads_, {product-proxy} sends asynchronous read requests to the secondary cluster (typically the target cluster) in addition to the synchronous read requests that are sent to the primary cluster.
 
-* Bifurcates writes synchronously to both clusters during the migration process.
+This feature is designed to test the target cluster's ability to handle a production workload before you permanently switch to the target cluster at the end of the migration process.
 
-* Read operations return the response from the primary (origin) cluster, which is its designated source of truth.
-+
-During a migration, the primary cluster is typically the origin cluster.
-Near the end of the migration, you shift the primary cluster to be the target cluster.
+With or without asynchronous dual reads, the client application only receives results from synchronous reads on the primary cluster.
+The results of asynchronous reads aren't returned to the client because asynchronous reads are for testing purposes only.
 
-* Option to read asynchronously from the target cluster as well as the origin cluster
-This capability is called **Asynchronous Dual Reads** or **Read Mirroring**, and it allows you to observe what read latencies and throughput the target cluster can achieve under the actual production load.
-+
-** Results from the asynchronous reads executed on the target cluster are not sent back to the client application.
-** This design implies that a failure on asynchronous reads from the target cluster does not cause an error on the client application.
-** Asynchronous dual reads can be enabled and disabled dynamically with a rolling restart of the {product-proxy} instances.
+For more information, see xref:ROOT:enable-async-dual-reads.adoc[].
 
-[NOTE]
+=== High availability and multiple {product-proxy} instances
+
+{product-proxy} is designed to be highly available and run a clustered fashion to avoid a single point of failure.
+
+With the exception of local test environments, {company} recommends that all {product-proxy} deployments have multiple {product-proxy} instances.
+Deployments typically consist of three or more instances.
+
+[TIP]
 ====
-When using Asynchronous Dual Reads, any additional read load on the target cluster may impact its ability to keep up with writes.
-This behavior is expected and desired.
-The idea is to mimic the full read and write load on the target cluster so there are no surprises during the last migration phase; that is, after cutting over completely to the target cluster.
+Throughout the {product-short} documentation, the term _{product-proxy} deployment_ refers to the entire deployment, and _{product-proxy} instance_ refers to an individual proxy process in the deployment.
 ====
 
-=== Run multiple {product-proxy} instances
+You can scale {product-proxy} instances horizontally and vertically.
+To avoid downtime when applying configuration changes, you can perform rolling restarts on your {product-proxy} instances.
 
-{product-proxy} has been designed to run in a clustered fashion so that it is never a single point of failure.
-Unless it is for a demo or local testing environment, a {product-proxy} deployment should always comprise multiple {product-proxy} instances.
-
-Throughout the documentation, the term _{product-proxy} deployment_ refers to the entire deployment, and _{product-proxy} instance_ refers to an individual proxy process in the deployment.
-
-You can use the {product-utility} and {product-automation} to set up and run Ansible playbooks that deploy and manage {product-proxy} and its monitoring stack.
+For simplicity, you can use the {product-utility} and {product-automation} to set up and run Ansible playbooks that deploy and manage {product-proxy} and its monitoring stack.
 
 == {product-utility} and {product-automation}
 

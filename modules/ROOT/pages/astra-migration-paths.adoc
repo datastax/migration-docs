@@ -103,4 +103,5 @@ If you have questions about migrating from a specific source to {astra-db}, cont
 
 == See also
 
+* https://www.datastax.com/events/migrating-your-legacy-cassandra-app-to-astra-db[Migrating your legacy {cass-reg} app to {astra-db}]
 * xref:astra-db-serverless:databases:migration-path-serverless.adoc[Migrate to {astra-db}]

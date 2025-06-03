@@ -439,7 +439,7 @@ We encourage you to upgrade to that version or greater.
 By default, {product-proxy} now sends heartbeats after 30 seconds of inactivity on a cluster connection, to keep it alive. 
 You can tune the heartbeat interval with the Ansible configuration variable `heartbeat_insterval_ms`, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you do not use the {product-automation}.
 
-== Performance degradation with {product-short}
+== Performance degradation with {product-proxy}
 
 === Symptoms
 
@@ -447,22 +447,28 @@ Consider a case where a user runs separate benchmarks against:
 
 * {astra-db} directly
 * Origin directly
-* {product-short} (with {astra-db} and the origin cluster)
+* {product-proxy} (with {astra-db} and the origin cluster)
 
-The results of these tests show latency/throughput values are worse with {product-short} than when connecting to {astra-db} or origin cluster directly.
+The results of these tests show latency/throughput values are worse with {product-proxy} than when connecting to {astra-db} or origin cluster directly.
 
 === Cause
 
-{product-short} will always add additional latency which, depending on the nature of the test, will also result in a lower throughput.
+{product-short} always increases latency and, depending on the nature of the test, reduces throughput.
 Whether this performance hit is expected or not depends on the difference between the {product-short} test results and the test results with the cluster that performed the worst.
 
-Writes in {product-short} require an `ACK` from both clusters while reads only require the result from the origin cluster (or target if the proxy is set up to route reads to the target cluster).
+Writes in {product-short} require successful acknowledgement from both clusters, while reads only require the result from the primary cluster, which is typically the origin cluster.
 This means that if the origin cluster has better performance than the target cluster, then {product-short} will have worse write performance.
 
-From our testing benchmarks, a performance degradation of up to 2x latency is not unheard of even without external factors adding more latency, but it is still worth checking some things that might add additional latency like whether the proxy is deployed on the same Availability Zone (AZ) as the origin cluster or application instances.
+It is typical for latency to increase with {product-proxy}.
+To minimize performance degradation with {product-proxy}, note the following:
 
-Simple statements and batch statements are things that will make the proxy add additional latency compared to normal prepared statements.
-Simple statements should be discouraged especially with the {product-proxy} because currently the proxy takes a considerable amount of time just parsing the queries and with prepared statements the proxy only has to parse them once.
+* Make sure your {product-proxy} infrastructure or configuration doesn't unnecessarily increase latency.
+For example, make sure your {product-proxy} instances are in the same availability zone (AZ) as your origin cluster or application instances.
+* Understand the impact of simple and batch statements on latency, as compared to typical prepared statements.
++
+Avoid simple statements with {product-proxy} because they require significant time for {product-proxy} to parse the queries.
++
+In contrast, prepared statements are parsed once, and then reused on subsequent requests, if repreparation isn't required.
 
 === Solution or Workaround
 

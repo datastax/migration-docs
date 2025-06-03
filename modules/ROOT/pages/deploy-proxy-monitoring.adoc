@@ -94,7 +94,7 @@ The default is 9042.
 ** For an {astra-db} database, leave this unset.
 * `*_astra_secure_connect_bundle_path`, `*_astra_db_id`, and `*_astra_token`:
 ** For a self-managed cluster, leave all of these unset.
-** For an {astra-db} database, provide either `*_astra_secure_connect_bundle_path` _or both_ `*_astra_db_id` and `*_astra_token`.
+** For an {astra-db} database, provide either `*_astra_secure_connect_bundle_path` or both `*_astra_db_id` and `*_astra_token`.
 *** If you want {product-automation} to automatically download your database's {scb}, use `*_astra_db_id` and `*_astra_token`.
 Set `*_astra_db_id` to your xref:astra-db-serverless:databases:create-database.adoc#get-db-id[database's ID], and set `*_astra_token` to your application token, which is prefixed by `AstraCS:`.
 *** If you want to manually upload your database's {scb-short} to the jumphost, use `*_astra_secure_connect_bundle_path`.

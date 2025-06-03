@@ -787,3 +787,4 @@ include::sideloader:partial$sideloader-partials.adoc[tags=validate]
 
 * xref:sideloader:cleanup-sideloader.adoc[]
 * xref:sideloader:troubleshoot-sideloader.adoc[]
+* https://www.datastax.com/events/migrating-your-legacy-cassandra-app-to-astra-db[Migrating your legacy {cass-reg} app to {astra-db}]

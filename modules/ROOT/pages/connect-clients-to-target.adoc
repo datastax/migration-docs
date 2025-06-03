@@ -106,3 +106,7 @@ Your client application is now able to connect directly to your {astra-db} datab
 
 Until this point, in case of any issues, you could have abandoned the migration and rolled back to connect directly to the origin cluster at any time.
 From this point onward, the clusters will diverge, and the target cluster becomes the source of truth for your client applications and data.
+
+== See also
+
+* https://www.datastax.com/events/migrating-your-legacy-cassandra-app-to-astra-db[Migrating your legacy {cass-reg} app to {astra-db}]
