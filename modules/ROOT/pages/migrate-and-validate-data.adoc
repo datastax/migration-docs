@@ -19,12 +19,10 @@ For more information, see xref:sideloader:sideloader-zdm.adoc[].
 
 == {cass-migrator}
 
-You can use {cass-migrator} ({cass-migrator-short}) to migrate and validate tables between {cass-short}-based clusters.
-It is best for large migrations and for migrations that need advanced features, such as for detailed logging, data verification, table column renaming, and reconciliation.
+You can use {cass-migrator} ({cass-migrator-short}) for data migration and validation between {cass-reg}-based databases.
+It offers extensive functionality and configuration options to support large and complex migrations as well as post-migration data validation.
 
-{cass-migrator-short} offers extensive functionality and configuration options to support large and complex migrations as well as post-migration data validation.
-
-You can use {cass-migrator-short} by itself, with {product-proxy}, or for data validation after using another data migration tool, such as {sstable-sideloader}.
+You can use {cass-migrator-short} by itself, with {product-proxy}, or for data validation after using another data migration tool.
 
 For more information, see xref:ROOT:cassandra-data-migrator.adoc[].
 
