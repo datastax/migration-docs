@@ -1,7 +1,7 @@
-= Set up the {product-automation} with {product-utility}
+= Set up {product-automation} with {product-utility}
 :page-tag: migration,zdm,zero-downtime,zdm-automation,zdm-proxy,ansible
 
-This page explains how to use the {product-utility} to set up the Ansible Control Host container for the {product-automation}.
+This page explains how to use {product-utility} to set up the Ansible Control Host container for {product-automation}.
 
 After completing the setup tasks in {product-utility}, see the xref:deploy-proxy-monitoring.adoc[next topic] for subsequent steps to use {product-automation}, which you will use to deploy {product-proxy} instances and the monitoring stack.
 
@@ -9,11 +9,11 @@ Once completed, you will have a working and fully monitored {product-proxy} depl
 
 == Introduction
 
-The {product-automation} uses **Ansible**, which deploys and configures the {product-proxy} instances and monitoring stack via playbooks.
+{product-automation} uses **Ansible**, which deploys and configures the {product-proxy} instances and monitoring stack via playbooks.
 This step expects that the infrastructure has been already provisioned.
 See xref:deployment-infrastructure.adoc[Deployment and infrastructure considerations], which include the infrastructure requirements.
 
-Configuring a machine to serve as the Ansible Control Host is very easy using the {product-utility}. 
+To Configure a machine to serve as the Ansible Control Host, you can use {product-utility}.
 This is a Golang (Go) executable program that runs anywhere.
 This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use.
 From this container, you will be able to easily configure and run the {product-automation} Ansible playbooks.
@@ -22,7 +22,7 @@ image::docker-container-and-zdm-utility.png[{product-proxy} connections from Doc
 
 == Prerequisites
 
-. You must have already provisioned the {product-short} infrastructure, which means you must have the server machines ready, and know their IP addresses.
+. You must have already provisioned the {product-proxy} infrastructure, which means you must have the server machines ready, and know their IP addresses.
 These can be in the cloud provider of your choice or on-premise.
 . Docker needs to be installed on the machine that will be running the Ansible Control Host container.
 For comprehensive installation instructions, see the https://docs.docker.com/engine/install/#server[Docker documentation].
@@ -67,8 +67,8 @@ The jumphost can be, for example, a Linux server machine that is able to access 
 The jumphost will serve three purposes:
 
 * Accessing the {product-proxy} machines.
-* Running the Ansible Control Host container, from which the {product-automation} can be run.
-* Running the {product-short} monitoring stack, which uses Prometheus and Grafana to expose the metrics of all the {product-proxy} instances in a preconfigured dashboard.
+* Running the Ansible Control Host container, from which you can run {product-automation}.
+* Running the {product-proxy} monitoring stack, which uses Prometheus and Grafana to expose the metrics of all the {product-proxy} instances in a preconfigured dashboard.
 
 [TIP]
 ====
@@ -80,12 +80,12 @@ Let's get started.
 
 == Proxy deployment setup on the jumphost
 
-To run the {product-automation}, the Ansible Control Host needs to be able to connect to all other instances of the {product-proxy} deployment.
+To run {product-automation}, the Ansible Control Host needs to be able to connect to all other instances of the {product-proxy} deployment.
 For this reason, it needs to have the SSH key required by those instances.
 
 === Add SSH keys to the jumphost
 
-From your local machine, transfer (`scp`) the SSH private key for the {product-short} deployment to the jumphost.
+From your local machine, transfer (`scp`) the SSH private key for the {product-proxy} deployment to the jumphost.
 Example:
 
 [source,bash]
@@ -100,7 +100,7 @@ Now connect to the jumphost.
 ssh -F <path to zdm_ssh_config> jumphost
 ----
 
-== Run the {product-utility}
+== Run {product-utility}
 
 . From the jumphost, download the latest {product-utility} executable from the {product-automation-repo}/releases[{product-automation} GitHub repository] {product-automation-shield}.
 +
@@ -120,7 +120,7 @@ wget https://github.com/datastax/zdm-proxy-automation/releases/download/v2.3.0/z
 tar -xvf zdm-util-linux-amd64-v2.3.0.tgz
 ----
 
-. Run the {product-utility}:
+. Run {product-utility}:
 +
 [source,bash]
 ----
@@ -131,11 +131,11 @@ The utility prompts you for a few configuration values, then creates and initial
 
 [TIP]
 ====
-The {product-utility} will store the configuration that you provide into a file named `ansible_container_init_config` in the current directory.
+{product-utility} will store the configuration that you provide into a file named `ansible_container_init_config` in the current directory.
 If you run the utility again, it will detect the file  and ask you if you wish to use that configuration or discard it.
 If the configuration is not fully valid, you will be prompted for the missing or invalid parameters only.
 
-You can also pass a custom configuration file to the {product-utility} with the optional command-line parameter `-utilConfigFile`.
+You can also pass a custom configuration file to {product-utility} with the optional command-line parameter `-utilConfigFile`.
 For example:
 
 [source,bash]
@@ -146,11 +146,11 @@ For example:
 
 [NOTE]
 ====
-The {product-utility} will validate each variable that you enter.
+{product-utility} will validate each variable that you enter.
 In case of invalid variables, it will display specific messages to help you fix the problem.
 
 You have five attempts to enter valid variables.
-You can always run the {product-utility} again, if necessary.
+You can always run {product-utility} again, if necessary.
 ====
 
 . Enter the path to, and name of, the SSH private key to access the proxy hosts:
@@ -169,16 +169,16 @@ You can always run the {product-utility} again, if necessary.
 
 . You're asked if you have an existing Ansible inventory file.
 If you do, and you transferred it to the jumphost, you can just specify it.
-If you do not, the {product-utility} will create one based on your answers to prompts and save it.
+If you do not, product-utility} will create one based on your answers to prompts and save it.
 Here we'll assume that you do not have one. Enter `n`.
 +
 The created file will be named `zdm_ansible_inventory` in your working directory.
 
-. Next, indicate if this deployment is for local testing and evaluation (such as when you're creating a demo or just experimenting with the {product-proxy}).
+. Next, indicate if this deployment is for local testing and evaluation (such as when you're creating a demo or just experimenting with {product-proxy}).
 In this example, we'll enter `n` because this scenario is for a production deployment.
 . Now enter at least three proxy private IP addresses for the machines that will run the {product-proxy} instances, for a production deployment.
 (If we had indicated above that we're doing local testing in dev, only one proxy would have been required.)
-Example values entered at the {product-utility}'s prompt, for production:
+Example values entered at the {product-utility} prompt, for production:
 +
 [source,bash]
 ----
@@ -190,7 +190,7 @@ Example values entered at the {product-utility}'s prompt, for production:
 To finish entering private IP addresses, simply press ENTER at the prompt.
 
 . Optionally, when prompted, you can enter the private IP address of your Monitoring instance, which will use Prometheus to store data and Grafana to visualize it into a preconfigured dashboard.
-It is strongly recommended exposing the {product-proxy} metrics in the preconfigured dashboard that ships with the {product-automation} for easy monitoring.
+It is strongly recommended to expose the {product-proxy} metrics in the preconfigured dashboard that ships with {product-automation} for easy monitoring.
 You can skip this step if you haven't decided which machine to use for monitoring, or if you wish to use your own monitoring stack.
 +
 [NOTE]
@@ -199,16 +199,16 @@ We highly recommend that you configure a monitoring instance, unless you intend 
 For migrations that may run for multiple days, it is essential that you use metrics to understand the performance and health of the {product-proxy} instances.
 
 You cannot rely solely on information in the logs.
-They report connection or protocol errors, but do not give you enough information on how the {product-proxy} is working and how each cluster is responding.
+They report connection or protocol errors, but do not give you enough information on how {product-proxy} is working and how each cluster is responding.
 Metrics, however, provide especially helpful data and the graphs show you how they vary over time.
 The monitoring stack ships with preconfigured Grafana dashboards that are automatically set up as part of the monitoring deployment.
 
 For details about the metrics you can observe in these preconfigured Grafana dashboards, see xref:ROOT:metrics.adoc[].
 ====
 +
-You can choose to deploy the monitoring stack on the jumphost or on a different machine, as long as it can connect to the {product-proxy} instances over TCP on ports 9100 (to collect host-level metrics) and on the port on which the {product-proxy} exposes its own metrics, typically 14001.
+You can choose to deploy the monitoring stack on the jumphost or on a different machine, as long as it can connect to the {product-proxy} instances over TCP on ports 9100 (to collect host-level metrics) and on the port on which {product-proxy} exposes its own metrics, typically 14001.
 +
-In this example, we'll enter the same IP of the Ansible control host (the jumphost machine on which we're running the {product-utility}).
+In this example, we'll enter the same IP of the Ansible control host (the jumphost machine on which we're running {product-utility}).
 Example:
 +
 [source,bash]
@@ -216,7 +216,7 @@ Example:
 172.18.100.128
 ----
 
-At this point, the {product-utility}:
+At this point, {product-utility}:
 
 * Has created the Ansible Inventory to the default file, `zdm_ansible_inventory`.
 * Has written the {product-utility} configuration to the default file, `ansible_container_init_config`.
@@ -227,7 +227,7 @@ image::zdm-go-utility-results3.png[A summary of the configuration provided is di
 
 If you agree, enter `Y` to proceed.
 
-The {product-utility} now:
+{product-utility} now:
 
 * Creates and downloads the image of the Ansible Docker container for you.
 * Creates, configures and starts the Ansible Control Host container.
@@ -237,8 +237,8 @@ image::zdm-go-utility-success3.png[Ansible Docker container success messages]
 
 [NOTE]
 ====
-Depending on your circumstances, you can make different choices in the {product-utility}, which will result in a path that is slightly different to the one explained here.
+Depending on your circumstances, you can make different choices in the {product-utility} configuration, which will result in a path that is slightly different to the one explained here.
 The utility will guide you through the process with meaningful, self-explanatory messages and help you rectify any issue that you may encounter.
 
-The successful outcome will always be a configured Ansible Control Host container ready to run the {product-automation}.
+The successful outcome will always be a configured Ansible Control Host container ready to run {product-automation}.
 ====

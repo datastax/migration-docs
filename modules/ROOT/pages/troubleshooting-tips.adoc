@@ -12,7 +12,7 @@ You can also contact your {company} account representative or {support-url}[{com
 [#proxy-logs]
 == {product-proxy} logs
 
-The {product-proxy} logs can help you troubleshoot issues with {product}.
+{product-proxy} logs can help you troubleshoot issues with {product}.
 
 === Set the {product-proxy} log level
 
@@ -23,23 +23,23 @@ The default log level is `INFO`, which is adequate for most logging.
 If you need more detail for temporary troubleshooting, you can set the log level to `DEBUG`.
 However, this can slightly degrade performance, and {company} recommends that you revert to `INFO` logging as soon as possible.
 
-How you set the log level depends on how you deployed the {product-proxy}:
+How you set the log level depends on how you deployed {product-proxy}:
 
-* If you used {product-automation} to deploy the {product-proxy}, set `log_level` in `vars/zdm_proxy_core_config.yml`.
+* If you used {product-automation} to deploy {product-proxy}, set `log_level` in `vars/zdm_proxy_core_config.yml`.
 +
 You can change this value in a rolling fashion by editing the variable and running the `rolling_update_zdm_proxy.yml` playbook.
 For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
 
-* If you didn't use {product-automation} to deploy the {product-proxy}, set the `ZDM_LOG_LEVEL` environment variable on each proxy instance, and then restart each instance.
+* If you didn't use {product-automation} to deploy {product-proxy}, set the `ZDM_LOG_LEVEL` environment variable on each proxy instance, and then restart each instance.
 
 === Retrieve the {product-proxy} log files
 
 //TODO: Reconcile with manage-proxy-instance.adoc content.
 
-If you used the {product-automation} to deploy {product-proxy}, then you can get logs for a single proxy instance, and you can use a playbook to retrieve logs for all instances.
+If you used {product-automation} to deploy {product-proxy}, then you can get logs for a single proxy instance, and you can use a playbook to retrieve logs for all instances.
 For instructions and more information, see xref:ROOT:manage-proxy-instances.adoc#access-the-proxy-logs[Access the proxy logs].
 
-If you did not use the {product-automation} to deploy {product-proxy}, you might have to access the logs another way.
+If you did not use {product-automation} to deploy {product-proxy}, you might have to access the logs another way.
 For example, if you used Docker, you can use the following command to export a container's logs to a `log.txt` file:
 
 [source,bash]
@@ -59,7 +59,7 @@ However, if you enable `DEBUG` logging, `debug` messages can help you find the s
 
 * `level=warn`: Reports an event that wasn't fatal to the overall process, but could indicate an issue with an individual request or connection.
 
-* `level=error`: Indicates an issue with the {product-proxy}, client application, or clusters.
+* `level=error`: Indicates an issue with {product-proxy}, the client application, or the clusters.
 These messages require further examination.
 
 If the meaning of a `warn` or `error` message isn't clear, you can submit an issue in the {product-proxy-repo}/issues[{product-proxy} GitHub repository].
@@ -70,7 +70,7 @@ Here are the most common messages in the {product-proxy} logs.
 
 ==== {product-proxy} startup message
 
-If the log level doesn't filter out `info` entries, you can look for a `Proxy started` log message to verify that the {product-proxy} started correctly.
+If the log level doesn't filter out `info` entries, you can look for a `Proxy started` log message to verify that {product-proxy} started correctly.
 For example:
 
 [source,json]
@@ -130,7 +130,7 @@ time="2023-01-13T13:37:28+01:00" level=info msg="Parsed configuration: ..."
 
 This message is logged immediately before the long `Parsed configuration` string.
 
-You can also pass the `-version` flag to the {product-proxy} to print the version.
+You can also pass the `-version` flag to {product-proxy} to print the version.
 For example, you can use the following Docker command:
 
 [source,bash]
@@ -178,7 +178,7 @@ For example, you might compare `cluster_name` to ensure that all instances are c
 To report an issue or get additional support, submit an issue in the {product-short} component GitHub repositories:
 
 * {product-proxy-repo}/issues[{product-proxy} repository]
-* {product-automation-repo}/issues[{product-automation} repository] (includes {product-automation} and the {product-utility})
+* {product-automation-repo}/issues[{product-automation} repository] (includes {product-automation} and {product-utility})
 * {cass-migrator-repo}/issues[{cass-migrator} repository]
 * {dsbulk-migrator-repo}/issues[{dsbulk-migrator} repository]
 

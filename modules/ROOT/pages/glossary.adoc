@@ -96,9 +96,9 @@ It is the opposite of the <<origin>>.
 == {product-automation}
 
 An Ansible-based tool that allows you to deploy and manage the {product-proxy} instances and associated monitoring stack.
-To simplify its setup, the suite includes the {product-utility}.
+To simplify its setup, the suite includes {product-utility}.
 This interactive utility creates a Docker container acting as the Ansible Control Host.
-The Ansible playbooks constitute the {product-automation}.
+The Ansible playbooks constitute {product-automation}.
 
 [[zdm-proxy]]
 == {product-proxy}

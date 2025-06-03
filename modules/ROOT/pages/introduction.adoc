@@ -102,7 +102,7 @@ image:migration-phase3ra.png["Migration Phase 3."]
 
 === Phase 4: Route reads to the target cluster
 
-In this phase, read routing on the {product-proxy} is switched to teh target cluster so that all reads are executed on the target.
+In this phase, read routing on {product-proxy} is switched to the target cluster so that all reads are executed on the target.
 Writes are still sent to both clusters.
 
 At this point, the target becomes the primary cluster.
@@ -111,7 +111,7 @@ image:migration-phase4ra9.png["Migration Phase 4."]
 
 === Phase 5: Connect directly to the target cluster
 
-In this phase, move your client applications off the {product-proxy} and connect them directly to the target cluster.
+In this phase, you move your client applications off {product-proxy} and connect them directly to the target cluster.
 
 Once this happens, the migration is complete, and you now exclusively use the target cluster.
 

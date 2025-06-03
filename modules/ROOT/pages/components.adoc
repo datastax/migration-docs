@@ -77,7 +77,7 @@ Throughout the {product-short} documentation, the term _{product-proxy} deployme
 You can scale {product-proxy} instances horizontally and vertically.
 To avoid downtime when applying configuration changes, you can perform rolling restarts on your {product-proxy} instances.
 
-For simplicity, you can use the {product-utility} and {product-automation} to set up and run Ansible playbooks that deploy and manage {product-proxy} and its monitoring stack.
+For simplicity, you can use {product-utility} and {product-automation} to set up and run Ansible playbooks that deploy and manage {product-proxy} and its monitoring stack.
 
 == {product-utility} and {product-automation}
 
@@ -89,9 +89,9 @@ The Ansible automation for {product-short} is organized into playbooks, each imp
 The machine from which the playbooks are run is known as the Ansible Control Host.
 In {product-short}, the Ansible Control Host runs as a Docker container.
 
-You use the {product-utility} to set up Ansible in a Docker container, and then you use {product-automation} to run the Ansible playbooks from the Docker container created by {product-utility}.
+You use {product-utility} to set up Ansible in a Docker container, and then you use {product-automation} to run the Ansible playbooks from the Docker container created by {product-utility}.
 
-The {product-utility} creates the Docker container acting as the Ansible Control Host, from which {product-automation} allows you to deploy and manage the {product-proxy} instances and the associated monitoring stack, which includes Prometheus metrics and Grafana visualizations of the metrics data.
+{product-utility} creates the Docker container acting as the Ansible Control Host, from which {product-automation} allows you to deploy and manage the {product-proxy} instances and the associated monitoring stack, which includes Prometheus metrics and Grafana visualizations of the metrics data.
 
 To use {product-utility} and {product-automation}, you must prepare the recommended infrastructure, as explained in xref:deployment-infrastructure.adoc[].
 
