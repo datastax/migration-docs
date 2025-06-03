@@ -1,18 +1,18 @@
 = Leverage metrics provided by {product-proxy}
 :page-tag: migration,zdm,zero-downtime,metrics
 
-This topic provides detailed information about the metrics captured by the {product-proxy} and explains how to interpret the metrics. 
+This topic provides detailed information about the metrics captured by {product-proxy} and explains how to interpret the metrics. 
 
 == Benefits
 
-The {product-proxy} gathers a large number of metrics, which allows you to gain deep insights into how it is operating with regard to its communication with client applications and clusters, as well as its request handling.
+{product-proxy} gathers a large number of metrics, which allows you to gain deep insights into how it is operating with regard to its communication with client applications and clusters, as well as its request handling.
 
-Having visibility on all aspects of the {product-proxy}'s behavior is extremely important in the context of a migration of critical client applications, and is a great help in building confidence in the process and troubleshooting any issues.
-For this reason, we strongly encourage you to monitor the {product-proxy}, either by deploying the self-contained monitoring stack provided by the {product-automation} or by importing the pre-built Grafana dashboards in your own monitoring infrastructure.
+Having visibility on all aspects of {product-proxy}'s behavior is extremely important in the context of a migration of critical client applications, and is a great help in building confidence in the process and troubleshooting any issues.
+For this reason, we strongly encourage you to monitor {product-proxy}, either by deploying the self-contained monitoring stack provided by {product-automation} or by importing the pre-built Grafana dashboards in your own monitoring infrastructure.
 
 == Retrieving the {product-proxy} metrics
 
-{product-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format.  
+{product-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format.
 
 {product-automation} can deploy Prometheus and Grafana, configuring them automatically, as explained xref:deploy-proxy-monitoring.adoc#_setting_up_the_monitoring_stack[here].
 The Grafana dashboards are ready to go with metrics that are being scraped from the {product-proxy} instances.
@@ -34,10 +34,10 @@ image::zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories
 
 * Latency
 +
-** Read Latency: Total latency measured by the {product-proxy} per read request, including post-processing, such as response aggregation.
+** Read Latency: Total latency measured by {product-proxy} per read request, including post-processing, such as response aggregation.
 This metric has two labels: `reads_origin` and `reads_target`.
 The label that has data depends on which cluster is receiving the reads, which is the current xref:glossary.adoc#_primary_cluster[primary cluster].
-** Write Latency: Total latency measured by the {product-proxy} per write request, including post-processing, such as response aggregation.
+** Write Latency: Total latency measured by {product-proxy} per write request, including post-processing, such as response aggregation.
 This metric is measured as the total latency across both clusters for a single xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[bifurcated write request].
 
 * Throughput (same structure as the previous latency metrics):
@@ -49,7 +49,7 @@ This metric is measured as the total latency across both clusters for a single x
 * Number of client connections
 
 * Prepared Statement cache:
-** Cache Misses: meaning, a prepared statement was sent to the {product-proxy}, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again.
+** Cache Misses: meaning, a prepared statement was sent to {product-proxy}, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again.
 ** Number of cached prepared statements.
 
 * Request Failure Rates: the number of request failures per interval.
@@ -109,7 +109,7 @@ These metrics track the following information for asynchronous read requests:
 * Number of dedicated connections per node for the cluster receiving the asynchronous read requests
 * Number of errors per node, separated by error type
 
-=== Insights via the {product-proxy} metrics
+=== Insights from the {product-proxy} metrics
 
 Some examples of problems manifesting on these metrics:
 

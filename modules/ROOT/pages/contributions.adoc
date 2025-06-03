@@ -3,7 +3,7 @@
 
 {company} {product} ({product-short}) provides a simple and reliable way for users to migrate an existing {cass-reg} or {dse} cluster to {astra-db}, or to any {cass-short} or {dse-short} cluster, without any interruption of service to the client applications and data.
 
-The {product-proxy} is open source software (OSS). We welcome contributions from the developer community via Pull Requests on a fork, for evaluation by the {product-short} team.
+{product-proxy} is open source software (OSS). We welcome contributions from the developer community via Pull Requests on a fork, for evaluation by the {product-short} team.
 
 The code sources for additional {product} components -- including {product-utility}, {product-automation}, {cass-migrator}, and {dsbulk-migrator} -- are available in public GitHub repos, where you may submit feedback and ideas via GitHub Issues.
 Code contributions for those additional components are not open for PRs at this time.

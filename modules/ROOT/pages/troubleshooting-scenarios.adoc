@@ -80,9 +80,9 @@ msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":
 === Cause
 
 Protocol errors like these are a normal part of the handshake process where the protocol version is being negotiated.
-These protocol version downgrades happen when either the {product-proxy} or at least one of the clusters doesn't support the version requested by the client.
+These protocol version downgrades happen when either {product-proxy} or at least one of the clusters doesn't support the version requested by the client.
 
-V5 downgrades are enforced by the {product-proxy} but any other downgrade is requested by one of the clusters when they don't support the version that the client requested.
+V5 downgrades are enforced by {product-proxy} but any other downgrade is requested by one of the clusters when they don't support the version that the client requested.
 The proxy supports V3, V4, DSE_V1 and DSE_V2.
 
 ////
@@ -133,7 +133,7 @@ time="2022-10-01T19:58:15+01:00" level=error msg="Couldn't start proxy, retrying
 
 === Cause
 
-The control connections of the {product-proxy} don't perform protocol version negotiation, they only attempt to use protocol version 3.
+The control connections of {product-proxy} don't perform protocol version negotiation, they only attempt to use protocol version 3.
 If one of the origin clusters doesn't support at least V3 (e.g. {cass-short} 2.0, {dse-short} 4.6), then {product-short} cannot be used for that migration at the moment.
 We plan to introduce support for {cass-short} 2.0 and {dse-short} 4.6 very soon.
 
@@ -154,7 +154,7 @@ None.
 
 Credentials are incorrect or have insufficient permissions.
 
-There are three sets of credentials in play with {product-short}:
+There are three sets of credentials in play with {product-proxy}:
 
 * Target: credentials that you set in the proxy configuration through the `ZDM_TARGET_USERNAME` and `ZDM_TARGET_PASSWORD` settings.
 
@@ -176,15 +176,15 @@ If the proxy is able to start up -- that is, this message can be seen in the log
 then the authentication error is happening when a client application tries to open a connection to the proxy.
 In this case, the issue is with the Client credentials so the application itself is using invalid credentials (incorrect username/password or insufficient permissions).
 
-Note that the proxy startup message has log level `INFO` so if the configured log level on the proxy is `warning` or `error`,  you will have to rely on other ways to know whether the {product-proxy} started correctly.
+Note that the proxy startup message has log level `INFO`, so if the configured log level on the proxy is `warning` or `error`, you must rely on other ways to know whether {product-proxy} started correctly.
 You can check if the docker container is running (or process if docker isn't being used) or if there is a log message similar to `Error launching proxy`.
 
 
-== The {product-proxy} listens on a custom port, and all applications are able to connect to one proxy instance only
+== {product-proxy} listens on a custom port, and all applications are able to connect to one proxy instance only
 
 === Symptoms
 
-The {product-proxy} is listening on a custom port (not 9042) and:
+{product-proxy} is listening on a custom port (not 9042) and:
 
 * The Grafana dashboard shows only one proxy instance receiving all the connections from the application.
 * Only one proxy instance has log messages such as `level=info msg="Accepted connection from 10.4.77.210:39458"`.
@@ -248,7 +248,7 @@ Consider a case where you deploy the metrics component of our {product-automatio
 
 === Cause
 
-The {product-automation} specifies a custom set of credentials instead of relying on the `admin/admin` ones that are typically the default for Grafana deployments.
+{product-automation} specifies a custom set of credentials instead of relying on the `admin/admin` ones that are typically the default for Grafana deployments.
 
 === Solution or Workaround
 
@@ -298,7 +298,7 @@ For client connections, each proxy instance cycles through its "assigned nodes" 
 _(The "assigned nodes" are a different subset of the cluster nodes for each proxy instance, generally non-overlapping between proxy instances so as to avoid any interference with the load balancing already in place at client-side driver level.
 The assigned nodes are not necessarily contact points: even discovered nodes undergo assignment to proxy instances.)_
 
-In the example above, the {product-proxy} doesn't have connectivity to 10.0.63.20, which was chosen as the origin node for the incoming client connection, but it was able to connect to 10.0.63.163 during startup.
+In the example above, {product-proxy} doesn't have connectivity to 10.0.63.20, which was chosen as the origin node for the incoming client connection, but it connected to 10.0.63.163 during startup.
 
 === Solution or Workaround
 
@@ -308,13 +308,13 @@ Ensure that network connectivity exists and is stable between the {product-proxy
 
 === Symptoms
 
-After a {product-proxy} has been unavailable for some time and it gets back up, the client application takes too long to reconnect.
+After a {product-proxy} instance has been unavailable for some time and it gets back up, the client application takes too long to reconnect.
 
-There should never be a reason to stop a {product-proxy} instance other than a configuration change but maybe the proxy crashed or the user tried to do a configuration change and took a long time to get the {product-proxy} back up.
+There should never be a reason to stop a {product-proxy} instance other than a configuration change, but maybe the proxy crashed or the user tried to do a configuration change and took a long time to get the {product-proxy} instance back up.
 
 === Cause
 
-The {product-proxy} does not send topology events to the client applications so the time it takes for the driver to reconnect to a {product-proxy} instance is determined by the reconnection policy.
+{product-proxy} does not send topology events to the client applications, so the reconnection policy determines the time required for the driver to reconnect to a {product-proxy} instance.
 
 === Solution or Workaround
 
@@ -322,7 +322,7 @@ Restart the client application to force an immediate reconnect.
 
 If you expect {product-proxy} instances to go down frequently, change the reconnection policy on the driver so that the interval between reconnection attempts has a shorter limit.
 
-== Error with {astra} DevOps API when using the {product-automation}
+== Error with {astra} DevOps API when using {product-automation}
 
 === Symptoms
 
@@ -347,7 +347,7 @@ xref:astra-db-serverless:databases:secure-connect-bundle.adoc[Download the {astr
 
 === Symptoms
 
-The {product-proxy} doesn't start and the following appears on the proxy logs:
+{product-proxy} doesn't start and the following appears on the proxy logs:
 
 [source,log]
 ----
@@ -359,7 +359,7 @@ metadata service (Astra) returned not successful status code
 
 There are two possible causes for this:
 
-* The credentials that the {product-proxy} is using for {astra-db} don't have sufficient permissions.
+* The credentials that {product-proxy} is using for {astra-db} don't have sufficient permissions.
 * The {astra-db} database is hibernated or otherwise unavailable.
 
 === Solution or Workaround
@@ -437,7 +437,7 @@ If a client application only sends reads through a connection then the target cl
 This issue has been fixed in {product-proxy} 2.1.0. 
 We encourage you to upgrade to that version or greater. 
 By default, {product-proxy} now sends heartbeats after 30 seconds of inactivity on a cluster connection, to keep it alive. 
-You can tune the heartbeat interval with the Ansible configuration variable `heartbeat_insterval_ms`, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you do not use the {product-automation}.
+You can tune the heartbeat interval with the Ansible configuration variable `heartbeat_insterval_ms`, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you do not use {product-automation}.
 
 == Performance degradation with {product-proxy}
 
@@ -475,7 +475,7 @@ In contrast, prepared statements are parsed once, and then reused on subsequent 
 If you are using simple statements, consider using prepared statements as the best first step.
 
 Increasing the number of proxies might help, but only if the VMs resources (CPU, RAM or network IO) are near capacity.
-The {product-proxy} doesn't use a lot of RAM, but it uses a lot of CPU and network IO.
+{product-proxy} doesn't use a lot of RAM, but it uses a lot of CPU and network IO.
 
 Deploying the proxy instances on VMs with faster CPUs and faster network IO might help, but only your own tests will reveal  whether it helps, because it depends on the workload type and details about your environment such as network/VPC configurations, hardware, and so on.
 

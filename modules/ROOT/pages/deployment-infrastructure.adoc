@@ -11,7 +11,7 @@ A minimum of three proxy instances is recommended for any deployment apart from 
 All {product-proxy} instances must be reachable by the client application and must be able to connect to your origin and target clusters.
 The {product-proxy} process is lightweight, requiring only a small amount of resources and no storage to persist state (apart from logs).
 
-The {product-proxy} should be deployed close to your client application instances.
+{product-proxy} should be deployed close to your client application instances.
 This can be on any cloud provider as well as on-premise, depending on your existing infrastructure.
 
 If you have a multi-DC cluster with multiple set of client application instances deployed to geographically distributed data centers, you should plan for a separate {product-proxy} deployment for each data center.
@@ -22,7 +22,7 @@ image::zdm-during-migration3.png[Connectivity between client applications, proxy
 
 == Infrastructure requirements
 
-To deploy the {product-proxy} and its companion monitoring stack, you will have to provision infrastructure that meets the following requirements.
+To deploy {product-proxy} and its companion monitoring stack, you must provision infrastructure that meets the following requirements.
 
 [[_machines]]
 === Machines
@@ -72,6 +72,7 @@ If there is one super large table (e.g. 15 TB of 20 TB is in one table), you can
 // TODO: investigate how to "leverage the parallelism of {cass-migrator} to run the migration process across all 4 machines."
 
 === Connectivity
+
 The {product-proxy} machines must be reachable by:
 
 * The client application instances, on port 9042
@@ -106,7 +107,7 @@ The {product-proxy} and monitoring machines must be able to connect externally, 
 * Various software packages (Docker, Prometheus, Grafana).
 * {product-proxy} image from DockerHub repo.
 
-=== Connecting to the {product-short} infrastructure from an external machine
+=== Connect to {product-proxy} infrastructure from an external machine
 
 To connect to the jumphost from an external machine, ensure that its IP address belongs to a permitted IP range.
 If you are connecting through a VPN that only intercepts connections to selected destinations, you may have to add a route from your VPN IP gateway to the public IP of the jumphost.

@@ -99,8 +99,8 @@ After this point, you must wait for the migration to finish, and then you can us
 // end::no-return[]
 
 // tag::sideloader-zdm[]
-If you need to migrate a live database, you can use {sstable-sideloader} instead of DSBulk or {cass-short} Data Migrator during of xref:ROOT:migrate-and-validate-data.adoc[Phase 2 of {product} ({product-short})].
+If you need to migrate a live database, you can use {sstable-sideloader} instead of {dsbulk-migrator} or {cass-migrator} during of xref:ROOT:migrate-and-validate-data.adoc[Phase 2 of {product}].
 
-.Use {sstable-sideloader} in the context of {product}.
+.Use {sstable-sideloader} with {product-proxy}
 svg::sideloader:astra-migration-toolkit.svg[]
 // end::sideloader-zdm[]

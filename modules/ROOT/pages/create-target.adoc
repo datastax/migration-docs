@@ -34,7 +34,7 @@ Assign your preferred values for the serverless database:
 * **Region**: choose your geographically preferred region - you can subsequently add more regions.
 
 When the {astra-db} database reaches **Active** status, create an application token in the {astra-ui} with the *Read/Write User* role.
-This role will be used by the client application, the {product-proxy}, and the {product-automation}.
+This role will be used by the client application, {product-proxy}, and {product-automation}.
 
 Save the generate token and credentials (Client ID, Client Secret, and Token) in a clearly named secure file.
 
