@@ -13,7 +13,7 @@ Once completed, you will have a working and fully monitored {product-proxy} depl
 This step expects that the infrastructure has been already provisioned.
 See xref:deployment-infrastructure.adoc[Deployment and infrastructure considerations], which include the infrastructure requirements.
 
-To Configure a machine to serve as the Ansible Control Host, you can use {product-utility}.
+To configure a machine to serve as the Ansible Control Host, you can use {product-utility}.
 This is a Golang (Go) executable program that runs anywhere.
 This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, then automatically creates the Ansible Control Host container ready for you to use.
 From this container, you will be able to easily configure and run the {product-automation} Ansible playbooks.
