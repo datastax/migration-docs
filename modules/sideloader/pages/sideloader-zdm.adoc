@@ -7,7 +7,7 @@ For compatible origin clusters, see xref:ROOT:astra-migration-paths.adoc[].
 
 Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like {dsbulk-migrator} and {cass-migrator}, including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
 
-{sstable-sideloader} uses the {astra} {devops-api}, your cloud provider's CLI, and `nodetool`.
+To migrate data with {sstable-sideloader}, you use the {astra} {devops-api}, your cloud provider's CLI, and `nodetool`.
 
 include::sideloader:partial$sideloader-partials.adoc[tags=sideloader-zdm]
 

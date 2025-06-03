@@ -4,7 +4,7 @@
 
 {sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-reg}, {dse}, or {hcd} cluster.
 
-Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like xref:dsbulk:overview:dsbulk-about.adoc[{company} Bulk Loader (DSBulk)] and xref:ROOT:cassandra-data-migrator.adoc[{cass-short} Data Migrator (CDM)], including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
+Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like xref:dsbulk:overview:dsbulk-about.adoc[{company} Bulk Loader (DSBulk)] and xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator} ({cass-migrator-short})], including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
 
 == {sstable-sideloader} concepts
 
