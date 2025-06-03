@@ -1,6 +1,6 @@
-= Use {cass-migrator} with {product-short}
+= Use {cass-migrator} with {product-proxy}
 :navtitle: Use {cass-migrator}
-:description: Use {cass-migrator} to migrate data with {product-short}
+:description: Use {cass-migrator} to migrate data with {product-proxy}
 :page-aliases: cdm-parameters.adoc, ROOT:cdm-steps.adoc
 
 //This page was an exact duplicate of cdm-overview.adoc and the (now deleted) cdm-steps.adoc, they are just in different parts of the nav.

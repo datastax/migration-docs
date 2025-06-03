@@ -6,10 +6,11 @@ image::migration-phase2ra.png[In {product-short} Phase 2, you migrate data from 
 
 To move and validate data, you can use a dedicated data migration tool, such as {sstable-sideloader}, {cass-migrator}, or {dsbulk-migrator}, or your can create your own custom data migration script.
 
-// tag::migration-tool-summaries[]
+//Migration tool summaries are also on ROOT:components.adoc.
+
 == {sstable-sideloader}
 
-{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshots of your existing {cass-short}-based cluster.
+{sstable-sideloader} is a service running in {astra-db} that imports data from snapshots of your existing {cass-short}-based cluster.
 This tool is exclusively for migrations that move data to {astra-db}.
 
 You can use {sstable-sideloader} alone or with {product-proxy}.
@@ -42,4 +43,3 @@ For more information, see xref:ROOT:dsbulk-migrator.adoc[].
 == Custom data migration processes
 
 If you want to write your own custom data migration processes, you can use a tool like Apache Spark(TM).
-// end::migration-tool-summaries[]

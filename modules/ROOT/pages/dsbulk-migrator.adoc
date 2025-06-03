@@ -1,6 +1,6 @@
-= Use {dsbulk-migrator} with {product-short}
+= Use {dsbulk-migrator} with {product-proxy}
 :navtitle: Use {dsbulk-migrator}
-:description: Use {dsbulk-migrator} to migrate data with {product-short}.
+:description: Use {dsbulk-migrator} to migrate data with {product-proxy}.
 
 //TODO: Reorganize this page and consider breaking it up into smaller pages.
 
