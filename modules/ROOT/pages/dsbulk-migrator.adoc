@@ -1,12 +1,13 @@
 = Use {dsbulk-migrator} with {product-proxy}
 :navtitle: Use {dsbulk-migrator}
-:description: Use {dsbulk-migrator} to migrate data with {product-proxy}.
+:description: {dsbulk-migrator} extends {dsbulk-loader} with migration commands.
 
 //TODO: Reorganize this page and consider breaking it up into smaller pages.
 
 // tag::body[]
-Use {dsbulk-migrator} to perform small or simple migrations that don't require data validation other than post-migration row counts.
-This tool is also an option for migrations where you can shard data from large tables into more manageable quantities.
+{dsbulk-migrator} is an extension of {dsbulk-loader}.
+It is best for smaller migrations or migrations that don't require extensive data validation, aside from post-migration row counts.
+You can also consider this tool for migrations where you can shard data from large tables into more manageable quantities.
 
 {dsbulk-migrator} extends {dsbulk-loader} with the following commands:
 

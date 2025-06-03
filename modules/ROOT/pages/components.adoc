@@ -121,11 +121,9 @@ For more information, see xref:ROOT:cassandra-data-migrator.adoc[].
 
 === {dsbulk-migrator}
 
-{dsbulk-migrator} is an extension of {dsbulk-loader}.
-It is best for smaller migrations or migrations that don't require data validation during the migration process.
+{dsbulk-migrator} extends {dsbulk-loader} with migration-specific commands: `migrate-live`, `generate-script`, and `generate-ddl`.
 
-In addition to loading and unloading CSV and JSON data, you can use {dsbulk-migrator} to transfer data between databases.
-It can read data from a table in your origin database, and then write that data to a table in your target database.
+It is best for smaller migrations or migrations that don't require extensive data validation, aside from post-migration row counts.
 
 You can use {dsbulk-migrator} alone or with {product-proxy}.
 
