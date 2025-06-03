@@ -148,7 +148,7 @@ For information about {astra-db} credentials in your {product-proxy} configurati
 === Disable client-side compression with {product-proxy}
 
 Client applications must not enable client-side compression when connecting through {product-proxy}, as this is not currently supported.
-This is disabled by default in all drivers, but if it was enabled in your client application configuration it will have to be temporarily disabled when connecting to {product-proxy}.
+This is disabled by default in all drivers, but if it was enabled in your client application configuration, it will have to be temporarily disabled when connecting to {product-proxy}.
 
 === {product-proxy} ignores token-aware routing
 

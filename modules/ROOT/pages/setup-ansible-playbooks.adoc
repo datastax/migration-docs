@@ -9,7 +9,7 @@ Once completed, you will have a working and fully monitored {product-proxy} depl
 
 == Introduction
 
-{product-automation} uses **Ansible**, which deploys and configures the {product-proxy} instances and monitoring stack via playbooks.
+{product-automation} uses **Ansible**, which deploys and configures the {product-proxy} instances and monitoring stack using playbooks.
 This step expects that the infrastructure has been already provisioned.
 See xref:deployment-infrastructure.adoc[Deployment and infrastructure considerations], which include the infrastructure requirements.
 

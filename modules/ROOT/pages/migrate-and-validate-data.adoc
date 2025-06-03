@@ -10,7 +10,7 @@ To move and validate data, you can use a dedicated data migration tool, such as 
 
 == {sstable-sideloader}
 
-{sstable-sideloader} is a service running in {astra-db} that imports data from snapshots of your existing {cass-short}-based cluster.
+{sstable-sideloader} is a service running in {astra-db} that imports data from snapshots of your existing {cass-reg}-based cluster.
 This tool is exclusively for migrations that move data to {astra-db}.
 
 You can use {sstable-sideloader} alone or with {product-proxy}.
@@ -19,7 +19,7 @@ For more information, see xref:sideloader:sideloader-zdm.adoc[].
 
 == {cass-migrator}
 
-You can use {cass-migrator} ({cass-migrator-short}) for data migration and validation between {cass-reg}-based databases.
+You can use {cass-migrator} ({cass-migrator-short}) for data migration and validation between {cass-short}-based databases.
 It offers extensive functionality and configuration options to support large and complex migrations as well as post-migration data validation.
 
 You can use {cass-migrator-short} by itself, with {product-proxy}, or for data validation after using another data migration tool.

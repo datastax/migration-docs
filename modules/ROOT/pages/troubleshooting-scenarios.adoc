@@ -176,7 +176,7 @@ If the proxy is able to start up -- that is, this message can be seen in the log
 then the authentication error is happening when a client application tries to open a connection to the proxy.
 In this case, the issue is with the Client credentials so the application itself is using invalid credentials (incorrect username/password or insufficient permissions).
 
-Note that the proxy startup message has log level `INFO` so if the configured log level on the proxy is `warning` or `error`,  you will have to rely on other ways to know whether {product-proxy} started correctly.
+Note that the proxy startup message has log level `INFO`, so if the configured log level on the proxy is `warning` or `error`, you must rely on other ways to know whether {product-proxy} started correctly.
 You can check if the docker container is running (or process if docker isn't being used) or if there is a log message similar to `Error launching proxy`.
 
 
@@ -298,7 +298,7 @@ For client connections, each proxy instance cycles through its "assigned nodes" 
 _(The "assigned nodes" are a different subset of the cluster nodes for each proxy instance, generally non-overlapping between proxy instances so as to avoid any interference with the load balancing already in place at client-side driver level.
 The assigned nodes are not necessarily contact points: even discovered nodes undergo assignment to proxy instances.)_
 
-In the example above, {product-proxy} doesn't have connectivity to 10.0.63.20, which was chosen as the origin node for the incoming client connection, but it was able to connect to 10.0.63.163 during startup.
+In the example above, {product-proxy} doesn't have connectivity to 10.0.63.20, which was chosen as the origin node for the incoming client connection, but it connected to 10.0.63.163 during startup.
 
 === Solution or Workaround
 
@@ -310,11 +310,11 @@ Ensure that network connectivity exists and is stable between the {product-proxy
 
 After a {product-proxy} instance has been unavailable for some time and it gets back up, the client application takes too long to reconnect.
 
-There should never be a reason to stop a {product-proxy} instance other than a configuration change but maybe the proxy crashed or the user tried to do a configuration change and took a long time to get the {product-proxy} instance back up.
+There should never be a reason to stop a {product-proxy} instance other than a configuration change, but maybe the proxy crashed or the user tried to do a configuration change and took a long time to get the {product-proxy} instance back up.
 
 === Cause
 
-{product-proxy} does not send topology events to the client applications so the time it takes for the driver to reconnect to a {product-proxy} instance is determined by the reconnection policy.
+{product-proxy} does not send topology events to the client applications, so the reconnection policy determines the time required for the driver to reconnect to a {product-proxy} instance.
 
 === Solution or Workaround
 
@@ -475,7 +475,7 @@ In contrast, prepared statements are parsed once, and then reused on subsequent 
 If you are using simple statements, consider using prepared statements as the best first step.
 
 Increasing the number of proxies might help, but only if the VMs resources (CPU, RAM or network IO) are near capacity.
-{product-proxy} doesn't use a lot of RAM but it uses a lot of CPU and network IO.
+{product-proxy} doesn't use a lot of RAM, but it uses a lot of CPU and network IO.
 
 Deploying the proxy instances on VMs with faster CPUs and faster network IO might help, but only your own tests will reveal  whether it helps, because it depends on the workload type and details about your environment such as network/VPC configurations, hardware, and so on.
 

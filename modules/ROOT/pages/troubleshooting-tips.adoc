@@ -30,7 +30,7 @@ How you set the log level depends on how you deployed {product-proxy}:
 You can change this value in a rolling fashion by editing the variable and running the `rolling_update_zdm_proxy.yml` playbook.
 For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
 
-* If you didn't use {product-automation} to deploy {product-proxy}, set the `ZDM_LOG_LEVEL` environment variable on each proxy instance, and then restart each instance.
+* If you didn't use {product-automation} to deploy {product-proxy}, set the `ZDM_LOG_LEVEL` environment variable on each proxy instance and then restart each instance.
 
 === Retrieve the {product-proxy} log files
 

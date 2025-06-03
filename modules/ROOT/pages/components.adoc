@@ -3,7 +3,7 @@
 :description: Learn about {company} migration tools.
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,components
 
-The {company} {product} ({product-short}) toolkit includes {product-proxy}, {product-utility}, and {product-automation}, and several data migration tools.
+The {company} {product} ({product-short}) toolkit includes {product-proxy}, {product-utility}, {product-automation}, and several data migration tools.
 
 For live migrations, {product-proxy} orchestrates activity-in-transition on your clusters.
 {product-utility} and {product-automation} facilitate the deployment and management of {product-proxy}.

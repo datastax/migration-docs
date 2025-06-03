@@ -69,9 +69,9 @@ This is not a required step, but you may wish to do it for peace of mind.
 ====
 Issuing a `DESCRIBE` or a read to any system table through {product-proxy} isn't a valid verification.
 
-{product-proxy} handles reads to system tables differently, by intercepting them and always routing them to the origin, in some cases partly populating them at proxy level.
+{product-proxy} handles reads to system tables differently, by intercepting them and always routing them to the origin, in some cases partly populating them at the proxy level.
 
-This means that system reads aren't representative of how {product-proxy} routes regular user reads.
+This means that system reads don't represent how {product-proxy} routes regular user reads.
 Even after you switched the configuration to read the target cluster as the primary cluster, all system reads still go to the origin.
 
 Although `DESCRIBE` requests are not system requests, they are also generally resolved in a different way to regular requests, and should not be used as a means to verify the read routing behavior.

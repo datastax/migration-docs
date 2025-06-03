@@ -22,7 +22,7 @@ image::zdm-during-migration3.png[Connectivity between client applications, proxy
 
 == Infrastructure requirements
 
-To deploy {product-proxy} and its companion monitoring stack, you will have to provision infrastructure that meets the following requirements.
+To deploy {product-proxy} and its companion monitoring stack, you must provision infrastructure that meets the following requirements.
 
 [[_machines]]
 === Machines
