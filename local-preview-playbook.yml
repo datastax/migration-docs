@@ -15,13 +15,17 @@ content:
   sources:
   - url: .
     branches: HEAD
+  - url: https://github.com/riptano/docs-common.git
+  # To incorporate the currently-checked-out branch (HEAD) from your _local_ docs-common clone:
+  # - url: ../docs-common
+  #   branches: HEAD
 
 antora:
   extensions:
-  - '@antora/atlas-extension'
   - '@antora/collector-extension'
   - lib/assets-processor.js
   - lib/tailwind-processor.js
+  - '@antora/atlas-extension'
   - id: unlisted-pages
     enabled: true
     require: lib/unlisted-pages-extension.js
@@ -31,10 +35,11 @@ antora:
 asciidoc:
   extensions:
   - '@asciidoctor/tabs'
+  - asciidoctor-external-callout
+  - asciidoctor-kroki
+  - lib/icon-macro.js
   - lib/remote-include-processor.js
   - lib/svg-macro.js
-  - asciidoctor-kroki
-  - asciidoctor-external-callout
   attributes:
     # BUILT-IN ATTRIBUTES
     # allow-uri-read: '' # Quality-of-life benefit for IntelliJ users. CAUTION: Opens the door to malicious code insertion - must remain disabled in prod build environment.
