@@ -41,12 +41,13 @@
 ** xref:ROOT:change-read-routing.adoc[]
 * Phase 5
 ** xref:ROOT:connect-clients-to-target.adoc[]
-* References
+* Support
 ** xref:ROOT:troubleshooting-tips.adoc[]
 ** xref:ROOT:troubleshooting-scenarios.adoc[]
-** xref:ROOT:contributions.adoc[]
 ** xref:ROOT:faqs.adoc[]
 ** xref:ROOT:glossary.adoc[]
+** xref:ROOT:contributions.adoc[]
+* Release notes
 ** {product-proxy-repo}/releases[{product-proxy} release notes]
 ** {product-automation-repo}/releases[{product-automation} release notes]
 

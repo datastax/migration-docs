@@ -105,26 +105,26 @@ ssh -F <path to zdm_ssh_config> jumphost
 . From the jumphost, download the latest {product-utility} executable from the {product-automation-repo}/releases[{product-automation} GitHub repository] {product-automation-shield}.
 +
 The package filename format is `zdm-util-**PLATFORM**-**VERSION**.tgz`.
-The following example downloads {product-utility} version 2.3.0 for Linux amd64.
+The following example downloads {product-utility} version 2.3.1 for Linux amd64.
 To download a different package, change the version and package filename accordingly.
 +
 [source,bash]
 ----
-wget https://github.com/datastax/zdm-proxy-automation/releases/download/v2.3.0/zdm-util-linux-amd64-v2.3.0.tgz
+wget https://github.com/datastax/zdm-proxy-automation/releases/download/v2.3.1/zdm-util-linux-amd64-v2.3.1.tgz
 ----
 
 . Extract the archive:
 +
 [source,bash]
 ----
-tar -xvf zdm-util-linux-amd64-v2.3.0.tgz
+tar -xvf zdm-util-linux-amd64-v2.3.1.tgz
 ----
 
 . Run {product-utility}:
 +
 [source,bash]
 ----
-./zdm-util-v2.3.0
+./zdm-util-v2.3.1
 ----
 
 The utility prompts you for a few configuration values, then creates and initializes the Ansible Control Host container.
@@ -140,7 +140,7 @@ For example:
 
 [source,bash]
 ----
-./zdm-util-v2.3.0 -utilConfigFile your_config_file
+./zdm-util-v2.3.1 -utilConfigFile your_config_file
 ----
 ====
 
@@ -169,7 +169,7 @@ You can always run {product-utility} again, if necessary.
 
 . You're asked if you have an existing Ansible inventory file.
 If you do, and you transferred it to the jumphost, you can just specify it.
-If you do not, product-utility} will create one based on your answers to prompts and save it.
+If you do not, {product-utility} will create one based on your answers to prompts and save it.
 Here we'll assume that you do not have one. Enter `n`.
 +
 The created file will be named `zdm_ansible_inventory` in your working directory.
