@@ -672,7 +672,8 @@ Microsoft Azure::
 For example, `/var/lib/cassandra/data/`.
 * *`SNAPSHOT_NAME`*: The name of the xref:sideloader:migrate-sideloader.adoc#create-snapshots[snapshot backup] that you created with `nodetool snapshot`.
 * *`MIGRATION_DIR`*: The entire `uploadBucketDir` value that was generated when you xref:sideloader:migrate-sideloader.adoc#initialize-migration[initialized the migration], including the trailing slash.
-* *`NODE_NAME`*: The host name of the current node you are uploading the snapshot from.
+* *`NODE_NAME`*: The host name of the node that your snapshots are from.
+It is important to use the specific node name to ensure that each node has a unique directory in the migration bucket.
 
 +
 [source,bash,subs="+quotes"]
@@ -720,20 +721,20 @@ After uploading snapshots, you must xref:sideloader:migrate-sideloader.adoc#impo
 
 === Idle migration directories are evicted
 
-As an added security measure, migrations that remain continuously idle for one week are subject to xref:sideloader:cleanup-sideloader.adoc[automatic cleanup], which deletes all associated snapshots, revokes any unexpired upload credentials, and then closes the migration.
-
-{company} recommends that you xref:sideloader:cleanup-sideloader.adoc#reschedule-a-cleanup[manually reschedule the cleanup] if you don't plan to launch the migration within one week or if you need several days to upload snapshots or import data.
-
 [WARNING]
 ====
 For large migrations, it can take several days to upload snapshots and import data.
 Make sure you xref:sideloader:cleanup-sideloader.adoc#reschedule-a-cleanup[manually reschedule the cleanup] to avoid automatic cleanup.
 ====
 
+As an added security measure, migrations that remain continuously idle for one week are subject to xref:sideloader:cleanup-sideloader.adoc[automatic cleanup], which deletes all associated snapshots, revokes any unexpired upload credentials, and then closes the migration.
+
+{company} recommends that you xref:sideloader:cleanup-sideloader.adoc#reschedule-a-cleanup[manually reschedule the cleanup] if you don't plan to launch the migration within one week or if you need several days to upload snapshots or import data.
+
 [#import-data]
 == Import data
 
-After you upload snapshots for each origin node, import the data into your target database.
+After you completely upload snapshots for each origin node, import the data into your target database.
 
 Data import is a multi-step operation that requires complete success.
 If one step fails, then the entire import operation stops and the migration fails.
@@ -745,10 +746,12 @@ If one step fails, then the entire import operation stops and the migration fail
 include::sideloader:partial$sideloader-partials.adoc[tags=import]
 ======
 
-[TIP]
+[WARNING]
 ====
-If necessary, you can xref:sideloader:stop-restart-sideloader.adoc[pause or abort the migration] during the import process.
+* Before you start the import process, make sure all snapshots are completely uploaded.
+For commands to monitor upload progress and compare uploaded data against the original snapshots, see xref:sideloader:migrate-sideloader.adoc#upload-snapshots-to-migration-directory[Upload snapshots to the migration directory].
 
+* If necessary, you can xref:sideloader:stop-restart-sideloader.adoc[pause or abort the migration] during the import process.
 include::sideloader:partial$sideloader-partials.adoc[tags=no-return]
 ====
 
