@@ -19,9 +19,7 @@ asciidoc:
     dse-short: 'DSE'
     hcd: 'Hyper-Converged Database (HCD)'
     hcd-short: 'HCD'
-    mc: 'Mission Control (MC)'
-    mc-short: 'MC'
-    mc-brief: 'Mission Control'
+    mc: 'Mission Control'
     #Astra DB attributes
     astra-db: 'Astra DB'
     astra: 'Astra'

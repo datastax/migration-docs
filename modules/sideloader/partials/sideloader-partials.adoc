@@ -23,7 +23,7 @@ It is important to use the specific node name to ensure that each node has a uni
 // end::command-placeholders-common[]
 
 // tag::validate[]
-After the migration is complete, you can query the migrated data using the xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL shell] or xref:astra-db-serverless:api-reference:row-methods/find-many.adoc[{data-api}].
+After the migration is complete, you can query the migrated data using the xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL shell] (`cqlsh`) or xref:astra-db-serverless:api-reference:row-methods/find-many.adoc[{data-api}].
 
 You can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator} ({cass-migrator-short}) in validation mode] for more thorough validation.
 {cass-migrator-short} also offers an AutoCorrect mode to reconcile any differences that it detects.
@@ -96,7 +96,7 @@ If all steps finish successfully, the migration is complete and you can access t
 
 // tag::no-return[]
 You can abort a migration up until the point at which {sstable-sideloader} starts importing SSTable metadata.
-After this point, you must wait for the migration to finish, and then you can use the CQL shell to drop the keyspace/table in your target database before repeating the entire migration procedure.
+After this point, you must wait for the migration to finish, and then you can use `cqlsh` to drop the keyspace/table in your target database before repeating the entire migration procedure.
 // end::no-return[]
 
 // tag::sideloader-zdm[]
