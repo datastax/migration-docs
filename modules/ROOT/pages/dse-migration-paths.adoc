@@ -23,21 +23,24 @@ The following information provides guidance on migrations _to_ {dse-short}.
 
 Generally, {company} recommends migrating to the latest version of {dse-short}, unless you have a compatibility issue that requires an interim migration to an earlier version before upgrading.
 
-//TODO: Resolve duplication and replace these at the source with one summary page that points to here.
+//TODO: Resolve DSE topic duplication and replace these at the source with one summary page that points to here.
 
 * {dse-short} 6.9
 +
 ** xref:6.9@dse:tooling:migration-path-dse.adoc[{dse-short} 6.9 migration tools]
 ** xref:6.9@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 6.9]
+** xref:ROOT:hcd-migration-paths.adoc[Migrate to {hcd-short}]
 
 * {dse-short} 6.8
 +
 ** xref:6.8@dse:tooling:migration-path-dse.adoc[{dse-short} 6.8 migration tools]
 ** xref:6.8@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 6.8]
+** xref:ROOT:hcd-migration-paths.adoc[Migrate to {hcd-short}]
 
 * {dse-short} 5.1
 +
 ** xref:5.1@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 5.1]
+** xref:ROOT:hcd-migration-paths.adoc[Migrate to {hcd-short}]
 --
 
 Migrate data from {dse-short}::

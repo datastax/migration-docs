@@ -1,0 +1,79 @@
+= {hcd-short} migration toolkit
+:description: Learn which migration tools you can use to migrate data to {hcd-short}.
+
+The {hcd} migration toolkit includes the xref:ROOT:components.adoc[{company} migration tools] that you can use to migrate your data to {hcd-short} from another {cass-reg}-based database, such as {astra-db}, {cass-short}, or {dse-short}.
+
+Whenever possible, {company} strongly recommends using the {product} ({product-short}) tools to orchestrate ongoing read/write traffic when you migrate to {hcd-short}.
+
+[#zdm-to-hcd]
+== Zero-downtime migrations to {hcd-short}
+
+The {product} ({product-short}) tools allow you to standup your new {hcd-short} clusters independently of your existing {dse-short} clusters.
+Then, {product-proxy} orchestrates live traffic and synchronizes ongoing writes while you migrate data to your new clusters using any {product-short}-compatible data migration and validation tool.
+Finally, you can use {product-proxy} to simulate the live workload on your new clusters before permanently switching your traffic over.
+
+{product-proxy} and {product-automation} provide the safest upgrade approach with blue-green deployment capabilities that eliminate time pressure and ensure optimal availability and operational safety.
+You can rollback up to the last stage of the migration if necessary.
+
+By orchestrating independent clusters with the {product-short} tools, you can specify your ideal {hcd-short} configuration settings that you otherwise wouldn't be able to change during an in-place cluster upgrade.
+Incompatibilities in cluster configuration don't disrupt the migration because your existing cluster stays active and unchanged while you setup the new cluster and migrate your data.
+
+=== Data validation with {product-short}
+
+The {product-short} tools don't migrate your data.
+During the {product-short} process, you use a xref:ROOT:migrate-and-validate-data.adoc[data migration tool] to rewrite the data from your existing cluster to your new cluster.
+
+{company} recommends that you do the following:
+
+* Choose a data migration tool that also includes strong validation capabilities, such as [{cass-migrator} ({cass-migrator-short})].
+* Be aware of incompatible data types that can fail to migrate from your old cluster.
+For example, {hcd-short} 1.2 doesn't support tuples in {dse-short} versions 6.8.4 and earlier.
+
+Data validation tools can catch these inconsistencies as missing or mismatched data, but you will still need to have a plan to resolve the inconsistencies.
+For example, you might need to modify your applications to use a different data type, or you might need to perform additional post-migration writes to populate lost data.
+
+It is crucial that you fully validate and test your new cluster before switching your traffic over to it.
+
+{product-proxy} is ideal for supporting this transition because it allows both clusters to remain in place until you are completely certain you are ready to switch to the new cluster.
+Additionally, your old cluster remains untouched and available for rollback or reversion if necessary.
+
+=== Get started with {product-short} and {hcd-short}
+
+For information about clusters that are eligible for {product} to {hcd-short}, see xref:ROOT:zdm-proxy-migration-paths.adoc[].
+
+To begin your {product} to {hcd-short}, go to xref:ROOT:introduction.adoc[].
+
+You must setup your {hcd-short} clusters before you can enable the {product-proxy}.
+For information about installing and configuring {hcd-short}, see the xref:1.2@hcd:get-started:get-started-hcd.adoc[{hcd-short} documentation].
+
+== Migrate your code
+
+After migrating your data to {hcd-short}, your applications can connect exclusively to your new databases.
+
+If you are already using a compatible {cass-short} driver, you can modify the driver connection string to connect to the new or upgraded databases.
+
+[IMPORTANT]
+====
+Your {cass-short} driver version must be compatible with {hcd-short}.
+
+If you are using an early driver version or a {dse-short}-only driver, you must upgrade to a driver version that is compatible with {hcd-short}.
+
+For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
+====
+
+For some migrations, changing the connection string might be the only change you need to make to your code.
+However, you might want to update your code to take advantage of features and improvements available in your new database platform or a newer driver version.
+
+For example, {hcd-short} includes an {astra} {data-api} server that you can use for application development with your {hcd-short} databases, including vector search and hybrid search capabilities.
+It provides several client libraries and direct access over HTTP.
+
+For more information about connecting to {hcd-short} databases, see the xref:1.2@hcd:get-started:get-started-hcd.adoc[{hcd-short} documentation].
+
+== Get support for your migration
+
+If you have questions about your {hcd-short} migration, contact your {company} account representative or {support-url}[{company} Support].
+
+== See also
+
+* xref:ROOT:mc-migration-paths.adoc[]
+* xref:1.2@hcd:migrate:dse-68-to-hcd-12.adoc[In-place upgrade from {dse-short} 6.8 to {hcd-short} 1.2]
