@@ -12,88 +12,88 @@ Use the following table to learn which tools are compatible with your current da
 |Origin |{sstable-sideloader} |{cass-migrator} |{product-proxy} |{dsbulk-migrator}/{dsbulk-loader}
 
 |Aiven for {cass-short}
-|✅
-|✅
-|✅
-|✅
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Amazon Keyspaces
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |{cass-reg} OSS 3.11 or later
-|✅
-|✅
-|✅
-|✅
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |{cass-reg} OSS 3.10 or earlier
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Azure Cosmos DB ({cass-short} API)
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Azure Managed Instance for {cass}
-|✅
-|✅
-|✅
-|✅
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |{dse-short} 5.1 or later
-|✅
-|✅
-|✅
-|✅
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |{dse-short} 5.0 or earlier
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Instaclustr Managed {cass-short}
-|✅
-|✅
-|✅
-|✅
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |K8ssandra (self-managed)
-|✅
-|✅
-|✅
-|✅
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Scylla Cloud
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Scylla OSS or Enterprise
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Yugabyte Aeon (YCQL)
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Yugabyte OSS or Anywhere
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |===
 
