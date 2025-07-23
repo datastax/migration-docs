@@ -74,7 +74,7 @@ You can view the logs for a single proxy instance, or you can use a playbook to 
 
 === View the logs
 
-The {product-proxy} runs as a Docker container on each proxy host.
+{product-proxy} runs as a Docker container on each proxy host.
 Its logs can be viewed by connecting to a proxy host and running the following command.
 
 [source,bash]
@@ -142,7 +142,7 @@ At the start of the migration, the primary cluster is the origin cluster because
 In Phase 4 of the migration, once all the existing data has been transferred and any validation/reconciliation step has been successfully executed, you can switch the primary cluster to be the target cluster.
 ** Valid values: `ORIGIN`, `TARGET`.
 * `read_mode`:
-** This variable determines how reads are handled by the {product-proxy}.
+** This variable determines how reads are handled by {product-proxy}.
 ** Valid values:
 *** `PRIMARY_ONLY`: reads are only sent synchronously to the primary cluster. This is the default behavior.
 *** `DUAL_ASYNC_ON_SECONDARY`: reads are sent synchronously to the primary cluster and also asynchronously to the secondary cluster.
@@ -159,21 +159,21 @@ Other, rarely changed variables:
 * Target username/password in `vars/zdm_proxy_cluster_config.yml`
 * Advanced configuration variables in `vars/zdm_proxy_advanced_config.yml`:
 ** `zdm_proxy_max_clients_connections`:
-*** Maximum number of client connections that the {product-proxy} should accept.
+*** Maximum number of client connections that {product-proxy} should accept.
 Each client connection results in additional cluster connections and causes the allocation of several in-memory structures, so this variable can be tweaked to cap the total number on each instance.
 A high number of client connections per proxy instance may cause some performance degradation, especially at high throughput.
 *** Defaults to `1000`.
 ** `replace_cql_functions`:
-*** Whether the {product-proxy} should replace standard CQL function calls in write requests with a value computed at proxy level.
+*** Whether {product-proxy} should replace standard CQL function calls in write requests with a value computed at proxy level.
 *** Currently, only the replacement of `now()` is supported.
 *** Boolean value.
 Disabled by default.
 Enabling this will have a noticeable performance impact.
 ** `zdm_proxy_request_timeout_ms`:
 *** Global timeout (in ms) of a request at proxy level.
-*** This variable determines how long the {product-proxy} will wait for one cluster (in case of reads) or both clusters (in case of writes) to reply to a request.
-If this timeout is reached, the {product-proxy} will abandon that request and no longer consider it as pending, thus freeing up the corresponding internal resources.
-Note that, in this case, the {product-proxy} will not return any result or error: when the client application's own timeout is reached, the driver will time out the request on its side.
+*** This variable determines how long {product-proxy} will wait for one cluster (in case of reads) or both clusters (in case of writes) to reply to a request.
+If this timeout is reached, {product-proxy} will abandon that request and no longer consider it as pending, thus freeing up the corresponding internal resources.
+Note that, in this case, {product-proxy} will not return any result or error: when the client application's own timeout is reached, the driver will time out the request on its side.
 *** Defaults to `10000` ms.
 If your client application has a higher client-side timeout because it is expected to generate requests that take longer to complete, you need to increase this timeout accordingly.
 ** `origin_connection_timeout_ms` and `target_connection_timeout_ms`:
@@ -182,7 +182,7 @@ If your client application has a higher client-side timeout because it is expect
 ** `async_handshake_timeout_ms`:
 *** Timeout (in ms) when performing the initialization (handshake) of a proxy-to-secondary cluster connection that will be used solely for asynchronous dual reads.
 *** If this timeout occurs, the asynchronous reads will not be sent.
-This has no impact on the handling of synchronous requests: the {product-proxy} will continue to handle all synchronous reads and writes normally.
+This has no impact on the handling of synchronous requests: {product-proxy} will continue to handle all synchronous reads and writes normally.
 *** Defaults to `4000` ms.
 ** `heartbeat_interval_ms`:
 *** Frequency (in ms) with which heartbeats will be sent on cluster connections (i.e. all control and request connections to the origin and the target).
@@ -196,7 +196,7 @@ This is not recommended.
 
 ** [[zdm_proxy_max_stream_ids]]`zdm_proxy_max_stream_ids`: 
 *** In the CQL protocol every request has a unique id, named stream id.
-This variable allows you to tune the maximum pool size of the available stream ids managed by the {product-proxy} per client connection.
+This variable allows you to tune the maximum pool size of the available stream ids managed by {product-proxy} per client connection.
 In the application client, the stream ids are managed internally by the driver, and in most drivers the max number is 2048 (the same default value used in the proxy).
 If you have a custom driver configuration with a higher value, you should change this property accordingly.
 *** Defaults to `2048`.

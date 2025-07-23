@@ -1,14 +1,25 @@
-= Use {sstable-sideloader} with {product-short}
+= Use {sstable-sideloader} with {product-proxy}
 :navtitle: Use {sstable-sideloader}
-:description: Use {sstable-sideloader} to migrate data with {product-short}.
+:description: {sstable-sideloader} is a service running in {astra-db} that imports data from snapshots of your existing {cass-short}-based cluster.
 
-{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {dse-short}, {hcd-short}, or other compatible {cass-short} cluster.
-For compatible origin clusters, see xref:ROOT:astra-migration-paths.adoc[].
+{description}
+This tool is exclusively for migrations that move data to {astra-db}.
 
 Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like {dsbulk-migrator} and {cass-migrator}, including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
 
-{sstable-sideloader} uses the {astra} {devops-api}, your cloud provider's CLI, and `nodetool`.
+== Migrate data with {sstable-sideloader}
+
+To migrate data with {sstable-sideloader}, you use `nodetool`, a cloud provider's CLI, and the {astra} {devops-api}:
+
+* *`nodetool`*: Create snapshots of your existing {dse-short}, {hcd-short}, open-source {cass-short} cluster.
+For compatible origin clusters, see xref:ROOT:astra-migration-paths.adoc[].
+* *Cloud provider CLI*: Upload snapshots to a dedicated cloud storage bucket for your migration.
+* *{astra} {devops-api}*: Run the {sstable-sideloader} commands to write the data from cloud storage to your {astra-db} database.
+
+For more information and instructions, see xref:sideloader:sideloader-overview.adoc[].
+
+== Use {sstable-sideloader} with {product-proxy}
+
+You can use {sstable-sideloader} alone or with {product-proxy}.
 
 include::sideloader:partial$sideloader-partials.adoc[tags=sideloader-zdm]
-
-For more information, see xref:sideloader:sideloader-overview.adoc[].

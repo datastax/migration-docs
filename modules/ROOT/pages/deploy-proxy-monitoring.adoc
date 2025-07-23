@@ -1,7 +1,7 @@
-= Deploy the {product-proxy} and monitoring
+= Deploy {product-proxy} and monitoring
 :page-tag: migration,zdm,zero-downtime,deploy,zdm-proxy,monitoring
 
-This topic explains how to use the Ansible automation playbooks that you set up in the xref:setup-ansible-playbooks.adoc[prior topic] to deploy the {product-proxy} and its monitoring stack.
+This topic explains how to use the Ansible automation playbooks that you set up in the xref:setup-ansible-playbooks.adoc[prior topic] to deploy {product-proxy} and its monitoring stack.
 
 Once completed, you will have a working and fully monitored {product-proxy} deployment.
 
@@ -34,7 +34,7 @@ Now, `cd` into `zdm-proxy-automation/ansible` and `ls`. Example:
 image::zdm-ansible-container-ls3.png[Contents of the Ansible Control Host container]
 
 [[_configure_the_zdm_proxy]]
-== Configure the {product-proxy}
+== Configure {product-proxy}
 
 The {product-proxy} configuration is composed of five files:
 
@@ -67,7 +67,7 @@ The `vi` and `nano` text editors are available in the container.
 .If you are on {product-automation} version 2.1.0 or earlier
 [%collapsible]
 ====
-Starting in version 2.2.0 of the {product-automation}, all origin and target cluster configuration variables are stored in `zdm_proxy_cluster_config.yml`.
+Starting in version 2.2.0 of {product-automation}, all origin and target cluster configuration variables are stored in `zdm_proxy_cluster_config.yml`.
 In earlier versions, these variables are in the `zdm_proxy_core_config.yml` file.
 
 This change is backward compatible.
@@ -159,7 +159,7 @@ For more information, see xref:enable-async-dual-reads.adoc[].
 
 === Enable TLS encryption (optional)
 
-If you want to enable TLS encryption between the client application and the {product-proxy}, or between the {product-proxy} and one (or both) self-managed clusters, you will need to specify some additional configuration.
+If you want to enable TLS encryption between the client application and {product-proxy}, or between {product-proxy} and one or both self-managed clusters, you will need to specify some additional configuration.
 For instructions, see xref:ROOT:tls.adoc[].
 
 [[_advanced_configuration_optional]]
@@ -171,7 +171,7 @@ All advanced configuration variables not listed here are considered mutable and 
 
 ==== Multi-datacenter clusters
 
-For multi-datacenter origin clusters, you will need to specify the name of the datacenter that the {product-proxy} should consider local. To do this, set the property `origin_local_datacenter` to the datacenter name.
+For multi-datacenter origin clusters, you will need to specify the name of the datacenter that {product-proxy} should consider local. To do this, set the property `origin_local_datacenter` to the datacenter name.
 Likewise, for multi-datacenter target clusters you will need to set `target_local_datacenter` appropriately.
 
 These two variables are stored in `vars/zdm_proxy_advanced_config.yml`.
@@ -182,13 +182,13 @@ Note that this is not relevant for multi-region {astra-db} databases, where this
 
 Each {product-proxy} instance listens on port 9042 by default, like a regular {cass-short} cluster.
 This can be overridden by setting `zdm_proxy_listen_port` to a different value.
-This can be useful if the origin nodes listen on a port that is not 9042 and you want to configure the {product-proxy} to listen on that same port to avoid changing the port in your client application configuration.
+This can be useful if the origin nodes listen on a port that is not 9042 and you want to configure {product-proxy} to listen on that same port to avoid changing the port in your client application configuration.
 
-The {product-proxy} exposes metrics on port 14001 by default.
+{product-proxy} exposes metrics on port 14001 by default.
 This port is used by Prometheus to scrape the application-level proxy metrics.
 This can be changed by setting `metrics_port` to a different value if desired.
 
-== Use Ansible to deploy the {product-proxy}
+== Use Ansible to deploy {product-proxy}
 
 Now you can run the playbook that you've configured above.
 From the shell connected to the container, ensure that you are in `/home/ubuntu/zdm-proxy-automation/ansible` and run:
@@ -206,14 +206,14 @@ That's it! A {product-proxy} container has been created on each proxy host.
 The playbook will create one {product-proxy} instance for each proxy host listed in the inventory file.
 It will indicate the operations that it is performing and print out any errors, or a success confirmation message at the end.
 
-Confirm that the {product-short} proxies are up and running by using one of the following options:
+Confirm that the {product-proxy} instances are up and running by using one of the following options:
 
-* Call the `liveness` and `readiness` HTTP endpoints for {product-proxy} instances.
-* Check {product-proxy} instances via docker logs.
+* Call the `liveness` and `readiness` HTTP endpoints for the {product-proxy} instances.
+* Check the {product-proxy} instances via docker logs.
 
 === Call the `liveness` and `readiness` HTTP endpoints
 
-{product-short} metrics provide `/health/liveness` and `/health/readiness` HTTP endpoints, which you can call to determine the state of {product-proxy} instances.
+{product-short} metrics provide `/health/liveness` and `/health/readiness` HTTP endpoints, which you can call to determine the state of the {product-proxy} instances.
 It's often fine to simply submit the `readiness` check to return the proxy's state.
 
 The format:
@@ -232,7 +232,7 @@ curl -G "http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address
 ----
 
 The default port for metrics collection is `14001`.
-You can override this port if you deploy the {product-proxy} with `metrics_port` set to a non-default port.
+You can override this port if you deploy {product-proxy} with `metrics_port` set to a non-default port.
 For more information, see <<ports>>.
 
 Readiness example:
@@ -328,13 +328,13 @@ Be aware that running the `deploy_zdm_proxy.yml` playbook results in a brief win
 [[_setting_up_the_monitoring_stack]]
 == Setting up the Monitoring stack
 
-The {product-automation} enables you to easily set up a self-contained monitoring stack that is preconfigured to collect metrics from your {product-proxy} instances and display them in ready-to-use Grafana dashboards.
+{product-automation} enables you to easily set up a self-contained monitoring stack that is preconfigured to collect metrics from your {product-proxy} instances and display them in ready-to-use Grafana dashboards.
 
 The monitoring stack is deployed entirely on Docker.
 It includes the following components, all deployed as Docker containers:
 
 * Prometheus node exporter, which runs on each {product-proxy} host and makes OS- and host-level metrics available to Prometheus.
-* Prometheus server, to collect metrics from the {product-proxy} process, its Golang runtime and the Prometheus node exporter.
+* Prometheus server, to collect metrics from {product-proxy}, its Golang runtime, and the Prometheus node exporter.
 * Grafana, to visualize all these metrics in three preconfigured dashboards (see xref:ROOT:metrics.adoc[]).
 
 After running the playbook described here, you will have a fully configured monitoring stack connected to your {product-proxy} deployment.

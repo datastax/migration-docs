@@ -2,7 +2,7 @@
 :navtitle: Connect client applications to {product-proxy}
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps
 
-The {product-proxy} is designed to be similar to a conventional {cass-reg} cluster.
+{product-proxy} is designed to be similar to a conventional {cass-reg} cluster.
 You communicate with it using the CQL query language used in your existing client applications.
 It understands the same messaging protocols used by {cass-short}, {dse}, and {astra-db}.
 As a result, most of your client applications won't be able to distinguish between connecting to {product-proxy} and connecting directly to your {cass-short} cluster.
@@ -13,7 +13,7 @@ We conclude by describing two sample client applications that serve as real-worl
 
 You can use the provided sample client applications, in addition to your own, as a quick way to validate that the deployed {product-proxy} is reading and writing data from the expected origin and target clusters.
 
-Finally, we will explain how to connect the `cqlsh` command-line client to the {product-proxy}.
+This topic also explains how to connect CQL shell (`cqlsh`) to {product-proxy}.
 
 == {company}-compatible drivers
 
@@ -147,8 +147,8 @@ For information about {astra-db} credentials in your {product-proxy} configurati
 
 === Disable client-side compression with {product-proxy}
 
-Client applications must not enable client-side compression when connecting through the {product-proxy}, as this is not currently supported.
-This is disabled by default in all drivers, but if it was enabled in your client application configuration it will have to be temporarily disabled when connecting to the {product-proxy}.
+Client applications must not enable client-side compression when connecting through {product-proxy}, as this is not currently supported.
+This is disabled by default in all drivers, but if it was enabled in your client application configuration, it will have to be temporarily disabled when connecting to {product-proxy}.
 
 === {product-proxy} ignores token-aware routing
 
@@ -186,16 +186,12 @@ You can find the details of building and running {product-demo} in the https://g
 [[_themis_client]]
 === Themis client
 
-https://github.com/absurdfarce/themis[Themis] is a Java command-line client application that allows you to insert randomly generated data into some combination of these three sources:
+https://github.com/absurdfarce/themis[Themis] is a Java command-line client application that allows you to write randomly generated data directly to the origin cluster, directly to the target cluster, or indirectly to both clusters through {product-proxy}.
 
-* Directly into the origin
-* Directly into the target
-* Into the {product-proxy}, and subsequently on to the origin and target
+Then, you can use the client application to query the data and confirm that {product-proxy} is reading and writing data from the expected sources.
 
-The client application can then be used to query the inserted data.
-This allows you to validate that the {product-proxy} is reading and writing data from the expected sources.
-Configuration details for the clusters and/or {product-proxy} are defined in a YAML file.
-Details are in the https://github.com/absurdfarce/themis/blob/main/README.md[README].
+Configuration details for the clusters and {product-proxy} are defined in a YAML file.
+For more information, see the https://github.com/absurdfarce/themis/blob/main/README.md[Themis README].
 
 In addition to any utility as a validation tool, Themis also serves as an example of a larger client application which uses the Java driver to connect to a {product-proxy} -- as well as directly to {cass-short} clusters or {astra-db} -- and perform operations.
 The configuration logic as well as the cluster and session management code have been cleanly separated into distinct packages to make them easy to understand.

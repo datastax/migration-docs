@@ -4,24 +4,20 @@
 
 {product-proxy} supports proxy-to-cluster and application-to-proxy TLS encryption.
 
-The TLS configuration is an optional part of the initial {product-proxy} configuration.
-See the information here in this topic, and then refer to the {product-automation} topics that cover:
-
-* xref:setup-ansible-playbooks.adoc[]
-* xref:deploy-proxy-monitoring.adoc[]
+The TLS configuration is an optional part of the initial {product-proxy} configuration, which includes xref:setup-ansible-playbooks.adoc[] and xref:deploy-proxy-monitoring.adoc[].
 
 == Introduction
 
-* All TLS configuration is optional. Enable TLS between the {product-proxy} and any cluster that requires it, and/or between your client application and the {product-proxy} if required.
+* All TLS configuration is optional. Enable TLS between {product-proxy} and any cluster that requires it, and/or between your client application and {product-proxy}, if required.
 
-* Proxy-to-cluster TLS can be configured between the {product-proxy} and either or both the origin and target clusters, as desired.
-Each set of configurations is independent of the other. When using proxy-to-cluster TLS, the {product-proxy} acts as the TLS client and the cluster as the TLS server.
+* Proxy-to-cluster TLS can be configured between {product-proxy} and either or both the origin and target clusters, as desired.
+Each set of configurations is independent of the other. When using proxy-to-cluster TLS, {product-proxy} acts as the TLS client and the cluster as the TLS server.
 One-way TLS and Mutual TLS are both supported and can be enabled depending on each cluster's requirements.
 
-* When using application-to-proxy TLS, your client application is the TLS client and the {product-proxy} is the TLS server.
+* When using application-to-proxy TLS, your client application is the TLS client and {product-proxy} is the TLS server.
 One-way TLS and Mutual TLS are both supported.
 
-* When the {product-proxy} connects to {astra-db}, it always implicitly uses Mutual TLS.
+* When {product-proxy} connects to {astra-db}, it always implicitly uses Mutual TLS.
 This is done through the {scb} and does not require any extra configuration.
 
 [[_retrieving_files_from_a_jks_keystore]]
@@ -30,7 +26,7 @@ This is done through the {scb} and does not require any extra configuration.
 If you are already using TLS between your client application and the origin cluster, then the files needed to configure TLS will already be used in the client application's configuration (TLS client files) and the origin's configuration (TLS Server files).
 In some cases, these files may be contained in a JKS keystore.
 
-The {product-proxy} does not accept a JKS keystore, requiring the raw files instead.
+{product-proxy} does not accept a JKS keystore, requiring the raw files instead.
 
 To view the files contained in a JKS keystore and their aliases:
 
@@ -51,8 +47,8 @@ For more details, see the https://docs.oracle.com/javase/8/docs/technotes/tools/
 
 == Proxy to self-managed cluster TLS
 
-Here's how to configure TLS between the {product-proxy} and a self-managed cluster ({cass} or {dse-short}).
-In this case the {product-proxy} acts as the TLS client and the cluster acts as the TLS server.
+Here's how to configure TLS between {product-proxy} and a self-managed cluster ({cass} or {dse-short}).
+In this case {product-proxy} acts as the TLS client and the cluster acts as the TLS server.
 
 The files required to configure proxy-to-cluster TLS are:
 
@@ -118,8 +114,8 @@ For Mutual TLS only, leave unset otherwise.
 
 == Application-to-proxy TLS
 
-Here are the steps to enable TLS between your client application and the {product-proxy} if required.
-In this case, your client application is the TLS client and the {product-proxy} is the TLS server.
+Here are the steps to enable TLS between your client application and {product-proxy}, if required.
+In this case, your client application is the TLS client and {product-proxy} is the TLS server.
 
 The files required by the proxy to configure application-to-proxy TLS are:
 
@@ -155,7 +151,7 @@ Optional: defaults to `false` ( = one-way TLS ), can be set to `true` to enable 
 
 [TIP]
 ====
-Remember that in this case, the {product-proxy} is the TLS server; thus the word `server` in these variable names.
+Remember that in this case, {product-proxy} is the TLS server; thus the word `server` in these variable names.
 ====
 
 == Apply the configuration

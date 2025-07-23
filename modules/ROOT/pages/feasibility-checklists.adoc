@@ -14,7 +14,7 @@ If your database doesn't meet these requirements, you can still complete the mig
 //TODO: V5 status: https://github.com/datastax/zdm-proxy/blob/main/faq.md#what-versions-of-apache-cassandra-or-cql-compatible-data-stores-does-the-zdm-proxy-support
 {product-proxy} technically doesn't support `v5`.
 If `v5` is requested, the proxy handles protocol negotiation so that the client application properly downgrades the protocol version to `v4`.
-This means that any client application using a recent driver that supports protocol version `v5` can be migrated using the {product-proxy} (as long as it does not use v5-specific functionality).
+This means that any client application using a recent driver that supports protocol version `v5`can be migrated using{product-proxy} as long as the application doesn't use v5-specific functionality.
 
 === Thrift is not supported by {product-proxy}
 
@@ -91,7 +91,7 @@ For upgrade instructions, see xref:ROOT:manage-proxy-instances.adoc#_upgrade_the
 If a client application only sends `SELECT` statements to a database connection then you may find that {product-proxy} terminates these read-only connections periodically, which may result in request errors if the driver is not configured to retry these requests in these conditions.
 
 This happens because {astra-db} terminates idle connections after some inactivity period (usually around 10 minutes).
-If {astra-db} is your target, and a client connection is only sending read requests to the {product-proxy}, then the {astra-db} connection that is paired to that client connection will remain idle and will be eventually terminated.
+If {astra-db} is your target, and a client connection is only sending read requests to {product-proxy}, then the {astra-db} connection that is paired to that client connection will remain idle and will be eventually terminated.
 
 A potential workaround is to not connect these read-only client applications to {product-proxy}, but you need to ensure that these client applications switch reads to the target at any point after all the data has been migrated and all validation and reconciliation has completed.
 
@@ -100,7 +100,7 @@ You can also implement some kind of meaningless write request that the applicati
 
 ==== Version 2.1.0 and newer
 
-This issue is solved in version 2.1.0 of the {product-proxy}, which introduces periodic heartbeats to keep alive idle cluster connections.
+This issue is solved in version 2.1.0 of {product-proxy}, which introduces periodic heartbeats to keep alive idle cluster connections.
 We strongly recommend using version 2.1.0 (or newer) to benefit from this improvement, especially if you have a read-only workload.
 
 [[non-idempotent-operations]]
@@ -206,7 +206,7 @@ Storage/table compression doesn't affect the client application or {product-prox
 
 While the authenticator has to be supported, the *authorizer* does not affect client applications or {product-proxy} so you should be able to use any kind of authorizer configuration on both of your clusters.
 
-The authentication configuration on each cluster can be different between the origin and target clustesr, as the {product-proxy} treats them independently.
+The authentication configuration on each cluster can be different between the origin and target clustesr, as {product-proxy} treats them independently.
 
 [[cql-function-replacement]]
 == Server-side non-deterministic functions in the primary key

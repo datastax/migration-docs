@@ -1,18 +1,19 @@
-= Use {cass-migrator} with {product-short}
+= Use {cass-migrator} with {product-proxy}
 :navtitle: Use {cass-migrator}
-:description: Use {cass-migrator} to migrate data with {product-short}
+:description: You can use {cass-migrator} ({cass-migrator-short}) for data migration and validation between {cass-reg}-based databases.
 :page-aliases: cdm-parameters.adoc, ROOT:cdm-steps.adoc
 
 //This page was an exact duplicate of cdm-overview.adoc and the (now deleted) cdm-steps.adoc, they are just in different parts of the nav.
 
 // tag::body[]
-You can use {cass-migrator} ({cass-migrator-short}) for data migration and validation between {cass-reg}-based databases.
-It supports important {cass} features and offers extensive configuration options:
+{description}
+It is best for large or complex migrations that benefit from advanced features and configuration options, such as the following:
 
 * Logging and run tracking
 * Automatic reconciliation
 * Performance tuning
 * Record filtering
+* Column renaming
 * Support for advanced data types, including sets, lists, maps, and UDTs
 * Support for SSL, including custom cipher algorithms
 * Use `writetime` timestamps to maintain chronological write history
@@ -26,7 +27,7 @@ To use {cass-migrator-short} successfully, your origin and target clusters must 
 
 == {cass-migrator-short} with {product-proxy}
 
-You can use {cass-migrator-short} alone or with {product-proxy}.
+You can use {cass-migrator-short} alone, with {product-proxy}, or for data validation after using another data migration tool.
 
 When using {cass-migrator-short} with {product-proxy}, {cass-short}'s last-write-wins semantics ensure that new, real-time writes accurately take precedence over historical writes.
 
