@@ -2,6 +2,8 @@
 :navtitle: Phase 5: Connect client applications directly to the target
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps,target
 
+//TODO: Add HCD (driver or data API) and Astra (Data API) options
+
 At this point in our migration phases, we've completed:
 
 * Phase 1: Connected client applications to {product-proxy}, which included setting up Ansible playbooks with {product-utility} and using {product-automation} to deploy the {product-proxy} instances with the Docker container.

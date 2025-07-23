@@ -1,0 +1,67 @@
+= {dse-short} migration toolkit
+:description: Learn which migration tools you can use to migrate data to and from {dse-short}.
+
+The {dse} migration toolkit includes the xref:ROOT:components.adoc[{company} migration tools] that you can use to migrate your data across {dse-short} and another {cass-reg}-based database, such as {astra-db} or {hcd-short}.
+
+This documentation doesn't describe _all_ possible migration paths; it focuses on migrations using {company} migration tools like {product-proxy}.
+
+== Migrate your data
+
+The tools and process for data migration to or from {dse-short} depends on your {dse-short} version and the other database's platform or version.
+
+[TIP]
+====
+For information about clusters that are eligible for {product} to or from {dse-short}, see xref:ROOT:zdm-proxy-migration-paths.adoc[].
+====
+
+[tabs]
+======
+Migrate data to {dse-short}::
++
+--
+The following information provides guidance on migrations _to_ {dse-short}.
+
+Generally, {company} recommends migrating to the latest version of {dse-short}, unless you have a compatibility issue that requires an interim migration to an earlier version before upgrading.
+
+* {dse-short} 6.9
++
+** xref:6.9@dse:tooling:migration-path-dse.adoc[{dse-short} 6.9 migration tools]
+** xref:6.9@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 6.9]
+
+* {dse-short} 6.8
++
+** xref:6.8@dse:tooling:migration-path-dse.adoc[{dse-short} 6.8 migration tools]
+** xref:6.8@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 6.8]
+
+* {dse-short} 5.1
++
+** xref:5.1@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 5.1]
+--
+
+Migrate data from {dse-short}::
++
+--
+When migrating _from_ {dse-short} to another {cass-short}-based database, follow the migration guidance for your target database to determine cluster compatibility, migration options, and recommendations.
+For example, for {astra-db}, see xref:ROOT:astra-migration-paths.adoc[].
+
+If your target database isn't directly compatible with a migration from {dse-short}, you might need to take interim steps to prepare your data for migration, such as upgrading your {dse-short} version or modifying the data in your existing database to be compatible with the target database.
+--
+======
+
+== Migrate your code
+
+After migrating your data, your applications can connect exclusively to your new databases.
+
+If you are already using a xref:datastax-drivers:compatibility:driver-matrix.adoc[compatible {cass-short} driver], you can modify the driver connection string to connect to the new databases.
+For some migrations, changing the connection string might be the only change you need to make to your code.
+However, you might want to update your code to take advantage of features and improvements available in your new database platform or a newer driver version.
+
+For database-specific connection information, see the documentation for your target database and version.
+
+== Get support for your migration
+
+If you have questions about your {dse-short} migration, contact your {company} account representative or {support-url}[{company} Support].
+
+== See also
+
+* xref:ROOT:mc-migration-paths.adoc[]
