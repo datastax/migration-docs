@@ -44,7 +44,7 @@ For information about clusters that are eligible for {product} to {hcd-short}, s
 To begin your {product} to {hcd-short}, go to xref:ROOT:introduction.adoc[].
 
 You must set up your {hcd-short} clusters before you can enable the {product-proxy}.
-For information about installing and configuring {hcd-short}, see the xref:1.1@hcd:get-started:get-started-hcd.adoc[{hcd-short} documentation].
+For information about installing and configuring {hcd-short}, see the xref:1.1@hyper-converged-database:get-started:get-started-hcd.adoc[{hcd-short} documentation].
 
 == Migrate your code
 
@@ -67,7 +67,7 @@ However, you might want to update your code to take advantage of features and im
 For example, {hcd-short} includes an {astra} {data-api} server that you can use for application development with your {hcd-short} databases, including vector search and hybrid search capabilities.
 It provides several client libraries and direct access over HTTP.
 
-For more information about connecting to {hcd-short} databases, see the xref:1.2@hcd:get-started:get-started-hcd.adoc[{hcd-short} documentation].
+For more information about connecting to {hcd-short} databases, see the xref:1.1@hyper-converged-database:get-started:get-started-hcd.adoc[{hcd-short} documentation].
 
 == Get support for your migration
 
@@ -76,5 +76,5 @@ If you have questions about your {hcd-short} migration, contact your {company} a
 == See also
 
 * xref:ROOT:mc-migration-paths.adoc[]
-//* xref:1.2@hcd:migrate:dse-68-to-hcd-12.adoc[In-place upgrade from {dse-short} 6.8 to {hcd-short} 1.2.3]
-//* xref:1.1@hcd:migrate:dse-51-to-hcd-11.adoc[In-place upgrade from {dse-short} 5.1 to {hcd-short} 1.1]
+//* xref:1.2@hyper-converged-database:migrate:dse-68-to-hcd-12.adoc[In-place upgrade from {dse-short} 6.8 to {hcd-short} 1.2.3]
+//* xref:1.1@hyper-converged-database:migrate:dse-51-to-hcd-11.adoc[In-place upgrade from {dse-short} 5.1 to {hcd-short} 1.1]
