@@ -23,7 +23,7 @@ The following information provides guidance on migrations _to_ {dse-short}.
 
 Generally, {company} recommends migrating to the latest version of {dse-short}, unless you have a compatibility issue that requires an interim migration to an earlier version before upgrading.
 
-//TODO: Resolve duplication and replace these at the source with one summary page that points to here.
+//TODO: Resolve DSE topic duplication and replace these at the source with one summary page that points to here.
 
 * {dse-short} 6.9
 +
@@ -44,7 +44,7 @@ Migrate data from {dse-short}::
 +
 --
 When migrating _from_ {dse-short} to another {cass-short}-based database, follow the migration guidance for your target database to determine cluster compatibility, migration options, and recommendations.
-For example, for {astra-db}, see xref:ROOT:astra-migration-paths.adoc[].
+For example, for {astra-db}, see xref:ROOT:astra-migration-paths.adoc[], and for {hcd-short}, see xref:ROOT:hcd-migration-paths.adoc[].
 
 If your target database isn't directly compatible with a migration from {dse-short}, you might need to take interim steps to prepare your data for migration, such as upgrading your {dse-short} version or modifying the data in your existing database to be compatible with the target database.
 --

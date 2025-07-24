@@ -3,7 +3,7 @@
 * xref:ROOT:zdm-proxy-migration-paths.adoc[]
 * xref:ROOT:astra-migration-paths.adoc[]
 * xref:ROOT:dse-migration-paths.adoc[]
-//* xref:ROOT:hcd-migration-paths.adoc[]
+* xref:ROOT:hcd-migration-paths.adoc[]
 * xref:ROOT:mc-migration-paths.adoc[]
 
 .{product}
