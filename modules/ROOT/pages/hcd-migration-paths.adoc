@@ -16,7 +16,7 @@ Finally, you can use {product-proxy} to simulate the live workload on your new c
 You can rollback up to the last stage of the migration if necessary.
 
 By orchestrating independent clusters with the {product-short} tools, you can specify your ideal {hcd-short} configuration settings that you otherwise wouldn't be able to change during an in-place cluster upgrade.
-Incompatibilities in cluster configuration don't disrupt the migration because your existing cluster stays active and unchanged while you setup the new cluster and migrate your data.
+Incompatibilities in cluster configuration don't disrupt the migration because your existing cluster remains active and unchanged while you set up the new cluster and migrate your data.
 
 === Data validation with {product-short}
 
@@ -27,10 +27,10 @@ During the {product-short} process, you use a xref:ROOT:migrate-and-validate-dat
 
 * Choose a data migration tool that also includes strong validation capabilities, such as [{cass-migrator} ({cass-migrator-short})].
 * Be aware of incompatible data types that can fail to migrate from your old cluster.
-For example, {hcd-short} 1.2 doesn't support tuples in {dse-short} versions 6.8.4 and earlier.
+//For example, {hcd-short} 1.2.3 doesn't support tuples in {dse-short} versions 6.8.4 and earlier.
 
-Data validation tools can catch these inconsistencies as missing or mismatched data, but you will still need to have a plan to resolve the inconsistencies.
-For example, you might need to modify your applications to use a different data type, or you might need to perform additional post-migration writes to populate lost data.
+Data validation tools can identify inconsistencies as missing or mismatched data, but you still need to have a plan to resolve them.
+For example, you might need to modify your applications to use a different data type or perform additional post-migration writes to populate lost data.
 
 It is crucial that you fully validate and test your new cluster before switching your traffic over to it.
 
@@ -43,8 +43,8 @@ For information about clusters that are eligible for {product} to {hcd-short}, s
 
 To begin your {product} to {hcd-short}, go to xref:ROOT:introduction.adoc[].
 
-You must setup your {hcd-short} clusters before you can enable the {product-proxy}.
-For information about installing and configuring {hcd-short}, see the xref:1.2@hcd:get-started:get-started-hcd.adoc[{hcd-short} documentation].
+You must set up your {hcd-short} clusters before you can enable the {product-proxy}.
+For information about installing and configuring {hcd-short}, see the xref:1.1@hcd:get-started:get-started-hcd.adoc[{hcd-short} documentation].
 
 == Migrate your code
 
@@ -76,4 +76,5 @@ If you have questions about your {hcd-short} migration, contact your {company} a
 == See also
 
 * xref:ROOT:mc-migration-paths.adoc[]
-* xref:1.2@hcd:migrate:dse-68-to-hcd-12.adoc[In-place upgrade from {dse-short} 6.8 to {hcd-short} 1.2]
+//* xref:1.2@hcd:migrate:dse-68-to-hcd-12.adoc[In-place upgrade from {dse-short} 6.8 to {hcd-short} 1.2.3]
+//* xref:1.1@hcd:migrate:dse-51-to-hcd-11.adoc[In-place upgrade from {dse-short} 5.1 to {hcd-short} 1.1]
