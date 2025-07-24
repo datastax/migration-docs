@@ -29,25 +29,22 @@ Generally, {company} recommends migrating to the latest version of {dse-short}, 
 +
 ** xref:6.9@dse:tooling:migration-path-dse.adoc[{dse-short} 6.9 migration tools]
 ** xref:6.9@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 6.9]
-** xref:ROOT:hcd-migration-paths.adoc[Migrate to {hcd-short}]
 
 * {dse-short} 6.8
 +
 ** xref:6.8@dse:tooling:migration-path-dse.adoc[{dse-short} 6.8 migration tools]
 ** xref:6.8@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 6.8]
-** xref:ROOT:hcd-migration-paths.adoc[Migrate to {hcd-short}]
 
 * {dse-short} 5.1
 +
 ** xref:5.1@dse:managing:operations/migrate-data.adoc[Migrate data to {dse-short} 5.1]
-** xref:ROOT:hcd-migration-paths.adoc[Migrate to {hcd-short}]
 --
 
 Migrate data from {dse-short}::
 +
 --
 When migrating _from_ {dse-short} to another {cass-short}-based database, follow the migration guidance for your target database to determine cluster compatibility, migration options, and recommendations.
-For example, for {astra-db}, see xref:ROOT:astra-migration-paths.adoc[].
+For example, for {astra-db}, see xref:ROOT:astra-migration-paths.adoc[], and for {hcd-short}, see xref:ROOT:hcd-migration-paths.adoc[].
 
 If your target database isn't directly compatible with a migration from {dse-short}, you might need to take interim steps to prepare your data for migration, such as upgrading your {dse-short} version or modifying the data in your existing database to be compatible with the target database.
 --

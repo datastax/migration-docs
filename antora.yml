@@ -21,7 +21,7 @@ asciidoc:
     hcd-short: 'HCD'
     mc: 'Mission Control'
     #Astra DB attributes
-    astra-db: 'Astra DB' 
+    astra-db: 'Astra DB'
     astra: 'Astra'
     db-serverless: 'Serverless (Non-Vector)'
     db-serverless-vector: 'Serverless (Vector)'
