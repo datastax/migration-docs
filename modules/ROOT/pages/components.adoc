@@ -129,6 +129,19 @@ You can use {dsbulk-migrator} alone or with {product-proxy}.
 
 For more information, see xref:ROOT:dsbulk-migrator.adoc[].
 
-=== Custom data migration processes
+=== Other data migration processes
 
-If you want to write your own custom data migration processes, you can use a tool like Apache Spark(TM).
+Depending on your source and target databases, there might be other data migration tools available for your migration.
+For example, if you want to write your own custom data migration processes, you can use a tool like Apache Spark(TM).
+
+To use a data migration tool with {product-proxy}, it must meet the following requirements:
+
+* Built-in data validation functionality or compatibility with another data validation tool, such as {cass-migrator-short}.
+
+* Avoids or minimizes changes to your data model, including column names and data types.
++
+Because {product-proxy} requires that both databases can successfully process the same read/write statements, migrations that perform significant data transformations might not be compatible with {product-proxy}.
+The impact of data transformations depends on your specific data model, database platforms, and the scale of your migration.
+
+For data-only migrations that aren't concerned with live application traffic or minimizing downtime, your chosen tool depends on your source and target databases, the compatibility of the data models, and the scale of your migration.
+Describing the full range of these tools is beyond the scope of this document, which focuses on full-scale platform migrations with the {product-short} tools and verified {product-short}-compatible data migration tools.

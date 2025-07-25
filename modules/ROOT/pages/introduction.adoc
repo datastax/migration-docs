@@ -3,7 +3,7 @@
 :description: Before you begin, learn about migration concepts, software components, and the sequence of operations.
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,introduction
 
-With {product}, your applications can continue to run while you migrate data from one {cass-short}-based cluster to another, resulting in little or no downtime and minimal service interruptions.
+With {product}, your applications can continue to run while you migrate data from one {cass-short}-based database to another, resulting in little or no downtime and minimal service interruptions.
 
 .Why migrate?
 [%collapsible]
@@ -21,9 +21,9 @@ For example, you might move from self-managed clusters to a cloud-based Database
 * You want to consolidate client applications running on separate clusters onto one shared cluster to minimize sprawl and maintenance.
 ====
 
-{product-short} is comprised of {product-proxy}, {product-utility}, and {product-automation}, which orchestrate activity-in-transition on your clusters.
+{product-short} is comprised of {product-proxy}, {product-utility}, and {product-automation}, which orchestrate activity-in-transition on your databases.
 To move and validate data, you use {sstable-sideloader}, {cass-migrator}, or {dsbulk-migrator}.
-{product-proxy} keeps your clusters in sync at all times by a dual-write logic configuration, which means you can stop the migration or xref:rollback.adoc[roll back] at any point.
+{product-proxy} keeps your databases in sync at all times by a dual-write logic configuration, which means you can stop the migration or xref:rollback.adoc[roll back] at any point.
 For more information about these tools, see xref:ROOT:components.adoc[].
 
 When the migration is complete, the data is present in the new database, and you can update your client applications to connect exclusively to the new database.
@@ -40,33 +40,29 @@ For more information, see xref:ROOT:feasibility-checklists.adoc[]
 
 A migration project includes preparation for the migration and five migration phases.
 
-The following sections describe the major events in each phase and how your client applications perform read and write operations on your origin and target clusters during each phase.
+The following sections describe the major events in each phase and how your client applications perform read and write operations on your origin and target databases during each phase.
 
 The _origin_ is is your existing {cass-short}-based environment, which can be {cass}, {dse-short}, or {astra-db}.
 The _target_ is your new {cass-short}-based environment where you want to migrate your data and client applications.
 
-=== Pre-migration client application operations
+=== Migration planning
 
-Here's a look at a pre-migration from a high-level view.
-At this point, your client applications are performing read/write operations with an existing CQL-compatible database such as {cass}, {dse-short}, or {astra-db}.
+Before you begin a migration, your client applications perform read/write operations with your existing CQL-compatible database, such as {cass}, {dse-short}, {hcd-short}, or {astra-db}.
 
 image:pre-migration0ra9.png["Pre-migration environment."]
 
-//The text from this note is duplicated on the feasibility checks page.
-[TIP]
+While your application is stable with the current data model and database platform, you might need to make some adjustments before enabling {product-proxy}.
+
+[IMPORTANT]
 ====
-For the migration to succeed, the origin and target clusters must have matching schemas.
+For the migration to succeed, the origin and target databases must have matching schemas, including keyspace names, table names, column names, and data types.
 
-A CQL statement that your client application sends to {product-proxy} must be able to succeed on both the origin and target clusters.
+A CQL statement that your client application sends to {product-proxy} must be able to succeed on both databases.
 
-This means that any keyspace that your client application uses must exist on both the origin and target clusters with the same name.
-The table names, column names, and data types must also match.
 For more information, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
 ====
 
-=== Migration planning
-
-Before you begin the migration, plan and prepare for the migration:
+Before you begin the migration, plan and prepare for the migration by setting up your target infrastructure, reviewing compatibility requirements for {product-proxy}, and understanding when you can rollback the migration if necessary:
 
 * xref:ROOT:feasibility-checklists.adoc[]
 * xref:ROOT:deployment-infrastructure.adoc[]
@@ -77,43 +73,55 @@ Before you begin the migration, plan and prepare for the migration:
 
 In this first phase, deploy the {product-proxy} instances and connect client applications to the proxies.
 This phase activates the dual-write logic.
-Writes are bifurcated (sent to both the origin and target), while reads are executed on the origin only.
+Writes are sent to both the origin and target databases, while reads are executed on the origin only.
+
+For more information and instructions, see xref:ROOT:phase1.adoc[].
 
 image:migration-phase1ra9.png["Migration Phase 1."]
 
 === Phase 2: Migrate data
 
-In this phase, migrate existing data using {sstable-sideloader}, {cass-migrator}, or {dsbulk-migrator}.
-For information about these tools, see xref:ROOT:components.adoc[].
+In this phase, you use a data migration tool to copy your existing data to the target database.
+{product-proxy} continues to perform dual writes so that you can focus on moving data that was present before you connected {product-proxy}.
+Then, you thoroughly validate the migrated data, resolving missing and mismatched records, before moving on to the next phase.
 
-{product-proxy} will continue to perform dual writes while you move data and validate that the migrated data is correct.
+For more information and instructions, see xref:ROOT:migrate-and-validate-data.adoc[].
 
 image:migration-phase2ra9a.png["Migration Phase 2."]
 
 === Phase 3: Enable asynchronous dual reads
 
-In this optional phase, you can enable the _asynchronous dual reads_ feature to test the target cluster's ability to handle a production workload before you permanently switch your applications to the target cluster at the end of the migration process.
+This phase is optional but recommended.
 
-When enabled, {product-proxy} sends asynchronous read requests to the secondary cluster in addition to the synchronous read requests that are sent to the primary cluster by default.
+In this phase, you can enable the _asynchronous dual reads_ feature to test the target database's ability to handle a production workload before you permanently switch your applications to the target database at the end of the migration process.
+
+When enabled, {product-proxy} sends asynchronous read requests to the secondary database in addition to the synchronous read requests that are sent to the primary database by default.
 
 For more information, see xref:ROOT:enable-async-dual-reads.adoc[] and xref:ROOT:components.adoc#how_zdm_proxy_handles_reads_and_writes[How {product-proxy} handles reads and writes].
 
 image:migration-phase3ra.png["Migration Phase 3."]
 
-=== Phase 4: Route reads to the target cluster
+=== Phase 4: Route reads to the target database
 
-In this phase, read routing on {product-proxy} is switched to the target cluster so that all reads are executed on the target.
-Writes are still sent to both clusters.
+In this phase, read routing on {product-proxy} is switched to the target database so that all reads are executed on the target.
+Writes are still sent to both databases in case you need to rollback the migration.
 
-At this point, the target becomes the primary cluster.
+At this point, the target database becomes the primary database.
+
+For more information and instructions, see xref:ROOT:change-read-routing.adoc[].
 
 image:migration-phase4ra9.png["Migration Phase 4."]
 
-=== Phase 5: Connect directly to the target cluster
+=== Phase 5: Connect directly to the target database
 
-In this phase, you move your client applications off {product-proxy} and connect them directly to the target cluster.
+In the final phase of the migration, you move your client applications off {product-proxy} and connect them directly to the target database.
 
-Once this happens, the migration is complete, and you now exclusively use the target cluster.
+Once this happens, the migration is complete, and you now exclusively use the target database.
+
+Whether you choose to destroy to retain the origin database depends on your organization's policies and whether you might need to revert to it in the future.
+However, be aware that the origin database is no longer synchronized with the target database, and the origin database won't contain writes that happen after you disconnect {product-proxy}.
+
+For more information, see xref:ROOT:connect-clients-to-target.adoc[].
 
 image:migration-phase5ra9.png["Migration Phase 5."]
 
@@ -129,3 +137,8 @@ You don't need to install anything because the lab uses a pre-configured GitPod 
 
 This lab provides an interactive, detailed walkthrough of the migration process, including pre-migration preparation and each of the five migration phases.
 The lab describes and demonstrates all steps and automation required to prepare for and complete a migration from any supported origin database to any supported target database.
+
+== Get help with your migration
+
+* xref:ROOT:troubleshooting-tips.adoc[]
+* xref:ROOT:faqs.adoc[]
