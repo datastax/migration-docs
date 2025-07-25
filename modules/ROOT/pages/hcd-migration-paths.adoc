@@ -25,7 +25,7 @@ During the {product-short} process, you use a xref:ROOT:migrate-and-validate-dat
 
 {company} recommends that you do the following:
 
-* Choose a data migration tool that also includes strong validation capabilities, such as [{cass-migrator} ({cass-migrator-short})].
+* Choose a data migration tool that also includes strong validation capabilities, such as xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator} ({cass-migrator-short})].
 * Be aware of incompatible data types that can fail to migrate from your old cluster.
 //For example, {hcd-short} 1.2.3 doesn't support tuples in {dse-short} versions 6.8.4 and earlier.
 
