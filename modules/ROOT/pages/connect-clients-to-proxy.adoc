@@ -13,7 +13,7 @@ We conclude by describing two sample client applications that serve as real-worl
 
 You can use the provided sample client applications, in addition to your own, as a quick way to validate that the deployed {product-proxy} is reading and writing data from the expected origin and target clusters.
 
-This topic also explains how to connect CQL shell (`cqlsh`) to {product-proxy}.
+This topic also explains how to connect `cqlsh` to {product-proxy}.
 
 == {company}-compatible drivers
 
