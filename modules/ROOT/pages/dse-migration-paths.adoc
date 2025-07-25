@@ -48,7 +48,7 @@ If your target database isn't directly compatible with a migration from {dse-sho
 
 == Migrate your code
 
-In the case of a platform migration where you want to shift your applications to use your new databases, migrate your data first, and then update your code to connect exclusively to the new databases.
+In the case of a platform migration where you want to shift your applications to use your new databases, migrate your data first, and then update your client applications to connect exclusively to the new databases.
 
 If you are already using a xref:datastax-drivers:compatibility:driver-matrix.adoc[compatible {cass-short} driver], you can modify the driver connection string to connect to the new databases.
 For some migrations, changing the connection string might be the only change you need to make to your code.
