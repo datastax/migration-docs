@@ -82,7 +82,7 @@ For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL
 To help you prepare the schema from the DDL in your origin cluster, consider using the `generate-ddl` functionality in the {dsbulk-migrator-repo}[{dsbulk-migrator}].
 However, this tool doesn't automatically convert MVs or indexes.
 
-CQL statements, such as those used to reproduce the schema on the target database, can be executed in {astra-db} using the built-in or standalone CQL shell (`cqlsh`).
+CQL statements, such as those used to reproduce the schema on the target database, can be executed in {astra-db} using the built-in or standalone `cqlsh`.
 For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL for {astra-db}].
 
 == Using a generic CQL cluster as the target

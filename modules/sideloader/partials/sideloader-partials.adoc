@@ -23,7 +23,7 @@ It is important to use the specific node name to ensure that each node has a uni
 // end::command-placeholders-common[]
 
 // tag::validate[]
-After the migration is complete, you can query the migrated data using the xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL shell] (`cqlsh`) or xref:astra-db-serverless:api-reference:row-methods/find-many.adoc[{data-api}].
+After the migration is complete, you can query the migrated data using the xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[cqlsh] or xref:astra-db-serverless:api-reference:row-methods/find-many.adoc[{data-api}].
 
 You can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator} ({cass-migrator-short}) in validation mode] for more thorough validation.
 {cass-migrator-short} also offers an AutoCorrect mode to reconcile any differences that it detects.
