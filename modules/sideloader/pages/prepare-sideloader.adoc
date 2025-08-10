@@ -206,14 +206,7 @@ In contrast, if you use a single large migration to migrate all SSTables for a C
 
 === Multi-region migrations
 
-Multi-region migrations can include one or more of the following scenarios:
-
-* Your origin cluster is deployed to multiple regions.
-* Your target database is, or will be, deployed to multiple regions.
-* You need to support multiple regions in a live migration scenario.
-
-It is difficult to provide a one-size-fits-all solution for multi-region migrations due to the potential complexity and variability of these scenarios.
-For assistance planning a multi-region migration, contact your {company} account representative or {support-url}[{company} Support].
+include::ROOT:partial$multi-region-migrations.adoc[]
 
 === Multi-node migrations
 

@@ -27,7 +27,7 @@ For more information, see xref:astra-db-serverless:administration:subscription-p
 +
 The keyspace is a handle that establishes the database's context in subsequent DDL and DML statements.
 +
-For multi-region clusters, {company} recommends migrating to one region first, and then xref:astra-db-serverless:databases:manage-regions.adoc[adding additional regions] after the initial migration is complete.
+For multi-region databases, see <<considerations-for-multi-region-migrations>>.
 
 . When your database reaches **Active** status, xref:astra-db-serverless:administration:manage-application-tokens.adoc[create an application token] with a role like *Read/Write User* or **Database Administrator**, and then store the credentials (Client ID, Client Secret, and Token) securely.
 +
@@ -68,9 +68,14 @@ As a best practice, omit unsupported table properties, such as compaction strate
 * {astra-db} doesn't support Materialized Views (MVs) and certain types of indexes.
 You must replace these with supported indexes.
 For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc#limitations-on-cql-for-astra-db[Limitations on CQL for {astra-db}].
-+
-To help you prepare the schema from the DDL in your origin cluster, consider using the `generate-ddl` functionality in the {dsbulk-migrator-repo}[{dsbulk-migrator}].
+
+[TIP]
+====
+* If you plan to use {sstable-sideloader} for your data migration, you can find more information and specific requirements in xref:sideloader:migrate-sideloader.adoc#record-schema[Migrate data with {sstable-sideloader}: Configure the target database].
+
+* To help you prepare the schema from the DDL in your origin cluster, consider using the `generate-ddl` functionality in the {dsbulk-migrator-repo}[{dsbulk-migrator}].
 However, this tool doesn't automatically convert MVs or indexes.
+====
 --
 
 Use a generic CQL cluster as the target::
@@ -92,8 +97,9 @@ Pay particular attention at configuration that must be done at installation time
 [TIP]
 ====
 Because {product-proxy} supports separate connection details for each cluster, your new cluster can be configured as you wish, independent of the origin cluster's configuration.
-
 This is a good opportunity to establish your desired configuration state on the new cluster and implement new patterns that might have been unavailable or impractical on the old cluster, such as enabling authentication or configuring TLS encryption.
+
+For multi-region clusters, see <<considerations-for-multi-region-migrations>>.
 ====
 .. Recommended: Consider testing your new cluster to ensure it meets your performance requirements, and then tune it as necessary before beginning the migration.
 
@@ -112,6 +118,11 @@ If you are migrating from an old version, you might need to edit CQL clauses tha
 For specific changes in each version, see your driver's changelog or release notes.
 --
 ======
+
+[#considerations-for-multi-region-migrations]
+== Considerations for multi-region migrations
+
+include::ROOT:partial$multi-region-migrations.adoc[]
 
 == Next steps
 

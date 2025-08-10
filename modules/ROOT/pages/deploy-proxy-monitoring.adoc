@@ -171,11 +171,13 @@ All advanced configuration variables not listed here are considered mutable and 
 
 ==== Multi-datacenter clusters
 
-For multi-datacenter origin clusters, you will need to specify the name of the datacenter that {product-proxy} should consider local. To do this, set the property `origin_local_datacenter` to the datacenter name.
-Likewise, for multi-datacenter target clusters you will need to set `target_local_datacenter` appropriately.
-
+For multi-datacenter origin clusters, specify the name of the datacenter that {product-proxy} should consider local.
+To do this, set the `origin_local_datacenter` property to the local datacenter name.
+Similarly, for multi-datacenter target clusters, set the `target_local_datacenter` property to the local datacenter name.
 These two variables are stored in `vars/zdm_proxy_advanced_config.yml`.
-Note that this is not relevant for multi-region {astra-db} databases, where this is handled through region-specific {scb-brief}s.
+
+This configuration isn't necessary for multi-region {astra-db} databases, which specify the local datacenter through each region's specific {scb}.
+For information about downloading a region-specific {scb-short}, see xref:astra-db-serverless:databases:secure-connect-bundle.adoc[].
 
 [#ports]
 ==== Ports
