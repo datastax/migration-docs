@@ -82,14 +82,15 @@ Don't park the PCU group during the {sstable-sideloader} process because databas
 Committed capacity PCU group::
 +
 --
-If you plan to keep your target database in a PCU group after the migration, you can create a committed capacity PCU group for your target database.
+For a long-term PCU group option, you can use a committed capacity PCU group for your target database.
+This could be your database's permanent PCU group assignment, or it could be a long-lived PCU group that you use for many migrations over time, adding and removing databases from the group as needed.
 
 [IMPORTANT]
 ====
 The {sstable-sideloader} process can be extremely resource intensive.
 If there are any other databases in the same PCU group, the migration process can affect their performance due to resource contention.
 
-If your PCU groups have multiple databases, consider using a flexible capacity PCU group to temporarily isolate your target database during the migration.
+To avoid interfering with other databases in the same PCU group, {company} recommends isolating the database during the migration using either a single-database committed capacity PCU group or a flexible capacity PCU group.
 ====
 
 {company} recommends the following committed capacity PCU group configuration for {sstable-sideloader} migrations.
