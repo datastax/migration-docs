@@ -1,0 +1,35 @@
+After uploading the snapshots to the migration directory, use the {devops-api} to start the data import process.
+
+During the import process, {sstable-sideloader} does the following:
+
+. Revokes access to the migration directory.
++
+You cannot read or write to the migration directory after starting the data import process.
+
+. Discovers all uploaded SSTables in the migration directory, and then groups them into approximately same-sized subsets.
+
+. Runs validation checks on each subset.
+
+. Converts all SSTables of each subset.
+
+. Disables new compactions on the target database.
++
+[WARNING]
+====
+This is the last point at which you can xref:sideloader:stop-restart-sideloader.adoc#abort-migration[abort the migration].
+
+Once {sstable-sideloader} begins to import SSTable metadata (the next step), you cannot stop the migration.
+====
+
+. Imports metadata from each SSTable.
++
+If the dataset contains tombstones, any read operations on the target database can return inconsistent results during this step.
+Since compaction is disabled, there is no risk of permanent inconsistencies.
+However, in the context of xref:ROOT:introduction.adoc[{product}], it's important that the {product-short} proxy continues to read from the origin cluster.
+
+. Re-enables compactions on the {astra-db} Serverless database.
+
+Each step must finish successfully.
+If one step fails, the import operation stops and no data is imported into your target database.
+
+If all steps finish successfully, the migration is complete and you can access the imported data in your target database.
