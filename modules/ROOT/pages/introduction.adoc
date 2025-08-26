@@ -49,7 +49,7 @@ The _target_ is your new {cass-short}-based environment where you want to migrat
 
 Before you begin a migration, your client applications perform read/write operations with your existing CQL-compatible database, such as {cass}, {dse-short}, {hcd-short}, or {astra-db}.
 
-image:pre-migration0ra9.png["Pre-migration environment."]
+image:pre-migration0ra.png["Pre-migration environment."]
 
 While your application is stable with the current data model and database platform, you might need to make some adjustments before enabling {product-proxy}.
 
@@ -77,7 +77,7 @@ Writes are sent to both the origin and target databases, while reads are execute
 
 For more information and instructions, see xref:ROOT:phase1.adoc[].
 
-image:migration-phase1ra9.png["Migration Phase 1."]
+image:migration-phase1ra.png["Migration Phase 1."]
 
 === Phase 2: Migrate data
 
@@ -87,7 +87,7 @@ Then, you thoroughly validate the migrated data, resolving missing and mismatche
 
 For more information and instructions, see xref:ROOT:migrate-and-validate-data.adoc[].
 
-image:migration-phase2ra9a.png["Migration Phase 2."]
+image:migration-phase2ra.png["Migration Phase 2."]
 
 === Phase 3: Enable asynchronous dual reads
 
@@ -123,7 +123,7 @@ However, be aware that the origin database is no longer synchronized with the ta
 
 For more information, see xref:ROOT:connect-clients-to-target.adoc[].
 
-image:migration-phase5ra9.png["Migration Phase 5."]
+image:migration-phase5ra.png["Migration Phase 5."]
 
 [#lab]
 == {product} interactive lab
