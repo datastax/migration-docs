@@ -1,0 +1,11 @@
+[source,bash]
+----
+curl -X GET \
+    -H "Authorization: Bearer ${token}" \
+    https://api.astra.datastax.com/v2/databases/${dbID}/migrations/${migrationID} \
+    | jq .
+----
++
+A successful response contains a `MigrationStatus` object.
+It can take a few minutes for the {devops-api} to reflect status changes during a migration.
+Immediately calling this endpoint after starting a new phase of the migration might not return the actual current status.

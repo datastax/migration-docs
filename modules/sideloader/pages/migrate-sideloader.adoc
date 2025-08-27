@@ -272,7 +272,7 @@ Use the {devops-api} to initialize the migration and get your migration director
 .What happens during initialization?
 [%collapsible]
 ====
-include::sideloader:partial$sideloader-partials.adoc[tags=initialize]
+include::sideloader:partial$initialize.adoc[]
 ====
 
 The initialization process can take several minutes to complete, especially if the migration bucket doesn't already exist.
@@ -322,7 +322,7 @@ Replace *`MIGRATION_ID`* with the `migrationID` returned by the `initialize` end
 
 . Check the migration status:
 +
-include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
+include::sideloader:partial$check-status.adoc[]
 
 . Check the `status` field in the response:
 +
@@ -520,7 +520,7 @@ aws s3 sync --only-show-errors --exclude '{asterisk}' --include '{asterisk}/snap
 +
 Replace the following:
 +
-include::sideloader:partial$sideloader-partials.adoc[tags=command-placeholders-common]
+include::sideloader:partial$command-placeholders-common.adoc[]
 
 +
 .Example: Upload a snapshot with AWS CLI
@@ -604,7 +604,7 @@ gsutil -m rsync -r -d **CASSANDRA_DATA_DIR**/**KEYSPACE_NAME**/{asterisk}{asteri
 +
 Replace the following:
 +
-include::sideloader:partial$sideloader-partials.adoc[tags=command-placeholders-common]
+include::sideloader:partial$command-placeholders-common.adoc[]
 
 +
 .Example: Upload a snapshot with gcloud and gsutil
@@ -743,7 +743,7 @@ If one step fails, then the entire import operation stops and the migration fail
 .What happens during data import?
 [%collapsible]
 ======
-include::sideloader:partial$sideloader-partials.adoc[tags=import]
+include::sideloader:partial$import.adoc[]
 ======
 
 [WARNING]
@@ -752,7 +752,7 @@ include::sideloader:partial$sideloader-partials.adoc[tags=import]
 For commands to monitor upload progress and compare uploaded data against the original snapshots, see xref:sideloader:migrate-sideloader.adoc#upload-snapshots-to-migration-directory[Upload snapshots to the migration directory].
 
 * If necessary, you can xref:sideloader:stop-restart-sideloader.adoc[pause or abort the migration] during the import process.
-include::sideloader:partial$sideloader-partials.adoc[tags=no-return]
+include::sideloader:partial$no-return.adoc[]
 ====
 
 . Use the {devops-api} to launch the data import:
@@ -769,7 +769,7 @@ Although this call returns immediately, the import process takes time.
 
 . Check the migration status periodically:
 +
-include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
+include::sideloader:partial$check-status.adoc[]
 
 . Check the `status` field in the response:
 +
@@ -784,7 +784,7 @@ Wait a few minutes before you check the status again.
 [#validate-the-migrated-data]
 == Validate the migrated data
 
-include::sideloader:partial$sideloader-partials.adoc[tags=validate]
+include::sideloader:partial$validate.adoc[]
 
 == See also
 

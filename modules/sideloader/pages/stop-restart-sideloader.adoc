@@ -49,12 +49,12 @@ curl -X POST \
     | jq .
 ----
 +
-include::sideloader:partial$sideloader-partials.adoc[tags=no-return]
+include::sideloader:partial$no-return.adoc[]
 For more information about what happens during each phase of a migration and the point of no return, see xref:sideloader:sideloader-overview.adoc[].
 
 . Wait a few minutes, and then check the migration status to confirm that the migration stopped:
 +
-include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
+include::sideloader:partial$check-status.adoc[]
 
 == Retry a failed migration
 

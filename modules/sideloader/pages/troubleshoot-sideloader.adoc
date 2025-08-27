@@ -18,7 +18,7 @@ If your credentials expire, do the following:
 
 . Use the `MigrationStatus` endpoint to generate new credentials:
 +
-include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
+include::sideloader:partial$check-status.adoc[]
 
 . Continue the migration with the fresh credentials.
 +
@@ -48,7 +48,7 @@ For more information, see <<restart>>.
 
 . Check the migration status for an error message related to the failure:
 +
-include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
+include::sideloader:partial$check-status.adoc[]
 
 . If possible, resolve the issue described in the error message.
 +

@@ -22,4 +22,4 @@ For more information and instructions, see xref:sideloader:sideloader-overview.a
 
 You can use {sstable-sideloader} alone or with {product-proxy}.
 
-include::sideloader:partial$sideloader-partials.adoc[tags=sideloader-zdm]
+include::sideloader:partial$sideloader-zdm.adoc[]
