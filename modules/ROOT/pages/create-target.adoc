@@ -2,131 +2,127 @@
 :navtitle: Create target environment for migration
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,target
 
-You must create and prepare a new cluster to be the target for your migration.
+In this phase of the migration, you must create and prepare a new database (cluster) to be the target for your migration.
+You must also gather authentication credentials to allow {product-proxy} and your client applications to connect to the new database.
 
-This section covers in detail the steps to prepare an {astra-db} Serverless database, and also outlines how to create and prepare a different cluster, which could be for example {cass-short} 4.0.x or {dse-short} 6.8.x.
+== Prepare the target database
 
-== Using an {astra-db} database as the target
+The preparation steps depend on your target database platform.
 
-If you intend to use {astra-db} as the target for the migration, you will need to:
+[tabs]
+======
+Use an {astra-db} database as the target::
++
+--
+To migrate data to an {astra-db} database, do the following:
 
-* Create an {astra-db} Serverless database.
-* Retrieve its {scb} and upload it to the application instances.
-* Create {astra-db} access credentials for your database.
-* Create the client application schema.
+. Sign in to your {astra-url}[{astra} account^].
++
+You can use any subscription plan tier.
+However, the Pay As You Go and Enterprise plans offer premium features that can facilitate your migration, including support for {sstable-sideloader}, more databases, and no automatic database hibernation.
+These plans also support advanced features like customer-managed encryption keys and metrics exports.
+For more information, see xref:astra-db-serverless:administration:subscription-plans.adoc[].
 
-=== Prerequisites
+. xref:astra-db-serverless:databases:create-database.adoc[Create an {astra-db} Serverless database] with your preferred database name, keyspace name, region, and other details.
++
+The keyspace is a handle that establishes the database's context in subsequent DDL and DML statements.
++
+For multi-region databases, see <<considerations-for-multi-region-migrations>>.
 
-* An active {astra-url}[{astra} account^]
+. When your database reaches **Active** status, xref:astra-db-serverless:administration:manage-application-tokens.adoc[create an application token] with a role like *Read/Write User* or **Database Administrator**, and then store the credentials (Client ID, Client Secret, and Token) securely.
++
+These credentials are used by the client application, {product-proxy}, and {product-automation} to read and write to your target database.
 
-=== Create an {astra-db} Serverless database
-
-Log into the {astra-ui} and create an {astra-db} Serverless database.
-You can start with a Free plan, but consider upgrading during your migration project to an {astra} Pay As You Go or Enterprise plan, to take advantage of additional functionality -- such as Exporting Metrics to external third-party applications, Bring Your Own Keys, and other features.
-
-The Pay As You Go and Enterprise plans have many benefits over the Free plan, such as the ability to lift rate limiting, and avoiding hibernation timeouts.
-
-Assign your preferred values for the serverless database:
-
-* **Name**.
-* **Keyspace**: this is a handle that establishes the database's context in subsequent DDL and DML statements.
-* **Cloud provider**: You can choose your preferred cloud provider among AWS, GCP and Azure (only GCP is available to Free Tier accounts).
-* **Region**: choose your geographically preferred region - you can subsequently add more regions.
-
-When the {astra-db} database reaches **Active** status, create an application token in the {astra-ui} with the *Read/Write User* role.
-This role will be used by the client application, {product-proxy}, and {product-automation}.
-
-Save the generate token and credentials (Client ID, Client Secret, and Token) in a clearly named secure file.
-
-=== Get the {scb-brief} and upload to client instances
-
-xref:astra-db-serverless:databases:secure-connect-bundle.adoc[Download your {astra-db} database's {scb}].
+. xref:astra-db-serverless:databases:secure-connect-bundle.adoc[Download your database's {scb}].
 The {scb-short} is a zip file that contains TLS encryption certificates and other metadata required to connect to your database.
-
++
 [IMPORTANT]
 ====
 The {scb-short} contains sensitive information that establishes a connection to your database, including key pairs and certificates.
-Treat is as you would any other sensitive values, such as passwords or tokens.
+Treat it as you would any other sensitive values, such as passwords or tokens.
 ====
++
+Your client application uses the {scb-short} to connect directly to {astra-db} near the end of the migration, and {cass-migrator} and {dsbulk-migrator} use the {scb-short} to migrate and validate data in {astra-db}.
 
-Your client application uses the {scb-short} to connect directly to {astra-db} near the end of the migration, and {cass-migrator} or {dsbulk-migrator} use the {scb-short} to migrate and validate data in {astra-db}.
-
-Use `scp` to copy the {scb-short} to your client application instance:
-
+. Use `scp` to copy the {scb-short} to your client application instance:
++
 [source,bash]
 ----
 scp -i <your_ssh_key> /path/to/scb.zip <linux user>@<public IP of client application instance>:
 ----
 
-=== Create the client application schema on your {astra-db} database
-
-To complete the preparation work, create the client application schema in your new {astra-db} database.
-
-In the {astra-ui}, create each corresponding keyspace and table.
-The keyspace names, table names, column names, data types, and primary keys must be identical to the schema on the origin cluster.
-
-Note the following limitations and exceptions for tables in {astra-db}:
-
-* In {astra-db}, you must create keyspaces in the {astra-ui} or with the {devops-api} because xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL for {astra-db}] doesn't support `CREATE KEYSPACE`.
-For instructions, see xref:astra-db-serverless:databases:manage-keyspaces.adoc[].
-
-* You can use typical CQL statements to create tables in {astra-db}.
-However, the only optional table properties that {astra-db} supports are `default_time_to_live` and `comment`.
-As a best practice, omit unsupported table properties, such as compaction strategy and `gc_grace_seconds`, when creating tables in {astra-db}.
-For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc#unsupported-values-are-ignored[CQL for {astra-db}: Unsupported values are ignored].
-
-* {astra-db} doesn't support Materialized Views (MVs) and certain types of indexes.
-You must replace these with supported indexes.
-For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL for {astra-db}].
-
-To help you prepare the schema from the DDL in your origin cluster, consider using the `generate-ddl` functionality in the {dsbulk-migrator-repo}[{dsbulk-migrator}].
-However, this tool doesn't automatically convert MVs or indexes.
-
-CQL statements, such as those used to reproduce the schema on the target database, can be executed in {astra-db} using the built-in or standalone `cqlsh`.
-For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL for {astra-db}].
-
-== Using a generic CQL cluster as the target
-
-To use a generic {cass-short} or {dse-short} cluster, you will have to:
-
-* Provision the infrastructure for your new cluster.
-* Create the cluster with the desired version of {cass-short} or {dse-short}.
-* Configure the cluster according to your requirements.
-* Create the client application schema.
-
-=== Create and configure the cluster
-
-{product-short} can be used to migrate to any type of CQL cluster, running in any cloud or even on-premise.
-
-Here are the steps that you'll need to follow:
-
-* Determine the correct topology and specifications for your new cluster, then provision infrastructure that meets these requirements.
-This can be in your cloud provider of choice, in your own private cloud or on bare metal machines.
-* Create your cluster using your chosen version of {cass-short} or {dse-short}.
-Refer to the documentation specific to the version that you are installing for detailed information, and pay particular attention at configuration that must be done at installation time.
-* Configure your new cluster as desired: for example, you may decide to enable internal authentication or configure TLS encryption.
-You should also consider testing your new cluster to ensure it meets your performance requirements and tune it as necessary.
+. Recreate your client application's schema on your {astra-db} database, including each keyspace and table that you want to migrate.
 +
-[NOTE]
-====
-Your new cluster can be configured as you wish, independently of how the origin was configured.
-{product-proxy} allows you to specify a separate set of configuration to connect to each cluster.
-====
-
-* If you enabled authentication, create a user with the required permissions to be used for your client application.
-
-=== Create the client application schema on the cluster
-
-At this point, the only thing that is left to do is creating the schema for your client application on the new cluster.
-
 [IMPORTANT]
 ====
-Make sure that all keyspaces and tables being migrated are identical to the corresponding ones on the origin cluster,including keyspace, table, and column names.
+On your new database, the keyspace names, table names, column names, data types, and primary keys must be identical to the schema on the origin cluster or the migration will fail.
 ====
++
+Note the following limitations and exceptions for tables in {astra-db}:
++
+* In {astra-db}, you must create keyspaces in the {astra-ui} or with the {devops-api} because xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL for {astra-db}] doesn't support `CREATE KEYSPACE`.
+For instructions, see xref:astra-db-serverless:databases:manage-keyspaces.adoc[].
+* You can use {astra-db}'s built-in or standalone `cqlsh` to issue typical CQL statements to xref:astra-db-serverless:databases:manage-collections.adoc#create-a-table[create tables in {astra-db}].
+However, the only optional table properties that {astra-db} supports are `default_time_to_live` and `comment`.
+As a best practice, omit unsupported table properties, such as compaction strategy and `gc_grace_seconds`, when creating tables in {astra-db} because xref:astra-db-serverless:cql:develop-with-cql.adoc#unsupported-values-are-ignored[CQL for {astra-db} ignores all unsupported values].
+* {astra-db} doesn't support Materialized Views (MVs) and certain types of indexes.
+You must replace these with supported indexes.
+For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc#limitations-on-cql-for-astra-db[Limitations on CQL for {astra-db}].
 
-* To copy the schema, you can run CQL `describe` on the origin cluster to get the schema that is being migrated, and then run the output on your new cluster.
+[TIP]
+====
+* If you plan to use {sstable-sideloader} for your data migration, you can find more information and specific requirements in xref:sideloader:migrate-sideloader.adoc#record-schema[Migrate data with {sstable-sideloader}: Configure the target database].
+
+* To help you prepare the schema from the DDL in your origin cluster, consider using the `generate-ddl` functionality in the {dsbulk-migrator-repo}[{dsbulk-migrator}].
+However, this tool doesn't automatically convert MVs or indexes.
+====
+--
+
+Use a generic CQL cluster as the target::
++
+--
+{product-short} can be used to migrate to any type of CQL cluster, running in any cloud or on-premise.
+
+To migrate data to any other generic CQL cluster, such as {hcd-short} or OSS {cass-short}, do the following:
+
+. Provision infrastructure, and then create the new cluster with your desired database platform version and configuration:
++
+.. Determine the correct topology and specifications for your new cluster, and then provision infrastructure that meets those requirements.
+Your target infrastructure can be hosted on a cloud provider, in a private cloud, or on bare metal machines.
+.. Create your cluster using your desired CQL cluster version.
+For specific infrastructure, installation, and configuration instructions, see the documentation for your infrastructure platform, database platform, and database platform version.
+Pay particular attention to the configuration that must be done at installation time.
+.. Configure your new cluster as desired.
++
+[TIP]
+====
+Because {product-proxy} supports separate connection details for each cluster, you can configure the new cluster as needed, independent of the origin cluster's configuration.
+This is a good opportunity to establish your desired configuration state on the new cluster and implement new patterns that might have been unavailable or impractical on the old cluster, such as enabling authentication or configuring TLS encryption.
+
+For multi-region clusters, see <<considerations-for-multi-region-migrations>>.
+====
+.. Recommended: Consider testing your new cluster to ensure it meets your performance requirements, and then tune it as necessary before beginning the migration.
+
+. If you enabled authentication, create a user with the required permissions for your client application to use to read and write to the cluster.
+
+. Recreate your client application's schema on your new cluster, including each keyspace and table that you want to migrate.
++
+[IMPORTANT]
+====
+On your new cluster, the keyspace names, table names, column names, data types, and primary keys must match the schema on the origin cluster, or the migration will fail.
+====
++
+To copy the schema, you can run CQL `describe` on the origin cluster to get the schema that is being migrated, and then run the output on your new cluster.
++
 If you are migrating from an old version, you might need to edit CQL clauses that are no longer supported in newer versions, such as `COMPACT STORAGE`.
 For specific changes in each version, see your driver's changelog or release notes.
+--
+======
+
+[#considerations-for-multi-region-migrations]
+== Considerations for multi-region migrations
+
+include::ROOT:partial$multi-region-migrations.adoc[]
 
 == Next steps
 
