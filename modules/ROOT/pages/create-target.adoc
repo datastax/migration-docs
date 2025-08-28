@@ -91,12 +91,12 @@ To migrate data to any other generic CQL cluster, such as {hcd-short} or OSS {ca
 Your target infrastructure can be hosted on a cloud provider, in a private cloud, or on bare metal machines.
 .. Create your cluster using your desired CQL cluster version.
 For specific infrastructure, installation, and configuration instructions, see the documentation for your infrastructure platform, database platform, and database platform version.
-Pay particular attention at configuration that must be done at installation time.
+Pay particular attention to the configuration that must be done at installation time.
 .. Configure your new cluster as desired.
 +
 [TIP]
 ====
-Because {product-proxy} supports separate connection details for each cluster, your new cluster can be configured as you wish, independent of the origin cluster's configuration.
+Because {product-proxy} supports separate connection details for each cluster, you can configure the new cluster as needed, independent of the origin cluster's configuration.
 This is a good opportunity to establish your desired configuration state on the new cluster and implement new patterns that might have been unavailable or impractical on the old cluster, such as enabling authentication or configuring TLS encryption.
 
 For multi-region clusters, see <<considerations-for-multi-region-migrations>>.
@@ -109,7 +109,7 @@ For multi-region clusters, see <<considerations-for-multi-region-migrations>>.
 +
 [IMPORTANT]
 ====
-On your new cluster, the keyspace names, table names, column names, data types, and primary keys must be identical to the schema on the origin cluster or the migration will fail.
+On your new cluster, the keyspace names, table names, column names, data types, and primary keys must match the schema on the origin cluster, or the migration will fail.
 ====
 +
 To copy the schema, you can run CQL `describe` on the origin cluster to get the schema that is being migrated, and then run the output on your new cluster.
