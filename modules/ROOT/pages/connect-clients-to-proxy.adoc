@@ -115,35 +115,27 @@ For information about self-managed cluster credentials in your {product-proxy} c
 [#expected-authentication-credentials-for-astra-db]
 ==== Expected authentication credentials for {astra-db}
 
-For {astra-db} databases, your client application can provide either application token credentials or a {scb}.
-
-[tabs]
-======
-Application token::
-+
---
-For token-based authentication, do the following:
+For {astra-db} databases, your client application need your database's {scb} and an application token:
 
 . xref:astra-db-serverless:administration:manage-application-tokens.adoc[Generate an application token] with the *Organization Administrator* role.
+You can change the token to reduce the permissions after the migration, but this role is recommended to avoid permissions-related request failures during the migration.
 +
 The token has three values: `clientId`, `secret`, and `token`.
-
-. Specify one of the following sets of credentials in your client application:
-
-* Recommended: Set `username` to the literal string `token`, and set `password` to the {astra-db} `token` value (`AstraCS:...`).
-* Legacy applications and older drivers: Set `username` to the `clientId` value, and set `password` to the `secret` value.
---
-
-{scb-short}::
+You must specify one of the following sets of credentials in your client application:
 +
---
-For information about downloading the {scb-short}, see xref:astra-db-serverless:databases:secure-connect-bundle.adoc[].
+* Token-only authentication (Recommended): Set `username` to the literal string `token`, and set `password` to the actual application token (`AstraCS:...`).
+* Legacy authentication for older applications and drivers: Set `username` to the `clientId` value, and set `password` to the `secret` value.
 
-For information about using a {scb-short} with a driver, see your driver's documentation.
---
-======
+. Download your database's xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb-short}].
++
+[IMPORTANT]
+====
+The {scb-short} contains sensitive information that establishes a connection to your database, including key pairs and certificates.
+Treat it as you would any other sensitive values, such as passwords or tokens.
+====
 
-For information about {astra-db} credentials in your {product-proxy} configuration, see xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[Cluster and core configuration].
+. Configure {product-proxy} to use your {astra-db} credentials when connecting to your {astra-db} database.
+For more information, see xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[{product-proxy} cluster and core configuration].
 
 === Disable client-side compression with {product-proxy}
 
