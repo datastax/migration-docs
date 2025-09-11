@@ -176,8 +176,8 @@ To use the Data API, you must rewrite your application code or create a new appl
 
 For more information, see the following:
 
-* xref:astra-db-serverless:apireference:dataapiclient.adoc[Get started with the Data API in {astra-db}]
-* xref:astra-db-serverless:apireference:compare-dataapi-to-cql.adoc[Migrate to the Data API from CQL in {astra-db}]
+* xref:astra-db-serverless:api-reference:dataapiclient.adoc[Get started with the Data API in {astra-db}]
+* xref:astra-db-serverless:api-reference:compare-dataapi-to-cql.adoc[Migrate to the Data API from CQL in {astra-db}]
 * xref:hyper-converged-database:api-reference:dataapiclient.adoc[Get started with the Data API in {hcd-short}]
 * xref:hyper-converged-database:api-reference:compare-dataapi-to-cql.adoc[Migrate to the Data API from CQL in {hcd-short}]
 
