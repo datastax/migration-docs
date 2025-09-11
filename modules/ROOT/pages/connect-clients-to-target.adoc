@@ -39,19 +39,35 @@ For more information on supported drivers, see xref:datastax-drivers:compatibili
 
 == Connect a driver to {astra-db}
 
-//TODO: Maybe unify and reduce duplication with datastax-drivers:compatibility:connect-cloud.adoc and data-migration:ROOT:connect-clients-to-proxy.adoc.
-
 Connections to {astra-db} are different from connections to generic CQL clusters.
 
 === Get {astra-db} credentials
 
-To connect a driver to {astra-db}, you need the same credentials that you used to xref:ROOT:connect-clients-to-proxy.adoc#expected-authentication-credentials-for-astra-db[connect your applications to {product-proxy}]:
+To connect a driver to {astra-db}, you need the following:
 
-* An xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token]
+* An xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token] with sufficient permissions to execute the required operations, such as the **Database Administrator** role.
++
+You must specify one of the following sets of credentials in your driver configuration:
++
+** Token-only authentication (Recommended):
++
+*** Set `username` to the literal string `token`.
+*** Set `password` to the actual application token value (`AstraCS:...`).
++
+** Legacy authentication for older applications and drivers:
++
+*** Set `username` to the `clientId` value generated with the token.
+*** Set `password` to the `secret` value generated with the token.
 
 * Your {astra-db} database's xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb}].
 +
-If you replicate your databases to multiple regions or use custom domains for {astra}, then your databases will have more than one {scb-short}.
+[IMPORTANT]
+====
+The {scb-short} contains sensitive information that establishes a connection to your database, including key pairs and certificates.
+Treat it as you would any other sensitive values, such as passwords or tokens.
+====
++
+For multi-region databases and {astra} organizations that use custom domains, your databases will have more than one {scb-short}.
 After making these changes in {astra}, your driver connections will need to be updated to use the appropriate {scb-short} for the desired region or domain when connecting to your databases.
 
 [#compare-connection-parameters]

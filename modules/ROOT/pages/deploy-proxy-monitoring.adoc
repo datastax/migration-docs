@@ -81,10 +81,14 @@ The variables for the origin cluster are prefixed with `origin`, and the variabl
 You must provide connection details in both sections, otherwise {product-proxy} won't be able to connect to both clusters.
 +
 * `*_username` and `*_password`:
-** For a self-managed cluster with authentication enabled, provide valid username and password values to access the cluster.
-** For a self-managed cluster without authentication, leave both values unset.
-** For an {astra-db} database, use the values generated with your application token.
-Either set `username` to the `clientId` and `password` to the `secret`, or set `username` to the literal string `token` and set `password` to the `token` value, which is prefixed by `AstraCS:`.
+** Self-managed cluster with authentication enabled: Provide a valid username and password to access the cluster.
+** Self-managed cluster without authentication: Leave both values unset.
+** {astra-db} token-only authentication:
+*** Set `username` to the literal string `token`.
+*** Set `password` to your {astra-db} application token value (`AstraCS:...`).
+** {astra-db} legacy authentication for older applications and drivers:
+*** Set `username` to the `clientId` value generated with your {astra-db} application token.
+*** Set `password` to the `secret` value generated with your {astra-db} application token.
 * `*_contact_points`:
 ** For a self-managed cluster, provide a comma-separated list of IP addresses for the cluster's seed nodes.
 ** For an {astra-db} database, leave this unset.
