@@ -177,7 +177,10 @@ print(release_version)
 In addition to updating connection strings, you might also need to make the following code changes:
 
 * Feature compatibility between your old and new database platform.
++
 For example, after migrating to {astra-db}, your drivers cannot create keyspaces because xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL for {astra-db}] doesn't support `CREATE KEYSPACE`.
++
+Similarly, {astra-db} doesn't support {dse-short}-specific features like {dse-short} Insights Monitoring.
 
 * Enhancements, deprecations, and removals when upgrading from an older driver version.
 
