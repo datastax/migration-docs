@@ -122,28 +122,47 @@ For {astra-db} databases, your client application can provide either application
 Application token::
 +
 --
-For token-based authentication, do the following:
+With token-based authentication, the {product-proxy} automatically calls the {astra} DevOps API to download the {scb-short}.
+The provided application token is used to authenticate this request.
 
-. xref:astra-db-serverless:administration:manage-application-tokens.adoc[Generate an application token] with the *Organization Administrator* role.
+To use token-based authentication, xref:astra-db-serverless:administration:manage-application-tokens.adoc[generate an application token] with the *Organization Administrator* role.
+This role is recommended to avoid permissions-related request failures during the migration.
+After the migration, you can configure your client applications to use tokens with reduced permissions.
+
+The token has three keys: `clientId`, `secret`, and `token`.
+Using these keys, you must specify one of the following sets of credentials in your {product-proxy} configuration:
+
+* Token-only authentication (Recommended):
 +
-The token has three values: `clientId`, `secret`, and `token`.
+** Set `username` to the literal string `token`.
+** Set `password` to the actual application token value (`AstraCS:...`).
 
-. Specify one of the following sets of credentials in your client application:
-
-* Recommended: Set `username` to the literal string `token`, and set `password` to the {astra-db} `token` value (`AstraCS:...`).
-* Legacy applications and older drivers: Set `username` to the `clientId` value, and set `password` to the `secret` value.
+* Legacy authentication for older applications and drivers:
++
+** Set `username` to the `clientId` value generated with the token.
+** Set `password` to the `secret` value generated with the token.
 --
 
 {scb-short}::
 +
 --
-For information about downloading the {scb-short}, see xref:astra-db-serverless:databases:secure-connect-bundle.adoc[].
-
-For information about using a {scb-short} with a driver, see your driver's documentation.
+To use {scb-short} authentication, xref:astra-db-serverless:databases:secure-connect-bundle.adoc[download your database's {scb-short}], and then provide the path to the {scb-short} zip file in your {product-proxy} configuration.
 --
 ======
 
-For information about {astra-db} credentials in your {product-proxy} configuration, see xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[Cluster and core configuration].
+For information about setting {astra-db} credentials in your {product-proxy} configuration, see xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[Cluster and core configuration].
+
+
+. xref:astra-db-serverless:administration:manage-application-tokens.adoc[Generate an application token] with the *Organization Administrator* role.
+
+
+. Download your database's xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb-short}].
++
+[IMPORTANT]
+====
+The {scb-short} contains sensitive information that establishes a connection to your database, including key pairs and certificates.
+Treat it as you would any other sensitive values, such as passwords or tokens.
+====
 
 === Disable client-side compression with {product-proxy}
 
