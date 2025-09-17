@@ -32,7 +32,7 @@ For information about driver connections for different {cass-short}-compatible c
 . Verify that your driver version is compatible with your target cluster and supports the features that you want to use on your new cluster.
 For example, if you want to use the vector data type on an {hcd-short} cluster, you must use a driver version that supports both {hcd-short} and the vector type.
 +
-When upgrading from an older driver version, you might need to make additional code changes to account for enhancements, deprecations, removals, and differences in platform features.
+When upgrading from an earlier driver version, you might need to make additional code changes to account for enhancements, deprecations, removals, and differences in platform features.
 Depending on your application's requirements, you might need to make these changes immediately, or you might make them after switching the connection.
 +
 For more information on supported drivers, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
@@ -54,7 +54,7 @@ You must specify one of the following sets of credentials in your driver configu
 *** Set `username` to the literal string `token`.
 *** Set `password` to the actual application token value (`AstraCS:...`).
 +
-** Legacy authentication for older applications and drivers:
+** Legacy authentication for earlier drivers:
 +
 *** Set `username` to the `clientId` value generated with the token.
 *** Set `password` to the `secret` value generated with the token.
@@ -117,8 +117,8 @@ a| Required.
 Verify that your driver version is compatible with {astra-db} and the features that you want to use in {astra-db}, such as the vector data type.
 For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
 
-If your client application uses an older driver version without built-in {scb-short} support, {company} strongly recommends upgrading to a compatible driver to simplify configuration and get the latest features and bug fixes.
-If you prefer to make this change after the migration, or you must support a legacy application that relies on an older driver, you can connect to {astra-db} with https://github.com/datastax/cql-proxy[CQL Proxy], or by extracting the {scb-short} archive and using the individual files to enable mTLS in your driver's configuration.
+If your client application uses an earlier driver version without built-in {scb-short} support, {company} strongly recommends upgrading to a compatible driver to simplify configuration and get the latest features and bug fixes.
+If you prefer to make this change after the migration, or you must support a legacy application that relies on an earlier driver, you can connect to {astra-db} with https://github.com/datastax/cql-proxy[CQL Proxy], or by extracting the {scb-short} archive and using the individual files to enable mTLS in your driver's configuration.
 
 If your driver has built-in support for the {astra-db} {scb-short}, the changes to enable your application to connect to {astra-db} are minimal.
 The following example demonstrates an {astra-db} connection through the Python driver using an {scb-short} and application token.
@@ -176,13 +176,13 @@ print(release_version)
 
 In addition to updating connection strings, you might also need to make the following code changes:
 
-* Feature compatibility between your old and new database platform.
+* Feature compatibility between your previous and current database platform.
 +
 For example, after migrating to {astra-db}, your drivers cannot create keyspaces because xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL for {astra-db}] doesn't support `CREATE KEYSPACE`.
 +
 Similarly, {astra-db} doesn't support {dse-short}-specific features like {dse-short} Insights Monitoring.
 
-* Enhancements, deprecations, and removals when upgrading from an older driver version.
+* Enhancements, deprecations, and removals when upgrading from an earlier driver version.
 
 Depending on your application's requirements, you might need to make these changes immediately, or you might make them after switching the connection.
 
@@ -206,7 +206,7 @@ Your migration is now complete, and your target cluster is the source of truth f
 
 When you are ready, you can decommission your origin cluster and {product-proxy}, as these are no longer needed and clean xref:ROOT:rollback.adoc[rollback] is no longer possible.
 
-If you need to revert to the origin cluster after this point, you must perform a full migration with your old origin cluster as the target to ensure that all data is rewritten and synchronized back to the origin.
+If you need to revert to the origin cluster after this point, you must perform a full migration with your previous origin cluster as the target to ensure that all data is rewritten and synchronized back to the origin.
 
 == See also
 

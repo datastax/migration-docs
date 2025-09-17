@@ -86,7 +86,7 @@ You must provide connection details in both sections, otherwise {product-proxy} 
 ** {astra-db} token-only authentication:
 *** Set `username` to the literal string `token`.
 *** Set `password` to your {astra-db} application token value (`AstraCS:...`).
-** {astra-db} legacy authentication for older applications and drivers:
+** {astra-db} legacy authentication for earlier drivers:
 *** Set `username` to the `clientId` value generated with your {astra-db} application token.
 *** Set `password` to the `secret` value generated with your {astra-db} application token.
 * `*_contact_points`:
