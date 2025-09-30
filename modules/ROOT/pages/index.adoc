@@ -1,5 +1,4 @@
 = {company} migration tools
-:navtitle: Data migration
 :page-layout: landing
 
 {company} has developed a set of thoroughly tested self-service tools that can help you migrate your data from any origin cluster based on {cass-reg} to any {cass-short}-compatible target with little or no downtime.

@@ -2,67 +2,152 @@
 :navtitle: Phase 5: Connect client applications directly to the target
 :page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps,target
 
-At this point in our migration phases, we've completed:
+Phase 5 is the last phase of the xref:ROOT:introduction.adoc[migration process].
+In this phase, you configure your client applications to connect directly and exclusively to the target cluster.
+This removes the dependency on {product-proxy} and completes the migration.
 
-* Phase 1: Connected client applications to {product-proxy}, which included setting up Ansible playbooks with {product-utility} and using {product-automation} to deploy the {product-proxy} instances with the Docker container.
+image::migration-phase5ra.png[In Phase 5, your applications no longer using the proxy and, instead, connect directly to the target.]
 
-* Phase 2: Migrated and validated our data with {cass-migrator} and/or {dsbulk-migrator}.
+The minimum requirements for reconfiguring these connections depend on whether your target cluster is {astra-db} or a generic CQL cluster, such as {cass-reg}, {dse}, or {hcd}.
 
-* Phase 3: Optionally enabled async data reads to check that the target cluster can handle the full production workload of read/write traffic.
+[WARNING]
+====
+Once you switch your client applications to connect directly to the target cluster, you can no longer cleanly roll back to the origin cluster.
+From this point onward, the clusters will diverge, and the target cluster becomes the source of truth for your client applications and data.
 
-* Phase 4: Changed read routing to the target cluster.
+Be sure that you have thoroughly xref:ROOT:migrate-and-validate-data.adoc[validated your data (Phase 2)], xref:ROOT:enable-async-dual-reads.adoc[tested your target cluster's performance (Phase 3)], and xref:ROOT:change-read-routing.adoc[routed all reads to the target (Phase 4)] before permanently switching the connection.
+====
 
-In Phase 5 you will configure your client applications to connect directly to the target cluster.
-How you do this depends on whether your target cluster is {astra-db}, {cass-reg}, or {dse-short}.
+== Connect a driver to a generic CQL cluster
 
-image::migration-phase5ra.png[In Phase 5, your apps no longer using the proxy and, instead, connect directly to the target.]
+If your origin and target clusters are both generic CQL clusters ({cass-short}, {dse-short}, or {hcd-short}), then the driver connection strings can be similar, requiring only minor changes to connect to the target cluster.
 
-//For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
-
-== Configuring your driver to connect to a generic CQL cluster
-
-If your target cluster is a generic CQL cluster, such as {cass-short} or {dse-short}, then you can connect your client application to it in a similar way as you previously connected it to the origin cluster, but with the appropriate contact points and any additional configuration that your target cluster may require.
-For connection details, see the documentation for your driver language and version.
-
-Make sure that your driver version is compatible with your target cluster.
-For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
-
-== Configuring your driver to connect to {astra-db}
-
-To connect to {astra-db}, you need the following:
-
-* The xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token] credentials that you used to xref:ROOT:connect-clients-to-proxy.adoc[connect your applications to {product-proxy}].
+. At minimum, update your driver configuration to use the appropriate contact points for your target cluster.
 +
-As before, you can use either of the following sets of credentials to connect to your {astra-db} database:
+You might need to make additional configuration changes depending on your target cluster's setup, such as authentication and encryption.
+For example, if you have execution profiles with unique datacenter-aware load balancing policies, you must update the profiles to use the target datacenters.
 +
-** Token-only authentication: Set `username` to the literal string `token`, and set `password` to your {astra-db} application token.
-** Client ID and secret authentication (legacy): Set `username` to the `clientId` generated with your application token, and then set `password` to the `secret` generated with your application token.
+For information about driver connections for different {cass-short}-compatible clusters, see xref:datastax-drivers:connecting:connect-cloud.adoc[].
 
-* Your {astra-db} database's {scb}.
+. Verify that your driver version is compatible with your target cluster and supports the features that you want to use on your new cluster.
+For example, if you want to use the vector data type on an {hcd-short} cluster, you must use a driver version that supports both {hcd-short} and the vector type.
 +
-The {scb-short} is a zip file that contains TLS encryption certificates and other metadata required to connect to your database.
-Databases can have one or more {scb-short}s.
-For more information, see xref:astra-db-serverless:databases:secure-connect-bundle.adoc[].
+When upgrading from an earlier driver version, you might need to make additional code changes to account for enhancements, deprecations, removals, and differences in platform features.
+Depending on your application's requirements, you might need to make these changes immediately, or you might make them after switching the connection.
++
+For more information on supported drivers, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
+
+== Connect a driver to {astra-db}
+
+Connections to {astra-db} are different from connections to generic CQL clusters.
+
+=== Get {astra-db} credentials
+
+To connect a driver to {astra-db}, you need the following:
+
+* An xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token] with sufficient permissions to execute the required operations, such as the **Database Administrator** role.
++
+You must specify one of the following sets of credentials in your driver configuration:
++
+** Token-only authentication (Recommended):
++
+*** Set `username` to the literal string `token`.
+*** Set `password` to the actual application token value (`AstraCS:...`).
++
+** Legacy authentication for earlier drivers:
++
+*** Set `username` to the `clientId` value generated with the token.
+*** Set `password` to the `secret` value generated with the token.
+
+* Your {astra-db} database's xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb}].
 +
 [IMPORTANT]
 ====
 The {scb-short} contains sensitive information that establishes a connection to your database, including key pairs and certificates.
 Treat it as you would any other sensitive values, such as passwords or tokens.
 ====
++
+For multi-region databases and {astra} organizations that use custom domains, your databases will have more than one {scb-short}.
+After making these changes in {astra}, your driver connections will need to be updated to use the appropriate {scb-short} for the desired region or domain when connecting to your databases.
 
-* Recommended: A driver language and version that is compatible with {astra-db}.
+[#compare-connection-parameters]
+=== Compare driver connection parameters for self-managed {cass-short} clusters and {astra-db}
+
+To help you understand the required changes for your driver connection strings, the following table compares driver connection parameters for self-managed {cass-short} clusters and {astra-db} databases:
+
+[cols=3]
+|===
+| Parameter | Self-managed clusters | {astra-db} databases
+
+| Contact points
+| Required, set manually
+| Automatically set by the {scb-short}
+
+| {scb}
+| Not applicable
+| Required
+
+| SSL context
+| Optional, set manually
+| Automatically set by the {scb-short}
+
+| Local datacenter
+| Required, set manually
+| Automatically set by the {scb-short}
+
+| Database username
+| Requirement depends on cluster configuration.
+If required, set to the relevant user name for authentication.
+a| Required.
+
+* Token-only authentication (Recommended): Set to the literal string `token`.
+* Client ID and secret authentication (Legacy): Set to the `clientId` generated with your token.
+
+| Database password
+| Requirement depends on cluster configuration.
+If required, set to the relevant password for authentication.
+a| Required.
+
+* Token-only authentication (Recommended): Set to your application token (`AstraCS:...`).
+* Client ID and secret authentication (Legacy): Set to the `secret` generated with your token.
+|===
+
+=== Verify driver compatibility and update connection strings
+
+Verify that your driver version is compatible with {astra-db} and the features that you want to use in {astra-db}, such as the vector data type.
 For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
 
-If your client application uses an old version of a driver without built-in {scb-short} support, {company} strongly recommends upgrading to a compatible driver to simplify configuration and get the latest features and bug fixes.
-However, you can still connect to {astra-db} for this migration by using https://github.com/datastax/cql-proxy[CQL Proxy] or extracting the {scb-short} archive and using the individual files to enable mTLS in your driver's configuration.
+If your client application uses an earlier driver version without built-in {scb-short} support, {company} strongly recommends upgrading to a compatible driver to simplify configuration and get the latest features and bug fixes.
+If you prefer to make this change after the migration, or you must support a legacy application that relies on an earlier driver, you can connect to {astra-db} with https://github.com/datastax/cql-proxy[CQL Proxy], or by extracting the {scb-short} archive and using the individual files to enable mTLS in your driver's configuration.
 
 If your driver has built-in support for the {astra-db} {scb-short}, the changes to enable your application to connect to {astra-db} are minimal.
+The following example demonstrates an {astra-db} connection through the Python driver using an {scb-short} and application token.
+For more information and examples, see <<compare-connection-parameters>> and xref:datastax-drivers:connecting:connect-cloud.adoc[].
 
+[source,python]
+----
+import os
+from cassandra.cluster import Cluster
+from cassandra.auth import PlainTextAuthProvider
+import json
+
+cloud_config= {
+        'secure_connect_bundle': '/path/to/scb.zip'
+        }
+auth_provider = PlainTextAuthProvider("token", os.environ["APPLICATION_TOKEN"])
+cluster = Cluster(cloud=cloud_config, auth_provider=auth_provider)
+session = cluster.connect()
+----
+
+.Driver pseudocode to connect to {astra-db}
+[%collapsible]
+====
 //Recalling the xref:connect-clients-to-proxy.adoc#_connecting_company_drivers_to_cassandra[pseudocode to enable your client application to connect to the proxy], here it is how your code needs to change to connect directly to {astra-db}:
 
-The following pseudocode provides guidance on how you might change your driver's code to connect directly to {astra-db}:
+The following pseudocode provides guidance on how you might change your driver's code to connect directly to {astra-db}.
+This is for illustration purposes only; the exact syntax depends on your driver and programming language.
 
-[source]
+[source,text]
 ----
 // Create an object to represent a Cassandra cluster
 // Note: there is no need to specify contact points when connecting to Astra DB.
@@ -85,27 +170,43 @@ my_cluster.close()
 // Display the release version to the user
 print(release_version)
 ----
+====
 
-As noted before, this pseudocode is just a guideline to illustrate the changes that are needed.
-For the specific syntax that applies to your driver, see the following documentation:
-//TODO: Bring migration steps to this page instead of on the astra db pages where they don't seem to belong.
+=== Other code changes for {astra-db}
 
-* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-cplusplus.html[C++ driver].
+In addition to updating connection strings, you might also need to make the following code changes:
 
-* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-csharp.html[C# driver].
+* Feature compatibility between your previous and current database platform.
++
+For example, after migrating to {astra-db}, your drivers cannot create keyspaces because xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL for {astra-db}] doesn't support `CREATE KEYSPACE`.
++
+Similarly, {astra-db} doesn't support {dse-short}-specific features like {dse-short} Insights Monitoring.
 
-* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-java.html[Java driver].
+* Enhancements, deprecations, and removals when upgrading from an earlier driver version.
 
-* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-nodejs.html[Node.js driver].
+Depending on your application's requirements, you might need to make these changes immediately, or you might make them after switching the connection.
 
-* https://docs.datastax.com/en/astra-serverless/docs/connect/drivers/connect-python.html[Python driver].
+== Switch to the Data API
 
-Your client application is now able to connect directly to your {astra-db} database.
+If you migrated to {astra-db} or {hcd-short}, and you have the option of using the Data API instead of, or in addition to, a {cass-short} driver.
 
-== Phase 5 of migration completed
+Although the Data API can read and write to CQL tables, it is significantly different from driver code.
+To use the Data API, you must rewrite your application code or create a new application.
 
-Until this point, in case of any issues, you could have abandoned the migration and rolled back to connect directly to the origin cluster at any time.
-From this point onward, the clusters will diverge, and the target cluster becomes the source of truth for your client applications and data.
+For more information, see the following:
+
+* xref:astra-db-serverless:api-reference:dataapiclient.adoc[Get started with the Data API in {astra-db}]
+* xref:astra-db-serverless:api-reference:compare-dataapi-to-cql.adoc[Migrate to the Data API from CQL in {astra-db}]
+* xref:hyper-converged-database:api-reference:dataapiclient.adoc[Get started with the Data API in {hcd-short}]
+* xref:hyper-converged-database:api-reference:compare-dataapi-to-cql.adoc[Migrate to the Data API from CQL in {hcd-short}]
+
+== Migration complete
+
+Your migration is now complete, and your target cluster is the source of truth for your client applications and data.
+
+When you are ready, you can decommission your origin cluster and {product-proxy}, as these are no longer needed and clean xref:ROOT:rollback.adoc[rollback] is no longer possible.
+
+If you need to revert to the origin cluster after this point, you must perform a full migration with your previous origin cluster as the target to ensure that all data is rewritten and synchronized back to the origin.
 
 == See also
 

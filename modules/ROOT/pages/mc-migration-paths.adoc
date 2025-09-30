@@ -1,0 +1,19 @@
+= {mc} migration toolkit
+:description: Learn about migrating your {cass-reg}-based clusters to {mc}.
+
+{mc} is an infrastructure management platform that you can use to manage your {cass-reg}-based clusters, including {cass-short}, {dse-short}, and {hcd-short} clusters.
+
+{mc} isn't required, but it can be helpful depending on your preferences for infrastructure management.
+Additionally, {mc} isn't applicable to {astra-db}, which has its own interface for database management and administration.
+
+== Migrate clusters to {mc}
+
+Cluster migration moves your entire cluster from one infrastructure to another, including its data.
+**It is meant as an infrastructure migration only, not a database software migration.**
+
+If you are migrating both your infrastructure _and_ your database software, create your new cluster in {mc}, and then use xref:ROOT:components.adoc[{company} migration tools] to migrate your data from your old cluster directly to the new cluster on {mc}.
+
+For information about migrating your infrastructure _only_ to {mc}, see the following:
+
+* xref:mission-control:migrate:oss-cass-to-mission-control.adoc[Migrate {cass-short} clusters to {mc}]
+* xref:mission-control:migrate:dse-to-mission-control.adoc[Migrate {dse-short} and other {cass-short}-based clusters to {mc}]

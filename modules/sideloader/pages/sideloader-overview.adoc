@@ -61,7 +61,7 @@ For specific requirements and more information, see xref:sideloader:migrate-side
 
 === Initialize a migration
 
-include::sideloader:partial$sideloader-partials.adoc[tags=initialize]
+include::sideloader:partial$initialize.adoc[]
 
 For instructions and more information, see xref:sideloader:migrate-sideloader.adoc#initialize-migration[Migrate data with {sstable-sideloader}: Initialize the migration].
 
@@ -105,17 +105,17 @@ In this case, consider creating your target database in a co-located datacenter,
 
 === Import data
 
-include::sideloader:partial$sideloader-partials.adoc[tags=import]
+include::sideloader:partial$import.adoc[]
 
 For instructions and more information, see xref:sideloader:migrate-sideloader.adoc#import-data[Migrate data with {sstable-sideloader}: Import data]
 
 === Validate imported data
 
-include::sideloader:partial$sideloader-partials.adoc[tags=validate]
+include::sideloader:partial$validate.adoc[]
 
 == Use {sstable-sideloader} with {product-proxy}
 
-include::sideloader:partial$sideloader-partials.adoc[tags=sideloader-zdm]
+include::sideloader:partial$sideloader-zdm.adoc[]
 
 == Next steps
 

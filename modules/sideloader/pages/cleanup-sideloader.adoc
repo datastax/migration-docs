@@ -47,7 +47,7 @@ If the request fails due to `ImportInProgress`, you must either wait for the imp
 
 . Wait a few minutes, and then check the migration status:
 +
-include::sideloader:partial$sideloader-partials.adoc[tags=check-status]
+include::sideloader:partial$check-status.adoc[]
 +
 While the cleanup is running, the migration status is `CleaningUpFiles`.
 When complete, the migration status is `Closed`.

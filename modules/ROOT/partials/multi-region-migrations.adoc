@@ -1,0 +1,15 @@
+Multi-region migrations require additional planning and action depending on factors like the amount of data, number of regions, data consistency requirements, and orchestration of multi-region traffic.
+
+Multi-region migrations can include one or more of the following scenarios:
+
+* Your origin cluster is deployed to multiple regions, with or without enforced consistency.
+* Your target database is, or will be, deployed to multiple regions.
+* You need to support multiple regions in a live migration scenario.
+* You are migrating to {astra-db}, and you need to prepare to follow the xref:astra-db-serverless:databases:manage-regions.adoc#data-consistency[eventual consistency model for multi-region databases].
+
+For relatively small migrations to {astra-db} with consistent data across all regions, you can migrate the primary region first, and then xref:astra-db-serverless:databases:manage-regions.adoc[add additional regions] after the initial migration is complete.
+This strategy allows {astra-db}'s eventual consistency model to replicate the data from the primary region to the additional regions.
+However, this approach isn't suitable for all migrations.
+
+It is difficult to provide a one-size-fits-all solution for multi-region migrations due to the potential complexity and variability of these scenarios.
+For assistance planning a multi-region migration, contact your {company} account representative or {support-url}[{company} Support].

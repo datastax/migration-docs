@@ -1,7 +1,7 @@
-= {astra} Migration Toolkit
-:description: Learn which migration tools are compatible with your origin cluster.
+= {astra} migration toolkit
+:description: Learn which migration tools you can use to migrate data to {astra}.
 
-The {astra} Migration Toolkit includes all xref:ROOT:components.adoc[{company} migration tools] that are designed to help you migrate your data to {astra-db}.
+The {astra} migration toolkit includes all xref:ROOT:components.adoc[{company} migration tools] that are designed to help you migrate your data to {astra-db}.
 
 == Migration tool compatibility
 
@@ -12,94 +12,94 @@ Use the following table to learn which tools are compatible with your current da
 |Origin |{sstable-sideloader} |{cass-migrator} |{product-proxy} |{dsbulk-migrator}/{dsbulk-loader}
 
 |Aiven for {cass-short}
-|✅
-|✅
-|✅
-|✅
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Amazon Keyspaces
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |{cass-reg} OSS 3.11 or later
-|✅
-|✅
-|✅
-|✅
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |{cass-reg} OSS 3.10 or earlier
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Azure Cosmos DB ({cass-short} API)
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Azure Managed Instance for {cass}
-|✅
-|✅
-|✅
-|✅
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |{dse-short} 5.1 or later
-|✅
-|✅
-|✅
-|✅
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |{dse-short} 5.0 or earlier
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Instaclustr Managed {cass-short}
-|✅
-|✅
-|✅
-|✅
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |K8ssandra (self-managed)
-|✅
-|✅
-|✅
-|✅
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Scylla Cloud
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Scylla OSS or Enterprise
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Yugabyte Aeon (YCQL)
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |Yugabyte OSS or Anywhere
-|❌
-|✅
-|✅
-|✅
+|icon:ban[role="text-tertiary",alt="Not supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
+|icon:check[role="text-success",alt="Supported"]
 
 |===
 
 == Get support for your migration
 
-If you have questions about migrating from a specific source to {astra-db}, contact your {company} account representative, {support-url}[{company} Support], or an https://www.datastax.com/products/datastax-astra/migration-toolkit[{astra} Migration Toolkit expert].
+If you have questions about migrating from a specific source to {astra-db}, contact your {company} account representative, {support-url}[{company} Support], or an https://www.datastax.com/products/datastax-astra/migration-toolkit[{astra} migration toolkit expert].
 
 == See also
 

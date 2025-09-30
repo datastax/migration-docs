@@ -81,10 +81,14 @@ The variables for the origin cluster are prefixed with `origin`, and the variabl
 You must provide connection details in both sections, otherwise {product-proxy} won't be able to connect to both clusters.
 +
 * `*_username` and `*_password`:
-** For a self-managed cluster with authentication enabled, provide valid username and password values to access the cluster.
-** For a self-managed cluster without authentication, leave both values unset.
-** For an {astra-db} database, use the values generated with your application token.
-Either set `username` to the `clientId` and `password` to the `secret`, or set `username` to the literal string `token` and set `password` to the `token` value, which is prefixed by `AstraCS:`.
+** Self-managed cluster with authentication enabled: Provide a valid username and password to access the cluster.
+** Self-managed cluster without authentication: Leave both values unset.
+** {astra-db} token-only authentication:
+*** Set `username` to the literal string `token`.
+*** Set `password` to your {astra-db} application token value (`AstraCS:...`).
+** {astra-db} legacy authentication for earlier drivers:
+*** Set `username` to the `clientId` value generated with your {astra-db} application token.
+*** Set `password` to the `secret` value generated with your {astra-db} application token.
 * `*_contact_points`:
 ** For a self-managed cluster, provide a comma-separated list of IP addresses for the cluster's seed nodes.
 ** For an {astra-db} database, leave this unset.
@@ -171,11 +175,13 @@ All advanced configuration variables not listed here are considered mutable and 
 
 ==== Multi-datacenter clusters
 
-For multi-datacenter origin clusters, you will need to specify the name of the datacenter that {product-proxy} should consider local. To do this, set the property `origin_local_datacenter` to the datacenter name.
-Likewise, for multi-datacenter target clusters you will need to set `target_local_datacenter` appropriately.
-
+For multi-datacenter origin clusters, specify the name of the datacenter that {product-proxy} should consider local.
+To do this, set the `origin_local_datacenter` property to the local datacenter name.
+Similarly, for multi-datacenter target clusters, set the `target_local_datacenter` property to the local datacenter name.
 These two variables are stored in `vars/zdm_proxy_advanced_config.yml`.
-Note that this is not relevant for multi-region {astra-db} databases, where this is handled through region-specific {scb-brief}s.
+
+This configuration isn't necessary for multi-region {astra-db} databases, which specify the local datacenter through each region's specific {scb}.
+For information about downloading a region-specific {scb-short}, see xref:astra-db-serverless:databases:secure-connect-bundle.adoc[].
 
 [#ports]
 ==== Ports

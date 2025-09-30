@@ -82,14 +82,15 @@ Don't park the PCU group during the {sstable-sideloader} process because databas
 Committed capacity PCU group::
 +
 --
-If you plan to keep your target database in a PCU group after the migration, you can create a committed capacity PCU group for your target database.
+For a long-term PCU group option, you can use a committed capacity PCU group for your target database.
+This could be your database's permanent PCU group assignment, or it could be a long-lived PCU group that you use for many migrations over time, adding and removing databases from the group as needed.
 
 [IMPORTANT]
 ====
 The {sstable-sideloader} process can be extremely resource intensive.
 If there are any other databases in the same PCU group, the migration process can affect their performance due to resource contention.
 
-If your PCU groups have multiple databases, consider using a flexible capacity PCU group to temporarily isolate your target database during the migration.
+To avoid interfering with other databases in the same PCU group, {company} recommends isolating the database during the migration using either a single-database committed capacity PCU group or a flexible capacity PCU group.
 ====
 
 {company} recommends the following committed capacity PCU group configuration for {sstable-sideloader} migrations.
@@ -205,14 +206,7 @@ In contrast, if you use a single large migration to migrate all SSTables for a C
 
 === Multi-region migrations
 
-Multi-region migrations can include one or more of the following scenarios:
-
-* Your origin cluster is deployed to multiple regions.
-* Your target database is, or will be, deployed to multiple regions.
-* You need to support multiple regions in a live migration scenario.
-
-It is difficult to provide a one-size-fits-all solution for multi-region migrations due to the potential complexity and variability of these scenarios.
-For assistance planning a multi-region migration, contact your {company} account representative or {support-url}[{company} Support].
+include::ROOT:partial$multi-region-migrations.adoc[]
 
 === Multi-node migrations
 

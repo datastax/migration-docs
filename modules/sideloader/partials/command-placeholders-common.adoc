@@ -1,0 +1,7 @@
+* *`CASSANDRA_DATA_DIR`*: The absolute file system path to where {cass-short} data is stored on the node.
+For example, `/var/lib/cassandra/data`.
+* *`KEYSPACE_NAME`*: The name of the keyspace that contains the tables you want to migrate.
+* *`SNAPSHOT_NAME`*: The name of the xref:sideloader:migrate-sideloader.adoc#create-snapshots[snapshot backup] that you created with `nodetool snapshot`.
+* *`MIGRATION_DIR`*: The entire `uploadBucketDir` value that was generated when you xref:sideloader:migrate-sideloader.adoc#initialize-migration[initialized the migration], including the trailing slash.
+* *`NODE_NAME`*: The host name of the node that your snapshots are from.
+It is important to use the specific node name to ensure that each node has a unique directory in the migration bucket.
