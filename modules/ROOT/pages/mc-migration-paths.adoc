@@ -16,4 +16,4 @@ If you are migrating both your infrastructure _and_ your database software, crea
 For information about migrating your infrastructure _only_ to {mc}, see the following:
 
 * xref:mission-control:migrate:oss-cass-to-mission-control.adoc[Migrate {cass-short} clusters to {mc}]
-* xref:mission-control:migrate:dse-to-mission-control.adoc[Migrate {dse-short} and other {cass-short}-based clusters to {mc}]
+* xref:mission-control:migrate:nosql-to-mission-control.adoc[Migrate {dse-short} and other {cass-short}-based clusters to {mc}]
