@@ -1,5 +1,4 @@
 = Leverage metrics provided by {product-proxy}
-:page-tag: migration,zdm,zero-downtime,metrics
 
 This topic provides detailed information about the metrics captured by {product-proxy} and explains how to interpret the metrics. 
 

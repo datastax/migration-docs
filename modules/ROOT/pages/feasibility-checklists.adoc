@@ -1,5 +1,4 @@
 = Feasibility checks
-:page-tag: migration,zdm,zero-downtime,zdm-proxy,feasibility
 :page-aliases: ROOT:preliminary-steps.adoc
 
 Before starting your migration, refer to the following considerations to ensure that your client application workload and xref:glossary.adoc#origin[**Origin**] are suitable for this {product} process.
@@ -66,7 +65,7 @@ For example, if your compound primary key is `PRIMARY KEY (A, B)` and you always
 == Considerations for {astra-db} migrations
 
 {astra-db} implements guardrails and sets limits to ensure good practices, foster availability, and promote optimal configurations for your databases.
-Check the list of https://docs.datastax.com/en/astra-serverless/docs/plan/planning.html#_astra_db_database_guardrails_and_limits[guardrails and limits] to make sure that your application workload can be successful within these limits.
+Check the list of xref:astra-db-serverless:databases:database-limits.adoc[guardrails and limits] to make sure that your application workload can be successful within these limits.
 
 If you need to make changes to the application or data model to ensure that your workload can run successfully in {astra-db}, then you need to do these changes before you start the migration process.
 

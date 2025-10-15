@@ -1,5 +1,4 @@
 = Set up {product-automation} with {product-utility}
-:page-tag: migration,zdm,zero-downtime,zdm-automation,zdm-proxy,ansible
 
 This page explains how to use {product-utility} to set up the Ansible Control Host container for {product-automation}.
 

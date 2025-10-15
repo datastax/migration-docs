@@ -1,6 +1,6 @@
 = Frequently Asked Questions
 :navtitle: FAQs
-:page-tag: migration,zdm,zero-downtime,zdm-proxy,faq
+:page-aliases: ROOT:contributions.adoc
 
 If you're new to the {company} {product} features, these FAQs are for you.
 
@@ -84,24 +84,19 @@ Before {company} {product} was available, migrating client applications between 
 
 == Is there support available if I have questions or issues during our migration?
 
-{product-proxy} and related software tools in the migration suite include technical assistance by {support-url}[{company} Support] for {dse-short} and Luna subscribers, and {astra} users who are on an Enterprise plan.
-Free and Pay As You Go plan users do not have support access and must raise questions in the {astra-ui} chat.
-https://www.datastax.com/products/luna[Luna] is a subscription to the {cass} support and expertise at {company}.
+{product-proxy} and related software tools in the migration suite include technical assistance by {support-url}[{company} Support] for {dse-short} users, https://www.ibm.com/docs/en/esfac[IBM Elite Support for {cass}] subscribers, and {astra} organizations on an Enterprise plan.
 
 For any observed problems with {product-proxy}, submit a {product-proxy-repo}/issues[GitHub Issue] in the {product-proxy} GitHub repo.
 
 Additional examples serve as templates, from which you can learn about migrations.
 {company} does not assume responsibility for making the templates work for specific use cases.
 
+== Can I contribute to {product-proxy}?
+
+Yes.
+See https://github.com/datastax/zdm-proxy/blob/main/CONTRIBUTING.md[CONTRIBUTING.md].
+
 == Where are the public GitHub repos?
-
-//TODO: Move to contribution guide.
-
-All the {product-proxy} GitHub repos are public and open source.
-You are welcome to read the code and submit feedback via GitHub Issues per repo.
-In addition to sending feedback, you may submit Pull Requests (PRs) for potential inclusion.
-
-To submit PRs, you must for first agree to the https://cla.datastax.com/[{company} Contribution License Agreement (CLA)].
 
 * {product-proxy-repo}[{product-proxy}] repo.
 
@@ -110,7 +105,6 @@ To submit PRs, you must for first agree to the https://cla.datastax.com/[{compan
 * {cass-migrator-repo}[cassandra-data-migrator] repo for the tool that supports migrating larger data quantities as well as detailed verifications and reconciliation options.
 
 * {dsbulk-migrator-repo}[dsbulk-migrator] repo for the tool that allows simple data migrations without validation and reconciliation capabilities.
-
 
 == Does {product-proxy} support Transport Layer Security (TLS)?
 
@@ -165,13 +159,3 @@ Ranging from large enterprises to small teams, IT managers, operators, and devel
 
 A CNDB like {astra-db} is a different environment.
 Running on proven cloud providers like AWS, Google Cloud, and Azure, {astra-db} greatly reduces complexity and increases convenience by surfacing a subset of configurable settings, providing a UI (the {astra-ui}) and APIs and CLI tools to interact with your {astra-db} organizations and databases.
-
-//TODO: Content to incorporate somewhere:
-
-////
-Zero-Downtime Migration (ZDM) Proxy is a proxy that mirrors traffic between the origin and target database. The requests are CQL-oriented - effectively, any database that uses the Cassandra drivers can use the proxy. Therefore, it can be used with Apache Cassandra, DataStax Enterprise (including Search and Graph through the driver), ScyllaDB, Instaclutsr, Amazon Keyspaces, Microsoft CosmosDB, Aiven’s Cassandra, Yugabyte, and anything else that the drivers can connect to. A matrix of what we’ve tested is found here: CQL databases tested with ZDM Proxy.
-
-Cassandra Data Migrator migrates historical data and does validation and reconciliation. It uses the CQL interface to do its work. Therefore, it can be used to migrate data from any origin database that speaks CQL.
-
-Astra DB Sideloader is able to import native Cassandra data (sstables) such as backups from an origin database and load them directly into the Astra Serverless data plane. Because it takes native Cassandra data, we can only import data from (specific versions of) native Cassandra databases such as Apache Cassandra, DataStax Enterprise, Hyper-Converged Database, Instaclustr, and Aiven. Sideloader cannot import data from databases that are simply Cassandra compatible, such as ScyllaDB, Keyspaces, CosmosDB, or Yugabyte, which don’t have the same native Cassandra format. In such cases, customers can use the Cassandra Data Migrator, which uses CQL.
-////

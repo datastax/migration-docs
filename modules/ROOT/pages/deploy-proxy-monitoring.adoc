@@ -1,5 +1,4 @@
 = Deploy {product-proxy} and monitoring
-:page-tag: migration,zdm,zero-downtime,deploy,zdm-proxy,monitoring
 
 This topic explains how to use the Ansible automation playbooks that you set up in the xref:setup-ansible-playbooks.adoc[prior topic] to deploy {product-proxy} and its monitoring stack.
 

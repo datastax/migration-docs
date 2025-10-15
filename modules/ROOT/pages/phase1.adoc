@@ -1,5 +1,4 @@
 = Phase 1: Deploy {product-proxy} and connect client applications
-:page-tag: migration,zdm,zero-downtime,deploy,zdm-proxy,connect-apps
 
 This section presents the following:
 
@@ -10,5 +9,3 @@ This section presents the following:
 * xref:manage-proxy-instances.adoc[]
 
 image::migration-phase1ra.png[Phase 1 diagram shows deployed {product-proxy} instances, client app connections to proxies, and the target cluster is setup.]
-
-//For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].

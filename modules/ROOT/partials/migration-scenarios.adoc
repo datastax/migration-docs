@@ -3,15 +3,15 @@ You can use {product-proxy} to support migrations from {cass-reg}, {dse}, {hcd},
 Compatible origin clusters::
 Migrate from one of the following:
 +
-* https://www.datastax.com/products/datastax-enterprise[{dse}] version 4.7.1 and later
-* https://cassandra.apache.org/_/index.html[{cass-reg}] version 2.1.6 and later
+* {dse} version 4.7.1 and later
+* {cass-reg} version 2.1.6 and later
 * Other {cass-short}-based databases that are based on a compatible {cass-short} version, such as {astra-db} Classic, ScyllaDB, and Yugabyte.
 
 Compatible target clusters::
 Migrate to one of the following:
 +
-* https://www.datastax.com/products/hyper-converged-database-hcd[{hcd}]
+* {hcd}
 * A cluster running the same or later version of {cass-short} or {dse-short}
-* https://www.datastax.com/products/datastax-astra[{astra-db}]
+* {astra-db}
 +
 For more {astra-db} migration paths, see xref:ROOT:astra-migration-paths.adoc[].

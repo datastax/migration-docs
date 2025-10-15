@@ -1,6 +1,5 @@
 = Create the target environment for your migration
 :navtitle: Create target environment for migration
-:page-tag: migration,zdm,zero-downtime,zdm-proxy,target
 
 In this phase of the migration, you must create and prepare a new database (cluster) to be the target for your migration.
 You must also gather authentication credentials to allow {product-proxy} and your client applications to connect to the new database.

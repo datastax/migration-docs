@@ -1,5 +1,4 @@
 = Deployment and infrastructure considerations
-:page-tag: migration,zdm,zero-downtime,zdm-proxy,deploy,infrastructure
 
 As part of planning your migration, you need to prepare your infrastructure.
 

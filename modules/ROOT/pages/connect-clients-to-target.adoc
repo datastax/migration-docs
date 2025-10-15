@@ -1,6 +1,5 @@
 = Phase 5: Connect your client applications directly to the target
 :navtitle: Phase 5: Connect client applications directly to the target
-:page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps,target
 
 Phase 5 is the last phase of the xref:ROOT:introduction.adoc[migration process].
 In this phase, you configure your client applications to connect directly and exclusively to the target cluster.
@@ -142,8 +141,6 @@ session = cluster.connect()
 .Driver pseudocode to connect to {astra-db}
 [%collapsible]
 ====
-//Recalling the xref:connect-clients-to-proxy.adoc#_connecting_company_drivers_to_cassandra[pseudocode to enable your client application to connect to the proxy], here it is how your code needs to change to connect directly to {astra-db}:
-
 The following pseudocode provides guidance on how you might change your driver's code to connect directly to {astra-db}.
 This is for illustration purposes only; the exact syntax depends on your driver and programming language.
 
@@ -207,7 +204,3 @@ Your migration is now complete, and your target cluster is the source of truth f
 When you are ready, you can decommission your origin cluster and {product-proxy}, as these are no longer needed and clean xref:ROOT:rollback.adoc[rollback] is no longer possible.
 
 If you need to revert to the origin cluster after this point, you must perform a full migration with your previous origin cluster as the target to ensure that all data is rewritten and synchronized back to the origin.
-
-== See also
-
-* https://www.datastax.com/events/migrating-your-legacy-cassandra-app-to-astra-db[Migrating your legacy {cass-reg} app to {astra-db}]
