@@ -132,7 +132,7 @@ Review all of these to ensure that your cluster is compatible with {sstable-side
 +
 ** {dse-short} 5.1 or later
 ** {hcd-short} 1.1 or later
-** {cass-reg} 3.11 or through 4.x.
+** {cass-reg} 3.11 through 4.x
 +
 {cass-short} 5.0 tables aren't supported unless the cluster is configured to explicitly use the {cass-short} 4.x storage format (`storage_compatibility_mode: CASSANDRA_4`).
 
