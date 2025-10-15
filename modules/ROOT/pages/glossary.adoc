@@ -1,5 +1,4 @@
 = Glossary
-:page-tag: migration,zdm,zero-downtime,glossary
 
 //TODO: Determine which terms are actually needed. Convert to partials if the definitions need to be repeated, otherwise replace links to this page with links to more useful and complete information.
 
@@ -27,7 +26,7 @@ For more information, see xref:ROOT:enable-async-dual-reads.adoc[].
 
 {cass-short} Query Language (CQL) is a query language for the {cass-short} database.
 It includes DDL and DML statements.
-For details, see https://docs.datastax.com/en/astra/astra-db-vector/cql/develop-with-cql.html[Develop with the {cass-short} Query Language].
+For details, see the xref:cql:ROOT:index.adoc[{cass-short} Query Language documentation].
 
 == Dual-write logic
 

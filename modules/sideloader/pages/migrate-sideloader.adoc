@@ -195,8 +195,6 @@ For example, {astra-db} doesn't support materialized views, and {sstable-sideloa
 However, indexes don't need to match.
 You can define indexes in your target database independently from the origin cluster because {sstable-sideloader} ignores Storage Attached Indexes (SAI) defined on the origin cluster.
 During the migration, {sstable-sideloader} automatically populates any SAI defined in your target database, even if those SAI weren't present in your origin cluster.
-//TODO: Difference between "indexes" and "SAI" here?
-//You can define {astra-db}-supported indexes independently on the target database and they will populate as part of the data migration process.
 ====
 
 . Get the following schema properties for _each table_ that you want to migrate:
@@ -230,7 +228,7 @@ CREATE TABLE smart_home.sensor_readings (
     PRIMARY KEY (device_id, room_id, reading_timestamp)
 ) WITH CLUSTERING ORDER BY (room_id ASC, reading_timestamp DESC);
 ----
-//However, {sstable-sideloader} cannot import data to a xref:astra-db-serverless:databases:collection in a {db-serverless-vector} database.
+
 . Recreate the schemas in your target database:
 +
 .. In the {astra-ui-link} navigation menu, click *Databases*, and then click the name of your {astra-db} database.
@@ -241,7 +239,6 @@ image::sideloader:cql-console-create-identical-schema.png[]
 +
 {astra-db} rejects or ignores some table properties, such as compaction strategy.
 See xref:astra-db-serverless:databases:database-limits.adoc[] for more information.
-//TODO: Does this matter?
 
 . In your terminal, set environment variables for your target database:
 +
@@ -790,4 +787,3 @@ include::sideloader:partial$validate.adoc[]
 
 * xref:sideloader:cleanup-sideloader.adoc[]
 * xref:sideloader:troubleshoot-sideloader.adoc[]
-* https://www.datastax.com/events/migrating-your-legacy-cassandra-app-to-astra-db[Migrating your legacy {cass-reg} app to {astra-db}]

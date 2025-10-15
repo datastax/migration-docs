@@ -1,6 +1,5 @@
 = Configure Transport Layer Security (TLS)
 :navtitle: Configure Transport Layer Security
-:page-tag: migration,zdm,zero-downtime,tls,transport-layer,zdm-proxy
 
 {product-proxy} supports proxy-to-cluster and application-to-proxy TLS encryption.
 

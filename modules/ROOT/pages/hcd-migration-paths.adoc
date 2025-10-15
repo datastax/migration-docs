@@ -27,7 +27,6 @@ During the {product-short} process, you use a xref:ROOT:migrate-and-validate-dat
 
 * Choose a data migration tool that also includes strong validation capabilities, such as xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator} ({cass-migrator-short})].
 * Be aware of incompatible data types that can fail to migrate from your old cluster.
-//For example, {hcd-short} 1.2.3 doesn't support tuples in {dse-short} versions 6.8.4 and earlier.
 
 Data validation tools can identify inconsistencies as missing or mismatched data, but you still need to have a plan to resolve them.
 For example, you might need to modify your applications to use a different data type or perform additional post-migration writes to populate lost data.
@@ -76,5 +75,5 @@ If you have questions about your {hcd-short} migration, contact your {company} a
 == See also
 
 * xref:ROOT:mc-migration-paths.adoc[]
-//* xref:1.2@hyper-converged-database:migrate:dse-68-to-hcd-12.adoc[In-place upgrade from {dse-short} 6.8 to {hcd-short} 1.2.3]
-//* xref:1.1@hyper-converged-database:migrate:dse-51-to-hcd-11.adoc[In-place upgrade from {dse-short} 5.1 to {hcd-short} 1.1]
+* xref:1.2@hyper-converged-database:migrate:dse-68-to-hcd-12.adoc[In-place upgrade from {dse-short} 6.8 to {hcd-short} 1.2.3]
+* xref:1.1@hyper-converged-database:migrate:dse-51-to-hcd-11.adoc[In-place upgrade from {dse-short} 5.1 to {hcd-short} 1.1]

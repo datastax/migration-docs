@@ -1,6 +1,5 @@
 = Connect your client applications to {product-proxy}
 :navtitle: Connect client applications to {product-proxy}
-:page-tag: migration,zdm,zero-downtime,zdm-proxy,connect-apps
 
 {product-proxy} is designed to be similar to a conventional {cass-reg} cluster.
 You communicate with it using the CQL query language used in your existing client applications.
@@ -66,14 +65,7 @@ The details may vary but you'll still see the same general pattern described in 
 
 This topic does not describe details or APIs for any of the drivers mentioned above.
 All the drivers come with a complete set of documentation for exactly this task.
-The following links provide some good starting points for learning about the interfaces for each specific driver:
-
-//TODO: Move this to the driver docs and replace this whole list with a link to the connect page.
-* The https://docs.datastax.com/en/developer/java-driver/latest/manual/core/[core driver section] of the Java driver manual.
-* The https://docs.datastax.com/en/developer/python-driver/latest/getting_started/[getting started guide] for the Python driver.
-* The https://docs.datastax.com/en/developer/csharp-driver/latest/index.html#basic-usage[basic usage section] of the C# driver documentation.
-* The https://docs.datastax.com/en/developer/cpp-driver/latest/topics/[getting started section] of the C/C++ driver documentation.
-* The https://docs.datastax.com/en/developer/nodejs-driver/latest/#basic-usage[basic usage section] of the Node.js driver documentation.
+For driver documentation, see xref:datastax-drivers:ROOT:index.adoc[].
 
 == Connect applications to {product-proxy}
 

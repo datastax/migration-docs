@@ -22,22 +22,15 @@ Make sure you understand how to securely store and use sensitive credentials whe
 
 * Your {astra} organization must be on an *Enterprise* xref:astra-db-serverless:administration:subscription-plans.adoc[subscription plan].
 +
-{sstable-sideloader} is a premium feature that incurs costs based on usage:
+{sstable-sideloader} is a premium feature that incurs costs based on usage.
+This includes the total amount (GB) of data processed as part of the {sstable-sideloader} workload, and the amount of data stored in the migration bucket is metered at the standard {astra-db} storage rate.
 +
-** Total amount (GB) of data processed as part of the {sstable-sideloader} workload.
-** The amount of data stored in the migration bucket is metered at the standard {astra-db} storage rate.
-
-+
---
-For more information and specific rates, see the https://www.datastax.com/pricing/astra-db[{astra} Pricing page].
-
 [TIP]
 ====
 Migration directories are automatically cleaned up after one week of idle time.
 
 To minimize costs, you can xref:sideloader:cleanup-sideloader.adoc[manually clean up migration directories] when you no longer need them.
 ====
---
 
 * Your target database must be an {astra-db} Serverless database.
 +

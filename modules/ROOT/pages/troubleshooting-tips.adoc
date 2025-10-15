@@ -1,5 +1,4 @@
 = Troubleshooting tips
-:page-tag: migration,zdm,zero-downtime,zdm-proxy,troubleshooting
 :page-aliases: ROOT:troubleshooting.adoc
 :description: Get help with {product}.
 
@@ -7,7 +6,7 @@ This page provides general troubleshooting advice and describes some common issu
 
 For specific error messages, see xref:troubleshooting-scenarios.adoc[].
 
-You can also contact your {company} account representative or {support-url}[{company} Support], if you have a https://www.datastax.com/products/luna[Luna service contract].
+You can also contact your {company} account representative or {support-url}[{company} Support], if you have an IBM Elite Support for {cass} contract.
 
 [#proxy-logs]
 == {product-proxy} logs

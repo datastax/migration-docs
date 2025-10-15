@@ -1,5 +1,4 @@
 = Manage your {product-proxy} instances
-:page-tag: migration,zdm,zero-downtime,zdm-proxy
 
 In this topic, we'll learn how to perform simple operations on your {product-proxy} deployment with no interruption to its availability:
 

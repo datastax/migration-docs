@@ -1,5 +1,4 @@
 = Troubleshooting scenarios
-:page-tag: migration,zdm,zero-downtime,zdm-proxy,troubleshooting
 
 //TODO: use same format as driver troubleshooting.
 //TODO: Remove or hide issues that have been resolved by a later release.
@@ -143,18 +142,9 @@ None.
 
 == Authentication errors
 
-=== Symptoms
+Authentication errors indicate that credentials are incorrect or have insufficient permissions.
 
-[source,log]
-----
-{"log":"\u001b[33mWARN\u001b[0m[0110] Secondary (TARGET) handshake failed with an auth error, returning ERROR AUTHENTICATION ERROR (code=ErrorCode AuthenticationError [0x00000100], msg=We recently improved your database security. To find out more and reconnect, see https://docs.datastax.com/en/astra/docs/manage-application-tokens.html) to client. \r\n","stream":"stdout","time":"2022-09-06T18:31:31.348472345Z"}
-----
-
-=== Cause
-
-Credentials are incorrect or have insufficient permissions.
-
-There are three sets of credentials in play with {product-proxy}:
+There are three sets of credentials used with {product-proxy}:
 
 * Target: credentials that you set in the proxy configuration through the `ZDM_TARGET_USERNAME` and `ZDM_TARGET_PASSWORD` settings.
 
@@ -162,23 +152,17 @@ There are three sets of credentials in play with {product-proxy}:
 
 * Client: credentials that the client application sends to the proxy during the connection handshake, these are set in the application configuration, not the proxy configuration.
 
-This error means that at least one of these three sets of credentials is incorrect or has insufficient permissions.
-
-=== Solution or Workaround
+Authentication errors mean that at least one of these three sets of credentials is incorrect or has insufficient permissions.
 
 If the authentication error is preventing the proxy from starting then it's either the origin or target credentials that are incorrect or have insufficient permissions.
 The log message shows whether it is the origin or target handshake that is failing.
 
-If the proxy is able to start up -- that is, this message can be seen in the logs:
-
-`Proxy started. Waiting for SIGINT/SIGTERM to shutdown.`
-
-then the authentication error is happening when a client application tries to open a connection to the proxy.
-In this case, the issue is with the Client credentials so the application itself is using invalid credentials (incorrect username/password or insufficient permissions).
+If the proxy is able to start up, and you can see the following message in the logs: `Proxy started. Waiting for SIGINT/SIGTERM to shutdown`, then the authentication error is happening when a client application tries to open a connection to the proxy.
+In this case, the issue is with the client credentials.
+The application itself is using invalid credentials, such as an incorrect username/password, expired token, or insufficient permissions.
 
 Note that the proxy startup message has log level `INFO`, so if the configured log level on the proxy is `warning` or `error`, you must rely on other ways to know whether {product-proxy} started correctly.
 You can check if the docker container is running (or process if docker isn't being used) or if there is a log message similar to `Error launching proxy`.
-
 
 == {product-proxy} listens on a custom port, and all applications are able to connect to one proxy instance only
 
