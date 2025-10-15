@@ -158,4 +158,5 @@ At the same time, with on-premise clusters you take on the cost of infrastructur
 Ranging from large enterprises to small teams, IT managers, operators, and developers are realizing that the Total Cost of Ownership (TCO) with cloud solutions is much lower than continuing to run on-prem physical data centers.
 
 A CNDB like {astra-db} is a different environment.
-Running on proven cloud providers like AWS, Google Cloud, and Azure, {astra-db} greatly reduces complexity and increases convenience by surfacing a subset of configurable settings, providing a UI (the {astra-ui}) and APIs and CLI tools to interact with your {astra-db} organizations and databases.
+Running on proven cloud providers like AWS, Google Cloud, and Azure, {astra-db} greatly reduces complexity and increases convenience by surfacing a subset of configurable settings.
+It provides a UI (the {astra-ui}), APIs, and CLI tools to interact with your {astra-db} organizations and databases.
