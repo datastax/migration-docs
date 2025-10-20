@@ -19,7 +19,7 @@ This command _doesn't_ trigger the migration; it only generates the migration sc
 
 * https://maven.apache.org/download.cgi[Maven] 3.9.x
 
-* Optional: If you don't want to use the embedded {dsbulk-loader} that is bundled with {dsbulk-migrator}, xref:dsbulk:installing:install.adoc[install {dsbulk-loader}] before installing {dsbulk-migrator}.
+* Optional: If you don't want to use the embedded {dsbulk-loader} that is bundled with {dsbulk-migrator}, xref:dsbulk:overview:install.adoc[install {dsbulk-loader}] before installing {dsbulk-migrator}.
 
 == Build {dsbulk-migrator}
 
@@ -639,4 +639,4 @@ java -jar /path/to/dsbulk-migrator-embedded-dsbulk.jar COMMAND --help
 == See also
 
 * xref:dsbulk:overview:dsbulk-about.adoc[{dsbulk-loader}]
-* xref:dsbulk:reference:dsbulk-cmd.adoc#escaping-and-quoting-command-line-arguments[Escaping and quoting {dsbulk-loader} command line arguments]
+* xref:dsbulk:reference:dsbulk-cmd.adoc#escape-and-quote-command-line-arguments[Escape and quote {dsbulk-loader} command line arguments]
