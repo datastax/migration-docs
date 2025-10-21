@@ -60,7 +60,7 @@ V4 is a good recommendation that usually fits all but if the user is migrating f
 
 To force the protocol version on the Java driver, see the documentation for your version of the Java driver:
 
-* https://github.com/apache/cassandra-java-driver/tree/4.x/manual/core/native_protocol[{cass-reg} Java driver 4.18 and later: Controlling the protocol version]
+* https://apache.github.io/cassandra-java-driver/4.19.0/core/native_protocol/?h=controlling#controlling-the-protocol-version[{cass-reg} Java driver 4.18 and later: Controlling the protocol version]
 * https://docs.datastax.com/en/developer/java-driver/latest/manual/core/native_protocol/index.html#controlling-the-protocol-version[{company} Java driver 4.17 and earlier: Controlling the protocol version]
 
 == Protocol errors in the proxy logs but clients can connect successfully
