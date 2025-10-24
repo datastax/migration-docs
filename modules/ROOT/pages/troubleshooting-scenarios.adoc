@@ -84,10 +84,6 @@ These protocol version downgrades happen when either {product-proxy} or at least
 V5 downgrades are enforced by {product-proxy} but any other downgrade is requested by one of the clusters when they don't support the version that the client requested.
 The proxy supports V3, V4, DSE_V1 and DSE_V2.
 
-////
-ZDM-71 tracks a request to support v2.
-////
-
 === Solution or Workaround
 
 These log messages are informative only (log level `DEBUG`).
@@ -98,9 +94,7 @@ This log message with a log level of `ERROR` means that the protocol error occur
 
 == Error during proxy startup: `Invalid or unsupported protocol version: 3`
 
-=== Symptoms
-
-{product-proxy} logs contain:
+If the {product-proxy} logs contain the following type of output, it indicates that one of the origin clusters doesn't support at least V3 (e.g. {cass-short} 2.0, {dse-short} 4.6), and {product-short} cannot be used for that migration.
 
 [source,log]
 ----
@@ -130,15 +124,7 @@ time="2022-10-01T19:58:15+01:00" level=info msg="Proxy shutdown complete."
 time="2022-10-01T19:58:15+01:00" level=error msg="Couldn't start proxy, retrying in 2.229151525s: failed to initialize origin control connection: could not open control connection to ORIGIN, tried endpoints: [127.0.0.1:9042]."
 ----
 
-=== Cause
-
 The control connections of {product-proxy} don't perform protocol version negotiation, they only attempt to use protocol version 3.
-If one of the origin clusters doesn't support at least V3 (e.g. {cass-short} 2.0, {dse-short} 4.6), then {product-short} cannot be used for that migration at the moment.
-We plan to introduce support for {cass-short} 2.0 and {dse-short} 4.6 very soon.
-
-=== Solution or Workaround
-
-None.
 
 == Authentication errors
 
