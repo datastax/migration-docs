@@ -18,7 +18,7 @@ To migrate data to an {astra-db} database, do the following:
 . Sign in to your {astra-url}[{astra} account^].
 +
 You can use any subscription plan tier.
-However, the Pay As You Go and Enterprise plans offer premium features that can facilitate your migration, including support for {sstable-sideloader}, more databases, and no automatic database hibernation.
+However, paid subscription plans offer premium features that can facilitate your migration, including support for {sstable-sideloader}, more databases, and no automatic database hibernation.
 These plans also support advanced features like customer-managed encryption keys and metrics exports.
 For more information, see xref:astra-db-serverless:administration:subscription-plans.adoc[].
 
