@@ -218,23 +218,11 @@ If there is no CQL version that is compatible with both clusters, `cqlsh` won't 
 
 To connect `cqlsh` to a {product-proxy} instance, do the following:
 
-. On a machine that can connect to your {product-proxy} instance, https://downloads.datastax.com/#cqlsh[download `cqlsh`].
+. On a machine that can connect to your {product-proxy} instance, xref:cql:connect:start-cqlsh-linux-mac.adoc[download and install `cqlsh`].
 +
 Any version of `cqlsh` can connect to {product-proxy}, but some clusters require a specific `cqlsh` version.
 
-. Install `cqlsh` by extracting the downloaded archive:
-+
-[source,shell,subs="+quotes"]
-----
-tar -xvf **CQLSH_ARCHIVE**
-----
-+
-Replace `**CQLSH_ARCHIVE**` with the file name of the downloaded `cqlsh` archive, such as `cqlsh-astra-20210304-bin.tar.gz`.
-
-. Change to the `bin` directory in your `cqlsh` installation directory.
-For example, if you installed `cqlsh` for {astra-db}, you would run `cd cqlsh-astra/bin`.
-
-. Launch `cqlsh`:
+. Start `cqlsh` with your {product-proxy} connection details:
 +
 [source,shell,subs="+quotes"]
 ----
