@@ -185,10 +185,9 @@ If you use the HTTP API then you can either modify your applications to use the 
 
 The binary protocol used by {cass-short}, {dse-short}, {hcd-short}, and {astra-db} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
 
-{product-proxy} doesn't support protocol compression.
-
-This compression type is disabled by default in {company}-compatible drivers.
-If it is enabled in your client application, you must disable it before starting the migration process.
+When establishing connections from client applications, {product-proxy} responds with a list of compression algorithms supported by both clusters.
+The compression algorithm configured in your {company}-compatible driver must match any item from the common list, or CQL request compression must be disabled completely.
+{product-proxy} cannot decompress and recompress CQL requests using different compression algorithms.
 
 This isn't related to storage compression, which you can configure on specific tables with the `compression` table property.
 Storage/table compression doesn't affect the client application or {product-proxy} in any way.
