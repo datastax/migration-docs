@@ -1,16 +1,16 @@
-= Troubleshooting tips
-:page-aliases: ROOT:troubleshooting.adoc
+= Troubleshoot {product}
+:navtitle: Troubleshoot {product-short}
+:page-aliases: ROOT:troubleshooting.adoc, ROOT:troubleshooting-scenarios.adoc
 :description: Get help with {product}.
-:page-aliases: ROOT:troubleshooting-scenarios.adoc
 
-This page provides general troubleshooting advice and describes some common issues you might encounter with {product}.
+This page provides general troubleshooting advice and describes some common issues you might encounter with {product} ({product-short}).
 
 For additional assistance, you can <<report-an-issue>>, contact your {company} account representative, or contact {support-url}[{company} Support].
 
 [#proxy-logs]
-== {product-proxy} logs
+== Check {product-proxy} logs
 
-{product-proxy} logs can help you troubleshoot issues with {product}.
+{product-proxy} logs can help you verify that your {product-proxy} instances are operating normally, investigate how processes are executed, and troubleshoot issues.
 
 === Set the {product-proxy} log level
 
@@ -30,12 +30,81 @@ For more information, see xref:manage-proxy-instances.adoc#change-mutable-config
 
 * If you didn't use {product-automation} to deploy {product-proxy}, set the `ZDM_LOG_LEVEL` environment variable on each proxy instance and then restart each instance.
 
-=== Retrieve the {product-proxy} log files
-
-//TODO: Reconcile with manage-proxy-instance.adoc content.
+=== Get {product-proxy} log files
 
 If you used {product-automation} to deploy {product-proxy}, then you can get logs for a single proxy instance, and you can use a playbook to retrieve logs for all instances.
-For instructions and more information, see xref:ROOT:manage-proxy-instances.adoc#access-the-proxy-logs[Access the proxy logs].
+
+[tabs]
+======
+Single-instance logs::
++
+--
+--
+
+Multi-instance logs::
++
+--
+--
+======
+
+////
+=== View the logs
+
+{product-proxy} runs as a Docker container on each proxy host.
+Its logs can be viewed by connecting to a proxy host and running the following command.
+
+[source,bash]
+----
+docker container logs zdm-proxy-container
+----
+
+To leave the logs open and continuously output the latest log messages, append the `--follow` (or `-f`) option to the command above.
+
+=== Collect the logs
+
+{product-automation} has a dedicated playbook, `collect_zdm_proxy_logs.yml`, that you can use to collect logs for all {product-proxy} instances in a deployment.
+
+You can view the playbook's configuration in `vars/zdm_proxy_log_collection_config.yml`, but no changes are required to run it.
+
+. Connect to the Ansible Control Host Docker container.
+You can do this from the jumphost machine by running the following command:
++
+[source,bash]
+----
+docker exec -it zdm-ansible-container bash
+----
++
+.Result
+[%collapsible]
+====
+[source,bash]
+----
+ubuntu@52772568517c:~$
+----
+====
+
+. Run the log collection playbook:
++
+[source,bash]
+----
+ansible-playbook collect_zdm_proxy_logs.yml -i zdm_ansible_inventory
+----
++
+This playbook creates a single zip file, `zdm_proxy_logs_**TIMESTAMP**.zip`, that contains the logs from all proxy instances.
+This archive is stored on the Ansible Control Host Docker container at `/home/ubuntu/zdm_proxy_archived_logs`.
+
+. To copy the archive from the container to the jumphost, open a shell on the jumphost, and then run the following command:
++
+[source,bash,subs="+quotes"]
+----
+docker cp zdm-ansible-container:/home/ubuntu/zdm_proxy_archived_logs/zdm_proxy_logs_**TIMESTAMP**.zip **DESTINATION_DIRECTORY_ON_JUMPHOST**
+----
++
+Replace the following:
++
+* `**TIMESTAMP**`: The timestamp from the name of your log file archive
+* `**DESTINATION_DIRECTORY_ON_JUMPHOST**`: The path to the directory where you want to copy the archive
+////
 
 If you did not use {product-automation} to deploy {product-proxy}, you might have to access the logs another way.
 For example, if you used Docker, you can use the following command to export a container's logs to a `log.txt` file:
@@ -117,8 +186,7 @@ Instead, this is a normal part of protocol version negotiation (handshake) durin
 [#check-version]
 == Check your {product-proxy} version
 
-//TODO: Possibly duplicated on manage-proxy-instances.html#_upgrade_the_proxy_version
-In the {product-proxy} logs, the first message contains the version string:
+The {product-proxy} version is printed at startup, and it is the first message in the logs, immediately before the long `Parsed configuration` string:
 
 [source,console]
 ----
@@ -126,16 +194,24 @@ time="2023-01-13T13:37:28+01:00" level=info msg="Starting ZDM proxy version 2.1.
 time="2023-01-13T13:37:28+01:00" level=info msg="Parsed configuration: ..."
 ----
 
-This message is logged immediately before the long `Parsed configuration` string.
-
 You can also pass the `-version` flag to {product-proxy} to print the version.
-For example, you can use the following Docker command:
+For example, you can use the following Docker command, replacing `**TAG**` with the `zdm_proxy_image` tag set in `vars/zdm_proxy_container.yml`:
 
-[source,bash]
+[source,bash,subs="+quotes"]
 ----
-docker run --rm datastax/zdm-proxy:2.x -version
+docker run --rm datastax/zdm-proxy:**TAG** -version
+----
+
+.Result
+[%collapsible]
+====
+The output shows the binary version of {product-proxy} that is currently running:
+
+[source,console]
+----
 ZDM proxy version 2.1.0
 ----
+====
 
 [IMPORTANT]
 ====

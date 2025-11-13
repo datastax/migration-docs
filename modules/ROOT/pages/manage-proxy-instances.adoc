@@ -64,69 +64,10 @@ To avoid downtime, wait for each instance to fully restart and begin receiving t
 --
 ======
 
-[#access-the-proxy-logs]
-== Access the proxy logs
+== Inspect {product-proxy} logs
 
-To confirm that the {product-proxy} instances are operating normally, or investigate any issue, you can view or collect their logs.
-
-You can view the logs for a single proxy instance, or you can use a playbook to systematically retrieve logs from all instances and package them in a zip archive for later inspection.
-
-=== View the logs
-
-{product-proxy} runs as a Docker container on each proxy host.
-Its logs can be viewed by connecting to a proxy host and running the following command.
-
-[source,bash]
-----
-docker container logs zdm-proxy-container
-----
-
-To leave the logs open and continuously output the latest log messages, append the `--follow` (or `-f`) option to the command above.
-
-=== Collect the logs
-
-{product-automation} has a dedicated playbook, `collect_zdm_proxy_logs.yml`, that you can use to collect logs for all {product-proxy} instances in a deployment.
-
-You can view the playbook's configuration in `vars/zdm_proxy_log_collection_config.yml`, but no changes are required to run it.
-
-. Connect to the Ansible Control Host Docker container.
-You can do this from the jumphost machine by running the following command:
-+
-[source,bash]
-----
-docker exec -it zdm-ansible-container bash
-----
-+
-.Result
-[%collapsible]
-====
-[source,bash]
-----
-ubuntu@52772568517c:~$
-----
-====
-
-. Run the log collection playbook:
-+
-[source,bash]
-----
-ansible-playbook collect_zdm_proxy_logs.yml -i zdm_ansible_inventory
-----
-+
-This playbook creates a single zip file, `zdm_proxy_logs_**TIMESTAMP**.zip`, that contains the logs from all proxy instances.
-This archive is stored on the Ansible Control Host Docker container at `/home/ubuntu/zdm_proxy_archived_logs`.
-
-. To copy the archive from the container to the jumphost, open a shell on the jumphost, and then run the following command:
-+
-[source,bash,subs="+quotes"]
-----
-docker cp zdm-ansible-container:/home/ubuntu/zdm_proxy_archived_logs/zdm_proxy_logs_**TIMESTAMP**.zip **DESTINATION_DIRECTORY_ON_JUMPHOST**
-----
-+
-Replace the following:
-+
-* `**TIMESTAMP**`: The timestamp from the name of your log file archive
-* `**DESTINATION_DIRECTORY_ON_JUMPHOST**`: The path to the directory where you want to copy the archive
+{product-proxy} logs can help you verify that your {product-proxy} instances are operating normally, investigate how processes are executed, and troubleshoot issues.
+For information about configuring, retrieving, and interpreting {product-proxy} logs, see xref:ROOT:troubleshooting-tips.adoc#proxy-logs[Viewing and interpreting {product-proxy} logs].
 
 [[change-mutable-config-variable]]
 == Change a mutable configuration variable
@@ -249,59 +190,51 @@ Be aware that running the `deploy_zdm_proxy.yml` playbook results in a brief win
 [[_upgrade_the_proxy_version]]
 == Upgrade the proxy version
 
-The {product-proxy} version is displayed at startup, in a message such as `Starting {product-proxy} version ...`.
-It can also be retrieved at any time by using the `version` option as in the following command.
+The same playbook that you use for configuration changes can also be used to upgrade the {product-proxy} version in a rolling fashion.
+All containers are recreated with the given image version.
+The same behavior and observations noted in <<change-mutable-config-variable>> also apply to {product-proxy} image upgrades.
 
-Example:
+To check your current {product-proxy} version, see xref:ROOT:troubleshooting-tips.adoc#check-version[Check your {product-proxy} version].
 
-[source,bash]
+. In `vars/zdm_proxy_container.yml`, set `zdm_proxy_image` to the desired tag.
+For available tags, see the https://hub.docker.com/r/datastax/zdm-proxy/tags[{product-proxy} Docker Hub repository].
++
+[source,yaml,subs="+quotes"]
 ----
-docker run --rm datastax/zdm-proxy:<version> -version
+zdm_proxy_image: datastax/zdm-proxy:**TAG**
 ----
-
-Here's an example for {product-proxy} 2.1.x:
-
-[source,bash]
++
+For example:
++
+[source,yaml]
 ----
-docker run --rm datastax/zdm-proxy:2.1.x -version
-----
-
-The playbook for configuration changes can also be used to upgrade the {product-proxy} version in a rolling fashion.
-All containers will be recreated with the image of the specified version.
-The same behavior and observations as above apply here.
-
-To perform an upgrade, change the version tag number to the desired version in `vars/zdm_proxy_container.yml`:
-
-[source,bash]
-----
-zdm_proxy_image: datastax/zdm-proxy:x.y.z
+zdm_proxy_image: datastax/zdm-proxy:2.3.4
 ----
 
-Replace `x.y.z` with the version you would like to upgrade to.
-
-{product-proxy} example:
-
-[source,bash]
-----
-zdm_proxy_image: datastax/zdm-proxy:2.1.0
-----
-
-Then run the same playbook as above, with the following command:
-
+. Run the `rolling_update_zdm_proxy.yml` playbook:
++
 [source,bash]
 ----
 ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
 ----
 
-== Scale operations with {product-automation}
+== Scale {product-proxy} instances
 
-{product-automation} doesn't provide a way to scale operations up or down in a rolling fashion.
-If you are using {product-automation} and you need a larger {product-proxy} deployment, you have two options:
-
-Recommended: Create a new deployment::
-This is the recommended way to scale your {product-proxy} deployment because it requires no downtime.
+[tabs]
+======
+Scale with {product-automation}::
 +
-With this option, you create a new {product-proxy} deployment, and then move your client application to it:
+--
+{product-automation} doesn't provide a way to scale operations up or down in a rolling fashion.
+If you are using {product-automation} and you need a larger {product-proxy} deployment, you can create a new deployment, or you can add instances to an existing deployment.
+
+[tabs]
+====
+Create a new deployment (recommended)::
++
+This option is the recommended way to scale your {product-proxy} deployment because it requires no downtime.
++
+Create a new {product-proxy} deployment, and then reconfigure your client application to use the new instance:
 +
 . xref:ROOT:setup-ansible-playbooks.adoc[Create a new {product-proxy} deployment] with the desired topology on a new set of machines.
 . Change the contact points in the application configuration so that the application instances point to the new {product-proxy} deployment.
@@ -312,53 +245,71 @@ The application instances switch seamlessly from the old deployment to the new o
 . After restarting all application instances, you can safely remove the old {product-proxy} deployment.
 
 Add instances to an existing deployment::
-This option requires some manual effort and a brief amount of downtime.
 +
-With this option, you change the topology of your existing {product-proxy} deployment, and then restart the entire deployment to apply the change:
-
+This option requires manual configuration and a small amount of downtime.
++
+Change the topology of your existing {product-proxy} deployment, and then restart the entire deployment to apply the change:
++
 . Amend the inventory file so that it contains one line for each machine where you want to deploy a {product-proxy} instance.
 +
 For example, if you want to add three nodes to a deployment with six nodes, then the amended inventory file must contain nine total IPs, including the six existing IPs and the three new IPs.
-
++
 . Run the `deploy_zdm_proxy.yml` playbook to apply the change and start the new instances.
 +
 Rerunning the playbook stops the existing instances, destroys them, and then creates and starts a new deployment with new instances based on the amended inventory.
 This results in a brief interruption of service for your entire {product-proxy} deployment.
+====
+--
 
-== Scale {product-proxy} without {product-automation}
+Scale without {product-automation}::
++
+--
+If you aren't using {product-automation}, use these steps to add, change, or remove {product-proxy} instances.
 
-If you aren't using {product-automation}, you can still add and remove {product-proxy} instances.
-
-[#add-an-instance]
+[tabs]
+====
 Add an instance::
++
 . Prepare and configure the new {product-proxy} instances appropriately based on your other instances.
 +
 Make sure the new instance's configuration references all planned {product-proxy} cluster nodes.
++
 . On all {product-proxy} instances, add the new instance's address to the `ZDM_PROXY_TOPOLOGY_ADDRESSES` environment variable.
 +
 Make sure to include all new nodes.
++
 . On the new {product-proxy} instance, set the `ZDM_PROXY_TOPOLOGY_INDEX` to the next sequential integer after the greatest one in your existing deployment.
++
 . Perform a rolling restart of all {product-proxy} instances, one at a time.
 
 Vertically scale existing instances::
++
 Use these steps to increase or decrease resources for existing {product-proxy} instances, such as CPU or memory.
 To avoid downtime, perform the following steps on one instance at a time:
 +
 . Stop the first {product-proxy} instance that you want to modify.
++
 . Modify the instance's resources as required.
 +
 Make sure the instance's IP address remains the same.
-If the IP address changes, you need to <<add-an-instance,treat it as a new instance>>.
+If the IP address changes, you must treat it as a new instance; follow the steps on the **Add an instance** tab.
++
 . Restart the modified {product-proxy} instance.
++
 . Wait until the instance starts, and then confirm that it is receiving traffic.
++
 . Repeat these steps to modify each additional instance, one at a time.
 
 Remove an instance::
++
 . On all {product-proxy} instances, remove the unused instance's address from the `ZDM_PROXY_TOPOLOGY_ADDRESSES` environment variable.
 . Perform a rolling restart of all remaining {product-proxy} instances.
 . Clean up resources used by the removed instance, such as the container or VM.
+====
+--
+======
 
-== Purpose of proxy topology addresses
+== Proxy topology addresses enable failover and high availability
 
 When you configure a {product-proxy} deployment, either through {product-automation} or manually-managed {product-proxy} instances, you specify the addresses of your instances.
 These are populated in the `ZDM_PROXY_TOPOLOGY_ADDRESSES` variable, either manually or automatically depending on how you manage your instances.
@@ -366,7 +317,7 @@ These are populated in the `ZDM_PROXY_TOPOLOGY_ADDRESSES` variable, either manua
 {cass-short} drivers look up nodes on a cluster by querying the `system.peers` table.
 {product-proxy} uses the topology addresses to effectively respond to the driver's request for connection nodes.
 If there are no topology addresses specified, {product-proxy} defaults to a single-instance configuration.
-This means that driver connections will use only that one {product-proxy} instance, rather than all instances in your {product-proxy} deployment.
+This means that driver connections use only that one {product-proxy} instance rather than all instances in your {product-proxy} deployment.
 
 If that one instance goes down, {product-proxy} won't know that there are other instances available, and your application can experience an outage.
 Additionally, if you need to restart {product-proxy} instances, and there is only one instance specified in the topology addresses, your migration will have downtime while that one instance restarts.
