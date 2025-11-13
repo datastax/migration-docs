@@ -374,5 +374,4 @@ Additionally, if you need to restart {product-proxy} instances, and there is onl
 == See also
 
 * xref:ROOT:troubleshooting-tips.adoc[]
-* xref:ROOT:troubleshooting-scenarios.adoc[]
 * xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[Indications of success on origin and target clusters]
