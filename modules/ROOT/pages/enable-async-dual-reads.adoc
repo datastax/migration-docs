@@ -17,7 +17,7 @@ This allows you to assess the target cluster's performance and make any adjustme
 == Response and error handling with asynchronous dual reads
 
 With or without asynchronous dual reads, the client application only receives results from synchronous reads on the primary cluster.
-The client never receives results from asynchronous reads on the secondary cluster because these results are used only for {product-proxy}'s asynchronous dual read metrics.
+The client never receives results from asynchronous reads on the secondary cluster because these results are used only for {product-proxy}'s asynchronous dual read metrics and testing purposes.
 
 By design, if an asynchronous read fails or times out, it has no impact on client operations and the client application doesn't receive an error.
 However, the increased workload from read requests can cause write requests to fail or time out on the secondary cluster.
@@ -25,7 +25,7 @@ With or without asynchronous dual reads, a failed write on either cluster return
 
 This functionality is intentional so you can simulate production-scale read traffic on the secondary cluster, in addition to the existing write traffic from {product-proxy}'s xref:components.adoc#how-zdm-proxy-handles-reads-and-writes[dual writes], with the least impact to your applications.
 
-To avoid unnecessary failures due to unmigrated data, enable asynchronous dual reads only after you migrate, validate, and reconcile all data from the origin cluster to the target cluster.
+To avoid unnecessary failures due to missing unmigrated data, don't enable asynchronous dual reads until you migrate, validate, and reconcile _all_ data from the origin cluster to the target cluster.
 
 [#configure-asynchronous-dual-reads]
 == Configure asynchronous dual reads

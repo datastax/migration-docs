@@ -269,7 +269,7 @@ Allowing these values to change from a rolling restart could propagate a misconf
 
 If you change the value of an immutable configuration variable, you must run the `deploy_zdm_proxy.yml` playbook again.
 You can run this playbook as many times as needed.
-Each time, {product-proxy-automation} recreates your entire {product-proxy} deployment with the new configuration.
+Each time, {product-automation} recreates your entire {product-proxy} deployment with the new configuration.
 However, this doesn't happen in a rolling fashion: The existing {product-proxy} instances are torn down simultaneously, and then they are recreated.
 This results in a brief period of downtime where the entire {product-proxy} deployment is unavailable.
 

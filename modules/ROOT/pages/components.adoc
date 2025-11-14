@@ -20,7 +20,7 @@ This tool is open-source software.
 It doesn't perform data migrations and it doesn't have awareness of ongoing migrations.
 Instead, you use a <<data-migration-tools,data migration tool>> to perform the data migration and validate migrated data.
 
-{product-proxy} reduces risks to upgrades and migrations by decoupling the origin cluster from the target cluster and maintaining consistency between both clusters.
+{product-proxy} reduces risks to upgrades and migrations by decoupling the origin (source) cluster from the target (destination) cluster and maintaining consistency between both clusters.
 You decide when you want to switch permanently to the target cluster.
 
 After migrating your data, changes to your application code are usually minimal, depending on your client's compatibility with the origin and target clusters.
@@ -34,7 +34,10 @@ These clusters can be any CQL-compatible data store, such as {cass-reg}, {dse}, 
 
 During the migration process, you designate one cluster as the _primary cluster_, which serves as the source of truth for reads.
 For the majority of the migration process, this is typically the origin cluster.
-Towards the end of the migration process, when you are ready to read from your target cluster, you set the target cluster as the primary cluster.
+Towards the end of the migration process, when you are ready to read exclusively from your target cluster, you set the target cluster as the primary cluster.
+
+The other cluster is referred to as the _secondary cluster_.
+While {product-proxy} is active, write requests are sent to both clusters to ensure data consistency, but only the primary cluster serves read requests.
 
 ==== Writes
 
