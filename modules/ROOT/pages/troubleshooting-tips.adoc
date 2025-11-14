@@ -5,7 +5,7 @@
 
 This page provides general troubleshooting advice and describes some common issues you might encounter with {product} ({product-short}).
 
-For additional assistance, you can <<report-an-issue>>, contact your {company} account representative, or contact {support-url}[{company} Support].
+For additional assistance, you can <<report-an-issue,report an issue>>, contact your {company} account representative, or contact {support-url}[{company} Support].
 
 [#proxy-logs]
 == Check {product-proxy} logs
@@ -36,32 +36,31 @@ If you used {product-automation} to deploy {product-proxy}, then you can get log
 
 [tabs]
 ======
-Single-instance logs::
+View or tail logs for one instance::
 +
 --
---
-
-Multi-instance logs::
-+
---
---
-======
-
-////
-=== View the logs
-
 {product-proxy} runs as a Docker container on each proxy host.
-Its logs can be viewed by connecting to a proxy host and running the following command.
+
+To view the logs for a single {product-proxy} instance, connect to a proxy host, and then run the following command:
 
 [source,bash]
 ----
 docker container logs zdm-proxy-container
 ----
 
-To leave the logs open and continuously output the latest log messages, append the `--follow` (or `-f`) option to the command above.
+To tail (stream) the logs as they are written, use the `--follow` (`-f`) option:
 
-=== Collect the logs
+[source,bash]
+----
+docker container logs zdm-proxy-container -f
+----
 
+Keep in mind that Docker logs are deleted if the container is recreated.
+--
+
+Collect logs for multiple instances::
++
+--
 {product-automation} has a dedicated playbook, `collect_zdm_proxy_logs.yml`, that you can use to collect logs for all {product-proxy} instances in a deployment.
 
 You can view the playbook's configuration in `vars/zdm_proxy_log_collection_config.yml`, but no changes are required to run it.
@@ -104,9 +103,13 @@ Replace the following:
 +
 * `**TIMESTAMP**`: The timestamp from the name of your log file archive
 * `**DESTINATION_DIRECTORY_ON_JUMPHOST**`: The path to the directory where you want to copy the archive
-////
+--
 
-If you did not use {product-automation} to deploy {product-proxy}, you might have to access the logs another way.
+Get logs for deployments that don't use {product-automation}::
++
+--
+If you didn't use {product-automation} to deploy {product-proxy}, you must access the logs another way, depending on your deployment configuration and infrastructure.
+
 For example, if you used Docker, you can use the following command to export a container's logs to a `log.txt` file:
 
 [source,bash]
@@ -115,31 +118,33 @@ docker logs my-container > log.txt
 ----
 
 Keep in mind that Docker logs are deleted if the container is recreated.
+--
+======
 
 === Message levels
 
-Some log messages contain text that sounds like an error, but they are not errors.
-The message's `level` typically indicates severity:
+Some log messages contain text that seems like an error but they aren't errors.
+Instead, the message's `level` indicates severity:
 
-* `level=debug` and `level=info`: Expected and normal messages that are typically not errors.
-However, if you enable `DEBUG` logging, `debug` messages can help you find the source of a problem.
+* `level=debug` and `level=info`: Expected and normal messages that typically aren't errors.
++
+If you enable `DEBUG` logging, the `debug` messages can help you find the source of a problem by providing information about the environment and conditions when the error occurred.
 
-* `level=warn`: Reports an event that wasn't fatal to the overall process, but could indicate an issue with an individual request or connection.
+* `level=warn`: Reports an event that wasn't fatal to the overall process but might indicate an issue with an individual request or connection.
 
 * `level=error`: Indicates an issue with {product-proxy}, the client application, or the clusters.
 These messages require further examination.
 
-If the meaning of a `warn` or `error` message isn't clear, you can submit an issue in the {product-proxy-repo}/issues[{product-proxy} GitHub repository].
+If the meaning of a `warn` or `error` message isn't clear, you can <<report-an-issue,report an issue>>.
 
 === Common log messages
 
-Here are the most common messages in the {product-proxy} logs.
+Here are some of the most common messages in the {product-proxy} logs.
 
-==== {product-proxy} startup message
-
+{product-proxy} startup message::
 If the log level doesn't filter out `info` entries, you can look for a `Proxy started` log message to verify that {product-proxy} started correctly.
 For example:
-
++
 [source,json]
 ----
 {"log":"time=\"2023-01-13T11:50:48Z\" level=info
@@ -147,12 +152,11 @@ msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
 \"\n","stream":"stderr","time":"2023-01-13T11:50:48.522097083Z"}
 ----
 
-==== {product-proxy} configuration message
-
+{product-proxy} configuration message::
 If the log level doesn't filter out `info` entries, the first few lines of a {product-proxy} log file contain all configuration variables and values in a long JSON string.
-
-For example, this log message has been truncated for readability:
-
++
+The following example log message is truncated for readability:
++
 [source,json]
 ----
 {"log":"time=\"2023-01-13T11:50:48Z\" level=info
@@ -160,18 +164,17 @@ msg=\"Parsed configuration: {\\\"ProxyIndex\\\":1,\\\"ProxyAddresses\\\":"...",
 ...TRUNCATED...
 ","stream":"stderr","time":"2023-01-13T11:50:48.339225051Z"}
 ----
-
++
 Configuration settings can help with troubleshooting.
-
++
 To make this message easier to read, pass it through a JSON formatter or paste it into a text editor that can reformat JSON.
 
-==== Protocol log messages
-
+Protocol log messages::
 There are cases where protocol errors are fatal, and they will kill an active connection that was being used to serve requests.
 However, it is also possible to get normal protocol log messages that contain wording that sounds like an error.
-
++
 For example, the following `DEBUG` message contains the phrases `force a downgrade` and `unsupported protocol version`, which can sound like errors:
-
++
 [source,json]
 ----
 {"log":"time=\"2023-01-13T12:02:12Z\" level=debug msg=\"[TARGET-CONNECTOR]
@@ -179,7 +182,7 @@ Protocol v5 detected while decoding a frame. Returning a protocol message
 to the client to force a downgrade: PROTOCOL (code=Code Protocol [0x0000000A],
 msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":"2023-01-13T12:02:12.379287735Z"}
 ----
-
++
 However, `level=debug` indicates that this is not an error.
 Instead, this is a normal part of protocol version negotiation (handshake) during connection initialization.
 
@@ -219,11 +222,11 @@ Don't use `--rm` when you launch the {product-proxy} container.
 This flag will prevent you from accessing the logs when {product-proxy} stops or crashes.
 ====
 
-== Query system.peers and system.local to check for {product-proxy} configuration issues
+== Query system.peers and system.local to check for configuration issues
 
 Querying `system.peers` and `system.local` can help you investigate {product-proxy} configuration issues:
 
-. xref:ROOT:connect-clients-to-proxy.adoc#connect-the-cql-shell-to-zdm-proxy[Connect cqlsh to a {product-proxy} instance].
+. xref:ROOT:connect-clients-to-proxy.adoc#connect-cqlsh-to-zdm-proxy[Connect cqlsh to a {product-proxy} instance].
 
 . Query `system.peers`:
 +
@@ -241,47 +244,38 @@ SELECT * FROM system.local
 
 . Repeat for each of your {product-proxy} instances.
 +
-Because `system.peers` and `system.local` reflect the local {product-proxy} instance's configuration, you need to query all instances to get all information and identify potential misconfigurations.
+Because `system.peers` and `system.local` reflect the local {product-proxy} instance's configuration, you must query all instances to get all information and identify potential misconfigurations.
 
-. Inspect the results for values related to an error that you are troubleshooting, such as IP addresses or tokens.
+. Compare the results from each instance by searching for values related to an error that you are troubleshooting, such as IP addresses or tokens.
 +
-For example, you might compare `cluster_name` to ensure that all instances are connected to the same cluster, rather than mixing contact points from different clusters.
+For example, you might compare `cluster_name` to ensure that all instances are connected to the same cluster rather than mixing contact points from different clusters.
 
 == Troubleshooting scenarios
 
-//TODO: use same format as driver troubleshooting.
-//TODO: Remove or hide issues that have been resolved by a later release.
+The following sections provide troubleshooting advice for specific issues or error messages related to {product}.
 
-This page provides troubleshooting advice for specific issues or error messages related to {product}.
+=== Configuration changes aren't applied by {product-automation}
 
-Each section includes symptoms, causes, and suggested solutions or workarounds.
+If you change some configuration variables, and then performing a rolling restart with the `rolling_update_zdm_proxy.yml` playbook, you might notice that some changes aren't applied to your {product-proxy} instances.
 
-=== Configuration changes are not being applied by the automation
+Typically, this happens because you modified an immutable configuration variable.
 
-==== Symptoms
+Not all {product-proxy} configuration variables can be changed after deployment, with or without a rolling restart.
+For a list of variables that you can change on a live deployment, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change mutable configuration variables].
 
-You changed the values of some configuration variables in the automation and then rolled them out using the `rolling_update_zdm_proxy.yml` playbook, but these changes are not taking effect on your {product-proxy} instances.
+Any configuration variables excluded from the mutable variables list are considered _immutable_, and you must fully redeploy your instances to change them.
+This is by design because immutable configuration variables store values that must not change between the time that you finalize the deployment and start the migration.
+Allowing these values to change from a rolling restart could propagate a misconfiguration and compromise the deployment's integrity.
 
-==== Cause
+If you change the value of an immutable configuration variable, you must run the `deploy_zdm_proxy.yml` playbook again.
+You can run this playbook as many times as needed.
+Each time, {product-proxy-automation} recreates your entire {product-proxy} deployment with the new configuration.
+However, this doesn't happen in a rolling fashion: The existing {product-proxy} instances are torn down simultaneously, and then they are recreated.
+This results in a brief period of downtime where the entire {product-proxy} deployment is unavailable.
 
-The {product-proxy} configuration comprises a number of variables, but only a subset of these can be changed on an existing deployment in a rolling fashion.
-The variables that can be changed with a rolling update are listed xref:manage-proxy-instances.adoc#change-mutable-config-variable[here].
+=== Client application throws unsupported protocol version error
 
-All other configuration variables excluded from the list above are considered immutable and can only be changed by a redeployment.
-This is by design: immutable configuration variables should not be changed after finalizing the deployment prior to starting the migration, so allowing them to be changed through a rolling update would risk accidentally propagating some misconfiguration that could compromise the deployment's integrity.
-
-==== Solution or Workaround
-
-To change the value of configuration variables that are considered immutable, simply run the `deploy_zdm_proxy.yml` playbook again.
-This playbook can be run as many times as necessary and will just recreate the entire {product-proxy} deployment from scratch with the provided configuration.
-This doesn't happen in a rolling fashion: the existing {product-proxy} instances are torn down all at the same time prior to being recreated, resulting in a brief window in which the whole {product-proxy} deployment will become unavailable.
-
-
-=== Unsupported protocol version error on the client application
-
-==== Symptoms
-
-In the logs for the Java driver 4.x series, the following issues can manifest during session initialization, or after initialization.
+If you are running version 4.0 to 4.9 of the {cass-short} Java driver, the following errors can occur during or after session initialization:
 
 [source,log]
 ----
@@ -296,27 +290,34 @@ In the logs for the Java driver 4.x series, the following issues can manifest du
 [s0] Failed to connect with protocol DSE_V2, retrying with DSE_V1
 ----
 
-==== Cause
+These errors are caused by a Java driver bug that was resolved in version 4.10.0.
 
-https://datastax-oss.atlassian.net/browse/JAVA-2905[JAVA-2905] is a driver bug that manifests itself in this way. It affects Java driver 4.x, and was fixed on the 4.10.0 release.
+To resolve this issue, do one of the following:
 
-==== Solution or Workaround
+* If your application uses any dependency that includes a version of the Java driver, such as Spring Boot or `spring-data-cassandra`, you must upgrade these dependencies to a version that uses Java driver 4.10.0 or later.
 
-If you are using spring boot and/or spring-data-cassandra then an upgrade of these dependencies will be necessary to a version that has the java driver fix.
+* If your are using the Java driver directly, upgrade to version 4.10.0 or later, if these versions are compatible with both your source and target clusters.
 
-Alternatively, you can force the protocol version on the driver to the max supported version by both clusters.
-V4 is a good recommendation that usually fits all but if the user is migrating from {dse-short} to {dse-short} then DSE_V1 should be used for {dse-short} 5.x and DSE_V2 should be used for {dse-short} 6.x.
+* Force the protocol version on the driver to the highest version that is supported by both your source and target clusters.
+Typically, `V4` is broadly supported.
+However, if you are migrating from {dse-short} to {dse-short}, then use `DSE_V1` for {dse-short} 5.x migrations, and `DSE_V2` for {dse-short} 6.x migrations.
++
+For more information, see the documentation for your version of the Java driver:
++
+** https://apache.github.io/cassandra-java-driver/4.19.0/core/native_protocol/?h=controlling#controlling-the-protocol-version[{cass-reg} Java driver 4.18 and later: Controlling the protocol version]
+** https://docs.datastax.com/en/developer/java-driver/latest/manual/core/native_protocol/index.html#controlling-the-protocol-version[{company} Java driver 4.17 and earlier: Controlling the protocol version]
 
-To force the protocol version on the Java driver, see the documentation for your version of the Java driver:
+=== Logs report protocol errors but clients connect successfully
 
-* https://apache.github.io/cassandra-java-driver/4.19.0/core/native_protocol/?h=controlling#controlling-the-protocol-version[{cass-reg} Java driver 4.18 and later: Controlling the protocol version]
-* https://docs.datastax.com/en/developer/java-driver/latest/manual/core/native_protocol/index.html#controlling-the-protocol-version[{company} Java driver 4.17 and earlier: Controlling the protocol version]
+`PROTOCOL ERROR` messages in {product-proxy} logs are a normal part of the handshake process while the protocol version is being negotiated.
 
-=== Protocol errors in the proxy logs but clients can connect successfully
+These messages indicate that a protocol version downgrades happened because {product-proxy} or one of the clusters doesn't support the version requested by the client.
 
-==== Symptoms
+`V5` downgrades are enforced by {product-proxy}.
+Any other downgrade results from a request by a cluster that doesn't support the version that the client requested.
+{product-proxy} supports `V3`, `V4`, `DSE_V1` and `DSE_V2`.
 
-{product-proxy} logs contain:
+In the following example, notice that the `PROTOCOL ERROR` message is introduced by `level=debug`, indicating that it isn't a true error:
 
 [source,log]
 ----
@@ -325,26 +326,17 @@ Returning a protocol error to the client to force a downgrade: ERROR PROTOCOL ER
 msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":"2022-07-20T12:02:12.379287735Z"}
 ----
 
-==== Cause
+`PROTOCOL ERROR` messages recorded at a higher log level, especially `level=error`, might indicate a bug because this means that the error occurred outside of the handshake process.
+This is a fatal unexpected error that terminates the connection.
+If you observe this behavior in your logs, <<report-an-issue,report an issue>> so the issue can be investigated by the {product-short} team.
 
-Protocol errors like these are a normal part of the handshake process where the protocol version is being negotiated.
-These protocol version downgrades happen when either {product-proxy} or at least one of the clusters doesn't support the version requested by the client.
+=== Proxy fails to start due to invalid or unsupported protocol version
 
-V5 downgrades are enforced by {product-proxy} but any other downgrade is requested by one of the clusters when they don't support the version that the client requested.
-The proxy supports V3, V4, DSE_V1 and DSE_V2.
+If the {product-proxy} logs contain `debug` messages with `Invalid or unsupported protocol version: 3`, this means that one of the origin clusters doesn't support protocol version `V3` or later.
 
-==== Solution or Workaround
-
-These log messages are informative only (log level `DEBUG`).
-
-If you find one of these messages with a higher log level (especially `level=error`) then there might be a bug.
-At that point the issue will need to be investigated by the {product-short} team.
-This log message with a log level of `ERROR` means that the protocol error occurred after the handshake, and this is a fatal unexpected error that results in a disconnect for that particular connection.
-
-=== Error during proxy startup: `Invalid or unsupported protocol version: 3`
-
-If the {product-proxy} logs contain the following type of output, it indicates that one of the origin clusters doesn't support at least V3 (e.g. {cass-short} 2.0, {dse-short} 4.6), and {product-short} cannot be used for that migration.
-
+.Invalid or unsupported protocol version logs
+[%collapsible]
+====
 [source,log]
 ----
 time="2022-10-01T19:58:15+01:00" level=info msg="Starting proxy..."
@@ -372,8 +364,10 @@ time="2022-10-01T19:58:15+01:00" level=debug msg="Shutting down the schedulers a
 time="2022-10-01T19:58:15+01:00" level=info msg="Proxy shutdown complete."
 time="2022-10-01T19:58:15+01:00" level=error msg="Couldn't start proxy, retrying in 2.229151525s: failed to initialize origin control connection: could not open control connection to ORIGIN, tried endpoints: [127.0.0.1:9042]."
 ----
+====
 
-The control connections of {product-proxy} don't perform protocol version negotiation, they only attempt to use protocol version 3.
+Specifically, this happens with {cass-short} 2.0 and {dse-short} 4.6.
+{product-short} cannot be used for these migrations because the {product-proxy} control connections don't perform protocol version negotiation, they only attempt to use `V3`.
 
 === Authentication errors
 
@@ -381,50 +375,48 @@ Authentication errors indicate that credentials are incorrect or have insufficie
 
 There are three sets of credentials used with {product-proxy}:
 
-* Target: credentials that you set in the proxy configuration through the `ZDM_TARGET_USERNAME` and `ZDM_TARGET_PASSWORD` settings.
+* Target cluster: Credentials that you set in the {product-proxy} configuration through the `ZDM_TARGET_USERNAME` and `ZDM_TARGET_PASSWORD` settings.
 
-* Origin: credentials that you set in the proxy configuration through the `ZDM_ORIGIN_USERNAME` and `ZDM_ORIGIN_PASSWORD` settings.
+* Origin cluster: Credentials that you set in the {product-proxy} configuration through the `ZDM_ORIGIN_USERNAME` and `ZDM_ORIGIN_PASSWORD` settings.
 
-* Client: credentials that the client application sends to the proxy during the connection handshake, these are set in the application configuration, not the proxy configuration.
+* Client application: Credentials that the client application sends to the proxy during the connection handshake.
+These are set in the application configuration, not the proxy configuration.
 
 Authentication errors mean that at least one of these three sets of credentials is incorrect or has insufficient permissions.
 
-If the authentication error is preventing the proxy from starting then it's either the origin or target credentials that are incorrect or have insufficient permissions.
-The log message shows whether it is the origin or target handshake that is failing.
+If the authentication error prevents {product-proxy} from starting, then the issue is in the origin or target cluster credentials.
+The log message shows whether the origin or target handshake failed.
 
-If the proxy is able to start up, and you can see the following message in the logs: `Proxy started. Waiting for SIGINT/SIGTERM to shutdown`, then the authentication error is happening when a client application tries to open a connection to the proxy.
-In this case, the issue is with the client credentials.
-The application itself is using invalid credentials, such as an incorrect username/password, expired token, or insufficient permissions.
+If {product-proxy} starts but the logs contain a message like `Proxy started. Waiting for SIGINT/SIGTERM to shutdown`, then the authentication error occurs when a client application tries to open a connection to the proxy.
+This means that the client application itself has invalid credentials, such as an incorrect username/password, expired token, or insufficient permissions.
 
-Note that the proxy startup message has log level `INFO`, so if the configured log level on the proxy is `warning` or `error`, you must rely on other ways to know whether {product-proxy} started correctly.
-You can check if the docker container is running (or process if docker isn't being used) or if there is a log message similar to `Error launching proxy`.
+[TIP]
+====
+Proxy startup messages are reported at `level=info`.
+If your configured log level is `warning` or `error`, you won't see these messages in the logs, and you must use another method to determine if {product-proxy} started correctly.
+For example, you can check if the {product-proxy} process or Docker container is running, or check for log messages like `Error launching proxy`.
+====
 
-=== {product-proxy} listens on a custom port, and all applications are able to connect to one proxy instance only
+=== {product-proxy} listens on a custom port, and all applications connect to one proxy instance only
 
-==== Symptoms
-
-{product-proxy} is listening on a custom port (not 9042) and:
+If {product-proxy} is listening on a custom port (not 9042), you might see either of the following issues:
 
 * The Grafana dashboard shows only one proxy instance receiving all the connections from the application.
-* Only one proxy instance has log messages such as `level=info msg="Accepted connection from 10.4.77.210:39458"`.
+* Only one proxy instance has log messages like `level=info msg="Accepted connection from 10.4.77.210:39458"`.
 
-==== Cause
+This happens because the application specifies the custom port as part of the contact points using the format
+`**PROXY_IP_ADDRESS**:**CUSTOM_PORT**`.
 
-The application is specifying the custom port as part of the contact points using the format
-`<proxy_ip_address>:<proxy_custom_port>`.
+For example, if the {product-proxy} instances were listening on port 14035, the contact points for the {cass-short} Java driver might be specified as `.addContactPoints("172.18.10.36:14035", "172.18.11.48:14035", "172.18.12.61:14035")`.
 
-For example, using the Java driver, if the {product-proxy} instances were listening on port 14035, this would look like:
+The contact point is the first point of contact to the cluster, but the driver discovers the rest of the nodes through CQL queries.
+However, this discovery process finds the addresses only, not the ports.
+The driver uses the addresses it discovers with the port that is configured at startup.
+As a result, the custom port is used for the initial contact point only, and the default port is used with all other nodes.
 
-`.addContactPoints("172.18.10.36:14035", "172.18.11.48:14035", "172.18.12.61:14035")`
-
-The contact point is used as the first point of contact to the cluster, but the driver discovers the rest of the nodes via CQL queries.
-However, this discovery process doesn't discover the ports, just the addresses so the driver uses the addresses it discovers with the port that is configured at startup.
-
-As a result, port 14035 will only be used for the contact point initially discovered, while for all other nodes the driver will attempt to use the default 9042 port.
-
-==== Solution or Workaround
-
-In the application, ensure that the custom port is explicitly indicated using the `.withPort(<customPort>)` API. In the above example:
+To resolve this issue, ensure that the custom port is explicitly set in your application.
+The way that you do this depends on your driver language and version.
+For example, for the Java driver, use `.withPort(**CUSTOM_PORT**)`:
 
 [source,java]
 ----
@@ -432,12 +424,9 @@ In the application, ensure that the custom port is explicitly indicated using th
 .withPort(14035)
 ----
 
+=== Proxy logs contain SyntaxError no viable alternative at input 'CALL'
 
-=== Syntax error "no viable alternative at input 'CALL'" in proxy logs
-
-==== Symptoms
-
-{product-proxy} logs contain:
+{product-proxy} log messages such as the following indicate that the server doesn't recognize the word "CALL" in the query string,  which typically means that it is a remote procedure call (RPC):
 
 [source,log]
 ----
@@ -446,41 +435,38 @@ ERROR SYNTAX ERROR (code=ErrorCode SyntaxError [0x00002000], msg=line 1:0 no via
 at input 'CALL' ([CALL]...))\"\n","stream":"stderr","time":"2022-07-20T13:10:47.322882877Z"}
 ----
 
-==== Cause
+From the proxy logs alone, you cannot determine which method was called by the query, but it's typically the RPC that {cass-short} drivers use to send {dse-short} Insights data to the server.
 
-The log message indicates that the server doesn't recognize the word “CALL” in the query string which most likely means that it is an RPC (remote procedure call).
-From the proxy logs alone, it is not possible to see what method is being called by the query but it's very likely the RPC that the drivers use to send {dse-short} Insights data to the server.
-
-Most {company}-compatible drivers have {dse-short} Insights reporting enabled by default when they detect a server version that supports it (regardless of whether the feature is enabled on the server side or not).
+Most {company}-compatible drivers have {dse-short} Insights reporting enabled by default when they detect a server version that supports it, even if the feature is disabled on the server side.
 The driver might also have it enabled for {astra-db} depending on what server version {astra-db} is returning for queries involving the `system.local` and `system.peers` tables.
-
-==== Solution or Workaround
 
 These log messages are harmless, but if you need to remove them, you can disable {dse-short} Insights in the driver configuration.
 For example, in the Java driver, you can set `https://github.com/apache/cassandra-java-driver/blob/4.x/core/src/main/resources/reference.conf#L1365[advanced.monitor-reporting]` to `false`.
 
 === Default Grafana credentials don't work
 
-==== Symptoms
+When you deploy the {product-automation} metrics component, a Grafana instance is deployed that _doesn't_ use Grafana's default `admin`/`admin` credentials.
 
-Consider a case where you deploy the metrics component of our {product-automation}, a Grafana instance is deployed but you cannot login using the usual default `admin/admin` credentials.
+Instead, {product-automation} specifies a custom set of credentials.
 
-==== Cause
+You can find the credentials for your {product-automation} Grafana instance in the `vars/zdm_monitoring_config.yml` file in the {product-automation} directory.
+You can also modify these credentials before deploying the metrics stack.
 
-{product-automation} specifies a custom set of credentials instead of relying on the `admin/admin` ones that are typically the default for Grafana deployments.
+=== Proxy starts but client cannot connect (connection timed out or connection closed)
 
-==== Solution or Workaround
+If the {product-proxy} logs contain messages like `Couldn't connect to`, `context timed out or cancelled while opening connection`, and `context deadline exceeded`, it can indicate that the {product-proxy} couldn't establish a connection with a particular node.
 
-Check the credentials that are being used by looking up the `vars/zdm_monitoring_config.yml` file on the {product-automation} directory.
-These credentials can also be modified before deploying the metrics stack.
+This can happen because {product-proxy} has connectivity to a specific subset of the nodes.
+The control connection, which is established during {product-proxy} startup, cycles through the nodes until it finds one that it can connect to successfully.
 
-=== Proxy starts but client cannot connect (connection timeout/closed)
+For client connections, each proxy instance cycles through its assigned nodes only.
+Each proxy instance has a different group of _assigned nodes_, which are a subset of the cluster nodes.
+Generally, these are unique for each proxy instances to avoid interference with load balancing that is already in place at client-side driver level.
+The assigned nodes aren't necessarily contact points: Even discovered nodes undergo assignment to proxy instances.
 
-==== Symptoms
+In the following example, {product-proxy} doesn't have connectivity to `10.0.63.20`, which was chosen as the origin node for the incoming client connection, but it connected to `10.0.63.163` during startup:
 
-{product-proxy} log contains:
-
-[source]
+[source,log]
 ----
 INFO[0000] [openTCPConnection] Opening connection to 10.0.63.163:9042
 INFO[0000] [openTCPConnection] Successfully established connection with 10.0.63.163:9042
@@ -508,44 +494,21 @@ ERRO[0066] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, r
 ERRO[0076] Client Handler could not be created: ORIGIN-CONNECTOR context timed out or cancelled while opening connection to ORIGIN: context deadline exceeded
 ----
 
-==== Cause
-
-{product-proxy} has connectivity only to a subset of the nodes.
-
-The control connection (during {product-proxy} startup) cycles through the nodes until it finds one that can be connected to.
-For client connections, each proxy instance cycles through its "assigned nodes" only.
-_(The "assigned nodes" are a different subset of the cluster nodes for each proxy instance, generally non-overlapping between proxy instances so as to avoid any interference with the load balancing already in place at client-side driver level.
-The assigned nodes are not necessarily contact points: even discovered nodes undergo assignment to proxy instances.)_
-
-In the example above, {product-proxy} doesn't have connectivity to 10.0.63.20, which was chosen as the origin node for the incoming client connection, but it connected to 10.0.63.163 during startup.
-
-==== Solution or Workaround
-
-Ensure that network connectivity exists and is stable between the {product-proxy} instances and all {cass-short} / {dse-short} nodes of the local datacenter.
+To avoid this issue, ensure that a stable network connection exists between the {product-proxy} instances and all nodes of your origin and target clusters in the client application's local datacenter.
 
 === Client application driver takes too long to reconnect to a proxy instance
 
-==== Symptoms
+When a {product-proxy} instance comes back online after being unavailable for some time, then your client application might take too long to reconnect.
 
-After a {product-proxy} instance has been unavailable for some time and it gets back up, the client application takes too long to reconnect.
+If {product-proxy} doesn't send topology events to the client application, the driver's reconnection policy determines the time required for the driver to reconnect to the {product-proxy} instance.
 
-There should never be a reason to stop a {product-proxy} instance other than a configuration change, but maybe the proxy crashed or the user tried to do a configuration change and took a long time to get the {product-proxy} instance back up.
+You can restart the client application to force an immediate reconnection attempt.
 
-==== Cause
+If you expect {product-proxy} instances to go down frequently, change the driver's reconnection policy to shorten the interval between reconnection attempts.
 
-{product-proxy} does not send topology events to the client applications, so the reconnection policy determines the time required for the driver to reconnect to a {product-proxy} instance.
+=== {astra} DevOps API errors when using {product-automation}
 
-==== Solution or Workaround
-
-Restart the client application to force an immediate reconnect.
-
-If you expect {product-proxy} instances to go down frequently, change the reconnection policy on the driver so that the interval between reconnection attempts has a shorter limit.
-
-=== Error with {astra} DevOps API when using {product-automation}
-
-==== Symptoms
-
-{product-automation}'s logs:
+{product-automation} logs might report errors that contain your {astra} DevOps API endpoint:
 
 [source,log]
 ----
@@ -554,19 +517,12 @@ Connection failure: Remote end closed connection without response", "redirected"
 "https://api.astra.datastax.com/v2/databases/REDACTED/secureBundleURL"}
 ----
 
-==== Cause
+This can indicate that the {astra} DevOps API is temporarily unavailable.
+You can either wait to retry the operation, or you can xref:astra-db-serverless:databases:secure-connect-bundle.adoc[download your database's {scb} from the {astra-ui}], and then provide the path the {scb-short} zip file in the xref:deploy-proxy-monitoring.adoc#_core_configuration[{product-automation} configuration].
 
-The {astra} DevOps API is likely temporarily unavailable.
+=== Metadata service returned not successful status code (4xx or 5xx)
 
-==== Solution or Workaround
-
-xref:astra-db-serverless:databases:secure-connect-bundle.adoc[Download the {astra-db} {scb}] manually and provide its path in the xref:deploy-proxy-monitoring.adoc#_core_configuration[{product-automation} configuration].
-
-=== Metadata service returned not successful status code 4xx or 5xx
-
-==== Symptoms
-
-{product-proxy} doesn't start and the following appears on the proxy logs:
+If {product-proxy} doesn't start, the logs might contain messages with `not successful status code`:
 
 [source,log]
 ----
@@ -574,22 +530,16 @@ Couldn't start proxy: error initializing the connection configuration or control
 metadata service (Astra) returned not successful status code
 ----
 
-==== Cause
-
 There are two possible causes for this:
 
 * The credentials that {product-proxy} is using for {astra-db} don't have sufficient permissions.
 * The {astra-db} database is hibernated or otherwise unavailable.
 
-==== Solution or Workaround
+To resolve this issue, sign in to the {astra-ui}, and then check the xref:astra-db-serverless:databases:database-statuses.adoc[database status].
 
-In the {astra-ui}, check the xref:astra-db-serverless:databases:database-statuses.adoc[database status].
+If the database isn't in *Active* status, xref:astra-db-serverless:databases:database-statuses.adoc#hibernated[reactivate] or wait for the database to return to **Active** status, and then retry the connection.
 
-If the database is not in *Active* status, you might need to take action or wait for the database to return to active status.
-For example, if the database is hibernated, xref:astra-db-serverless:databases:database-statuses.adoc#hibernated[reactivate the database].
-When the database is active again, retry the connection.
-
-If the database is in *Active* status, then the issue is likely due to the credentials permissions.
+If the database is in *Active* status, then the credentials likely have insufficient permissions.
 Try using an xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token scoped to a database], specifically a token with the *Database Administrator* role for your target database.
 
 [[_async_read_timeouts_stream_id_map_exhausted]]
