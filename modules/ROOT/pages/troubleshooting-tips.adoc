@@ -23,12 +23,10 @@ However, this can slightly degrade performance, and {company} recommends that yo
 
 How you set the log level depends on how you deployed {product-proxy}:
 
-* If you used {product-automation} to deploy {product-proxy}, set `log_level` in `vars/zdm_proxy_core_config.yml`.
-+
-You can change this value in a rolling fashion by editing the variable and running the `rolling_update_zdm_proxy.yml` playbook.
+* If you used {product-automation} to deploy {product-proxy}, set `log_level` in `vars/zdm_proxy_core_config.yml`, and then run the `rolling_update_zdm_proxy.yml` playbook.
 For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
 
-* If you didn't use {product-automation} to deploy {product-proxy}, set the `ZDM_LOG_LEVEL` environment variable on each proxy instance and then restart each instance.
+* If you didn't use {product-automation} to deploy {product-proxy}, set the `ZDM_LOG_LEVEL` environment variable on each proxy instance, and then restart each instance.
 
 === Get {product-proxy} log files
 
@@ -254,6 +252,7 @@ For example, you might compare `cluster_name` to ensure that all instances are c
 
 The following sections provide troubleshooting advice for specific issues or error messages related to {product}.
 
+[#configuration-changes-arent-applied-by-zdm-automation]
 === Configuration changes aren't applied by {product-automation}
 
 If you change some configuration variables, and then performing a rolling restart with the `rolling_update_zdm_proxy.yml` playbook, you might notice that some changes aren't applied to your {product-proxy} instances.
@@ -574,17 +573,25 @@ If you are running a version prior to 2.1.0, upgrade {product-proxy}.
 If these errors are constantly written to the log files over a period of minutes or hours, then you likely need to restart the client application _or_ {product-proxy} to fix the issue.
 If you find an error like this, <<report-an-issue,report an issue>> so the {product-short} team can investigate it.
 
+[#client-application-closed-connection-errors-every-10-minutes-when-migrating-to-astra-db]
 === Client application closed connection errors every 10 minutes when migrating to {astra-db}
 
 This issue is fixed in {product-proxy} 2.1.0.
 
-If you are running an earlier version, and the logs report that the {astra-db} `TARGET-CONNECTOR` is disconnected every 10 minutes, upgrade your {product-proxy} instances to 2.1.0 or later to resolve this issue.
+In {product-proxy} versions earlier than 2.1.0, the logs can report that the {astra-db} `TARGET-CONNECTOR` is disconnected every 10 minutes.
+This happens because {astra-db} terminates idle connections after 10 minutes of inactivity.
+In the absence of asynchronous dual reads, the target cluster won't get any traffic when the client application produces only read requests because {product-short} forwards all reads to the origin cluster only.
 
-This issue occurred because {astra-db} terminates idle connections after 10 minutes of inactivity.
-In the absence of asynchronous dual reads, the target cluster won't get any traffic if the client application sends only read requests because {product-short} forwards all reads to the origin cluster only.
+To resolve this issue, {company} recommends that you upgrade your {product-proxy} instances to 2.1.0 or later to take advantage of the heartbeats feature, which keeps the connection alive during periods of inactivity.
+You can tune the heartbeat interval with the `xref:ROOT:manage-proxy-instances.adoc#change-mutable-config-variable[heartbeat_interval_ms]` variable, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you aren't using {product-automation}.
 
-This issue is fixed in {product-proxy} 2.1.0, which sends heartbeats after 30 seconds of inactivity on a cluster connection to keep it alive.
-You can tune the heartbeat interval with the Ansible configuration variable `heartbeat_insterval_ms`, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you aren't using {product-automation}.
+If upgrading is impossible, you can try the following alternatives:
+
+* Don't connect the read-only client applications to {product-proxy}, and then manually ensure that these client applications switch reads to the target at any point after all the data has been migrated, validated, and reconciled on the target cluster.
+
+* Implement a mechanism in your client application that creates a new `Session` periodically to avoid the {astra-db} inactivity timeout.
+
+* Implement a mechanism in your client application to issue a periodic meaningless write request to prevent the {astra-db} connection from becoming idle.
 
 === Performance degradation with {product-proxy}
 

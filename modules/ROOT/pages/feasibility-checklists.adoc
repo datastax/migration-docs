@@ -74,33 +74,16 @@ It is also highly recommended to perform tests and benchmarks when connected dir
 [[_read_only_applications]]
 === Read-only applications
 
-Read-only applications require special handling only if you are using {product-proxy} versions older than 2.1.0.
+In versions 2.1.0 and later, {product-proxy} sends periodic heartbeats to keep idle cluster connections alive.
+The default interval is 30,000 milliseconds, and it can be configured with the `xref:ROOT:manage-proxy-instances.adoc#change-mutable-config-variable[heartbeat_interval_ms]` variable, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you aren't using {product-automation}.
 
-[TIP]
-====
+In {product-proxy} versions earlier than 2.1.0, read-only applications require special handling to avoid connection termination due to inactivity.
+
+{company} recommends that you upgrade to version 2.1.0 or later to benefit from the heartbeat feature.
 If you have an existing {product-proxy} deployment, you can xref:ROOT:troubleshooting-tips.adoc#check-version[check your {product-proxy} version].
-
 For upgrade instructions, see xref:ROOT:manage-proxy-instances.adoc#_upgrade_the_proxy_version[Upgrade the proxy version].
-====
 
-//TODO: combine the below 2 sections to only use 2.1.0 or later.
-//Reconcile with troubleshooting-tips.adoc in case this issue is also described there.
-==== Versions older than 2.1.0
-
-If a client application only sends `SELECT` statements to a database connection then you may find that {product-proxy} terminates these read-only connections periodically, which may result in request errors if the driver is not configured to retry these requests in these conditions.
-
-This happens because {astra-db} terminates idle connections after some inactivity period (usually around 10 minutes).
-If {astra-db} is your target, and a client connection is only sending read requests to {product-proxy}, then the {astra-db} connection that is paired to that client connection will remain idle and will be eventually terminated.
-
-A potential workaround is to not connect these read-only client applications to {product-proxy}, but you need to ensure that these client applications switch reads to the target at any point after all the data has been migrated and all validation and reconciliation has completed.
-
-Another work around is to implement a mechanism in your client application that creates a new `Session` periodically to avoid the {astra-db} inactivity timeout.
-You can also implement some kind of meaningless write request that the application sends periodically to make sure the {astra-db} connection doesn't idle.
-
-==== Version 2.1.0 and newer
-
-This issue is solved in version 2.1.0 of {product-proxy}, which introduces periodic heartbeats to keep alive idle cluster connections.
-We strongly recommend using version 2.1.0 (or newer) to benefit from this improvement, especially if you have a read-only workload.
+If you cannot upgrade to version 2.1.0 or later, see the alternatives described in xref:ROOT:troubleshooting-tips.adoc#client-application-closed-connection-errors-every-10-minutes-when-migrating-to-astra-db[Client application closed connection errors every 10 minutes when migrating to {astra-db}].
 
 [[non-idempotent-operations]]
 == Lightweight Transactions and other non-idempotent operations
@@ -110,9 +93,7 @@ Examples of non-idempotent operations in CQL are:
 * Lightweight Transactions (LWTs)
 * Counter updates
 * Collection updates with `+=` and `-=` operators
-* Non-deterministic functions like `now()` and `uuid()`
-
-For more information on how to handle non-deterministic functions, see <<cql-function-replacement>>.
+* Non-deterministic functions like `now()` and `uuid()` (see <<cql-function-replacement>>)
 
 Given that there are two separate clusters involved, the state of each cluster may be different.
 For conditional writes, this may create a divergent state for a time.
@@ -209,26 +190,28 @@ The authentication configuration on each cluster can be different between the or
 [[cql-function-replacement]]
 == Server-side non-deterministic functions in the primary key
 
-Statements with functions like `now()` and `uuid()` will result in data inconsistency between the origin and target clusters because the values are computed at the cluster level.
+Statements with xref:dse-6.9@cql:reference:uuid.adoc[UUID and timeuuid functions], like `now()` and `uuid()`, create data inconsistencies between the origin and target clusters because the values are computed at the cluster level.
 
-If these functions are used for columns that are not part of the primary key, you may find it acceptable to have different values in the two clusters depending on your application business logic.
-However, if these columns are part of the primary key, the data migration phase will not be successful as there will be data inconsistencies between the two clusters and they will never be in sync.
+If these functions are used for regular non-primary key columns, you must determine if it is acceptable to have different values in the two clusters depending on your application business logic.
+However, if these functions are used in any primary key column, then your data migration phase will fail because of data inconsistencies between the two clusters.
+Effectively, the clusters will never be truly in sync from a programmatic perspective.
 
-[NOTE]
+{product-proxy} has an option to replace `now()` with a timeUUID calculated at the proxy level to ensure that these records write the same value to both clusters.
+
+To enable this feature, set `replace_cql_functions` to `true`.
+For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
+
+[IMPORTANT]
 ====
-{product-short} does not support the `uuid()` function currently.
+The `replace_cql_functions` option only replaces the `now()` function.
+
+This feature is disabled by default because it has a noticeable impact on performance.
+{company} recommends that you test this feature extensively before using it in production.
 ====
 
-{product-proxy} is able to compute timestamps and replace `now()` function references with such timestamps in CQL statements at proxy level to ensure that these parameters will have the same value when these statements are sent to both clusters.
-However, this feature is disabled by default because it might result in performance degradation.
-We highly recommend that you test this properly before using it in production.
-Also keep in mind that this feature is only supported for `now()` functions at the moment.
-To enable this feature, set the configuration variable `replace_cql_function` to `true`.
-For more, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
-
-If you find that the performance is not acceptable when this feature is enabled, or the feature doesn't cover a particular function that your client application is using, then you will have to make a change to your client application so that the value is computed locally (at client application level) before the statement is sent to the database.
+If the performance impact is unacceptable for your application, or you are using functions other than `now()`, then you must change your client application to use values calculated locally at the client-level before the statement is sent to the database.
 Most drivers have utility methods that help you compute these values locally.
-For more information, see your driver's documentation.
+For more information, see your driver's documentation and xref:datastax-drivers:developing:query-timestamps.adoc[Query timestamps in {cass-short} drivers].
 
 == Driver retry policy and query idempotence
 
