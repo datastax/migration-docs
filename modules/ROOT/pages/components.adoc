@@ -49,7 +49,7 @@ The client can then retry the request, if appropriate, based on the client's ret
 
 This design ensures that new data is always written to both clusters, and that any failure on either cluster is always made visible to the client application.
 
-For information about how {product-proxy} handles lightweight transactions (LWTs), see xref:feasibility-checklists.adoc#_lightweight_transactions_and_the_applied_flag[Lightweight Transactions and the applied flag].
+For information about how {product-proxy} handles Lightweight Transactions (LWTs), see xref:feasibility-checklists.adoc#_lightweight_transactions_and_the_applied_flag[Lightweight Transactions and the applied flag].
 
 ==== Reads
 

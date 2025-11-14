@@ -158,10 +158,11 @@ This includes all control and request connections to the origin and the target c
 Default: `30000`
 
 * `metrics_enabled`: Whether to enable metrics collection.
-The default is `true` (enabled).
 +
 If `false`, {product-proxy} metrics collection is completely disabled.
 This isn't recommended.
++
+Default: `true` (enabled)
 
 [[zdm_proxy_max_stream_ids]]
 * `zdm_proxy_max_stream_ids`: Set the maximum pool size of available stream IDs managed by {product-proxy} per client connection.
@@ -173,7 +174,7 @@ However, if there are a lot of requests in a given amount of time, errors can oc
 In the client application, the stream IDs are managed internally by the driver, and, in most drivers, the max number is 2048, which is the same default value used by {product-proxy}.
 If you have a custom driver configuration with a higher value, make sure `zdm_proxy_max_stream_ids` matches your driver's maximum stream IDs.
 +
-Defaults: `2048`
+Default: `2048`
 
 === Deprecated mutable variables
 

@@ -12,6 +12,7 @@ For additional assistance, you can <<report-an-issue,report an issue>>, contact 
 
 {product-proxy} logs can help you verify that your {product-proxy} instances are operating normally, investigate how processes are executed, and troubleshoot issues.
 
+[#set-the-zdm-proxy-log-level]
 === Set the {product-proxy} log level
 
 Set the {product-proxy} log level to print the messages that you need.
@@ -124,9 +125,12 @@ Keep in mind that Docker logs are deleted if the container is recreated.
 Some log messages contain text that seems like an error but they aren't errors.
 Instead, the message's `level` indicates severity:
 
-* `level=debug` and `level=info`: Expected and normal messages that typically aren't errors.
+* `level=info`: Expected and normal messages that typically aren't errors.
+
+* `level=debug`: Expected and normal messages that typically aren't errors.
+However, they can help you find the source of a problem by providing information about the environment and conditions when the error occurred.
 +
-If you enable `DEBUG` logging, the `debug` messages can help you find the source of a problem by providing information about the environment and conditions when the error occurred.
+`debug` messages are only recorded if you <<set-the-zdm-proxy-log-level,set the log level to DEBUG>>.
 
 * `level=warn`: Reports an event that wasn't fatal to the overall process but might indicate an issue with an individual request or connection.
 

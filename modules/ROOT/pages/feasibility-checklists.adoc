@@ -109,16 +109,16 @@ This depends entirely on your application business logic and requirements.
 It is your responsibility to determine whether your workloads can tolerate these inconsistencies and to what extent.
 
 [[_lightweight_transactions_and_the_applied_flag]]
-=== Lightweight transactions and the applied flag
+=== Lightweight Transactions and the applied flag
 
 //TODO: Align with the write request language on components.adoc
 
 ////
-The ZDM proxy can bifurcate lightweight transactions to the ORIGIN and TARGET clusters.
+The ZDM proxy can bifurcate Lightweight Transactions to the ORIGIN and TARGET clusters.
 However, it only returns the applied flag from one cluster, whichever cluster is the source of truth. 
 Given that there are two separate clusters involved, the state of each cluster may be different.
 For conditional writes, this may create a divergent state for a time.
-It may not make a difference in many cases, but if lightweight transactions are used, we would recommend a reconciliation phase in the migration before switching reads to rely on the TARGET cluster.
+It may not make a difference in many cases, but if Lightweight Transactions are used, we would recommend a reconciliation phase in the migration before switching reads to rely on the TARGET cluster.
 ////
 
 {product-proxy} handles LWTs as write operations.
