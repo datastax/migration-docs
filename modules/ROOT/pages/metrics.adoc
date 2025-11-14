@@ -35,7 +35,7 @@ image::zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories
 +
 ** Read Latency: Total latency measured by {product-proxy} per read request, including post-processing, such as response aggregation.
 This metric has two labels: `reads_origin` and `reads_target`.
-The label that has data depends on which cluster is receiving the reads, which is the current xref:glossary.adoc#_primary_cluster[primary cluster].
+The label that has data depends on which cluster is receiving the reads, which is the current xref:ROOT:faqs.adoc#what-are-origin-target-primary-and-secondary-clusters[primary cluster].
 ** Write Latency: Total latency measured by {product-proxy} per write request, including post-processing, such as response aggregation.
 This metric is measured as the total latency across both clusters for a single xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[bifurcated write request].
 

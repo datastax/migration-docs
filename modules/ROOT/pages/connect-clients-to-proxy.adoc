@@ -1,18 +1,16 @@
 = Connect your client applications to {product-proxy}
 :navtitle: Connect client applications to {product-proxy}
 
-{product-proxy} is designed to be similar to a conventional {cass-reg} cluster.
-You communicate with it using the CQL query language used in your existing client applications.
-It understands the same messaging protocols used by {cass-short}, {dse}, and {astra-db}.
-As a result, most of your client applications won't be able to distinguish between connecting to {product-proxy} and connecting directly to your {cass-short} cluster.
+{product-proxy} is designed to mimic communication with a typical cluster based on {cass-reg}.
+This means that your client applications connect to {product-proxy} in the same way that they already connect to your existing {cass-short}-based clusters.
 
-On this page, we explain how to connect your client applications to a {cass-short} cluster.
-We then move on to discuss how this process changes when connecting to a {product-proxy}.
-We conclude by describing two sample client applications that serve as real-world examples of how to build a client application that works effectively with {product-proxy}.
+You can communicate with {product-proxy} using the same xref:cql:ROOT:index.adoc[CQL] statements used in your existing client applications.
+It understands the same messaging protocols used by {cass-short}, {dse-short}, {hcd-short}, and {astra-db}.
 
+As a result, most client applications won't be able to distinguish between connections to {product-proxy} and direct connections to a {cass-short}-based cluster.
+
+This page explains how to connect your client applications to a {cass-short}-based cluster, compares this process to connections to {product-proxy}, provides realistic examples of client applications that work effectively with {product-proxy}, and, finally, explains how to connect `cqlsh` to {product-proxy}.
 You can use the provided sample client applications, in addition to your own, as a quick way to validate that the deployed {product-proxy} is reading and writing data from the expected origin and target clusters.
-
-This topic also explains how to connect `cqlsh` to {product-proxy}.
 
 == {company}-compatible drivers
 
@@ -209,7 +207,7 @@ The configuration logic as well as the cluster and session management code have 
 
 == Connect cqlsh to {product-proxy}
 
-`cqlsh` is a command-line tool that you can use to send {cass-short} Query Language (CQL) statements to your {cass-short}-based clusters, including {astra-db}, {dse-short}, {hcd-short}, and {cass} databases.
+`cqlsh` is a command-line tool that you can use to send CQL statements and `cqlsh`-specific commands to your {cass-short}-based clusters, including {astra-db}, {dse-short}, {hcd-short}, and {cass} databases.
 
 You can use your database's included version of `cqlsh`, or you can download and run a standalone `cqlsh`.
 

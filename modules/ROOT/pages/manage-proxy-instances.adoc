@@ -77,7 +77,7 @@ The following configuration variables are considered mutable and can be changed 
 Commonly changed variables, located in `vars/zdm_proxy_core_config.yml`:
 
 * `primary_cluster`:
-** This variable determines which cluster is currently considered the xref:glossary.adoc#_primary_cluster[primary cluster].
+** This variable determines which cluster is currently considered the xref:ROOT:faqs.adoc#what-are-origin-target-primary-and-secondary-clusters[primary cluster].
 At the start of the migration, the primary cluster is the origin cluster because it contains all of the data.
 In Phase 4 of the migration, once all the existing data has been transferred and any validation/reconciliation step has been successfully executed, you can switch the primary cluster to be the target cluster.
 ** Valid values: `ORIGIN`, `TARGET`.

@@ -1,21 +1,20 @@
-= Frequently Asked Questions
-:navtitle: FAQs
-:page-aliases: ROOT:contributions.adoc
+= {product} frequently asked questions
+:navtitle: {product-short} FAQs
+:page-aliases: ROOT:contributions.adoc, ROOT:glossary.adoc
 
-This page includes common questions about the {company} {product} tools.
+This page includes common questions about the {company} {product} ({product-short}) tools.
 
-//TODO: Eliminate redundancies in these FAQs and the Glossary.
 //FAQs in ZDM-proxy repo: https://github.com/datastax/zdm-proxy/blob/main/faq.md#what-versions-of-apache-cassandra-or-cql-compatible-data-stores-does-the-zdm-proxy-support 
 
 == What is a zero-downtime migration?
 
-A zero-downtime migration with the {company} {product} ({product-short}) tools means you can reliably migrate your client applications and data between CQL clusters with no interruption of service.
+A zero-downtime migration with the {company} {product-short} tools means you can reliably migrate your client applications and data between CQL clusters with no interruption of service.
 
 == Which platforms and versions are supported by the {product-short} tools?
 
 See xref:ROOT:zdm-proxy-migration-paths.adoc[].
 
-== Why should I use the {product} ({product-short}) tools for my migration?
+== Why should I use the {product-short} tools for my migration?
 
 There are several benefits to using the {product-short} tools for your migration:
 
@@ -28,7 +27,7 @@ Once you set up {product-proxy}, the dual-writes feature ensures that new writes
 
 * Safely test the new cluster under full production workloads: In addition to the dual-writes feature, you can optionally enable asynchronous dual-reads to test the target cluster's ability to handle a production workload before you permanently switch to the target cluster at the end of the migration process.
 +
-Client applications aren't interrupted by errors or latency spikes on the new, target cluster.
+Client applications aren't interrupted by read errors or latency spikes on the new, target cluster.
 Although these errors and metrics are received by {product-proxy} for monitoring and performance benchmarking purposes, they aren't propagated back to the client applications.
 +
 From the client side, traffic is seamless and uninterrupted during the entire migration process.
@@ -125,3 +124,28 @@ See xref:feasibility-checklists.adoc#_lightweight_transactions_and_the_applied_f
 
 Don't deploy {product-proxy} as a sidecar.
 For more information, see xref:deployment-infrastructure.adoc#_choosing_where_to_deploy_the_proxy[Choosing where to deploy the proxy].
+
+[#what-are-origin-target-primary-and-secondary-clusters]
+== What are origin, target, primary, and secondary clusters?
+
+These terms refer to where your data is located during the migration process, and where read and write requests are sent by {product-proxy}:
+
+Origin and target::
+The _origin cluster_ is your existing database that you are migrating away from.
+The _target cluster_ is your new database that you are migrating to.
++
+Origin and target cluster credentials are provided to {product-proxy} so it can establish connections and send requests to both clusters.
+
+Primary and secondary::
+The _primary cluster_ is the database that is designated as the source of truth for read requests.
+It receives all read requests by default, and the responses from these read requests are returned to the client application.
+The primary cluster is set by {product-automation} through the `primary_cluster` variable, or you can set it directly through the {product-proxy} `ZDM_PRIMARY_CLUSTER` environment variable.
++
+The other database is the _secondary cluster_.
+It doesn't receive read requests unless you enable asynchronous dual-reads.
++
+For the majority of the migration process, the origin cluster is the primary cluster, and the target cluster is the secondary cluster.
+Near the end of the migration, when you have validated that all pre-existing data has been replicated to the target cluster, you set the target cluster as the primary cluster.
++
+Throughout the entire migration, until you decommission {product-proxy}, both clusters receive all write requests through the dual writes feature.
+For more information, see xref:components.adoc#how-zdm-proxy-handles-reads-and-writes[How {product-proxy} handles reads and writes].

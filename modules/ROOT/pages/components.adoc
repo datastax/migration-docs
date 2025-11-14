@@ -30,7 +30,7 @@ Typically, you only need to update the connection string.
 === How {product-proxy} handles reads and writes
 
 {company} created {product-proxy} to orchestrate requests between a client application and both the origin and target clusters.
-These clusters can be any CQL-compatible data store, such as {cass-reg}, {dse}, and {astra-db}.
+These clusters can be any xref:cql:ROOT:index.adoc[CQL]-compatible data store, such as {cass-reg}, {dse}, and {astra-db}.
 
 During the migration process, you designate one cluster as the _primary cluster_, which serves as the source of truth for reads.
 For the majority of the migration process, this is typically the origin cluster.
@@ -39,7 +39,7 @@ Towards the end of the migration process, when you are ready to read exclusively
 The other cluster is referred to as the _secondary cluster_.
 While {product-proxy} is active, write requests are sent to both clusters to ensure data consistency, but only the primary cluster serves read requests.
 
-==== Writes
+==== Writes (dual-write logic)
 
 {product-proxy} sends every write operation (`INSERT`, `UPDATE`, `DELETE`) synchronously to both clusters at the requested consistency level:
 
