@@ -38,7 +38,7 @@ For more information, see xref:ROOT:dsbulk-migrator.adoc[].
 
 == Other data migration processes
 
-Depending on your source and target databases, there might be other {product-short}-compatible data migration tools available, or you can write your own custom data migration processes with a tool like Apache Spark(TM).
+Depending on your origin and target databases, there might be other {product-short}-compatible data migration tools available, or you can write your own custom data migration processes with a tool like Apache Spark(TM).
 
 To use a data migration tool with {product-proxy}, it must meet the following requirements:
 

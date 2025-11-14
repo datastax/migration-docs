@@ -5,19 +5,20 @@
 
 The TLS configuration is an optional part of the initial {product-proxy} configuration, which includes xref:setup-ansible-playbooks.adoc[] and xref:deploy-proxy-monitoring.adoc[].
 
-== Introduction
+You can enable TLS between {product-proxy} and any cluster that requires it.
+You can also enable it between your client application and {product-proxy}, if required.
 
-* All TLS configuration is optional. Enable TLS between {product-proxy} and any cluster that requires it, and/or between your client application and {product-proxy}, if required.
+* Proxy-to-cluster TLS can be configured between {product-proxy} and either or both the origin and target clusters, as needed.
+Each set of configurations is independent of the other.
++
+When using proxy-to-cluster TLS, {product-proxy} acts as the TLS client, and the cluster acts as the TLS server.
+One-way TLS and Mutual TLS are both supported, and they can be enabled as needed for each cluster's requirements.
 
-* Proxy-to-cluster TLS can be configured between {product-proxy} and either or both the origin and target clusters, as desired.
-Each set of configurations is independent of the other. When using proxy-to-cluster TLS, {product-proxy} acts as the TLS client and the cluster as the TLS server.
-One-way TLS and Mutual TLS are both supported and can be enabled depending on each cluster's requirements.
-
-* When using application-to-proxy TLS, your client application is the TLS client and {product-proxy} is the TLS server.
+* When using application-to-proxy TLS, your client application is the TLS client, and {product-proxy} is the TLS server.
 One-way TLS and Mutual TLS are both supported.
 
 * When {product-proxy} connects to {astra-db}, it always implicitly uses Mutual TLS.
-This is done through the {scb} and does not require any extra configuration.
+This is done through the xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb}] and does not require any extra configuration.
 
 [[_retrieving_files_from_a_jks_keystore]]
 == Retrieving files from a JKS keystore

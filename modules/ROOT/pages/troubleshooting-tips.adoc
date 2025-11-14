@@ -296,9 +296,9 @@ To resolve this issue, do one of the following:
 
 * If your application uses any dependency that includes a version of the Java driver, such as Spring Boot or `spring-data-cassandra`, you must upgrade these dependencies to a version that uses Java driver 4.10.0 or later.
 
-* If your are using the Java driver directly, upgrade to version 4.10.0 or later, if these versions are compatible with both your source and target clusters.
+* If your are using the Java driver directly, upgrade to version 4.10.0 or later, if these versions are compatible with both your origin and target clusters.
 
-* Force the protocol version on the driver to the highest version that is supported by both your source and target clusters.
+* Force the protocol version on the driver to the highest version that is supported by both your origin and target clusters.
 Typically, `V4` is broadly supported.
 However, if you are migrating from {dse-short} to {dse-short}, then use `DSE_V1` for {dse-short} 5.x migrations, and `DSE_V2` for {dse-short} 6.x migrations.
 +

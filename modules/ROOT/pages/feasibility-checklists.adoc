@@ -1,7 +1,7 @@
 = Feasibility checks
 :page-aliases: ROOT:preliminary-steps.adoc
 
-Before starting your migration, refer to the following considerations to ensure that your client application workload and xref:glossary.adoc#origin[**Origin**] are suitable for this {product} process.
+Before starting your migration, review the following information to ensure that your client application workload and origin (source) cluster are suitable for the {product} process.
 
 True zero downtime migration is only possible if your database meets the minimum requirements described on this page.
 If your database doesn't meet these requirements, you can still complete the migration, but downtime might be necessary to finish the migration.

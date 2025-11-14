@@ -166,7 +166,7 @@ This is disabled by default in all drivers, but if it was enabled in your client
 Token-aware routing isn't enforced when connecting through {product-proxy} because these instances don't hold actual token ranges in the same way as database nodes.
 Instead, each {product-proxy} instance has a unique, non-overlapping set of synthetic tokens that simulate token ownership and enable balanced load distribution across the instances.
 
-Upon receiving a request, a {product-proxy} instance routes the request to appropriate source and target database nodes, independent of token ownership.
+Upon receiving a request, a {product-proxy} instance routes the request to appropriate origin and target database nodes, independent of token ownership.
 
 If your clients have token-aware routing enabled, you don't need to disable this behavior while using {product-proxy}.
 Clients can continue to operate with token-aware routing enabled without negative impacts to functionality or performance.
