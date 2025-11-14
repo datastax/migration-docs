@@ -4,8 +4,6 @@
 
 This page includes common questions about the {company} {product} ({product-short}) tools.
 
-//FAQs in ZDM-proxy repo: https://github.com/datastax/zdm-proxy/blob/main/faq.md#what-versions-of-apache-cassandra-or-cql-compatible-data-stores-does-the-zdm-proxy-support 
-
 == What is a zero-downtime migration?
 
 A zero-downtime migration with the {company} {product-short} tools means you can reliably migrate your client applications and data between CQL clusters with no interruption of service.
@@ -149,3 +147,11 @@ Near the end of the migration, when you have validated that all pre-existing dat
 +
 Throughout the entire migration, until you decommission {product-proxy}, both clusters receive all write requests through the dual writes feature.
 For more information, see xref:components.adoc#how-zdm-proxy-handles-reads-and-writes[How {product-proxy} handles reads and writes].
+
+== Is there a difference between cluster and database?
+
+In the context of the {product-short} process, the terms _cluster_ and _database_ are used interchangeably to refer to the source and destination for the data that you are moving during your migration.
+
+== See also
+
+* https://github.com/datastax/zdm-proxy/blob/main/faq.md[{product-proxy} FAQ on GitHub]

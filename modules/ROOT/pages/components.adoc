@@ -159,7 +159,7 @@ Whenever possible, {company} recommends using the {product-short} process to orc
 ====
 
 For certain migration paths, it is possible to perform in-place database platform replacements on the same cluster where you data already exists.
-Supported paths for in-place migrations include xref:6.9@dse:planning:migrate-cassandra-to-dse.adoc[{cass} to {dse-short}] and xref:1.2@hcd:migrate:dse-68-to-hcd-12.adoc[{dse-short} to {hcd-short}].
+Supported paths for in-place migrations include xref:6.9@dse:planning:migrate-cassandra-to-dse.adoc[{cass} to {dse-short}] and xref:1.2@hyper-converged-database:migrate:dse-68-to-hcd-12.adoc[{dse-short} to {hcd-short}].
 
 == See also
 
