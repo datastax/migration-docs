@@ -90,22 +90,23 @@ If you cannot upgrade to version 2.1.0 or later, see the alternatives described 
 
 Examples of non-idempotent operations in CQL are:
 
-* Lightweight Transactions (LWTs)
+* Lightweight Transactions (LWTs) (see <<_lightweight_transactions_and_the_applied_flag>>)
 * Counter updates
 * Collection updates with `+=` and `-=` operators
 * Non-deterministic functions like `now()` and `uuid()` (see <<cql-function-replacement>>)
 
-Given that there are two separate clusters involved, the state of each cluster may be different.
-For conditional writes, this may create a divergent state for a time.
+Given that there are two separate clusters involved, the state of each cluster can be different.
+For conditional writes, this can create a temporary divergent state.
 
-If non-idempotent operations are used, {company} recommends adding a reconciliation phase to your migration before and after Phase 4, where you switch reads to the target.
+If you use non-idempotent operations, {company} recommends adding a reconciliation phase to your migration before and after Phase 4 (where you switch reads to the target).
+This allows you additional opportunities to resolve any data inconsistencies that are produced by non-idempotent operations.
 
-For details about using the {cass-migrator}, see xref:migrate-and-validate-data.adoc[].
+The {cass-migrator} is ideal for detecting and reconciling these types of inconsistencies.
+For more information, see xref:migrate-and-validate-data.adoc[].
 
-[TIP]
-====
-Some application workloads can tolerate inconsistent data in some cases (especially for counter values) in which case you may not need to do anything special to handle those non-idempotent operations.
-====
+If your application workloads can tolerate inconsistencies produced by LWTs and non-idempotent operations, you might not need to perform any additional validation or reconciliation steps.
+This depends entirely on your application business logic and requirements.
+It is your responsibility to determine whether your workloads can tolerate these inconsistencies and to what extent.
 
 [[_lightweight_transactions_and_the_applied_flag]]
 === Lightweight transactions and the applied flag
@@ -135,7 +136,7 @@ Up to that point, an LWT's condition can be evaluated differently on each side, 
 The response that a cluster sends after executing a LWT includes a flag called `applied`.
 This flag tells the client whether the LWT update was actually applied.
 The status depends on the condition, which in turn depends on the state of the data.
-When {product-proxy} receives a response from both the origin and target, each response would have its own `applied` flag. 
+When {product-proxy} receives a response from both the origin and target, each response would have its own `applied` flag.
 
 However, {product-proxy} can only return a *single response* to the client.
 Recall that the client has no knowledge that there are two clusters behind the proxy.
@@ -145,50 +146,8 @@ If your client has logic that depends on the `applied` flag, be aware that durin
 To reiterate, {product-proxy} only returns the `applied` value from the primary cluster, which is the cluster from where read results are returned to the client application. By default, this is the origin cluster.
 This means that when you set the target cluster as your primary cluster, then the `applied` value returned to the client application will come from the target cluster.
 
-== Advanced workloads ({dse-short})
-
-=== Graph
-
-{product-proxy} handles all {dse-short} Graph requests as write requests even if the traversals are read-only. There is no special handling for these requests, so you need to take a look at the traversals that your client application sends and determine whether the traversals are idempotent. If the traversals are non-idempotent then the reconciliation step is needed.
-
-Keep in mind that our recommended tools for data migration and reconciliation are CQL-based, so they can be used for migrations where the origin cluster is a database that uses the new {dse-short} Graph engine released with {dse-short} 6.8, but *cannot be used for the old Graph engine* that older {dse-short} versions relied on.
-See <<non-idempotent-operations,this section>> for more information about non-idempotent operations.
-
-=== Search
-
-Read-only {dse-short} Search workloads can be moved directly from the origin to the target without {product-proxy} being involved.
-If your client application uses Search and also issues writes, or if you need the read routing capabilities from {product-proxy}, then you can connect your Search workloads to it as long as you are using xref:datastax-drivers:compatibility:driver-matrix.adoc[{company}-compatible drivers] to submit these queries.
-This approach means the queries are regular CQL `SELECT` statements, so {product-proxy} handles them as regular read requests.
-
-If you use the HTTP API then you can either modify your applications to use the CQL API instead or you will have to move those applications directly from the origin to the target when the migration is complete if that is acceptable.
-
-== Client compression
-
-The binary protocol used by {cass-short}, {dse-short}, {hcd-short}, and {astra-db} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
-
-When establishing connections from client applications, {product-proxy} responds with a list of compression algorithms supported by both clusters.
-The compression algorithm configured in your {company}-compatible driver must match any item from the common list, or CQL request compression must be disabled completely.
-{product-proxy} cannot decompress and recompress CQL requests using different compression algorithms.
-
-This isn't related to storage compression, which you can configure on specific tables with the `compression` table property.
-Storage/table compression doesn't affect the client application or {product-proxy} in any way.
-
-== Authenticator and Authorizer configuration
-
-{product-proxy} supports the following cluster authenticator configurations:
-
-* No authenticator
-* `PasswordAuthenticator`
-* `DseAuthenticator` with `internal` or `ldap` scheme
-
-{product-proxy} does *not* support `DseAuthenticator` with `kerberos` scheme.
-
-While the authenticator has to be supported, the *authorizer* does not affect client applications or {product-proxy} so you should be able to use any kind of authorizer configuration on both of your clusters.
-
-The authentication configuration on each cluster can be different between the origin and target clustesr, as {product-proxy} treats them independently.
-
 [[cql-function-replacement]]
-== Server-side non-deterministic functions in the primary key
+=== Server-side non-deterministic functions in the primary key
 
 Statements with xref:dse-6.9@cql:reference:uuid.adoc[UUID and timeuuid functions], like `now()` and `uuid()`, create data inconsistencies between the origin and target clusters because the values are computed at the cluster level.
 
@@ -235,6 +194,48 @@ For more information, see the following driver documentation:
 
 * xref:datastax-drivers:developing:query-idempotence.adoc[]
 * xref:datastax-drivers:connecting:retry-policies.adoc[]
+
+== {dse-short} advanced workloads
+
+Graph::
+{product-proxy} handles all {dse-short} Graph requests as write requests even if the traversals are read-only. There is no special handling for these requests, so you need to take a look at the traversals that your client application sends and determine whether the traversals are idempotent. If the traversals are non-idempotent then the reconciliation step is needed.
++
+Keep in mind that our recommended tools for data migration and reconciliation are CQL-based, so they can be used for migrations where the origin cluster is a database that uses the new {dse-short} Graph engine released with {dse-short} 6.8, but *cannot be used for the old Graph engine* that older {dse-short} versions relied on.
+See <<non-idempotent-operations,this section>> for more information about non-idempotent operations.
+
+Search::
+Read-only {dse-short} Search workloads can be moved directly from the origin to the target without {product-proxy} being involved.
+If your client application uses Search and also issues writes, or if you need the read routing capabilities from {product-proxy}, then you can connect your Search workloads to it as long as you are using xref:datastax-drivers:compatibility:driver-matrix.adoc[{company}-compatible drivers] to submit these queries.
+This approach means the queries are regular CQL `SELECT` statements, so {product-proxy} handles them as regular read requests.
++
+If you use the HTTP API then you can either modify your applications to use the CQL API instead or you will have to move those applications directly from the origin to the target when the migration is complete if that is acceptable.
+
+== Client compression
+
+The binary protocol used by {cass-short}, {dse-short}, {hcd-short}, and {astra-db} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
+
+When establishing connections from client applications, {product-proxy} responds with a list of compression algorithms supported by both clusters.
+The compression algorithm configured in your {company}-compatible driver must match any item from the common list, or CQL request compression must be disabled completely.
+{product-proxy} cannot decompress and recompress CQL requests using different compression algorithms.
+
+This isn't related to storage compression, which you can configure on specific tables with the `compression` table property.
+Storage/table compression doesn't affect the client application or {product-proxy} in any way.
+
+== Authenticator and authorizer configuration
+
+A cluster's _authorizer_ doesn't affect client applications or {product-proxy}, which means that you can use any kind of authorizer configuration on your clusters, and they can use different authorizers.
+
+In contrast, a cluster's _authenticator_ must be compatible with {product-proxy}.
+
+{product-proxy} supports the following cluster authenticator configurations:
+
+* No authenticator
+* `PasswordAuthenticator`
+* `DseAuthenticator` with `internal` or `ldap` scheme
+
+{product-proxy} _doesn't_ support `DseAuthenticator` with `kerberos` scheme.
+
+The origin and target clusters can have different authentication configurations because {product-proxy} treats them independently.
 
 == Next steps
 

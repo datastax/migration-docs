@@ -190,16 +190,14 @@ For more information, see xref:ROOT:connect-clients-to-proxy.adoc#_client_applic
 
 === Apply mutable configuration changes
 
-. Edit mutable variables in their corresponding configuration files: `vars/zdm_proxy_core_config.yml`, `vars/zdm_proxy_cluster_config.yml`, or `vars/zdm_proxy_advanced_config.yml`.
+Edit mutable variables in their corresponding configuration files (`vars/zdm_proxy_core_config.yml`, `vars/zdm_proxy_cluster_config.yml`, or `vars/zdm_proxy_advanced_config.yml`), and then apply the configuration changes to your {product-proxy} instances using the rolling restart playbook.
 
-. Apply the configuration changes to your {product-proxy} instances using the rolling restart playbook.
-+
 [IMPORTANT]
 ====
-A configuration change is a destructive action because running this playbook removes the previous container and its logs, replacing it with a new container and the new configuration.
+A configuration change is a destructive action because the rolling restart playbook removes the previous containers and their logs, replacing them with new containers and the new configuration.
 xref:ROOT:troubleshooting-tips.adoc#proxy-logs[Collect the logs] before you run the playbook if you want to keep them.
 ====
-+
+
 [source,bash]
 ----
 ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
@@ -210,13 +208,13 @@ The {product-proxy} deployment remains available at all times, and you can safel
 
 The playbook performs the following actions automatically:
 
-. Stop one container gracefully, and then wait for it to shut down.
-. Recreate the container, and then start it.
-. Check that the container started successfully by checking the readiness endpoint:
+. {product-automation} stops one container gracefully, and then waits for it to shut down.
+. {product-automation} recreates the container, and then starts it.
+. {product-automation} checks that the container started successfully by checking the readiness endpoint:
 +
-* If unsuccessful, repeat the check up to six times at 5-second intervals.
-If it still fails, interrupt the entire rolling restart process.
-* If successful, wait 10 seconds (default), and then move on to the next container.
+* If unsuccessful, {product-automation} repeats the check up to six times at 5-second intervals.
+If it still fails, {product-automation} interrupts the entire rolling restart process.
+* If successful, {product-automation} waits 10 seconds (default), and then moves on to the next container.
 +
 The pause between the restart of each {product-proxy} instance defaults to 10 seconds.
 To change this value, you can set the desired number of seconds in `zdm-proxy-automation/ansible/vars/zdm_playbook_internal_config.yml`.
@@ -236,7 +234,12 @@ For more information, see xref:ROOT:troubleshooting-tips.adoc#configuration-chan
 
 The same playbook that you use for configuration changes can also be used to upgrade the {product-proxy} version in a rolling fashion.
 All containers are recreated with the given image version.
-The same behavior and observations noted in <<change-mutable-config-variable>> also apply to {product-proxy} image upgrades.
+
+[IMPORTANT]
+====
+A version change is a destructive action because the rolling restart playbook removes the previous containers and their logs, replacing them with new containers using the new image.
+xref:ROOT:troubleshooting-tips.adoc#proxy-logs[Collect the logs] before you run the playbook if you want to keep them.
+====
 
 To check your current {product-proxy} version, see xref:ROOT:troubleshooting-tips.adoc#check-version[Check your {product-proxy} version].
 
@@ -261,6 +264,22 @@ zdm_proxy_image: datastax/zdm-proxy:2.3.4
 ----
 ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
 ----
++
+The rolling restart playbook recreates each {product-proxy} container, one by one, with the new image.
+The {product-proxy} deployment remains available at all times, and you can safely use it throughout this operation.
++
+The playbook performs the following actions automatically:
++
+.. {product-automation} stops one container gracefully, and then waits for it to shut down.
+.. {product-automation} recreates the container, and then starts it.
+.. {product-automation} checks that the container started successfully by checking the readiness endpoint:
++
+** If unsuccessful, {product-automation} repeats the check up to six times at 5-second intervals.
+If it still fails, {product-automation} interrupts the entire rolling restart process.
+** If successful, {product-automation} waits 10 seconds (default), and then moves on to the next container.
++
+The pause between the restart of each {product-proxy} instance defaults to 10 seconds.
+To change this value, you can set the desired number of seconds in `zdm-proxy-automation/ansible/vars/zdm_playbook_internal_config.yml`.
 
 == Scale {product-proxy} instances
 
