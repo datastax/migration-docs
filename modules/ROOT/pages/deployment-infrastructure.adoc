@@ -19,6 +19,19 @@ Here's a typical deployment showing connectivity between client applications, {p
 
 image::zdm-during-migration3.png[Connectivity between client applications, proxy instances, and clusters.]
 
+=== Don't deploy {product-proxy} as a sidecar
+
+Don't deploy {product-proxy} as a sidecar because it was designed to mimic communication with a {cass-short}-based cluster.
+For this reason, {company} recommends deploying multiple {product-proxy} instances, each running on a dedicated machine, instance, or VM.
+
+For best performance, deploy your {product-proxy} instances as close as possible to your client applications,  ideally on the same local network, but don't co-deploy them on the same machines as the client applications.
+This way, each client application instance can connect to all {product-proxy} instances, just as it would connect to all nodes in a {cass-short}-based cluster or datacenter.
+
+This deployment model provides maximum resilience and failure tolerance guarantees, and it allows the client application driver to continue using the same load balancing and retry mechanisms that it would normally use.
+
+Conversely, deploying a single {product-proxy} instance undermines this resilience mechanism and creates a single point of failure, which can affect client applications if one or more nodes of the underlying origin or target clusters go offline.
+In a sidecar deployment, each client application instance would be connecting to a single {product-proxy} instance, and would, therefore, be exposed to this risk.
+
 == Infrastructure requirements
 
 To deploy {product-proxy} and its companion monitoring stack, you must provision infrastructure that meets the following requirements.
@@ -87,7 +100,7 @@ The only direct access to these machines should be from the jumphost.
 The {product-proxy} machines must be able to connect to the origin and target cluster nodes:
 
 * For self-managed clusters ({cass} or {dse-short}), connectivity is needed to the {cass-short} native protocol port (typically 9042).
-* For {astra-db}, you will need to ensure outbound connectivity to the {astra} endpoint indicated in the {scb}.
+* For {astra-db}, you will need to ensure outbound connectivity to the {astra} endpoint indicated in the xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb}].
 Connectivity over Private Link is also supported.
 
 The connectivity requirements for the jumphost / monitoring machine are:

@@ -22,7 +22,7 @@ For example, you might move from self-managed clusters to a cloud-based Database
 
 {product-short} is comprised of {product-proxy}, {product-utility}, and {product-automation}, which orchestrate activity-in-transition on your databases.
 To move and validate data, you use {sstable-sideloader}, {cass-migrator}, or {dsbulk-migrator}.
-{product-proxy} keeps your databases in sync at all times by a dual-write logic configuration, which means you can stop the migration or xref:rollback.adoc[roll back] at any point.
+{product-proxy} keeps your databases in sync at all times by the dual-writes feature, which means you can stop the migration or xref:rollback.adoc[roll back] at any point.
 For more information about these tools, see xref:ROOT:components.adoc[].
 
 When the migration is complete, the data is present in the new database, and you can update your client applications to connect exclusively to the new database.
@@ -46,7 +46,7 @@ The _target_ is your new {cass-short}-based environment where you want to migrat
 
 === Migration planning
 
-Before you begin a migration, your client applications perform read/write operations with your existing CQL-compatible database, such as {cass}, {dse-short}, {hcd-short}, or {astra-db}.
+Before you begin a migration, your client applications perform read/write operations with your existing xref:cql:ROOT:index.adoc[CQL]-compatible database, such as {cass}, {dse-short}, {hcd-short}, or {astra-db}.
 
 image:pre-migration0ra.png["Pre-migration environment."]
 

@@ -20,7 +20,7 @@ This tool is open-source software.
 It doesn't perform data migrations and it doesn't have awareness of ongoing migrations.
 Instead, you use a <<data-migration-tools,data migration tool>> to perform the data migration and validate migrated data.
 
-{product-proxy} reduces risks to upgrades and migrations by decoupling the origin cluster from the target cluster and maintaining consistency between both clusters.
+{product-proxy} reduces risks to upgrades and migrations by decoupling the origin (source) cluster from the target (destination) cluster and maintaining consistency between both clusters.
 You decide when you want to switch permanently to the target cluster.
 
 After migrating your data, changes to your application code are usually minimal, depending on your client's compatibility with the origin and target clusters.
@@ -30,13 +30,16 @@ Typically, you only need to update the connection string.
 === How {product-proxy} handles reads and writes
 
 {company} created {product-proxy} to orchestrate requests between a client application and both the origin and target clusters.
-These clusters can be any CQL-compatible data store, such as {cass-reg}, {dse}, and {astra-db}.
+These clusters can be any xref:cql:ROOT:index.adoc[CQL]-compatible data store, such as {cass-reg}, {dse}, and {astra-db}.
 
 During the migration process, you designate one cluster as the _primary cluster_, which serves as the source of truth for reads.
 For the majority of the migration process, this is typically the origin cluster.
-Towards the end of the migration process, when you are ready to read from your target cluster, you set the target cluster as the primary cluster.
+Towards the end of the migration process, when you are ready to read exclusively from your target cluster, you set the target cluster as the primary cluster.
 
-==== Writes
+The other cluster is referred to as the _secondary cluster_.
+While {product-proxy} is active, write requests are sent to both clusters to ensure data consistency, but only the primary cluster serves read requests.
+
+==== Writes (dual-write logic)
 
 {product-proxy} sends every write operation (`INSERT`, `UPDATE`, `DELETE`) synchronously to both clusters at the requested consistency level:
 
@@ -46,7 +49,7 @@ The client can then retry the request, if appropriate, based on the client's ret
 
 This design ensures that new data is always written to both clusters, and that any failure on either cluster is always made visible to the client application.
 
-For information about how {product-proxy} handles lightweight transactions (LWTs), see xref:feasibility-checklists.adoc#_lightweight_transactions_and_the_applied_flag[Lightweight Transactions and the applied flag].
+For information about how {product-proxy} handles Lightweight Transactions (LWTs), see xref:feasibility-checklists.adoc#_lightweight_transactions_and_the_applied_flag[Lightweight Transactions and the applied flag].
 
 ==== Reads
 
@@ -80,22 +83,23 @@ For simplicity, you can use {product-utility} and {product-automation} to set up
 
 == {product-utility} and {product-automation}
 
-You can use {product-automation-repo}[{product-utility} and {product-automation}] to set up and run Ansible playbooks that deploy and manage {product-proxy} and the associated monitoring stack.
+You can use {product-automation-repo}[{product-utility} and {product-automation}] to set up and run Ansible playbooks that deploy and manage multiple {product-proxy} instances and the associated monitoring stack (Prometheus metrics and associated Grafana visualizations).
 
-https://www.ansible.com/[Ansible] is a suite of software tools that enables infrastructure as code.
-It is open source and its capabilities include software provisioning, configuration management, and application deployment functionality.
-The Ansible automation for {product-short} is organized into playbooks, each implementing a specific operation.
-The machine from which the playbooks are run is known as the Ansible Control Host.
-In {product-short}, the Ansible Control Host runs as a Docker container.
+https://www.ansible.com/[Ansible] is a suite of software tools that enable infrastructure as code.
+It is open source, and its capabilities include software provisioning, configuration management, and application deployment.
 
-You use {product-utility} to set up Ansible in a Docker container, and then you use {product-automation} to run the Ansible playbooks from the Docker container created by {product-utility}.
+Ansible playbooks streamline and automate the deployment and management of {product-proxy} instances and their monitoring components.
+Playbooks are YAML files that define a series of tasks to be executed on one or more remote machines, including installing software, configuring settings, and managing services.
+They are repeatable and reusable, and they simplify deployment and configuration management because each playbook focuses on a specific operation, such as rolling restarts.
 
-{product-utility} creates the Docker container acting as the Ansible Control Host, from which {product-automation} allows you to deploy and manage the {product-proxy} instances and the associated monitoring stack, which includes Prometheus metrics and Grafana visualizations of the metrics data.
+You run playbooks from a centralized machine known as the Ansible Control Host.
+{product-utility}, which is included with {product-automation}, creates the Docker container that acts as the Ansible Control Host.
 
-To use {product-utility} and {product-automation}, you must prepare the recommended infrastructure, as explained in xref:deployment-infrastructure.adoc[].
+To use {product-utility} and {product-automation}, you must xref:deployment-infrastructure.adoc[prepare the recommended infrastructure].
 
-For more information, see xref:setup-ansible-playbooks.adoc[] and xref:deploy-proxy-monitoring.adoc[].
+For more information about the role of Ansible and Ansible playbooks in the {product-short} process, see xref:setup-ansible-playbooks.adoc[] and xref:deploy-proxy-monitoring.adoc[].
 
+[#data-migration-tools]
 == Data migration tools
 
 You use data migration tools to move data between clusters and validate the migrated data.
@@ -130,7 +134,7 @@ For more information, see xref:ROOT:dsbulk-migrator.adoc[].
 
 === Other data migration processes
 
-Depending on your source and target databases, there might be other data migration tools available for your migration.
+Depending on your origin and target databases, there might be other data migration tools available for your migration.
 For example, if you want to write your own custom data migration processes, you can use a tool like Apache Spark(TM).
 
 To use a data migration tool with {product-proxy}, it must meet the following requirements:
@@ -142,5 +146,21 @@ To use a data migration tool with {product-proxy}, it must meet the following re
 Because {product-proxy} requires that both databases can successfully process the same read/write statements, migrations that perform significant data transformations might not be compatible with {product-proxy}.
 The impact of data transformations depends on your specific data model, database platforms, and the scale of your migration.
 
-For data-only migrations that aren't concerned with live application traffic or minimizing downtime, your chosen tool depends on your source and target databases, the compatibility of the data models, and the scale of your migration.
+For data-only migrations that aren't concerned with live application traffic or minimizing downtime, your chosen tool depends on your origin and target databases, the compatibility of the data models, and the scale of your migration.
 Describing the full range of these tools is beyond the scope of this document, which focuses on full-scale platform migrations with the {product-short} tools and verified {product-short}-compatible data migration tools.
+
+== In-place migrations
+
+[WARNING]
+====
+In-place migrations carry a higher risk of data loss or corruption, require progressive manual reconfiguration of the cluster, and are more cumbersome to rollback compared to the {product-short} process.
+
+Whenever possible, {company} recommends using the {product-short} process to orchestrate live migrations between separate clusters, which eliminates the need for progressive configuration changes, and allows you to seamlessly xref:ROOT:rollback.adoc[rollback to your origin cluster] if there is a problem during the migration.
+====
+
+For certain migration paths, it is possible to perform in-place database platform replacements on the same cluster where you data already exists.
+Supported paths for in-place migrations include xref:6.9@dse:planning:migrate-cassandra-to-dse.adoc[{cass} to {dse-short}] and xref:1.2@hyper-converged-database:migrate:dse-68-to-hcd-12.adoc[{dse-short} to {hcd-short}].
+
+== See also
+
+* xref:ROOT:zdm-proxy-migration-paths.adoc#incompatible-clusters-and-migrations-with-some-downtime[Incompatible clusters and migrations with some downtime]

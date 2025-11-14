@@ -1,7 +1,7 @@
 = Feasibility checks
 :page-aliases: ROOT:preliminary-steps.adoc
 
-Before starting your migration, refer to the following considerations to ensure that your client application workload and xref:glossary.adoc#origin[**Origin**] are suitable for this {product} process.
+Before starting your migration, review the following information to ensure that your client application workload and origin (source) cluster are suitable for the {product} process.
 
 True zero downtime migration is only possible if your database meets the minimum requirements described on this page.
 If your database doesn't meet these requirements, you can still complete the migration, but downtime might be necessary to finish the migration.
@@ -74,69 +74,51 @@ It is also highly recommended to perform tests and benchmarks when connected dir
 [[_read_only_applications]]
 === Read-only applications
 
-Read-only applications require special handling only if you are using {product-proxy} versions older than 2.1.0.
+In versions 2.1.0 and later, {product-proxy} sends periodic heartbeats to keep idle cluster connections alive.
+The default interval is 30,000 milliseconds, and it can be configured with the `xref:ROOT:manage-proxy-instances.adoc#change-mutable-config-variable[heartbeat_interval_ms]` variable, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you aren't using {product-automation}.
 
-[TIP]
-====
+In {product-proxy} versions earlier than 2.1.0, read-only applications require special handling to avoid connection termination due to inactivity.
+
+{company} recommends that you upgrade to version 2.1.0 or later to benefit from the heartbeat feature.
 If you have an existing {product-proxy} deployment, you can xref:ROOT:troubleshooting-tips.adoc#check-version[check your {product-proxy} version].
-
 For upgrade instructions, see xref:ROOT:manage-proxy-instances.adoc#_upgrade_the_proxy_version[Upgrade the proxy version].
-====
 
-//TODO: combine the below 2 sections to only use 2.1.0 or later.
-//Reconcile with troubleshooting-scenarios.adoc in case this issue is also described there.
-==== Versions older than 2.1.0
-
-If a client application only sends `SELECT` statements to a database connection then you may find that {product-proxy} terminates these read-only connections periodically, which may result in request errors if the driver is not configured to retry these requests in these conditions.
-
-This happens because {astra-db} terminates idle connections after some inactivity period (usually around 10 minutes).
-If {astra-db} is your target, and a client connection is only sending read requests to {product-proxy}, then the {astra-db} connection that is paired to that client connection will remain idle and will be eventually terminated.
-
-A potential workaround is to not connect these read-only client applications to {product-proxy}, but you need to ensure that these client applications switch reads to the target at any point after all the data has been migrated and all validation and reconciliation has completed.
-
-Another work around is to implement a mechanism in your client application that creates a new `Session` periodically to avoid the {astra-db} inactivity timeout.
-You can also implement some kind of meaningless write request that the application sends periodically to make sure the {astra-db} connection doesn't idle.
-
-==== Version 2.1.0 and newer
-
-This issue is solved in version 2.1.0 of {product-proxy}, which introduces periodic heartbeats to keep alive idle cluster connections.
-We strongly recommend using version 2.1.0 (or newer) to benefit from this improvement, especially if you have a read-only workload.
+If you cannot upgrade to version 2.1.0 or later, see the alternatives described in xref:ROOT:troubleshooting-tips.adoc#client-application-closed-connection-errors-every-10-minutes-when-migrating-to-astra-db[Client application closed connection errors every 10 minutes when migrating to {astra-db}].
 
 [[non-idempotent-operations]]
 == Lightweight Transactions and other non-idempotent operations
 
 Examples of non-idempotent operations in CQL are:
 
-* Lightweight Transactions (LWTs)
+* Lightweight Transactions (LWTs) (see <<_lightweight_transactions_and_the_applied_flag>>)
 * Counter updates
 * Collection updates with `+=` and `-=` operators
-* Non-deterministic functions like `now()` and `uuid()`
+* Non-deterministic functions like `now()` and `uuid()` (see <<cql-function-replacement>>)
 
-For more information on how to handle non-deterministic functions, see <<cql-function-replacement>>.
+Given that there are two separate clusters involved, the state of each cluster can be different.
+For conditional writes, this can create a temporary divergent state.
 
-Given that there are two separate clusters involved, the state of each cluster may be different.
-For conditional writes, this may create a divergent state for a time.
+If you use non-idempotent operations, {company} recommends adding a reconciliation phase to your migration before and after Phase 4 (where you switch reads to the target).
+This allows you additional opportunities to resolve any data inconsistencies that are produced by non-idempotent operations.
 
-If non-idempotent operations are used, {company} recommends adding a reconciliation phase to your migration before and after Phase 4, where you switch reads to the target.
+The {cass-migrator} is ideal for detecting and reconciling these types of inconsistencies.
+For more information, see xref:migrate-and-validate-data.adoc[].
 
-For details about using the {cass-migrator}, see xref:migrate-and-validate-data.adoc[].
-
-[TIP]
-====
-Some application workloads can tolerate inconsistent data in some cases (especially for counter values) in which case you may not need to do anything special to handle those non-idempotent operations.
-====
+If your application workloads can tolerate inconsistencies produced by LWTs and non-idempotent operations, you might not need to perform any additional validation or reconciliation steps.
+This depends entirely on your application business logic and requirements.
+It is your responsibility to determine whether your workloads can tolerate these inconsistencies and to what extent.
 
 [[_lightweight_transactions_and_the_applied_flag]]
-=== Lightweight transactions and the applied flag
+=== Lightweight Transactions and the applied flag
 
 //TODO: Align with the write request language on components.adoc
 
 ////
-The ZDM proxy can bifurcate lightweight transactions to the ORIGIN and TARGET clusters.
+The ZDM proxy can bifurcate Lightweight Transactions to the ORIGIN and TARGET clusters.
 However, it only returns the applied flag from one cluster, whichever cluster is the source of truth. 
 Given that there are two separate clusters involved, the state of each cluster may be different.
 For conditional writes, this may create a divergent state for a time.
-It may not make a difference in many cases, but if lightweight transactions are used, we would recommend a reconciliation phase in the migration before switching reads to rely on the TARGET cluster.
+It may not make a difference in many cases, but if Lightweight Transactions are used, we would recommend a reconciliation phase in the migration before switching reads to rely on the TARGET cluster.
 ////
 
 {product-proxy} handles LWTs as write operations.
@@ -154,7 +136,7 @@ Up to that point, an LWT's condition can be evaluated differently on each side, 
 The response that a cluster sends after executing a LWT includes a flag called `applied`.
 This flag tells the client whether the LWT update was actually applied.
 The status depends on the condition, which in turn depends on the state of the data.
-When {product-proxy} receives a response from both the origin and target, each response would have its own `applied` flag. 
+When {product-proxy} receives a response from both the origin and target, each response would have its own `applied` flag.
 
 However, {product-proxy} can only return a *single response* to the client.
 Recall that the client has no knowledge that there are two clusters behind the proxy.
@@ -164,71 +146,31 @@ If your client has logic that depends on the `applied` flag, be aware that durin
 To reiterate, {product-proxy} only returns the `applied` value from the primary cluster, which is the cluster from where read results are returned to the client application. By default, this is the origin cluster.
 This means that when you set the target cluster as your primary cluster, then the `applied` value returned to the client application will come from the target cluster.
 
-== Advanced workloads ({dse-short})
-
-=== Graph
-
-{product-proxy} handles all {dse-short} Graph requests as write requests even if the traversals are read-only. There is no special handling for these requests, so you need to take a look at the traversals that your client application sends and determine whether the traversals are idempotent. If the traversals are non-idempotent then the reconciliation step is needed.
-
-Keep in mind that our recommended tools for data migration and reconciliation are CQL-based, so they can be used for migrations where the origin cluster is a database that uses the new {dse-short} Graph engine released with {dse-short} 6.8, but *cannot be used for the old Graph engine* that older {dse-short} versions relied on.
-See <<non-idempotent-operations,this section>> for more information about non-idempotent operations.
-
-=== Search
-
-Read-only {dse-short} Search workloads can be moved directly from the origin to the target without {product-proxy} being involved.
-If your client application uses Search and also issues writes, or if you need the read routing capabilities from {product-proxy}, then you can connect your Search workloads to it as long as you are using xref:datastax-drivers:compatibility:driver-matrix.adoc[{company}-compatible drivers] to submit these queries.
-This approach means the queries are regular CQL `SELECT` statements, so {product-proxy} handles them as regular read requests.
-
-If you use the HTTP API then you can either modify your applications to use the CQL API instead or you will have to move those applications directly from the origin to the target when the migration is complete if that is acceptable.
-
-== Client compression
-
-The binary protocol used by {cass-short}, {dse-short}, {hcd-short}, and {astra-db} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
-
-When establishing connections from client applications, {product-proxy} responds with a list of compression algorithms supported by both clusters.
-The compression algorithm configured in your {company}-compatible driver must match any item from the common list, or CQL request compression must be disabled completely.
-{product-proxy} cannot decompress and recompress CQL requests using different compression algorithms.
-
-This isn't related to storage compression, which you can configure on specific tables with the `compression` table property.
-Storage/table compression doesn't affect the client application or {product-proxy} in any way.
-
-== Authenticator and Authorizer configuration
-
-{product-proxy} supports the following cluster authenticator configurations:
-
-* No authenticator
-* `PasswordAuthenticator`
-* `DseAuthenticator` with `internal` or `ldap` scheme
-
-{product-proxy} does *not* support `DseAuthenticator` with `kerberos` scheme.
-
-While the authenticator has to be supported, the *authorizer* does not affect client applications or {product-proxy} so you should be able to use any kind of authorizer configuration on both of your clusters.
-
-The authentication configuration on each cluster can be different between the origin and target clustesr, as {product-proxy} treats them independently.
-
 [[cql-function-replacement]]
-== Server-side non-deterministic functions in the primary key
+=== Server-side non-deterministic functions in the primary key
 
-Statements with functions like `now()` and `uuid()` will result in data inconsistency between the origin and target clusters because the values are computed at the cluster level.
+Statements with xref:dse-6.9@cql:reference:uuid.adoc[UUID and timeuuid functions], like `now()` and `uuid()`, create data inconsistencies between the origin and target clusters because the values are computed at the cluster level.
 
-If these functions are used for columns that are not part of the primary key, you may find it acceptable to have different values in the two clusters depending on your application business logic.
-However, if these columns are part of the primary key, the data migration phase will not be successful as there will be data inconsistencies between the two clusters and they will never be in sync.
+If these functions are used for regular non-primary key columns, you must determine if it is acceptable to have different values in the two clusters depending on your application business logic.
+However, if these functions are used in any primary key column, then your data migration phase will fail because of data inconsistencies between the two clusters.
+Effectively, the clusters will never be truly in sync from a programmatic perspective.
 
-[NOTE]
+{product-proxy} has an option to replace `now()` with a timeUUID calculated at the proxy level to ensure that these records write the same value to both clusters.
+
+To enable this feature, set `replace_cql_functions` to `true`.
+For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
+
+[IMPORTANT]
 ====
-{product-short} does not support the `uuid()` function currently.
+The `replace_cql_functions` option only replaces the `now()` function.
+
+This feature is disabled by default because it has a noticeable impact on performance.
+{company} recommends that you test this feature extensively before using it in production.
 ====
 
-{product-proxy} is able to compute timestamps and replace `now()` function references with such timestamps in CQL statements at proxy level to ensure that these parameters will have the same value when these statements are sent to both clusters.
-However, this feature is disabled by default because it might result in performance degradation.
-We highly recommend that you test this properly before using it in production.
-Also keep in mind that this feature is only supported for `now()` functions at the moment.
-To enable this feature, set the configuration variable `replace_cql_function` to `true`.
-For more, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
-
-If you find that the performance is not acceptable when this feature is enabled, or the feature doesn't cover a particular function that your client application is using, then you will have to make a change to your client application so that the value is computed locally (at client application level) before the statement is sent to the database.
+If the performance impact is unacceptable for your application, or you are using functions other than `now()`, then you must change your client application to use values calculated locally at the client-level before the statement is sent to the database.
 Most drivers have utility methods that help you compute these values locally.
-For more information, see your driver's documentation.
+For more information, see your driver's documentation and xref:datastax-drivers:developing:query-timestamps.adoc[Query timestamps in {cass-short} drivers].
 
 == Driver retry policy and query idempotence
 
@@ -252,6 +194,48 @@ For more information, see the following driver documentation:
 
 * xref:datastax-drivers:developing:query-idempotence.adoc[]
 * xref:datastax-drivers:connecting:retry-policies.adoc[]
+
+== {dse-short} advanced workloads
+
+Graph::
+{product-proxy} handles all {dse-short} Graph requests as write requests even if the traversals are read-only. There is no special handling for these requests, so you need to take a look at the traversals that your client application sends and determine whether the traversals are idempotent. If the traversals are non-idempotent then the reconciliation step is needed.
++
+Keep in mind that our recommended tools for data migration and reconciliation are CQL-based, so they can be used for migrations where the origin cluster is a database that uses the new {dse-short} Graph engine released with {dse-short} 6.8, but *cannot be used for the old Graph engine* that older {dse-short} versions relied on.
+See <<non-idempotent-operations,this section>> for more information about non-idempotent operations.
+
+Search::
+Read-only {dse-short} Search workloads can be moved directly from the origin to the target without {product-proxy} being involved.
+If your client application uses Search and also issues writes, or if you need the read routing capabilities from {product-proxy}, then you can connect your Search workloads to it as long as you are using xref:datastax-drivers:compatibility:driver-matrix.adoc[{company}-compatible drivers] to submit these queries.
+This approach means the queries are regular CQL `SELECT` statements, so {product-proxy} handles them as regular read requests.
++
+If you use the HTTP API then you can either modify your applications to use the CQL API instead or you will have to move those applications directly from the origin to the target when the migration is complete if that is acceptable.
+
+== Client compression
+
+The binary protocol used by {cass-short}, {dse-short}, {hcd-short}, and {astra-db} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
+
+When establishing connections from client applications, {product-proxy} responds with a list of compression algorithms supported by both clusters.
+The compression algorithm configured in your {company}-compatible driver must match any item from the common list, or CQL request compression must be disabled completely.
+{product-proxy} cannot decompress and recompress CQL requests using different compression algorithms.
+
+This isn't related to storage compression, which you can configure on specific tables with the `compression` table property.
+Storage/table compression doesn't affect the client application or {product-proxy} in any way.
+
+== Authenticator and authorizer configuration
+
+A cluster's _authorizer_ doesn't affect client applications or {product-proxy}, which means that you can use any kind of authorizer configuration on your clusters, and they can use different authorizers.
+
+In contrast, a cluster's _authenticator_ must be compatible with {product-proxy}.
+
+{product-proxy} supports the following cluster authenticator configurations:
+
+* No authenticator
+* `PasswordAuthenticator`
+* `DseAuthenticator` with `internal` or `ldap` scheme
+
+{product-proxy} _doesn't_ support `DseAuthenticator` with `kerberos` scheme.
+
+The origin and target clusters can have different authentication configurations because {product-proxy} treats them independently.
 
 == Next steps
 
