@@ -16,7 +16,7 @@ For more information about {product-utility} and {product-automation}, see xref:
 
 == Prerequisites
 
-Before running {product-utility} to create the Ansible Control Host contain, you must complete the following prerequisites:
+Before running {product-utility} to create the Ansible Control Host container, you must complete the following prerequisites:
 
 * xref:ROOT:deployment-infrastructure.adoc[Provision all {product-proxy} infrastructure]: This means your server machines are ready, and you know their IP addresses.
 +
@@ -24,7 +24,7 @@ This infrastructure can be on-premise or in any cloud provider of your choice.
 +
 If your {product-proxy} machines use private IPs, which are recommended for production deployments, configure these before running {product-utility}.
 If you enable private IPs later, you must reconfigure and redeploy your {product-proxy} instances.
-This is a distruptive operation that requires a small amount of downtime because the deployment playbook decommissions and recreates all {product-proxy} containers simultaneously.
+This is a disruptive operation that requires a small amount of downtime because the deployment playbook decommissions and recreates all {product-proxy} containers simultaneously.
 
 * https://docs.docker.com/engine/install/#server[Install Docker] on the machine that will run the Ansible Control Host container, and ensure that the `docker` command https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[doesn't require superuser privileges].
 +
@@ -72,35 +72,34 @@ This guide uses a jumphost to run the Ansible Control Host container.
 A jumphost is a server on a network that is used to access and manage devices in a separate security zone, providing a controlled means of access between them.
 The jumphost can be, for example, a Linux server machine that is able to access the server machines that you wish to use for your {product-proxy} deployment.
 
-The jumphost serves three purposes:
-
-* Accessing the {product-proxy} machines.
-* Running the Ansible Control Host container, from which you can run {product-automation}.
-* Running the {product-proxy} monitoring stack, which uses Prometheus and Grafana to expose the metrics of all the {product-proxy} instances in a preconfigured dashboard.
-
-[TIP]
-====
-To simplify accessing the jumphost and {product-proxy} instances from your machine, create a xref:deployment-infrastructure.adoc#_connecting_to_the_zdm_infrastructure_from_an_external_machine[custom SSH configuration file].
-The following steps assume that this file exists.
-====
-
-To run {product-automation}, the Ansible Control Host needs to be able to connect to all other instances of the {product-proxy} deployment.
-For this reason, it needs to have the SSH key required by those instances.
+The jumphost is used to access the {product-proxy} machines, and run the Ansible Control Host container, from which you run {product-automation}.
+In this example, the jumphost also runs the {product-proxy} monitoring stack, which uses Prometheus and Grafana to expose the metrics of all the {product-proxy} instances to preconfigured dashboards.
+However, you can run the monitoring stack on a different machine.
 
 . Add SSH keys to the jumphost.
++
+To run {product-automation}, the Ansible Control Host must be able to connect to all other instances of the {product-proxy} deployment.
+For this reason, it needs to have the SSH key required by those instances.
++
+[TIP]
+====
+To simplify accessing the jumphost and {product-proxy} instances from your machine, you can create a xref:ROOT:deployment-infrastructure.adoc#connect-to-zdm-proxy-infrastructure-from-an-external-machine[custom SSH configuration file].
+These steps assume that this file exists.
+====
++
 From your local machine, transfer (`scp`) the SSH private key for the {product-proxy} deployment to the jumphost.
 For example:
 +
 [source,bash]
 ----
-scp -F <path to zdm_ssh_config> <zdm key> jumphost:
+scp -F path/to/zdm_ssh_config zdm_key_name jumphost:
 ----
 
 . Connect to the jumphost.
 +
 [source,bash]
 ----
-ssh -F <path to zdm_ssh_config> jumphost
+ssh -F path/to/zdm_ssh_config jumphost
 ----
 
 . From the jumphost, download the latest {product-utility} executable from the {product-automation-repo}/releases[{product-automation} GitHub repository] {product-automation-shield}.
@@ -129,7 +128,7 @@ tar -xvf zdm-util-linux-amd64-v2.3.1.tgz
 ----
 
 . Enter configuration values as you are prompted for them.
-{product utility} creates and initializes the Ansible Control Host container after it has all required configuration values.
+{product-utility} creates and initializes the Ansible Control Host container after it has all required configuration values.
 +
 {product-utility} validates each value that you enter.
 In case of invalid values, it prompts you for the variable again and prints a message to help you fix potential problems.
@@ -204,7 +203,7 @@ You can skip this step if you haven't decided which machine to use for monitorin
 +
 [IMPORTANT]
 ====
-{company} strongly recommendeds that you configure a monitoring instance to expose xref:ROOT:metrics.adoc[{product-proxy} metrics and preconfigured dashboards] with {product-automation}.
+{company} strongly recommends that you configure a monitoring instance to expose xref:ROOT:metrics.adoc[{product-proxy} metrics and preconfigured dashboards] with {product-automation}.
 This is the most simplified approach to {product-proxy} montioring, and it is preferred unless you intend (or are required) to use a monitoring stack that you already have.
 
 Metrics are essential for understanding the performance and health of your {product-proxy} instances, especially for migrations that run over multiple days or weeks.
