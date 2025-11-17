@@ -12,14 +12,19 @@ image::migration-phase4ra9.png[In migration Phase 4, {product-proxy}'s read rout
 
 == Prerequisites
 
-* Complete xref:ROOT:migrate-and-validate-data.adoc[Phase 2].
+* Complete xref:ROOT:migrate-and-validate-data.adoc[Phase 2], including thorough data validation and reconciliation of any discrepancies.
++
+The success of Phase 4 depends on the target cluster having all the data from the origin cluster.
++
+If your migration was idle for some time after completing Phase 2, or you skipped Phase 3, {company} recommends re-validating the data on the target cluster before proceeding.
 
 * Complete xref:ROOT:enable-async-dual-reads.adoc[Phase 3], and then disable asynchronous dual reads by setting `read_mode` to `PRIMARY_ONLY`.
 +
 If you don't disable asynchronous dual reads, {product-proxy} sends asynchronous, duplicate read requests to your origin cluster.
 This is harmless but unnecessary.
 
-== Changing the read routing configuration
+[#change-the-read-routing-configuration]
+== Change the read routing configuration
 
 Read routing is controlled by a mutable configuration variable.
 For more information, see  xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
@@ -155,6 +160,19 @@ This means that system reads don't represent how {product-proxy} routes regular 
 
 Although `DESCRIBE` requests aren't system reads, they are also resolved differently than other `DESCRIBE` requests.
 Don't use `DESCRIBE` requests to verify read routing behavior.
+
+== Monitor and troubleshoot read performance
+
+After changing read routing, monitor the performance of {product-proxy} and the target cluster to ensure reads are succeeding and meeting your performance expectations.
+
+If read requests fail or perform poorly, you can <<change-the-read-routing-configuration>> back to `ORIGIN` while you investigate the issue.
+
+If read requests fail due to missing data, go back to xref:ROOT:migrate-and-validate-data.adoc[Phase 2] and repeat your data validation and reconciliation processes as needed to rectify the missing data errors.
+
+If your data model includes non-idempotent operations, ensure that this data is handled correctly during data migration, reconciliation, and ongoing dual writes.
+For more information, see xref:ROOT:feasibility-checklists.adoc#non-idempotent-operations[Lightweight Transactions and other non-idempotent operations].
+
+If your target cluster performs poorly, or you skipped Phase 3 previously, go back to xref:ROOT:enable-async-dual-reads.adoc[Phase 3] to test, adjust, and retest the target cluster before reattempting Phase 4.
 
 == Next steps
 

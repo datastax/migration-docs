@@ -4,7 +4,13 @@
 :page-aliases: cdm-parameters.adoc, ROOT:cdm-steps.adoc, ROOT:cdm-overview.adoc
 
 {description}
-It is best for large or complex migrations that benefit from advanced features and configuration options, such as the following:
+
+[IMPORTANT]
+====
+To use {cass-migrator-short} successfully, your origin and target clusters must be {cass-short}-based databases with matching schemas.
+====
+
+{cass-migrator-short} is best for large or complex migrations that benefit from advanced features and configuration options, such as the following:
 
 * Logging and run tracking
 * Automatic reconciliation
@@ -18,11 +24,7 @@ It is best for large or complex migrations that benefit from advanced features a
 
 For more information and a complete list of features, see the {cass-migrator-repo}?tab=readme-ov-file#features[{cass-migrator-short} GitHub repository].
 
-== {cass-migrator} requirements
-
-To use {cass-migrator-short} successfully, your origin and target clusters must be {cass-short}-based databases with matching schemas.
-
-== {cass-migrator-short} with {product-proxy}
+== {cass-migrator-short} last-write-wins with {product-proxy}
 
 You can use {cass-migrator-short} alone, with {product-proxy}, or for data validation after using another data migration tool.
 
@@ -32,7 +34,7 @@ Last-write-wins compares the `writetime` of conflicting records, and then retain
 
 For example, if a new write occurs in your target cluster with a `writetime` of `2023-10-01T12:05:00Z`, and then {cass-migrator-short} migrates a record against the same row with a `writetime` of `2023-10-01T12:00:00Z`, the target cluster retains the data from the new write because it has the most recent `writetime`.
 
-== Install {cass-migrator}
+== Install {cass-migrator-short}
 
 {company} recommends that you always install the latest version of {cass-migrator-short} to get the latest features, dependencies, and bug fixes.
 

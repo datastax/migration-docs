@@ -1,4 +1,5 @@
 = Phase 5: Connect client applications to the target cluster
+:navtitle: Phase 5: Connect client applications to the target
 
 Phase 5 is the last phase of the xref:ROOT:introduction.adoc[migration process], after you route all read requests to the target cluster in xref:ROOT:change-read-routing.adoc[Phase 4].
 
