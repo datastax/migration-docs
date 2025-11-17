@@ -239,4 +239,4 @@ The origin and target clusters can have different authentication configurations 
 
 == Next steps
 
-* xref:ROOT:deployment-infrastructure.adoc[]
+Next, xref:ROOT:deployment-infrastructure.adoc[prepare the {product-proxy} infrastructure].

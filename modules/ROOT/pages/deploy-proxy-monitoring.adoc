@@ -396,3 +396,7 @@ Login with:
 ====
 Details about the metrics you can observe are available in xref:ROOT:metrics.adoc[].
 ====
+
+== Next steps
+
+To continue Phase 1 of the migration, xref:ROOT:connect-clients-to-proxy.adoc[connect your client applications to {product-proxy}].

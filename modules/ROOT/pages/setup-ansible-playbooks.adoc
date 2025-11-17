@@ -232,3 +232,7 @@ image::zdm-go-utility-results3.png[A summary of the configuration provided is di
 
 +
 image::zdm-go-utility-success3.png[Ansible Docker container success messages]
+
+== Next steps
+
+After you use {product-utility} to set up the Ansible Control Host container, you can xref:deploy-proxy-monitoring.adoc[use {product-automation} to deploy your {product-proxy} instances and the monitoring stack].

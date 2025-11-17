@@ -1,5 +1,4 @@
-= Connect your client applications to {product-proxy}
-:navtitle: Connect client applications to {product-proxy}
+= Connect client applications to {product-proxy}
 
 {product-proxy} is designed to mimic communication with a typical cluster based on {cass-reg}.
 This means that your client applications connect to {product-proxy} in the same way that they already connect to your existing {cass-short}-based clusters.
@@ -247,3 +246,7 @@ Instead, use the token-based authentication option explained in <<expected-authe
 
 If you include the {scb-short}, `cqlsh` ignores all other connection arguments and connects exclusively to your {astra-db} database instead of {product-proxy}.
 ====
+
+== Next steps
+
+After you connect your client applications to {product-proxy}, you can begin xref:ROOT:migrate-and-validate-data.adoc[Phase 2] of the migration, which is the data migration phase.

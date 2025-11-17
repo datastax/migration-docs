@@ -1,7 +1,6 @@
-= Create the target environment for your migration
-:navtitle: Create target environment for migration
+= Create the target environment
 
-In this phase of the migration, you must create and prepare a new database (cluster) to be the target for your migration.
+Before you begin your migration, you must create and prepare a new database (cluster) to be the target for your migration.
 You must also gather authentication credentials to allow {product-proxy} and your client applications to connect to the new database.
 
 == Prepare the target database
@@ -125,4 +124,4 @@ include::ROOT:partial$multi-region-migrations.adoc[]
 
 == Next steps
 
-* xref:ROOT:rollback.adoc[]
+Learn about xref:ROOT:rollback.adoc[rollback options] before you begin Phase 1 of the migration process.

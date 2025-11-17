@@ -1,96 +1,164 @@
-= Route reads to the target
+= Phase 4: Route reads to the target
 
-This topic explains how you can configure {product-proxy} to route all reads to the target cluster instead of the origin cluster.
+After you migrate and validate your data in xref:ROOT:migrate-and-validate-data.adoc[Phase 2], and then test your target cluster's production readiness in xref:ROOT:enable-async-dual-reads.adoc[Phase 3], you can configure {product-proxy} to route _all_ read requests to the target cluster instead of the origin cluster.
 
-image::migration-phase4ra9.png["Phase 4 diagram shows read routing on {product-proxy} was switched to the target."]
-
-For illustrations of all the migration phases, see the xref:introduction.adoc#_migration_phases[Introduction].
-
-== Steps
-
-You would typically perform these steps once you have migrated all the existing data from the origin cluster, and completed all validation checks and reconciliation if necessary.
-
-This operation is a configuration change that can be carried out as explained xref:manage-proxy-instances.adoc#change-mutable-config-variable[here].
-
-[TIP]
+[IMPORTANT]
 ====
-If you xref:enable-async-dual-reads.adoc[enabled asynchronous dual reads] to test your target cluster's performance, make sure that you disable asynchronous dual reads when you're done testing.
+This phase routes production read requests to the target cluster exclusively.
+Make sure all data is present on the target cluster, and it is prepared to handle full-scale production workloads.
+====
 
-To do this, edit the `vars/zdm_proxy_core_config.yml` file, and then set the `read_mode` variable  to `PRIMARY_ONLY`.
+image::migration-phase4ra9.png[In migration Phase 4, {product-proxy}'s read routing switches to the target cluster]
 
-If you don't disable asynchronous dual reads, {product-proxy} instances send asynchronous, duplicate read requests to your origin cluster.
+== Prerequisites
+
+* Complete xref:ROOT:migrate-and-validate-data.adoc[Phase 2].
+
+* Complete xref:ROOT:enable-async-dual-reads.adoc[Phase 3], and then disable asynchronous dual reads by setting `read_mode` to `PRIMARY_ONLY`.
++
+If you don't disable asynchronous dual reads, {product-proxy} sends asynchronous, duplicate read requests to your origin cluster.
 This is harmless but unnecessary.
-====
 
 == Changing the read routing configuration
 
-If you're not there already, `ssh` back into the jumphost:
+Read routing is controlled by a mutable configuration variable.
+For more information, see  xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
 
+. Connect to your Ansible Control Host container.
++
+For example, `ssh` into the jumphost:
++
 [source,bash]
 ----
 ssh -F ~/.ssh/zdm_ssh_config jumphost
 ----
-
-On the jumphost, connect to the Ansible Control Host container:
++
+Then, connect to the Ansible Control Host container:
++
 [source,bash]
 ----
 docker exec -it zdm-ansible-container bash
 ----
-
-You will see a prompt like:
++
+.Result
+[%collapsible]
+====
 [source,bash]
 ----
 ubuntu@52772568517c:~$
 ----
+====
 
-Now open the configuration file `vars/zdm_proxy_core_config.yml` for editing.
+. Edit the {product-proxy} core configuration file: `vars/zdm_proxy_core_config.yml`.
 
-Change the variable `primary_cluster` to `TARGET`.
+. Change the `primary_cluster` variable to `TARGET`.
 
-Run the playbook that changes the configuration of the existing {product-proxy} deployment:
-
+. Run the rolling restart playbook to apply the configuration change to your entire {product-proxy} deployment:
++
 [source,bash]
 ----
 ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
 ----
 
-Wait for the {product-proxy} instances to be restarted by Ansible, one by one.
-All instances will now send all reads to the target cluster instead of the origin cluster.
+. Wait while Ansible restarts the {product-proxy} instances, one by one.
 
-At this point, the target cluster becomes the primary cluster, but {product-proxy} still keeps the origin cluster up-to-date through dual writes.
+Once the instances are restarted, all reads are routed to the target cluster instead of the origin cluster.
 
-== Verifying the read routing change
+At this point, the target cluster is considered the primary cluster, but {product-proxy} still keeps the origin cluster synchronized through dual writes.
 
-Once the read routing configuration change has been rolled out, you may want to verify that reads are correctly sent to the target cluster, as expected.
-This is not a required step, but you may wish to do it for peace of mind.
+== Verify the read routing change
 
-[TIP]
+Once the read routing configuration change has been rolled out, you might want to verify that reads are being sent to the target cluster as expected.
+This isn't required, but it can provide confirmation that the change was applied successfully.
+
+However, it is difficult to assess read routing because the purpose of {product-short} is to align the clusters and provide an invisible proxy layer between your client application and the database clusters.
+By design, the data is expected to be identical on both clusters, and your client application has no awareness of which cluster is servicing its requests.
+
+For this reason, the only way to manually test read routing is to intentionally write mismatched test data to the clusters.
+Then, you can send a read request to {product-proxy} and see which cluster-specific data is returned, which indicates the cluster that received the read request.
+There are two ways to do this.
+
+[tabs]
+======
+Manually create mismatched tables::
++
+--
+To manually create mismatched data, you can create a test table on each cluster, and then write different data to each table.
+
+[IMPORTANT]
 ====
-Issuing a `DESCRIBE` or a read to any system table through {product-proxy} isn't a valid verification.
-
-{product-proxy} handles reads to system tables differently, by intercepting them and always routing them to the origin, in some cases partly populating them at the proxy level.
-
-This means that system reads don't represent how {product-proxy} routes regular user reads.
-Even after you switched the configuration to read the target cluster as the primary cluster, all system reads still go to the origin.
-
-Although `DESCRIBE` requests are not system requests, they are also generally resolved in a different way to regular requests, and should not be used as a means to verify the read routing behavior.
+When you write the mismatched data to the tables, make sure you connect to each cluster directly.
+Don't connect to {product-proxy}, because {product-proxy} will, by design, write the same data to both clusters through dual writes.
 ====
 
-Verifying that the correct routing is taking place is a slightly cumbersome operation, due to the fact that the purpose of the {product-short} process is to align the clusters and therefore, by definition, the data will be identical on both sides.
+. Create a small test table on both clusters, such as a simple key/value table.
+You can use an existing keyspace, or create one for this test specifically.
+For example:
++
+[source,cql]
+----
+CREATE TABLE test_keyspace.test_table(k TEXT PRIMARY KEY, v TEXT);
+----
 
-For this reason, the only way to do a manual verification test is to force a discrepancy of some test data between the clusters.
-To do this, you could consider using the xref:connect-clients-to-proxy.adoc#_themis_client[Themis sample client application].
-This client application connects directly to the origin cluster, the target cluster, and {product-proxy}.
-It inserts some test data in its own table, and then you can view the results of reads from each source.
-Refer to the Themis README for more information.
+. Use `cqlsh` to connect _directly to the origin cluster_, and then insert a row with any key and a value that is specific to the origin cluster.
+For example:
++
+[source,cql]
+----
+INSERT INTO test_keyspace.test_table(k, v) VALUES ('1', 'Hello from the origin cluster!');
+----
 
-Alternatively, you could follow this manual procedure:
+. Use `cqlsh` to connect _directly to the target cluster_, and then insert a row with the same key and a value that is specific to the target cluster.
+For example:
++
+[source,cql]
+----
+INSERT INTO test_keyspace.test_table(k, v) VALUES ('1', 'Hello from the target cluster!');
+----
 
-* Create a small test table on both clusters, for example a simple key/value table (it could be in an existing keyspace, or in one that you create specifically for this test).
-For example `CREATE TABLE test_keyspace.test_table(k TEXT PRIMARY KEY, v TEXT);`.
-* Use `cqlsh` to connect *directly to the origin cluster*.
-Insert a row with any key, and with a value specific to the origin cluster, for example `INSERT INTO test_keyspace.test_table(k, v) VALUES ('1', 'Hello from the origin cluster!');`.
-* Now, use `cqlsh` to connect *directly to the target cluster*.
-Insert a row with the same key as above, but with a value specific to the target cluster, for example `INSERT INTO test_keyspace.test_table(k, v) VALUES ('1', 'Hello from the target cluster!');`.
-* Now, use `cqlsh` to xref:connect-clients-to-proxy.adoc#_connecting_cqlsh_to_the_zdm_proxy[connect to {product-proxy}], and then issue a read request for this test table: `SELECT * FROM test_keyspace.test_table WHERE k = '1';`.
-The result will clearly show you where the read actually comes from.
+. Use `cqlsh` to xref:connect-clients-to-proxy.adoc#_connecting_cqlsh_to_the_zdm_proxy[connect to {product-proxy}], and then issue a read request to your test table.
+For example:
++
+[source,cql]
+----
+SELECT * FROM test_keyspace.test_table WHERE k = '1';
+----
++
+The cluster-specific value in the response tells you which cluster received the read request.
+For example:
++
+* If the read request was correctly routed to the target cluster, the result from `test_table` contains `Hello from the target cluster!`.
+* If the read request was incorrectly routed to the origin cluster, the result from `test_table` contains `Hello from the origin cluster!`.
+
+. When you're done testing, drop the test tables from both clusters.
+If you created dedicated test keyspaces, drop the keyspaces as well.
+--
+
+Use the Themis sample client application::
++
+--
+The xref:connect-clients-to-proxy.adoc#_themis_client[Themis sample client application] connects directly to the origin cluster, the target cluster, and {product-proxy}.
+It inserts some test data in its own, dedicated table.
+Then, you can view the results of reads from each source.
+For more information, see the https://github.com/absurdfarce/themis/blob/main/README.md[Themis README].
+--
+======
+
+=== System tables cannot validate read routing
+
+Issuing a `DESCRIBE` command or read request to any system table through {product-proxy} cannot sufficiently validate read routing.
+
+When {product-proxy} receives system reads, it intercepts them and always routes them to the origin, regardless of the `primary_cluster` variable.
+In some cases, {product-proxy} partially populates these queries at the proxy level.
+
+This means that system reads don't represent how {product-proxy} routes regular read requests.
+
+Although `DESCRIBE` requests aren't system reads, they are also resolved differently than other `DESCRIBE` requests.
+Don't use `DESCRIBE` requests to verify read routing behavior.
+
+== Next steps
+
+You can stay at this phase as long as you like.
+{product-proxy} continues to perform dual writes to both clusters, keeping the origin and target clusters synchronized.
+
+When you're ready to complete the migration and stop using your origin cluster, proceed to xref:ROOT:connect-clients-to-target.adoc[Phase 5] to disable dual writes and cut over to the target cluster exclusively.
