@@ -73,7 +73,7 @@ svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-
     <p>{cass-migrator-short} can migrate and validate data between {cass-short}-based clusters, with optional logging and reconciliation support.</p>
 
     <div class="landing-a mt-auto">
-        xref:ROOT:cdm-overview.adoc[Get started with {cass-migrator-short}]
+        xref:ROOT:cassandra-data-migrator.adoc[Get started with {cass-migrator-short}]
     </div>
 
   </div>

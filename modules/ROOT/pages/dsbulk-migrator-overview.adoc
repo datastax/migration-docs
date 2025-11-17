@@ -1,4 +1,0 @@
-= {dsbulk-migrator} overview
-:description: {dsbulk-migrator} extends {dsbulk-loader} with migration commands.
-
-include::ROOT:partial$dsbulk-migrator-body.adoc[]

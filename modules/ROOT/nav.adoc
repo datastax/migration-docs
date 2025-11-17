@@ -21,11 +21,7 @@
 ** xref:ROOT:connect-clients-to-proxy.adoc[]
 ** xref:ROOT:metrics.adoc[]
 ** xref:ROOT:manage-proxy-instances.adoc[]
-* Phase 2
-** xref:ROOT:migrate-and-validate-data.adoc[]
-** xref:sideloader:sideloader-zdm.adoc[]
-** xref:ROOT:cassandra-data-migrator.adoc[]
-** xref:ROOT:dsbulk-migrator.adoc[]
+* xref:ROOT:migrate-and-validate-data.adoc[]
 * Phase 3
 ** xref:ROOT:enable-async-dual-reads.adoc[]
 * Phase 4
@@ -47,8 +43,8 @@
 * xref:sideloader:troubleshoot-sideloader.adoc[]
 
 .{cass-migrator}
-* xref:ROOT:cdm-overview.adoc[]
+* xref:ROOT:cassandra-data-migrator.adoc[]
 * {cass-migrator-repo}/releases[{cass-migrator-short} release notes]
 
 .{dsbulk-migrator}
-* xref:ROOT:dsbulk-migrator-overview.adoc[]
+* xref:ROOT:dsbulk-migrator.adoc[]
