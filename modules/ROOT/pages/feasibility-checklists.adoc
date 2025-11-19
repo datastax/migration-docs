@@ -78,6 +78,19 @@ It is also highly recommended to perform tests and benchmarks when connected dir
 {product-proxy} doesn't mute these failures because you need to be aware of them.
 You must adapt your client application to use a consistency level that is supported by both clusters to ensure that the migration is seamless and error-free.
 
+=== {astra} doesn't support the Stargate APIs
+
+The xref:astra-db-serverless:api-reference:compare-dataapi-to-stargate.adoc[Stargate APIs] (Document, REST, GraphQL, gRPC) are deprecated for {astra}.
+
+If you are migrating to {astra} from an origin cluster that uses any of these APIs, your client applications won't work with {astra}.
+
+Before you migrate, you must change your applications to use other programmatic access, such as {cass-short} drivers or the {data-api}.
+
+=== Multi-region and multi-node {astra} migrations
+
+If your migration involves multi-region or multi-node clusters, plan your strategy for migrating and replicating data to the different regions.
+For more information, see the xref:sideloader:prepare-sideloader.adoc#additional-preparation-for-specific-migration-scenarios[{sstable-sideloader} preparations for specific migration scenarios] and the xref:ROOT:deployment-infrastructure.adoc[{product-proxy} infrastructure guidelines for multi-datacenter clusters].
+
 [[_read_only_applications]]
 === Read-only applications
 

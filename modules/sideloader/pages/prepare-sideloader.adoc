@@ -178,6 +178,7 @@ Your administration server must have SSH access to each node in your origin clus
 * https://jqlang.github.io/jq/[jq] to format JSON responses from the {astra} {devops-api}.
 The {devops-api} commands in this guide use this tool.
 
+[#additional-preparation-for-specific-migration-scenarios]
 == Additional preparation for specific migration scenarios
 
 The following information can help you prepare for specific migration scenarios, including multi-region migrations and multiple migrations to the same database.
