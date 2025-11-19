@@ -110,9 +110,9 @@ Don't rush through this phase.
 Take time to verify that the target cluster can handle the expected production workloads successfully before proceeding to Phase 4.
 Make adjustments and reassess performance until you are confident in the cluster's readiness.
 
-Asynchronous dual reads simulates real read requests without impacting your applications or end users.
+Asynchronous dual reads simulate real read requests without impacting your applications or end users.
 However, in Phase 4, genuine production read requests are directed to the target cluster _exclusively_.
-If your target cluster hasn't been fully tested and prepared for production workloads, you applications can experience performance degradation, timeouts, and other issues.
+If your target cluster hasn't been fully tested and prepared for production workloads, your applications can experience performance degradation, timeouts, and other issues.
 ====
 
 When you are confident that the target cluster is prepared to handle production workloads, you can <<configure-asynchronous-dual-reads,disable asynchronous dual reads>>, and then proceed to xref:ROOT:change-read-routing.adoc[Phase 4] where you will permanently route read requests to the target cluster.

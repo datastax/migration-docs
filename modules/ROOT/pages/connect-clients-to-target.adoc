@@ -186,7 +186,7 @@ Depending on your application's requirements, you might need to make these chang
 
 == Switch to the Data API
 
-If you migrated to {astra-db} or {hcd-short}, and you have the option of using the Data API instead of, or in addition to, a {cass-short} driver.
+If you migrated to {astra-db} or {hcd-short}, you have the option of using the Data API instead of, or in addition to, a {cass-short} driver.
 
 Although the Data API can read and write to CQL tables, it is significantly different from driver code.
 To use the Data API, you must rewrite your application code or create a new application.
