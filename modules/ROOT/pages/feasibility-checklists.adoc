@@ -71,6 +71,13 @@ If you need to make changes to the application or data model to ensure that your
 
 It is also highly recommended to perform tests and benchmarks when connected directly to {astra-db} prior to the migration, so that you don't find unexpected issues during the migration process.
 
+=== {astra} doesn't support CL.ONE
+
+`CL.ONE` isn't supported by {astra}, and xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[read and write requests sent through {product-proxy}] with `CL.ONE` to {astra-db} databases always fail.
+
+{product-proxy} doesn't mute these failures because you need to be aware of them.
+You must adapt your client application to use a consistency level that is supported by both clusters to ensure that the migration is seamless and error-free.
+
 [[_read_only_applications]]
 === Read-only applications
 

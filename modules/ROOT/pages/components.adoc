@@ -41,7 +41,7 @@ While {product-proxy} is active, write requests are sent to both clusters to ens
 
 ==== Writes (dual-write logic)
 
-{product-proxy} sends every write operation (`INSERT`, `UPDATE`, `DELETE`) synchronously to both clusters at the requested consistency level:
+{product-proxy} sends every write operation (`INSERT`, `UPDATE`, `DELETE`) synchronously to both clusters at the client application's requested consistency level:
 
 * If the write is acknowledged in both clusters at the requested consistency level, then the operation returns a successful write acknowledgement to the client that issued the request.
 * If the write fails in either cluster, then {product-proxy} passes a write failure, originating from the primary cluster, back to the client.
@@ -63,6 +63,26 @@ With or without asynchronous dual reads, the client application only receives re
 The results of asynchronous reads aren't returned to the client because asynchronous reads are for testing purposes only.
 
 For more information, see xref:ROOT:enable-async-dual-reads.adoc[].
+
+==== Consistency levels
+
+{product-proxy} doesn't directly manage or track consistency levels.
+Instead, it passes the requested consistency level from the client application to each cluster (origin and target) when routing requests.
+
+For reads, the consistency level is always passed to the primary cluster, which always receives read requests.
+The request is then executed within the primary cluster at the requested consistency level.
+
+If asynchronous dual reads are enabled, the consistency level is passed to both clusters, and each cluster executes the read request at the requested consistency level independently.
+If the request fails to attain the required quorum on the primary cluster, the failure is returned to the client application as normal.
+However, failure of asynchronous reads on the secondary cluster are logged but not returned to the client application.
+
+For writes, the consistency level is passed to both clusters, and each cluster executes the write request at the requested consistency level independently.
+If either request fails to attain the required quorum, the failure is returned to the client application as normal.
+
+If either cluster is an {astra-db} database, be aware that `CL.ONE` isn't supported by {astra}.
+Requests sent with `CL.ONE` to {astra-db} databases always fail.
+{product-proxy} doesn't mute these failures because you need to be aware of them.
+You must adapt your client application to use a consistency level that is supported by both clusters to ensure that the migration is seamless and error-free.
 
 === High availability and multiple {product-proxy} instances
 
