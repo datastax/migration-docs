@@ -1,11 +1,14 @@
-= Phase 1: Deploy {product-proxy} and connect client applications
+= Deploy and connect {product-proxy}
 
-This section presents the following:
+After you plan and prepare for your migration, you can start Phase 1 of the migration process where you deploy and connect {product-proxy}.
 
-* xref:setup-ansible-playbooks.adoc[]
-* xref:deploy-proxy-monitoring.adoc[]
-** xref:tls.adoc[]
-* xref:connect-clients-to-proxy.adoc[]
-* xref:manage-proxy-instances.adoc[]
+image::migration-phase1ra.png[In migration Phase 1, you deploy {product-proxy} instances, and then connect your client applications to the proxies]
 
-image::migration-phase1ra.png[Phase 1 diagram shows deployed {product-proxy} instances, client app connections to proxies, and the target cluster is setup.]
+To complete Phase 1, do the following:
+
+. xref:setup-ansible-playbooks.adoc[].
+. xref:deploy-proxy-monitoring.adoc[] with optional xref:tls.adoc[TLS].
+. xref:connect-clients-to-proxy.adoc[].
+
+During the migration you will modify {product-proxy} configuration settings and monitor your {product-proxy} instances.
+Before you proceed to Phase 2, make sure you understand how to xref:manage-proxy-instances.adoc[manage {product-proxy} instances] and xref:metrics.adoc[use {product-proxy} metrics].

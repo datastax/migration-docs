@@ -1,7 +1,10 @@
-= Enable asynchronous dual reads
+= Phase 3: Enable asynchronous dual reads
 :description: Use asynchronous dual reads to test your target database's ability to handle a simulated production workload.
 
-In this optional phase, you can enable the _asynchronous dual reads_ feature to test the secondary (target) cluster's ability to handle a production workload before you permanently redirect read requests in xref:ROOT:change-read-routing.adoc[phase 4].
+After migrating and validating your data in xref:ROOT:migrate-and-validate-data.adoc[Phase 2], you can begin to test your target cluster's production readiness.
+
+Phase 3 is optional but highly recommended.
+In this phase, you enable the _asynchronous dual reads_ feature to test the secondary (target) cluster's ability to handle a production workload before you permanently redirect read requests in xref:ROOT:change-read-routing.adoc[Phase 4].
 
 By default, {product-proxy} sends all reads to the primary (origin) cluster, and then returns the result to the client application.
 
@@ -10,7 +13,7 @@ When you enable _asynchronous dual reads_, {product-proxy} sends asynchronous re
 At this point in the migration process, the secondary cluster is typically the target cluster.
 Because this feature is intended to test your target cluster's ability to handle a simulated production workload, there is no reason to run it against the origin cluster that is already capable of handling production workloads.
 
-image:migration-phase3ra.png["Migration phase 3 diagram with asynchronous dual reads sent to the secondary cluster."]
+image:migration-phase3ra.png[In migration Phase 3, enable asynchronous dual reads to send read requests to both clusters]
 
 This allows you to assess the target cluster's performance and make any adjustments before permanently switching your workloads to the target cluster.
 
@@ -93,6 +96,23 @@ To assess performance, you can monitor the following:
 
 If needed, adjust the target cluster's configuration and continue monitoring until the cluster reaches your performance targets.
 
+If read requests fail due to missing data, go back to xref:ROOT:migrate-and-validate-data.adoc[Phase 2] and repeat your data validation and reconciliation processes as needed to rectify the missing data errors.
+
+If your data model includes non-idempotent operations, ensure that this data is handled correctly during data migration, reconciliation, and ongoing dual writes.
+For more information, see xref:ROOT:feasibility-checklists.adoc#non-idempotent-operations[Lightweight Transactions and other non-idempotent operations].
+
 == Next steps
 
-When you are confident that the target cluster is prepared to handle production workloads, you can <<configure-asynchronous-dual-reads,disable asynchronous dual reads>>, and then permanently xref:ROOT:change-read-routing.adoc[route read requests to the target cluster].
+[IMPORTANT]
+====
+Don't rush through this phase.
+
+Take time to verify that the target cluster can handle the expected production workloads successfully before proceeding to Phase 4.
+Make adjustments and reassess performance until you are confident in the cluster's readiness.
+
+Asynchronous dual reads simulate real read requests without impacting your applications or end users.
+However, in Phase 4, genuine production read requests are directed to the target cluster _exclusively_.
+If your target cluster hasn't been fully tested and prepared for production workloads, your applications can experience performance degradation, timeouts, and other issues.
+====
+
+When you are confident that the target cluster is prepared to handle production workloads, you can <<configure-asynchronous-dual-reads,disable asynchronous dual reads>>, and then proceed to xref:ROOT:change-read-routing.adoc[Phase 4] where you will permanently route read requests to the target cluster.

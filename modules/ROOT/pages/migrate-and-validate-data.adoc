@@ -1,8 +1,11 @@
-= Migrate and validate data
+= Phase 2: Migrate and validate data
+:page-aliases: ROOT:sideloader-zdm.adoc
+
+In xref:ROOT:phase1.adoc[Phase 1], you set up {product-proxy} to orchestrate live traffic to your origin and target clusters.
 
 In Phase 2 of {product}, you migrate data from the origin to the target, and then validate the migrated data.
 
-image::migration-phase2ra.png[In {product-short} Phase 2, you migrate data from the origin cluster to the target cluster.]
+image::migration-phase2ra.png[In {product-short} Phase 2, you migrate data from the origin cluster to the target cluster]
 
 To move and validate data, you can use a dedicated data migration tool, such as {sstable-sideloader}, {cass-migrator}, or {dsbulk-migrator}, or your can create your own custom data migration script.
 
@@ -10,19 +13,31 @@ To move and validate data, you can use a dedicated data migration tool, such as 
 
 == {sstable-sideloader}
 
-{sstable-sideloader} is a service running in {astra-db} that imports data from snapshots of your existing {cass-reg}-based cluster.
 This tool is exclusively for migrations that move data to {astra-db}.
+
+{sstable-sideloader} is a service running in {astra-db} that imports data from snapshots of your existing {cass-reg}-based cluster.
+Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like {dsbulk-migrator} and {cass-migrator}, including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
+
+To migrate data with {sstable-sideloader}, you use `nodetool`, a cloud provider's CLI, and the {astra} {devops-api}:
+
+* *`nodetool`*: Create snapshots of your existing {dse-short}, {hcd-short}, or open-source {cass-short} cluster.
+For compatible origin clusters, see xref:ROOT:astra-migration-paths.adoc[].
+* *Cloud provider CLI*: Upload snapshots to a dedicated cloud storage bucket for your migration.
+* *{astra} {devops-api}*: Run the {sstable-sideloader} commands to write the data from cloud storage to your {astra-db} database.
 
 You can use {sstable-sideloader} alone or with {product-proxy}.
 
-For more information, see xref:sideloader:sideloader-zdm.adoc[].
+For more information and instructions, see xref:sideloader:sideloader-overview.adoc[].
+
+.Use {sstable-sideloader} with {product-proxy}
+svg::sideloader:astra-migration-toolkit.svg[]
 
 == {cass-migrator}
 
 You can use {cass-migrator} ({cass-migrator-short}) for data migration and validation between {cass-short}-based databases.
 It offers extensive functionality and configuration options to support large and complex migrations as well as post-migration data validation.
 
-You can use {cass-migrator-short} by itself, with {product-proxy}, or for data validation after using another data migration tool.
+You can use {cass-migrator-short} alone, with {product-proxy}, or for data validation after using another data migration tool.
 
 For more information, see xref:ROOT:cassandra-data-migrator.adoc[].
 
@@ -49,3 +64,16 @@ This is crucial to a successful migration.
 +
 Migrations that perform significant data transformations might not be compatible with {product-proxy}.
 The impact of data transformations depends on your specific data model, database platforms, and the scale of your migration.
+
+== Next steps
+
+[IMPORTANT]
+====
+Don't proceed to Phase 3 until you have replicated _all_ preexisting data from your origin cluster to your target cluster, _and_ you have taken time to validate that the data was migrated correctly and completely.
+
+The success of your migration and future performance of the target cluster depends on correct and complete data.
+
+If your chosen data migration tool doesn't have built-in validation features, you need to use a separate tool for validation.
+====
+
+After using your chosen data migration tool to migrate and thoroughly validate your data, proceed to xref:ROOT:enable-async-dual-reads.adoc[Phase 3] to test your target cluster's production readiness.

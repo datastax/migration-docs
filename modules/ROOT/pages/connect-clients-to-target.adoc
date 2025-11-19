@@ -1,11 +1,12 @@
-= Phase 5: Connect your client applications directly to the target
-:navtitle: Phase 5: Connect client applications directly to the target
+= Phase 5: Connect client applications to the target cluster
+:navtitle: Phase 5: Connect client applications to the target
 
-Phase 5 is the last phase of the xref:ROOT:introduction.adoc[migration process].
-In this phase, you configure your client applications to connect directly and exclusively to the target cluster.
-This removes the dependency on {product-proxy} and completes the migration.
+Phase 5 is the last phase of the xref:ROOT:introduction.adoc[migration process], after you route all read requests to the target cluster in xref:ROOT:change-read-routing.adoc[Phase 4].
 
-image::migration-phase5ra.png[In Phase 5, your applications no longer using the proxy and, instead, connect directly to the target.]
+In this final phase, you connect your client applications directly and exclusively to the target cluster.
+This removes the dependency on {product-proxy} and the origin cluster, thereby completing the migration process.
+
+image::migration-phase5ra.png[In Phase 5, your applications no longer use the proxy and, instead, connect directly to the target cluster]
 
 The minimum requirements for reconfiguring these connections depend on whether your target cluster is {astra-db} or a generic CQL cluster, such as {cass-reg}, {dse}, or {hcd}.
 
@@ -185,7 +186,7 @@ Depending on your application's requirements, you might need to make these chang
 
 == Switch to the Data API
 
-If you migrated to {astra-db} or {hcd-short}, and you have the option of using the Data API instead of, or in addition to, a {cass-short} driver.
+If you migrated to {astra-db} or {hcd-short}, you have the option of using the Data API instead of, or in addition to, a {cass-short} driver.
 
 Although the Data API can read and write to CQL tables, it is significantly different from driver code.
 To use the Data API, you must rewrite your application code or create a new application.
@@ -201,6 +202,6 @@ For more information, see the following:
 
 Your migration is now complete, and your target cluster is the source of truth for your client applications and data.
 
-When you are ready, you can decommission your origin cluster and {product-proxy}, as these are no longer needed and clean xref:ROOT:rollback.adoc[rollback] is no longer possible.
+When you are ready, you can decommission your origin cluster and {product-proxy} because these are no longer needed and xref:ROOT:rollback.adoc[seamless rollback] is no longer possible.
 
-If you need to revert to the origin cluster after this point, you must perform a full migration with your previous origin cluster as the target to ensure that all data is rewritten and synchronized back to the origin.
+If you need to revert to the origin cluster after this point, you must perform a full migration in the opposite direction, with your previous origin cluster as the target, to ensure that all data is rewritten and synchronized back to the origin.

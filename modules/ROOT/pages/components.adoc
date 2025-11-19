@@ -111,7 +111,7 @@ You can use these tools alone or with {product-proxy}.
 {sstable-sideloader} is a service running in {astra-db} that imports data from snapshots of your existing {cass-short}-based cluster.
 This tool is exclusively for migrations that move data to {astra-db}.
 
-For more information, see xref:sideloader:sideloader-zdm.adoc[].
+For more information, see xref:sideloader:sideloader-overview.adoc[].
 
 === {cass-migrator}
 

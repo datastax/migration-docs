@@ -8,12 +8,12 @@
 
 .{product}
 * xref:ROOT:introduction.adoc[]
-* Planning
+* Plan your migration
 ** xref:ROOT:feasibility-checklists.adoc[]
 ** xref:ROOT:deployment-infrastructure.adoc[]
 ** xref:ROOT:create-target.adoc[]
 ** xref:ROOT:rollback.adoc[]
-* Phase 1
+* Phase 1: Deploy {product-proxy}
 ** xref:ROOT:phase1.adoc[]
 ** xref:ROOT:setup-ansible-playbooks.adoc[]
 ** xref:ROOT:deploy-proxy-monitoring.adoc[]
@@ -21,17 +21,10 @@
 ** xref:ROOT:connect-clients-to-proxy.adoc[]
 ** xref:ROOT:metrics.adoc[]
 ** xref:ROOT:manage-proxy-instances.adoc[]
-* Phase 2
-** xref:ROOT:migrate-and-validate-data.adoc[]
-** xref:sideloader:sideloader-zdm.adoc[]
-** xref:ROOT:cassandra-data-migrator.adoc[]
-** xref:ROOT:dsbulk-migrator.adoc[]
-* Phase 3
-** xref:ROOT:enable-async-dual-reads.adoc[]
-* Phase 4
-** xref:ROOT:change-read-routing.adoc[]
-* Phase 5
-** xref:ROOT:connect-clients-to-target.adoc[]
+* xref:ROOT:migrate-and-validate-data.adoc[]
+* xref:ROOT:enable-async-dual-reads.adoc[]
+* xref:ROOT:change-read-routing.adoc[]
+* xref:ROOT:connect-clients-to-target.adoc[]
 * xref:ROOT:troubleshooting-tips.adoc[]
 * xref:ROOT:faqs.adoc[]
 * Release notes
@@ -47,8 +40,8 @@
 * xref:sideloader:troubleshoot-sideloader.adoc[]
 
 .{cass-migrator}
-* xref:ROOT:cdm-overview.adoc[]
+* xref:ROOT:cassandra-data-migrator.adoc[]
 * {cass-migrator-repo}/releases[{cass-migrator-short} release notes]
 
 .{dsbulk-migrator}
-* xref:ROOT:dsbulk-migrator-overview.adoc[]
+* xref:ROOT:dsbulk-migrator.adoc[]
