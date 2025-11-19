@@ -34,9 +34,9 @@ To avoid unnecessary failures due to missing unmigrated data, don't enable async
 == Configure asynchronous dual reads
 
 Use the `read_mode` variable to enable or disable asynchronous dual reads.
-Then, perform rolling restarts of your {product-proxy} instances to apply the configuration change.
+Then, perform a rolling restart of your {product-proxy} instances to apply the configuration change.
 
-. In `vars/zdm_proxy_core_config.yml`, edit the `read_mode` variable:
+. Edit `vars/zdm_proxy_core_config.yml`, and then set the `read_mode` variable:
 +
 [tabs]
 ======
@@ -59,31 +59,7 @@ read_mode: PRIMARY_ONLY
 --
 ======
 
-. Perform rolling restarts to apply the configuration change to your {product-proxy} instances.
-+
-[tabs]
-======
-With {product-automation}::
-+
---
-If you use {product-automation} to manage your {product-proxy} deployment, run the following command:
-
-[source,bash]
-----
-ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
-----
---
-
-Without {product-automation}::
-+
---
-If you don't use {product-automation}, you must manually restart each instance.
-
-To avoid downtime, wait for each instance to fully restart and begin receiving traffic before restarting the next instance.
---
-======
-+
-For more information about rolling restarts and changing {product-proxy} configuration variables, see xref:manage-proxy-instances.adoc[].
+. xref:ROOT:manage-proxy-instances.adoc#perform-a-rolling-restart-of-the-proxies[Perform a rolling restart] to apply the configuration change to your {product-proxy} instances.
 
 == Monitor the target cluster's performance
 

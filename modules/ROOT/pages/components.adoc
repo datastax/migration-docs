@@ -77,7 +77,7 @@ Throughout the {product-short} documentation, the term _{product-proxy} deployme
 ====
 
 You can scale {product-proxy} instances horizontally and vertically.
-To avoid downtime when applying configuration changes, you can perform rolling restarts on your {product-proxy} instances.
+To avoid downtime when applying configuration changes, you can xref:ROOT:manage-proxy-instances.adoc#perform-a-rolling-restart-of-the-proxies[perform a rolling restart] of your {product-proxy} instances.
 
 For simplicity, you can use {product-utility} and {product-automation} to set up and run Ansible playbooks that deploy and manage {product-proxy} and its monitoring stack.
 
