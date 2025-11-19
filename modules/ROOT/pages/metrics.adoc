@@ -48,7 +48,8 @@ This metric is measured as the total latency across both clusters for a single x
 * Number of client connections
 
 * Prepared Statement cache:
-** Cache Misses: meaning, a prepared statement was sent to {product-proxy}, but it wasn't on its cache, so the proxy returned an `UNPREPARED` response to make the driver send the `PREPARE` request again.
+** Cache Misses: If a prepared statement is sent to {product-proxy} but the statement's `preparedID` isn't present in the node's cache, then {product-proxy} sends an `UNPREPARED` response to the client to reprepare the statement.
+This metric tracks the number of times this happens.
 ** Number of cached prepared statements.
 
 * Request Failure Rates: the number of request failures per interval.

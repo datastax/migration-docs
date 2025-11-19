@@ -84,6 +84,16 @@ Requests sent with `CL.ONE` to {astra-db} databases always fail.
 {product-proxy} doesn't mute these failures because you need to be aware of them.
 You must adapt your client application to use a consistency level that is supported by both clusters to ensure that the migration is seamless and error-free.
 
+==== Timeouts and connection failures
+
+When requests are routed through {product-proxy}, there is a proxy-side timeout and application-side timeout.
+
+If a response isn't received within the timeout period (`xref:ROOT:manage-proxy-instances.adoc#zdm_proxy_request_timeout_ms[zdm_proxy_request_timeout_ms]`), nothing is returned to the request handling thread, and, by extension, no response is sent to the client.
+This inevitably results in a client-side timeout, which is an accurate representation of the fact that at least one cluster failed to respond to the request.
+The clusters that are required to respond depend on the type of request and whether asynchronous dual reads are enabled.
+
+See also xref:ROOT:feasibility-checklists.adoc#driver-retry-policy-and-query-idempotence[Driver retry policy and query idempotence] and `xref:manage-proxy-instances.adoc#zdm_proxy_max_stream_ids[zdm_proxy_max_stream_ids]`.
+
 === High availability and multiple {product-proxy} instances
 
 {product-proxy} is designed to be highly available and run a clustered fashion to avoid a single point of failure.

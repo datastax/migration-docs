@@ -153,9 +153,10 @@ If `now()` is used in any of your primary key columns, {company} recommends enab
 For more information, see xref:ROOT:feasibility-checklists.adoc#cql-function-replacement[Server-side non-deterministic functions in the primary key].
 ====
 
-* `zdm_proxy_request_timeout_ms`: Global timeout in milliseconds of a request at proxy level.
+* [[zdm_proxy_request_timeout_ms]]`zdm_proxy_request_timeout_ms`: Global timeout in milliseconds of a request at proxy level.
 Determines how long {product-proxy} waits for one cluster (for reads) or both clusters (for writes) to reply to a request.
 Upon reaching the timeout limit, {product-proxy} abandons the request and no longer considers it pending, which frees up internal resources to processes other requests.
++
 When a request is abandoned due to a timeout, {product-proxy} doesn't return any result or error.
 A timeout warning or error is only returned when the client application's own timeout is reached and the request is expired on the driver side.
 +

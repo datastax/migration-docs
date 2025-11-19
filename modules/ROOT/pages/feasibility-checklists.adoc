@@ -192,6 +192,7 @@ If the performance impact is unacceptable for your application, or you are using
 Most drivers have utility methods that help you compute these values locally.
 For more information, see your driver's documentation and xref:datastax-drivers:developing:query-timestamps.adoc[Query timestamps in {cass-short} drivers].
 
+[#driver-retry-policy-and-query-idempotence]
 == Driver retry policy and query idempotence
 
 [IMPORTANT]
