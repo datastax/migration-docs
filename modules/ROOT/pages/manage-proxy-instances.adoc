@@ -4,9 +4,16 @@ After you deploy {product-proxy} instances, you might need to perform various ma
 
 If you are using {product-automation}, you can use Ansible playbooks for all of these operations.
 
+[#perform-a-rolling-restart-of-the-proxies]
 == Perform a rolling restart of the proxies
 
 Rolling restarts of the {product-proxy} instances are useful to apply configuration changes or to upgrade the {product-proxy} version without impacting the availability of the deployment.
+
+[IMPORTANT]
+====
+A rolling restart is a destructive action because it stops the previous containers, and then starts new containers.
+xref:ROOT:troubleshooting-tips.adoc#proxy-logs[Collect the logs] before you apply the configuration change if you want to keep them.
+====
 
 [tabs]
 ======
@@ -15,8 +22,16 @@ With {product-automation}::
 --
 If you use {product-automation} to manage your {product-proxy} deployment, you can use a dedicated playbook to perform rolling restarts of all {product-proxy} instances in a deployment:
 
-. Connect to the Ansible Control Host Docker container.
-You can do this from the jumphost machine by running the following command:
+. Connect to your Ansible Control Host container.
++
+For example, `ssh` into the jumphost:
++
+[source,bash]
+----
+ssh -F ~/.ssh/zdm_ssh_config jumphost
+----
++
+Then, connect to the Ansible Control Host container:
 +
 [source,bash]
 ----
@@ -38,14 +53,20 @@ ubuntu@52772568517c:~$
 ----
 ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
 ----
+
+The rolling restart playbook recreates each {product-proxy} container, one by one.
+The {product-proxy} deployment remains available at all times, and you can safely use it throughout this operation.
+If you modified mutable configuration variables, the new containers use the updated configuration files.
+
+The playbook performs the following actions automatically:
+
+. {product-automation} stops one container gracefully, and then waits for it to shut down.
+. {product-automation} recreates the container, and then starts it.
+. {product-automation} calls the xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[readiness endpoint] to check the container's status:
 +
-While running, this playbook gracefully stops one container and waits for it to shut down before restarting the container.
-Then, it calls the xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[readiness endpoint] to check the container's status:
-+
-* If the check fails, the playbook repeats the check every five seconds for a maximum of six attempts.
-If all six attempts fail, the playbook interrupts the entire rolling restart process.
-* If the check succeeds, the playbook waits before proceeding to the next container.
-+
+* If the status check fails, {product-automation} repeats the check up to six times at 5-second intervals.
+If all six attempts fail, {product-automation} interrupts the entire rolling restart process.
+* If the check succeeds, {product-automation} waits a fixed amount of time, and then moves on to the next container.
 The default pause between containers is 10 seconds.
 You can change the pause duration in `zdm-proxy-automation/ansible/vars/zdm_playbook_internal_config.yml`.
 --
@@ -69,7 +90,9 @@ For information about configuring, retrieving, and interpreting {product-proxy} 
 
 Some, but not all, configuration variables can be changed after you deploy a {product-proxy} instance.
 
-This section lists the _mutable_ configuration variables that you can change on an existing {product-proxy} deployment using the rolling restart playbook.
+This section lists the _mutable_ configuration variables that you can change on an existing {product-proxy} deployment.
+
+After you edit mutable variables in their corresponding configuration files (`vars/zdm_proxy_core_config.yml`, `vars/zdm_proxy_cluster_config.yml`, or `vars/zdm_proxy_advanced_config.yml`), you must <<perform-a-rolling-restart-of-the-proxies,perform a rolling restart>> to apply the configuration changes to your {product-proxy} instances.
 
 === Mutable variables in `vars/zdm_proxy_core_config.yml`
 
@@ -130,9 +153,10 @@ If `now()` is used in any of your primary key columns, {company} recommends enab
 For more information, see xref:ROOT:feasibility-checklists.adoc#cql-function-replacement[Server-side non-deterministic functions in the primary key].
 ====
 
-* `zdm_proxy_request_timeout_ms`: Global timeout in milliseconds of a request at proxy level.
+* [[zdm_proxy_request_timeout_ms]]`zdm_proxy_request_timeout_ms`: Global timeout in milliseconds of a request at proxy level.
 Determines how long {product-proxy} waits for one cluster (for reads) or both clusters (for writes) to reply to a request.
 Upon reaching the timeout limit, {product-proxy} abandons the request and no longer considers it pending, which frees up internal resources to processes other requests.
++
 When a request is abandoned due to a timeout, {product-proxy} doesn't return any result or error.
 A timeout warning or error is only returned when the client application's own timeout is reached and the request is expired on the driver side.
 +
@@ -189,40 +213,14 @@ This deprecated variable is no longer functional.
 Instead, the expected credentials are based on the authentication requirements of the origin and target clusters.
 For more information, see xref:ROOT:connect-clients-to-proxy.adoc#_client_application_credentials[Client application credentials].
 
-=== Apply mutable configuration changes
+== Change immutable configuration variables
 
-Edit mutable variables in their corresponding configuration files (`vars/zdm_proxy_core_config.yml`, `vars/zdm_proxy_cluster_config.yml`, or `vars/zdm_proxy_advanced_config.yml`), and then apply the configuration changes to your {product-proxy} instances using the rolling restart playbook.
-
-[IMPORTANT]
-====
-A configuration change is a destructive action because the rolling restart playbook removes the previous containers and their logs, replacing them with new containers and the new configuration.
-xref:ROOT:troubleshooting-tips.adoc#proxy-logs[Collect the logs] before you run the playbook if you want to keep them.
-====
+All configuration variables not listed in <<change-mutable-config-variable>> are _immutable_ and can only be changed by recreating the deployment with the xref:ROOT:deploy-proxy-monitoring.adoc[initial deployment playbook] (`deploy_zdm_proxy.yml`):
 
 [source,bash]
 ----
-ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
+ansible-playbook deploy_zdm_proxy.yml -i zdm_ansible_inventory
 ----
-
-The rolling restart playbook recreates each {product-proxy} container, one by one, with the updated configuration files.
-The {product-proxy} deployment remains available at all times, and you can safely use it throughout this operation.
-
-The playbook performs the following actions automatically:
-
-. {product-automation} stops one container gracefully, and then waits for it to shut down.
-. {product-automation} recreates the container, and then starts it.
-. {product-automation} checks that the container started successfully by checking the readiness endpoint:
-+
-* If unsuccessful, {product-automation} repeats the check up to six times at 5-second intervals.
-If it still fails, {product-automation} interrupts the entire rolling restart process.
-* If successful, {product-automation} waits 10 seconds (default), and then moves on to the next container.
-+
-The pause between the restart of each {product-proxy} instance defaults to 10 seconds.
-To change this value, you can set the desired number of seconds in `zdm-proxy-automation/ansible/vars/zdm_playbook_internal_config.yml`.
-
-== Change immutable configuration variables
-
-All configuration variables not listed in <<change-mutable-config-variable>> are _immutable_ and can only be changed by recreating the deployment with the xref:ROOT:deploy-proxy-monitoring.adoc[initial deployment playbook] (`deploy_zdm_proxy.yml`).
 
 You can re-run the deployment playbook as many times as necessary.
 However, this playbook decommissions and recreates _all_ {product-proxy} instances simultaneously.
@@ -259,28 +257,7 @@ For example:
 zdm_proxy_image: datastax/zdm-proxy:2.3.4
 ----
 
-. Run the `rolling_update_zdm_proxy.yml` playbook:
-+
-[source,bash]
-----
-ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
-----
-+
-The rolling restart playbook recreates each {product-proxy} container, one by one, with the new image.
-The {product-proxy} deployment remains available at all times, and you can safely use it throughout this operation.
-+
-The playbook performs the following actions automatically:
-+
-.. {product-automation} stops one container gracefully, and then waits for it to shut down.
-.. {product-automation} recreates the container, and then starts it.
-.. {product-automation} checks that the container started successfully by checking the readiness endpoint:
-+
-** If unsuccessful, {product-automation} repeats the check up to six times at 5-second intervals.
-If it still fails, {product-automation} interrupts the entire rolling restart process.
-** If successful, {product-automation} waits 10 seconds (default), and then moves on to the next container.
-+
-The pause between the restart of each {product-proxy} instance defaults to 10 seconds.
-To change this value, you can set the desired number of seconds in `zdm-proxy-automation/ansible/vars/zdm_playbook_internal_config.yml`.
+. <<perform-a-rolling-restart-of-the-proxies,Perform a rolling restart>> to update all {product-proxy} instances to the new version.
 
 == Scale {product-proxy} instances
 
@@ -318,7 +295,12 @@ Change the topology of your existing {product-proxy} deployment, and then restar
 +
 For example, if you want to add three nodes to a deployment with six nodes, then the amended inventory file must contain nine total IPs, including the six existing IPs and the three new IPs.
 +
-. Run the `deploy_zdm_proxy.yml` playbook to apply the change and start the new instances.
+. Run the `deploy_zdm_proxy.yml` playbook to apply the change and start the new instances:
++
+[source,bash]
+----
+ansible-playbook deploy_zdm_proxy.yml -i zdm_ansible_inventory
+----
 +
 Rerunning the playbook stops the existing instances, destroys them, and then creates and starts a new deployment with new instances based on the amended inventory.
 This results in a brief interruption of service for your entire {product-proxy} deployment.

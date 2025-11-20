@@ -259,9 +259,7 @@ The following sections provide troubleshooting advice for specific issues or err
 [#configuration-changes-arent-applied-by-zdm-automation]
 === Configuration changes aren't applied by {product-automation}
 
-If you change some configuration variables, and then performing a rolling restart with the `rolling_update_zdm_proxy.yml` playbook, you might notice that some changes aren't applied to your {product-proxy} instances.
-
-Typically, this happens because you modified an immutable configuration variable.
+If some configuration changes aren't applied to your {product-proxy} instances after a rolling restart, this typically means that you modified an immutable configuration variable.
 
 Not all {product-proxy} configuration variables can be changed after deployment, with or without a rolling restart.
 For a list of variables that you can change on a live deployment, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change mutable configuration variables].

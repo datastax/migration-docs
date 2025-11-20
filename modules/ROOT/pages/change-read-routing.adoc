@@ -26,46 +26,13 @@ This is harmless but unnecessary.
 [#change-the-read-routing-configuration]
 == Change the read routing configuration
 
-Read routing is controlled by a mutable configuration variable.
-For more information, see  xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
+Read routing is controlled by a xref:manage-proxy-instances.adoc#change-mutable-config-variable[mutable configuration variable].
 
-. Connect to your Ansible Control Host container.
-+
-For example, `ssh` into the jumphost:
-+
-[source,bash]
-----
-ssh -F ~/.ssh/zdm_ssh_config jumphost
-----
-+
-Then, connect to the Ansible Control Host container:
-+
-[source,bash]
-----
-docker exec -it zdm-ansible-container bash
-----
-+
-.Result
-[%collapsible]
-====
-[source,bash]
-----
-ubuntu@52772568517c:~$
-----
-====
-
-. Edit the {product-proxy} core configuration file: `vars/zdm_proxy_core_config.yml`.
+. Edit the {product-proxy} core configuration file `vars/zdm_proxy_core_config.yml`.
 
 . Change the `primary_cluster` variable to `TARGET`.
 
-. Run the rolling restart playbook to apply the configuration change to your entire {product-proxy} deployment:
-+
-[source,bash]
-----
-ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
-----
-
-. Wait while Ansible restarts the {product-proxy} instances, one by one.
+. xref:ROOT:manage-proxy-instances.adoc#perform-a-rolling-restart-of-the-proxies[Perform a rolling restart] to apply the configuration change to your entire {product-proxy} deployment.
 
 Once the instances are restarted, all reads are routed to the target cluster instead of the origin cluster.
 

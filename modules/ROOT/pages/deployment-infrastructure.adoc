@@ -14,11 +14,18 @@ The {product-proxy} process is lightweight, requiring only a small amount of res
 {product-proxy} should be deployed close to your client application instances.
 This can be on any cloud provider as well as on-premise, depending on your existing infrastructure.
 
-If you have a multi-DC cluster with multiple set of client application instances deployed to geographically distributed data centers, you should plan for a separate {product-proxy} deployment for each data center.
-
-Here's a typical deployment showing connectivity between client applications, {product-proxy} instances, and clusters:
+The following diagram shows a typical deployment with connectivity between client applications, {product-proxy} instances, and clusters:
 
 image::zdm-during-migration3.png[Connectivity between client applications, proxy instances, and clusters.]
+
+=== Multiple datacenter clusters
+
+If you have a multi-datacenter cluster with multiple set of client application instances deployed to geographically distributed datacenters, you must plan a separate {product-proxy} deployment for each datacenter.
+
+In the configuration for each {product-proxy} deployment, specify only the contact points that belong to that datacenter, and set the `xref:ROOT:deploy-proxy-monitoring.adoc#_advanced_configuration_optional[origin_local_datacenter]` and `xref:ROOT:deploy-proxy-monitoring.adoc#_advanced_configuration_optional[target_local_datacenter]` properties as needed.
+
+If your origin and target clusters are both multi-datacenter clusters, this configuration will be more complicated to correctly orchestrate traffic routing through {product-proxy}.
+{company} recommends contacting {support-url}[{company} Support] for assistance with complex multi-region and multi-datacenter migrations.
 
 === Don't deploy {product-proxy} as a sidecar
 

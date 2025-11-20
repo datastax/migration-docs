@@ -62,6 +62,10 @@ For example, if a table has 10 columns but your client application only uses 5 o
 You can also change the primary key in some cases.
 For example, if your compound primary key is `PRIMARY KEY (A, B)` and you always provide parameters for the `A` and `B` columns in your CQL statements then you could change the key to `PRIMARY KEY (B, A)` when creating the schema on the target because your CQL statements will still run successfully.
 
+== Request and error handling expectations with {product-proxy}
+
+See xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[How {product-proxy} handles reads and writes].
+
 == Considerations for {astra-db} migrations
 
 {astra-db} implements guardrails and sets limits to ensure good practices, foster availability, and promote optimal configurations for your databases.
@@ -71,6 +75,26 @@ If you need to make changes to the application or data model to ensure that your
 
 It is also highly recommended to perform tests and benchmarks when connected directly to {astra-db} prior to the migration, so that you don't find unexpected issues during the migration process.
 
+=== {astra} doesn't support CL.ONE
+
+`CL.ONE` isn't supported by {astra}, and read and write requests sent through {product-proxy} with `CL.ONE` to {astra-db} databases always fail.
+
+{product-proxy} doesn't mute these failures because you need to be aware of them.
+You must adapt your client application to use a consistency level that is supported by both clusters to ensure that the migration is seamless and error-free.
+
+=== {astra} doesn't support the Stargate APIs
+
+The Stargate APIs (Document, REST, GraphQL, gRPC) are deprecated for {astra}.
+
+If you are migrating to {astra} from an origin cluster that uses any of these APIs, your client applications won't work with {astra}.
+Before you migrate, you must change your applications to use other programmatic access, such as {cass-short} drivers or the {data-api}.
+For more information, see xref:astra-db-serverless:api-reference:compare-dataapi-to-stargate.adoc[].
+
+=== Multi-region and multi-node {astra} migrations
+
+If your migration involves multi-region or multi-node clusters, plan your strategy for migrating and replicating data to the different regions.
+For more information, see the xref:sideloader:prepare-sideloader.adoc#additional-preparation-for-specific-migration-scenarios[{sstable-sideloader} preparations for specific migration scenarios] and the xref:ROOT:deployment-infrastructure.adoc[{product-proxy} infrastructure guidelines for multi-datacenter clusters].
+
 [[_read_only_applications]]
 === Read-only applications
 
@@ -79,11 +103,8 @@ The default interval is 30,000 milliseconds, and it can be configured with the `
 
 In {product-proxy} versions earlier than 2.1.0, read-only applications require special handling to avoid connection termination due to inactivity.
 
-{company} recommends that you upgrade to version 2.1.0 or later to benefit from the heartbeat feature.
-If you have an existing {product-proxy} deployment, you can xref:ROOT:troubleshooting-tips.adoc#check-version[check your {product-proxy} version].
-For upgrade instructions, see xref:ROOT:manage-proxy-instances.adoc#_upgrade_the_proxy_version[Upgrade the proxy version].
-
-If you cannot upgrade to version 2.1.0 or later, see the alternatives described in xref:ROOT:troubleshooting-tips.adoc#client-application-closed-connection-errors-every-10-minutes-when-migrating-to-astra-db[Client application closed connection errors every 10 minutes when migrating to {astra-db}].
+{company} recommends that you use {product-proxy} version 2.1.0 or later to benefit from the heartbeat feature.
+If you cannot use version 2.1.0 or later, see the alternatives described in xref:ROOT:troubleshooting-tips.adoc#client-application-closed-connection-errors-every-10-minutes-when-migrating-to-astra-db[Client application closed connection errors every 10 minutes when migrating to {astra-db}].
 
 [[non-idempotent-operations]]
 == Lightweight Transactions and other non-idempotent operations
@@ -172,6 +193,7 @@ If the performance impact is unacceptable for your application, or you are using
 Most drivers have utility methods that help you compute these values locally.
 For more information, see your driver's documentation and xref:datastax-drivers:developing:query-timestamps.adoc[Query timestamps in {cass-short} drivers].
 
+[#driver-retry-policy-and-query-idempotence]
 == Driver retry policy and query idempotence
 
 [IMPORTANT]

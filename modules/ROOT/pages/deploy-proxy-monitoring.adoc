@@ -170,11 +170,12 @@ For instructions, see xref:ROOT:tls.adoc[].
 
 There are additional configuration variables in `vars/zdm_proxy_advanced_config.yml` that you might want to change _at deployment time_ in specific cases.
 
-All advanced configuration variables not listed here are considered mutable and can be changed later if needed (changes can be easily applied to existing deployments in a rolling fashion using the relevant Ansible playbook, as explained later, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable]).
+All advanced configuration variables that aren't listed here are mutable and can be changed later without recreating the entire deployment.
+For more information, see xref:manage-proxy-instances.adoc[].
 
 ==== Multi-datacenter clusters
 
-For multi-datacenter origin clusters, specify the name of the datacenter that {product-proxy} should consider local.
+For xref:ROOT:feasibility-checklists.adoc[multi-datacenter origin clusters], specify the name of the datacenter that {product-proxy} should consider local.
 To do this, set the `origin_local_datacenter` property to the local datacenter name.
 Similarly, for multi-datacenter target clusters, set the `target_local_datacenter` property to the local datacenter name.
 These two variables are stored in `vars/zdm_proxy_advanced_config.yml`.
@@ -320,14 +321,11 @@ CONTAINER ID  IMAGE                     COMMAND  CREATED      STATUS     PORTS  
 
 If the {product-proxy} instances fail to start up due to mistakes in the configuration, you can simply rectify the incorrect configuration values and run the deployment playbook again.
 
-[NOTE]
+[IMPORTANT]
 ====
-With the exception of the origin credentials, target credentials, and the `primary_cluster` variable, which can all be changed for existing deployments in a rolling fashion, all cluster connection configuration variables are considered immutable and can only be changed by recreating the deployment.
-
-If you wish to change any of the cluster connection configuration variables (other than credentials and `primary_cluster`) on an existing deployment, you will need to re-run the `deploy_zdm_proxy.yml` playbook.
-This playbook can be run as many times as necessary.
-
-Be aware that running the `deploy_zdm_proxy.yml` playbook results in a brief window of unavailability of the whole {product-proxy} deployment while all the {product-proxy} instances are torn down and recreated.
+The origin credentials, target credentials, and the `primary_cluster` variable are mutable variables that you can change after deploying {product-proxy}.
+All other cluster connection configuration variables are immutable; the only way to change these values is by completely recreating the {product-proxy} deployment.
+For more information, see xref:ROOT:manage-proxy-instances.adoc[].
 ====
 
 [[_setting_up_the_monitoring_stack]]

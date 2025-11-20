@@ -41,7 +41,7 @@ While {product-proxy} is active, write requests are sent to both clusters to ens
 
 ==== Writes (dual-write logic)
 
-{product-proxy} sends every write operation (`INSERT`, `UPDATE`, `DELETE`) synchronously to both clusters at the requested consistency level:
+{product-proxy} sends every write operation (`INSERT`, `UPDATE`, `DELETE`) synchronously to both clusters at the client application's requested consistency level:
 
 * If the write is acknowledged in both clusters at the requested consistency level, then the operation returns a successful write acknowledgement to the client that issued the request.
 * If the write fails in either cluster, then {product-proxy} passes a write failure, originating from the primary cluster, back to the client.
@@ -64,6 +64,36 @@ The results of asynchronous reads aren't returned to the client because asynchro
 
 For more information, see xref:ROOT:enable-async-dual-reads.adoc[].
 
+==== Consistency levels
+
+{product-proxy} doesn't directly manage or track consistency levels.
+Instead, it passes the requested consistency level from the client application to each cluster (origin and target) when routing requests.
+
+For reads, the consistency level is always passed to the primary cluster, which always receives read requests.
+The request is then executed within the primary cluster at the requested consistency level.
+
+If asynchronous dual reads are enabled, the consistency level is passed to both clusters, and each cluster executes the read request at the requested consistency level independently.
+If the request fails to attain the required quorum on the primary cluster, the failure is returned to the client application as normal.
+However, failure of asynchronous reads on the secondary cluster are logged but not returned to the client application.
+
+For writes, the consistency level is passed to both clusters, and each cluster executes the write request at the requested consistency level independently.
+If either request fails to attain the required quorum, the failure is returned to the client application as normal.
+
+If either cluster is an {astra-db} database, be aware that `CL.ONE` isn't supported by {astra}.
+Requests sent with `CL.ONE` to {astra-db} databases always fail.
+{product-proxy} doesn't mute these failures because you need to be aware of them.
+You must adapt your client application to use a consistency level that is supported by both clusters to ensure that the migration is seamless and error-free.
+
+==== Timeouts and connection failures
+
+When requests are routed through {product-proxy}, there is a proxy-side timeout and application-side timeout.
+
+If a response isn't received within the timeout period (`xref:ROOT:manage-proxy-instances.adoc#zdm_proxy_request_timeout_ms[zdm_proxy_request_timeout_ms]`), nothing is returned to the request handling thread, and, by extension, no response is sent to the client.
+This inevitably results in a client-side timeout, which is an accurate representation of the fact that at least one cluster failed to respond to the request.
+The clusters that are required to respond depend on the type of request and whether asynchronous dual reads are enabled.
+
+See also xref:ROOT:feasibility-checklists.adoc#driver-retry-policy-and-query-idempotence[Driver retry policy and query idempotence] and `xref:manage-proxy-instances.adoc#zdm_proxy_max_stream_ids[zdm_proxy_max_stream_ids]`.
+
 === High availability and multiple {product-proxy} instances
 
 {product-proxy} is designed to be highly available and run a clustered fashion to avoid a single point of failure.
@@ -77,7 +107,7 @@ Throughout the {product-short} documentation, the term _{product-proxy} deployme
 ====
 
 You can scale {product-proxy} instances horizontally and vertically.
-To avoid downtime when applying configuration changes, you can perform rolling restarts on your {product-proxy} instances.
+To avoid downtime when applying configuration changes, you can xref:ROOT:manage-proxy-instances.adoc#perform-a-rolling-restart-of-the-proxies[perform a rolling restart] of your {product-proxy} instances.
 
 For simplicity, you can use {product-utility} and {product-automation} to set up and run Ansible playbooks that deploy and manage {product-proxy} and its monitoring stack.
 
