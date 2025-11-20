@@ -2,7 +2,7 @@
 :navtitle: About the {product-short} process
 :description: Before you begin, learn about migration concepts, software components, and the sequence of operations.
 
-With {product}, your applications can continue to run while you migrate data from one {cass-short}-based database to another, resulting in little or no downtime and minimal service interruptions.
+With the {product} ({product-short}) process, your applications can continue to run while you migrate data from one {cass-short}-based database to another, resulting in little or no downtime and minimal service interruptions.
 
 .Why migrate?
 [%collapsible]
@@ -20,53 +20,54 @@ For example, you might move from self-managed clusters to a cloud-based Database
 * You want to consolidate client applications running on separate clusters onto one shared cluster to minimize sprawl and maintenance.
 ====
 
-{product-short} is comprised of {product-proxy}, {product-utility}, and {product-automation}, which orchestrate activity-in-transition on your databases.
-To move and validate data, you use {sstable-sideloader}, {cass-migrator}, or {dsbulk-migrator}.
-{product-proxy} keeps your databases in sync at all times by the dual-writes feature, which means you can stop the migration or xref:rollback.adoc[roll back] at any point.
+The {product-short} process uses {product-proxy}, {product-utility}, and {product-automation} to orchestrate live reads and writes on your databases while you move and validate data with a data migration tool, such as {sstable-sideloader}, {cass-migrator}, or {dsbulk-migrator}.
+
+{product-proxy} keeps your databases in sync at all times through its dual-writes feature, which means you can seamlessly stop or abandon the migration at any point before the last phase of the migration (the final cutover to the new database).
 For more information about these tools, see xref:ROOT:components.adoc[].
 
-When the migration is complete, the data is present in the new database, and you can update your client applications to connect exclusively to the new database.
-The old database becomes obsolete and can be removed.
+When the migration is complete, all data is present in the new database, and you can switch your client applications to connect exclusively to the new database.
+The old database becomes obsolete and can be shut down.
 
 == Requirements for zero downtime
 
-True zero downtime migration is only possible if your database meets the minimum requirements, including cluster compatibility, described in xref:ROOT:feasibility-checklists.adoc[]
-If your database doesn't meet these requirements, you can still complete the migration, but downtime might be necessary to finish the migration.
-
-For more information, see xref:ROOT:feasibility-checklists.adoc[]
+True zero downtime migration with {product-proxy} is only possible if your database meets the minimum requirements, including cluster compatibility, that are described in xref:ROOT:feasibility-checklists.adoc[]
+If your database doesn't meet these requirements, you can still complete the migration, but you might not be able to use {product-proxy} and some downtime might be necessary to finish the migration.
 
 == Migration phases
 
 A migration project includes preparation for the migration and five migration phases.
 
-The following sections describe the major events in each phase and how your client applications perform read and write operations on your origin and target databases during each phase.
+The following sections describe the major events in each phase and how your client applications connect to your origin cluster, {product-proxy}, and the target cluster during each phase.
 
-The _origin_ is is your existing {cass-short}-based environment, which can be {cass}, {dse-short}, or {astra-db}.
-The _target_ is your new {cass-short}-based environment where you want to migrate your data and client applications.
+The _origin cluster_ is is your existing {cass-short}-based environment, such as {dse-short} or open-source {cass}.
+The _target cluster_ is your new {cass-short}-based environment where you want to migrate your data and client applications.
 
-=== Migration planning
+=== Plan and prepare for your migration
 
-Before you begin a migration, your client applications perform read/write operations with your existing xref:cql:ROOT:index.adoc[CQL]-compatible database, such as {cass}, {dse-short}, {hcd-short}, or {astra-db}.
+From a functional standpoint, before you begin a migration, your client applications perform read/write operations directly with your existing xref:cql:ROOT:index.adoc[CQL]-compatible database, such as {cass}, {dse-short}, {hcd-short}, or {astra-db}.
+Over the course of the migration, the contact points change to incorporate {product-proxy} and eventually switch to the target database.
 
 image:pre-migration0ra.png[Before the migration begins, your applications connect exclusively to your origin cluster]
 
-While your application is stable with the current data model and database platform, you might need to make some adjustments before enabling {product-proxy}.
+To plan and prepare for the migration, do the following:
 
+. xref:ROOT:feasibility-checklists.adoc[]: Review compatibility requirements for {product-proxy}, and understand how certain operations are handled by {product-proxy}.
++
 [IMPORTANT]
 ====
-For the migration to succeed, the origin and target databases must have matching schemas, including keyspace names, table names, column names, and data types.
+To successfully migrate with {product-proxy}, a read or write request produced by your client application must be able to succeed _without modification_ on both your origin (existing) and target (new) clusters.
+This means that the origin and target clusters must have matching schemas, including keyspace names, table names, column names, and data types.
 
-A CQL statement that your client application sends to {product-proxy} must be able to succeed on both databases.
+You might need to adjust your data model or application logic to ensure compatibility between the two clusters during the migration and ongoing compatibility with the target cluster after the migration.
 
-For more information, see xref:feasibility-checklists.adoc#_schemakeyspace_compatibility[Schema/keyspace compatibility].
+For more information, see xref:feasibility-checklists.adoc[].
 ====
 
-Before you begin the migration, plan and prepare for the migration by setting up your target infrastructure, reviewing compatibility requirements for {product-proxy}, and understanding when you can rollback the migration if necessary:
+. xref:ROOT:deployment-infrastructure.adoc[]: Set up the infrastructure to host the {product-short} tools.
 
-* xref:ROOT:feasibility-checklists.adoc[]
-* xref:ROOT:deployment-infrastructure.adoc[]
-* xref:ROOT:create-target.adoc[]
-* xref:ROOT:rollback.adoc[]
+. xref:ROOT:create-target.adoc[]: Set up your target cluster, and create schemas that match those on your origin cluster.
+
+. xref:ROOT:rollback.adoc[]: Learn when and how you can stop or rollback an in-progress migration.
 
 === Phase 1: Deploy {product-proxy} and connect client applications
 

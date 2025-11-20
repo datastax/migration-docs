@@ -1,10 +1,11 @@
 = Feasibility checks
 :page-aliases: ROOT:preliminary-steps.adoc
 
-Before starting your migration, review the following information to ensure that your client application workload and origin (source) cluster are suitable for the {product} process.
+True zero downtime migration with {product-proxy} is possible only if your clusters, data model, and application logic meet the compatibility requirements described on this page.
 
-True zero downtime migration is only possible if your database meets the minimum requirements described on this page.
-If your database doesn't meet these requirements, you can still complete the migration, but downtime might be necessary to finish the migration.
+You might need to adjust your data model or application logic to ensure compatibility between the origin and target clusters during the migration and ongoing compatibility with the target cluster after the migration.
+
+If you cannot meet these requirements, particularly the cluster and schema compatibility requirements, see xref:ROOT:components.adoc[] for alternative migration tools and strategies.
 
 == {cass-short} Native Protocol version and cluster version support
 
@@ -13,11 +14,11 @@ If your database doesn't meet these requirements, you can still complete the mig
 //TODO: V5 status: https://github.com/datastax/zdm-proxy/blob/main/faq.md#what-versions-of-apache-cassandra-or-cql-compatible-data-stores-does-the-zdm-proxy-support
 {product-proxy} technically doesn't support `v5`.
 If `v5` is requested, the proxy handles protocol negotiation so that the client application properly downgrades the protocol version to `v4`.
-This means that any client application using a recent driver that supports protocol version `v5`can be migrated using{product-proxy} as long as the application doesn't use v5-specific functionality.
+This means that you can use {product-proxy} with any client application that uses a driver version supporting protocol version `v5`, as long as the application doesn't use v5-specific functionality.
 
-=== Thrift is not supported by {product-proxy}
+=== Thrift isn't supported by {product-proxy}
 
-If you are using a very old driver or cluster version that only supports Thrift, you need to change your client application to use CQL and potentially upgrade your cluster before starting the migration process.
+If you are using an earlier driver or cluster version that only supports Thrift, you must change your client application to use CQL, and, if needed, upgrade your cluster before starting the migration process.
 
 === Supported cluster versions and migration paths
 
@@ -39,17 +40,24 @@ TODO: Need to verify as these are in conflict with other information in this gui
 * {astra-db}.
 
 See also: https://github.com/datastax/zdm-proxy/blob/main/faq.md#what-versions-of-apache-cassandra-or-cql-compatible-data-stores-does-the-zdm-proxy-support
+"Other CQL-compatible data stores might be compatible targets with {product-proxy}, but {company} doesn't test all possible targets."
 ////
 
 [TIP]
 ====
-Before you begin the migration process, test directly connecting your client application to your target cluster, without {product-proxy}.
+Before you begin the migration process, try directly connecting your client application to your target cluster without {product-proxy}.
 This ensures that you know the connection will work when you disconnect {product-proxy} at the end of the migration.
 ====
 
 == Schema/keyspace compatibility
 
-{product-proxy} does not modify or transform CQL statements besides the optional feature that replaces `now()` functions with timestamp literals.
+[IMPORTANT]
+====
+To successfully migrate with {product-proxy}, the origin and target clusters must have matching schemas, including keyspace names, table names, column names, and data types.
+A CQL statement produced by your client application must be able to succeed _without modification_ on both clusters because {product-proxy} routes the exact same CQL statements to both clusters.
+====
+
+{product-proxy} does not modify or transform CQL statements besides the optional feature that can replace `now()` functions with timestamp literals.
 See <<cql-function-replacement>> for more information about this feature.
 
 A CQL statement that your client application sends to {product-proxy} must be able to succeed on both clusters.
@@ -89,11 +97,6 @@ The Stargate APIs (Document, REST, GraphQL, gRPC) are deprecated for {astra}.
 If you are migrating to {astra} from an origin cluster that uses any of these APIs, your client applications won't work with {astra}.
 Before you migrate, you must change your applications to use other programmatic access, such as {cass-short} drivers or the {data-api}.
 For more information, see xref:astra-db-serverless:api-reference:compare-dataapi-to-stargate.adoc[].
-
-=== Multi-region and multi-node {astra} migrations
-
-If your migration involves multi-region or multi-node clusters, plan your strategy for migrating and replicating data to the different regions.
-For more information, see the xref:sideloader:prepare-sideloader.adoc#additional-preparation-for-specific-migration-scenarios[{sstable-sideloader} preparations for specific migration scenarios] and the xref:ROOT:deployment-infrastructure.adoc[{product-proxy} infrastructure guidelines for multi-datacenter clusters].
 
 [[_read_only_applications]]
 === Read-only applications
@@ -232,6 +235,8 @@ This approach means the queries are regular CQL `SELECT` statements, so {product
 +
 If you use the HTTP API then you can either modify your applications to use the CQL API instead or you will have to move those applications directly from the origin to the target when the migration is complete if that is acceptable.
 
+For more {dse-short}-specific migration considerations, see xref:6.9@dse:managing:operations/migrate-data.adoc[].
+
 == Client compression
 
 The binary protocol used by {cass-short}, {dse-short}, {hcd-short}, and {astra-db} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
@@ -258,6 +263,17 @@ In contrast, a cluster's _authenticator_ must be compatible with {product-proxy}
 {product-proxy} _doesn't_ support `DseAuthenticator` with `kerberos` scheme.
 
 The origin and target clusters can have different authentication configurations because {product-proxy} treats them independently.
+
+[#considerations-for-multi-datacenter-clusters-and-other-complex-migrations]
+== Considerations for multi-datacenter clusters and other complex migrations
+
+Complex migration scenarios, such as multi-datacenter migrations or many-to-one migrations, require additional planning to configure {product-proxy} and migrate the data efficiently.
+
+include::ROOT:partial$multi-region-migrations.adoc[]
+
+To configure {product-proxy} for a multi-datacenter migration, see the xref:ROOT:deployment-infrastructure.adoc[{product-proxy} infrastructure guidelines for multi-datacenter clusters].
+
+For more guidance on migrations to {astra}, see the xref:sideloader:prepare-sideloader.adoc#additional-preparation-for-specific-migration-scenarios[{sstable-sideloader} preparations for specific migration scenarios].
 
 == Next steps
 
