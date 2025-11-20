@@ -18,6 +18,7 @@ The following diagram shows a typical deployment with connectivity between clien
 
 image::zdm-during-migration3.png[Connectivity between client applications, proxy instances, and clusters.]
 
+[#multiple-datacenter-clusters]
 === Multiple datacenter clusters
 
 If you have a multi-datacenter cluster with multiple set of client application instances deployed to geographically distributed datacenters, you must plan a separate {product-proxy} deployment for each datacenter.

@@ -175,7 +175,7 @@ For more information, see xref:manage-proxy-instances.adoc[].
 
 ==== Multi-datacenter clusters
 
-For xref:ROOT:feasibility-checklists.adoc[multi-datacenter origin clusters], specify the name of the datacenter that {product-proxy} should consider local.
+For xref:ROOT:deployment-infrastructure.adoc#multiple-datacenter-clusters[multi-datacenter origin clusters], specify the name of the datacenter that {product-proxy} should consider local.
 To do this, set the `origin_local_datacenter` property to the local datacenter name.
 Similarly, for multi-datacenter target clusters, set the `target_local_datacenter` property to the local datacenter name.
 These two variables are stored in `vars/zdm_proxy_advanced_config.yml`.

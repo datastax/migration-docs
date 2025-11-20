@@ -1,6 +1,6 @@
 = Create the target environment
 
-After you review the xref:ROOT:feasibility-checklists.adoc[feasibility checklists] and prepare the xref:ROOT:deployment-infrastructure.adoc[{product-proxy} infrastructure], you must prepare your target cluster for the migration.
+After you review the xref:ROOT:feasibility-checklists.adoc[compatibility requirements] and prepare the xref:ROOT:deployment-infrastructure.adoc[{product-proxy} infrastructure], you must prepare your target cluster for the migration.
 
 This includes the following:
 
@@ -117,11 +117,17 @@ Other CQL-compatible data stores::
 --
 Support for other CQL-compatible data stores isn't guaranteed for {product-proxy}.
 
-If your origin and target clusters meet the protocol version requirements described in the xref:ROOT:feasibility-checklists.adoc[feasibility checklists], you might be able to use {product-proxy} for your migration.
+If your origin and target clusters meet the xref:ROOT:feasibility-checklists.adoc[protocol version compatibility requirements], you might be able to use {product-proxy} for your migration.
 As with any migration, {company} recommends that you test this in isolation before attempting a full-scale production migration.
 
 See your data store provider's documentation for information about creating your cluster and schema, generating authentication credentials, and gathering the connection details.
 --
 ======
+
+[TIP]
+====
+Before you begin the migration process, try connecting your client application directly to your target cluster without {product-proxy}.
+This ensures that the connection will work when you disconnect {product-proxy} at the end of the migration.
+====
 
 Next, learn about xref:ROOT:rollback.adoc[rollback options] before you begin xref:ROOT:phase1.adoc[Phase 1] of the migration process.

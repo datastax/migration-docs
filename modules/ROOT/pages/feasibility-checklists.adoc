@@ -1,4 +1,5 @@
-= Feasibility checks
+= Compatibility requirements for {product-proxy}
+:navtitle: Compatibility requirements
 :page-aliases: ROOT:preliminary-steps.adoc
 
 True zero downtime migration with {product-proxy} is possible only if your clusters, data model, and application logic meet the compatibility requirements described on this page.
@@ -7,20 +8,20 @@ You might need to adjust your data model or application logic to ensure compatib
 
 If you cannot meet these requirements, particularly the cluster and schema compatibility requirements, see xref:ROOT:components.adoc[] for alternative migration tools and strategies.
 
-== {cass-short} Native Protocol version and cluster version support
+== Supported {cass-short} Native Protocol versions
 
 {product-proxy} supports protocol versions `v3`, `v4`, `DSE_V1`, and `DSE_V2`.
 
 //TODO: V5 status: https://github.com/datastax/zdm-proxy/blob/main/faq.md#what-versions-of-apache-cassandra-or-cql-compatible-data-stores-does-the-zdm-proxy-support
 {product-proxy} technically doesn't support `v5`.
 If `v5` is requested, the proxy handles protocol negotiation so that the client application properly downgrades the protocol version to `v4`.
-This means that you can use {product-proxy} with any client application that uses a driver version supporting protocol version `v5`, as long as the application doesn't use v5-specific functionality.
+This means that you can use {product-proxy} with any client application that uses a driver version supporting protocol version `v5`, as long as the application doesn't use `v5`-specific functionality.
 
 === Thrift isn't supported by {product-proxy}
 
 If you are using an earlier driver or cluster version that only supports Thrift, you must change your client application to use CQL, and, if needed, upgrade your cluster before starting the migration process.
 
-=== Supported cluster versions and migration paths
+== Supported data store providers, versions, and migration paths
 
 include::ROOT:partial$migration-scenarios.adoc[]
 
@@ -42,12 +43,6 @@ TODO: Need to verify as these are in conflict with other information in this gui
 See also: https://github.com/datastax/zdm-proxy/blob/main/faq.md#what-versions-of-apache-cassandra-or-cql-compatible-data-stores-does-the-zdm-proxy-support
 "Other CQL-compatible data stores might be compatible targets with {product-proxy}, but {company} doesn't test all possible targets."
 ////
-
-[TIP]
-====
-Before you begin the migration process, try directly connecting your client application to your target cluster without {product-proxy}.
-This ensures that you know the connection will work when you disconnect {product-proxy} at the end of the migration.
-====
 
 == Schema/keyspace compatibility
 
@@ -74,7 +69,7 @@ For example, if your compound primary key is `PRIMARY KEY (A, B)` and you always
 
 See xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[How {product-proxy} handles reads and writes].
 
-== Considerations for {astra-db} migrations
+== Considerations for {astra} migrations
 
 {astra-db} implements guardrails and sets limits to ensure good practices, foster availability, and promote optimal configurations for your databases.
 Check the list of xref:astra-db-serverless:databases:database-limits.adoc[guardrails and limits] to make sure that your application workload can be successful within these limits.

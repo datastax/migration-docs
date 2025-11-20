@@ -40,6 +40,7 @@ A migration project includes preparation for the migration and five migration ph
 The following sections describe the major events in each phase and how your client applications connect to your origin cluster, {product-proxy}, and the target cluster during each phase.
 
 The _origin cluster_ is is your existing {cass-short}-based environment, such as {dse-short} or open-source {cass}.
+
 The _target cluster_ is your new {cass-short}-based environment where you want to migrate your data and client applications.
 
 === Plan and prepare for your migration
@@ -51,16 +52,13 @@ image:pre-migration0ra.png[Before the migration begins, your applications connec
 
 To plan and prepare for the migration, do the following:
 
-. xref:ROOT:feasibility-checklists.adoc[]: Review compatibility requirements for {product-proxy}, and understand how certain operations are handled by {product-proxy}.
+. xref:ROOT:feasibility-checklists.adoc[Review compatibility requirements for {product-proxy}]: Make sure your clusters, data model, and application logic are compatible with {product-proxy}, and understand how certain operations are handled by {product-proxy}.
+If needed, adjust your data model or application logic to ensure compatibility between the two clusters during the migration and ongoing compatibility with the target cluster after the migration.
 +
 [IMPORTANT]
 ====
 To successfully migrate with {product-proxy}, a read or write request produced by your client application must be able to succeed _without modification_ on both your origin (existing) and target (new) clusters.
 This means that the origin and target clusters must have matching schemas, including keyspace names, table names, column names, and data types.
-
-You might need to adjust your data model or application logic to ensure compatibility between the two clusters during the migration and ongoing compatibility with the target cluster after the migration.
-
-For more information, see xref:feasibility-checklists.adoc[].
 ====
 
 . xref:ROOT:deployment-infrastructure.adoc[]: Set up the infrastructure to host the {product-short} tools.
