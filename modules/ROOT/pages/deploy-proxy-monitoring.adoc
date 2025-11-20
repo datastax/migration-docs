@@ -170,7 +170,7 @@ For instructions, see xref:ROOT:tls.adoc[].
 
 There are additional configuration variables in `vars/zdm_proxy_advanced_config.yml` that you might want to change _at deployment time_ in specific cases.
 
-All advanced configuration variables that aren't listed here are considered mutable and can be changed later without recreating the entire deployment.
+All advanced configuration variables that aren't listed here are mutable and can be changed later without recreating the entire deployment.
 For more information, see xref:manage-proxy-instances.adoc[].
 
 ==== Multi-datacenter clusters

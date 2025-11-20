@@ -84,11 +84,11 @@ You must adapt your client application to use a consistency level that is suppor
 
 === {astra} doesn't support the Stargate APIs
 
-The xref:astra-db-serverless:api-reference:compare-dataapi-to-stargate.adoc[Stargate APIs] (Document, REST, GraphQL, gRPC) are deprecated for {astra}.
+The Stargate APIs (Document, REST, GraphQL, gRPC) are deprecated for {astra}.
 
 If you are migrating to {astra} from an origin cluster that uses any of these APIs, your client applications won't work with {astra}.
-
 Before you migrate, you must change your applications to use other programmatic access, such as {cass-short} drivers or the {data-api}.
+For more information, see xref:astra-db-serverless:api-reference:compare-dataapi-to-stargate.adoc[].
 
 === Multi-region and multi-node {astra} migrations
 
