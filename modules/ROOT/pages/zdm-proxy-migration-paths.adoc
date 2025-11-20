@@ -7,12 +7,6 @@ True zero downtime migration is only possible if your database meets the minimum
 
 include::ROOT:partial$migration-scenarios.adoc[]
 
-[TIP]
-====
-You can use {product-short} to support major version upgrades for your current database platform, such as upgrades from {dse-short} 5.0 to {dse-short} 6.9.
-Using {product-short} reduces the risk of data loss or corruption due to breaking changes between versions, provides a seamless rollback option, and streamlines the upgrade process, eliminating the need for interim upgrades and progressive manual reconfiguration.
-====
-
 [#incompatible-clusters-and-migrations-with-some-downtime]
 == Incompatible clusters and migrations with some downtime
 

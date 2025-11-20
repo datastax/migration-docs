@@ -12,7 +12,7 @@ The preparation steps depend on your target platform.
 
 [IMPORTANT]
 ====
-For complex migrations, such as those that involve multi-datacenter clusters, many-to-one/one-to-many mappings, or unresolvable mismatched schemas, see the xref:ROOT:feasibility-checklists.adoc#considerations-for-multi-datacenter-clusters-and-other-complex-migrations[considerations for complex migrations].
+For complex migrations, such as those that involve multi-datacenter clusters, many-to-one/one-to-many mappings, or unresolvable mismatched schemas, see the xref:ROOT:feasibility-checklists.adoc#multi-datacenter-clusters-and-other-complex-migrations[considerations for complex migrations].
 ====
 
 [tabs]
@@ -126,8 +126,15 @@ See your data store provider's documentation for information about creating your
 
 [TIP]
 ====
-Before you begin the migration process, try connecting your client application directly to your target cluster without {product-proxy}.
+After you create the target cluster, try connecting your client application directly to the target cluster without {product-proxy}.
 This ensures that the connection will work when you disconnect {product-proxy} at the end of the migration.
+
+Additionally, {company} recommends running performance tests and measuring benchmarks in a test environment where your client application is connected directly to your target cluster.
+This helps you understand how your application workloads will perform on the new cluster.
+This is particularly valuable when migrating to a new platform, such as {dse-short} to {astra}, where you might be unfamiliar with the platform's performance characteristics.
+
+Depending on the results of your tests, you might need to adjust your application logic, data model, or cluster configuration to achieve your performance goals.
+For example, you might need to optimize queries to avoid anti-patterns that were acceptable on your origin cluster but degrade performance on the target cluster.
 ====
 
 Next, learn about xref:ROOT:rollback.adoc[rollback options] before you begin xref:ROOT:phase1.adoc[Phase 1] of the migration process.

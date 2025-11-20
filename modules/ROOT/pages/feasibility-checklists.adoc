@@ -12,7 +12,6 @@ If you cannot meet these requirements, particularly the cluster and schema compa
 
 {product-proxy} supports protocol versions `v3`, `v4`, `DSE_V1`, and `DSE_V2`.
 
-//TODO: V5 status: https://github.com/datastax/zdm-proxy/blob/main/faq.md#what-versions-of-apache-cassandra-or-cql-compatible-data-stores-does-the-zdm-proxy-support
 {product-proxy} technically doesn't support `v5`.
 If `v5` is requested, the proxy handles protocol negotiation so that the client application properly downgrades the protocol version to `v4`.
 This means that you can use {product-proxy} with any client application that uses a driver version supporting protocol version `v5`, as long as the application doesn't use `v5`-specific functionality.
@@ -25,105 +24,55 @@ If you are using an earlier driver or cluster version that only supports Thrift,
 
 include::ROOT:partial$migration-scenarios.adoc[]
 
-////
-TODO: Need to verify as these are in conflict with other information in this guide:
-
-{product-proxy} supports migrations to and from the following cluster versions:
-
-* {cass-reg} 2.1 and later, including {cass-short} 4.x.
-+
-{cass-short} 2.0 migration support may be introduced when protocol version v2 is supported.
-
-* {dse} 4.7.1 and later.
-+
-{dse-short} 4.6 migration support may be introduced when protocol version v2 is supported.
-
-* {astra-db}.
-
-See also: https://github.com/datastax/zdm-proxy/blob/main/faq.md#what-versions-of-apache-cassandra-or-cql-compatible-data-stores-does-the-zdm-proxy-support
-"Other CQL-compatible data stores might be compatible targets with {product-proxy}, but {company} doesn't test all possible targets."
-////
-
-== Schema/keyspace compatibility
+== Schema and keyspace alignment
 
 [IMPORTANT]
 ====
 To successfully migrate with {product-proxy}, the origin and target clusters must have matching schemas, including keyspace names, table names, column names, and data types.
 A CQL statement produced by your client application must be able to succeed _without modification_ on both clusters because {product-proxy} routes the exact same CQL statements to both clusters.
+
+Even without {product-proxy}, matching schemas are required for most CQL-based data migration tools, such as {sstable-sideloader} and {cass-migrator}.
+If it is impossible to match the schemas, your migration cannot use {product-proxy}.
+See xref:ROOT:components.adoc[] for alternative migration tools and strategies, such as extract, transform, and load (ETL) processes.
 ====
 
-{product-proxy} does not modify or transform CQL statements besides the optional feature that can replace `now()` functions with timestamp literals.
-See <<cql-function-replacement>> for more information about this feature.
+{product-proxy} _doesn't_ modify or transform CQL statements with the exception of <<cql-function-replacement,optional replacement for `now()`>>.
 
 A CQL statement that your client application sends to {product-proxy} must be able to succeed on both clusters.
-This means that any keyspace that your client application uses must exist on both the origin and target clusters with the same name (although they can have different replication strategies and durable writes settings).
-Table names must also match.
+This means that any keyspace that your client application uses must exist on both the origin and target clusters with the same keyspace name, table names, column names, and compatible data types.
+However, the keyspaces can have different replication strategies and durable write settings.
 
-The schema doesn't have to be an exact match as long as the CQL statements can be executed successfully on both clusters.
-For example, if a table has 10 columns but your client application only uses 5 of those columns then you could create that table on the target with just those 5 columns.
+At the column level, the schema doesn't need to be a one-to-one match as long as the CQL statements can be executed successfully on both clusters.
+For example, if a table has 10 columns, and your client application uses only five of those columns, then you can recreate the table on the target cluster with only the five required columns.
+However, the data from the other columns won't be migrated to the target cluster if those columns don't exist on the target cluster.
+Before you decide to omit a column from the target cluster, make sure that it is acceptable to permanently lose that data after the migration.
 
-You can also change the primary key in some cases.
-For example, if your compound primary key is `PRIMARY KEY (A, B)` and you always provide parameters for the `A` and `B` columns in your CQL statements then you could change the key to `PRIMARY KEY (B, A)` when creating the schema on the target because your CQL statements will still run successfully.
+In some cases, you can change the primary key on the target cluster.
+For example, if your compound primary key is `PRIMARY KEY (A, B)`, and you always provide parameters for the `A` and `B` columns in your CQL statements, then you could change the key to `PRIMARY KEY (B, A)` when creating the schema on the target because your CQL statements will still run successfully.
 
-== Request and error handling expectations with {product-proxy}
+== Request and error handling with {product-proxy}
 
 See xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[How {product-proxy} handles reads and writes].
-
-== Considerations for {astra} migrations
-
-{astra-db} implements guardrails and sets limits to ensure good practices, foster availability, and promote optimal configurations for your databases.
-Check the list of xref:astra-db-serverless:databases:database-limits.adoc[guardrails and limits] to make sure that your application workload can be successful within these limits.
-
-If you need to make changes to the application or data model to ensure that your workload can run successfully in {astra-db}, then you need to do these changes before you start the migration process.
-
-It is also highly recommended to perform tests and benchmarks when connected directly to {astra-db} prior to the migration, so that you don't find unexpected issues during the migration process.
-
-=== {astra} doesn't support CL.ONE
-
-`CL.ONE` isn't supported by {astra}, and read and write requests sent through {product-proxy} with `CL.ONE` to {astra-db} databases always fail.
-
-{product-proxy} doesn't mute these failures because you need to be aware of them.
-You must adapt your client application to use a consistency level that is supported by both clusters to ensure that the migration is seamless and error-free.
-
-=== {astra} doesn't support the Stargate APIs
-
-The Stargate APIs (Document, REST, GraphQL, gRPC) are deprecated for {astra}.
-
-If you are migrating to {astra} from an origin cluster that uses any of these APIs, your client applications won't work with {astra}.
-Before you migrate, you must change your applications to use other programmatic access, such as {cass-short} drivers or the {data-api}.
-For more information, see xref:astra-db-serverless:api-reference:compare-dataapi-to-stargate.adoc[].
-
-[[_read_only_applications]]
-=== Read-only applications
-
-In versions 2.1.0 and later, {product-proxy} sends periodic heartbeats to keep idle cluster connections alive.
-The default interval is 30,000 milliseconds, and it can be configured with the `xref:ROOT:manage-proxy-instances.adoc#change-mutable-config-variable[heartbeat_interval_ms]` variable, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you aren't using {product-automation}.
-
-In {product-proxy} versions earlier than 2.1.0, read-only applications require special handling to avoid connection termination due to inactivity.
-
-{company} recommends that you use {product-proxy} version 2.1.0 or later to benefit from the heartbeat feature.
-If you cannot use version 2.1.0 or later, see the alternatives described in xref:ROOT:troubleshooting-tips.adoc#client-application-closed-connection-errors-every-10-minutes-when-migrating-to-astra-db[Client application closed connection errors every 10 minutes when migrating to {astra-db}].
 
 [[non-idempotent-operations]]
 == Lightweight Transactions and other non-idempotent operations
 
-Examples of non-idempotent operations in CQL are:
+Non-idempotent CQL operations don't produce the exact same result each time the request is executed.
+Whether the request is executed and the actual value written to the database depend on the column's current value or other conditions at the time of the request.
+Examples of non-idempotent operations include the following:
 
-* Lightweight Transactions (LWTs) (see <<_lightweight_transactions_and_the_applied_flag>>)
+* Conditional writes and Lightweight Transactions (LWTs) (see <<_lightweight_transactions_and_the_applied_flag>>)
 * Counter updates
 * Collection updates with `+=` and `-=` operators
 * Non-deterministic functions like `now()` and `uuid()` (see <<cql-function-replacement>>)
 
-Given that there are two separate clusters involved, the state of each cluster can be different.
-For conditional writes, this can create a temporary divergent state.
+By design, a {product-short} migration involves two separate clusters, and it is possible for the clusters to have differences due to non-idempotent operations.
 
-If you use non-idempotent operations, {company} recommends adding a reconciliation phase to your migration before and after Phase 4 (where you switch reads to the target).
-This allows you additional opportunities to resolve any data inconsistencies that are produced by non-idempotent operations.
+If you use non-idempotent operations, {company} recommends adding a reconciliation phase to your migration before and after xref:ROOT:change-read-routing.adoc[Phase 4].
+This allows you an additional opportunity to resolve any data inconsistencies that are produced by non-idempotent operations.
+The xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator}] is ideal for detecting and reconciling these types of inconsistencies.
 
-The {cass-migrator} is ideal for detecting and reconciling these types of inconsistencies.
-For more information, see xref:migrate-and-validate-data.adoc[].
-
-If your application workloads can tolerate inconsistencies produced by LWTs and non-idempotent operations, you might not need to perform any additional validation or reconciliation steps.
+However, if your application workloads can tolerate inconsistencies produced by LWTs and non-idempotent operations, you might not need to perform any additional validation or reconciliation steps.
 This depends entirely on your application business logic and requirements.
 It is your responsibility to determine whether your workloads can tolerate these inconsistencies and to what extent.
 
@@ -140,30 +89,38 @@ For conditional writes, this may create a divergent state for a time.
 It may not make a difference in many cases, but if Lightweight Transactions are used, we would recommend a reconciliation phase in the migration before switching reads to rely on the TARGET cluster.
 ////
 
-{product-proxy} handles LWTs as write operations.
-The proxy sends the LWT to the origin and target clusters concurrently, and then waits for a response from both.
-{product-proxy} will return a `success` status to the client if both the origin and target send successful acknowledgements.
-Otherwise, it will return a `failure` status if one or both do not return an acknowledgement.
+{product-proxy} handles LWTs in the same way as other xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[write requests]: It sends the request to both clusters concurrently, and then it waits for both to respond.
+{product-proxy} returns a `success` status to the client _only_ if both clusters send successful acknowledgements; otherwise, it returns a `failure` status.
 
-What sets LWTs apart from regular writes is that they are conditional.
-In other words, a LWT can appear to have been successful (its execution worked as expected).
-However, the change will be applied only if the LWT's condition was met.
-Whether the condition was met depends on the state of the data on the cluster.
-In a migration, the clusters will not be in sync until all existing data has been imported into the target.
-Up to that point, an LWT's condition can be evaluated differently on each side, leading to a different outcome even though the LWT was technically successful on both sides.
+However, clusters can consider an LWT to be successful with or without data modification, because LWTs modify data only if a specific condition is met, and they don't fail if the condition isn't met.
+With {product-proxy}, this means both clusters can return successful acknowledgements with _different outcomes on each cluster_.
+This is because the evaluation of an LWT's condition is based on the state of the data on the cluster at the time of the request.
+For example, if the condition is met on the origin cluster but not on the target cluster, then the data is modified on the origin cluster only.
 
-The response that a cluster sends after executing a LWT includes a flag called `applied`.
-This flag tells the client whether the LWT update was actually applied.
-The status depends on the condition, which in turn depends on the state of the data.
-When {product-proxy} receives a response from both the origin and target, each response would have its own `applied` flag.
+If your application logic includes LWTs, you must reconcile any inconsistences caused by LWTs, and understand how the `applied` flag is handled by {product-proxy}:
 
-However, {product-proxy} can only return a *single response* to the client.
-Recall that the client has no knowledge that there are two clusters behind the proxy.
-Therefore, {product-proxy} returns the `applied` flag from the cluster that is *currently used as primary*.
-If your client has logic that depends on the `applied` flag, be aware that during the migration, you will only have visibility of the flag coming from the primary cluster; that is, the cluster to which synchronous reads are routed.
+Repeatedly validate and reconcile data to catch all inconsistencies::
+During the {product-short} process, the clusters aren't fully synchronized until the data has been completely replicated and thoroughly validated at the end of xref:ROOT:migrate-and-validate-data.adoc[Phase 2].
+Up to that point, LWTs can produce inconsistent data that you must reconcile at the end of Phase 2.
+Furthermore, because {product-proxy} is designed to continuously route writes to both clusters, you might need to validate and reconcile the data multiple times to catch additional inconsistencies that occurred while you were reconciling previous inconsistencies.
 
-To reiterate, {product-proxy} only returns the `applied` value from the primary cluster, which is the cluster from where read results are returned to the client application. By default, this is the origin cluster.
-This means that when you set the target cluster as your primary cluster, then the `applied` value returned to the client application will come from the target cluster.
+Don't rely on the `applied` flag::
+A cluster's response to an LWT includes an `applied` flag.
+If `applied` is `True`, then the LWT's condition was met and the data was actually modified.
+If `applied` is `False`, then the condition wasn't met and the data wasn't modified.
++
+Outside of a migration scenario, this flag is passed to the client application from the one cluster that the client is connected to.
+However, with {product-proxy}, the responses from both clusters are passed to {product-proxy}, which then passes only _one_ response back to the client application.
+This is intentional because {product-proxy} is designed to be transparent to the client application: The client application believes it is interacting with a single cluster.
++
+Specifically, {product-proxy} returns the response, including the `applied` flag, from the xref:ROOT:faqs.adoc#what-are-origin-target-primary-and-secondary-clusters[primary cluster].
+For the majority of the migration process, the origin cluster is the primary cluster.
+Near the end of the migration (xref:ROOT:change-read-routing.adoc[Phase 4]), the target cluster becomes the primary cluster.
++
+If your application logic depends on the `applied` flag, be aware that, during the migration, your application receives the `applied` flag from the primary cluster only.
+It cannot access the `applied` flag from the secondary cluster.
+If needed, modify your application logic in anticipation of this behavior.
+Or, plan to thoroughly reconcile inconsistencies that occur due to LWTs before the final phases of the migration (xref:ROOT:change-read-routing.adoc[Phase 4] and xref:ROOT:connect-clients-to-target.adoc[Phase 5]) where the target cluster becomes the primary cluster and your applications stop using the origin cluster.
 
 [[cql-function-replacement]]
 === Server-side non-deterministic functions in the primary key
@@ -200,41 +157,19 @@ The {product-short} process requires you to perform rolling restarts of your cli
 This is standard practice for client applications that are deployed over multiple instances, and it is a widely used approach to roll out releases and configuration changes.
 ====
 
-As part of the normal migration process, the {product-proxy} instances will have to be restarted in between phases to apply configuration changes.
-From the point of view of the client application, this is a similar behavior to a {dse-short} or {cass-short} cluster going through a rolling restart in a non-migration scenario.
+Throughout the migration process, you must restart {product-proxy} instances to apply configuration changes.
+Client applications handle this in the same way as typical rolling restarts of {dse-short} or {cass-short} clusters.
 
-If your application already tolerates rolling restarts of your current cluster then you should see no issues when there is a rolling restart of {product-proxy} instances.
+If your applications already tolerate rolling restarts of your origin cluster, then you shouldn't expect any issues during rolling restarts of {product-proxy} instances.
 
-To ensure that your client application retries requests when a database connection is closed you should check the section of your driver's documentation related to retry policies.
-
-Most {company}-compatible drivers require a statement to be marked as `idempotent` in order to retry it in case of a connection error (such as the termination of a database connection).
-This means that, by default, these drivers treat statements as non-idempotent, and the drivers don't automatically retry them in the event of a connection error.
-
-For more information, see the following driver documentation:
-
-* xref:datastax-drivers:developing:query-idempotence.adoc[]
-* xref:datastax-drivers:connecting:retry-policies.adoc[]
-
-== {dse-short} advanced workloads
-
-Graph::
-{product-proxy} handles all {dse-short} Graph requests as write requests even if the traversals are read-only. There is no special handling for these requests, so you need to take a look at the traversals that your client application sends and determine whether the traversals are idempotent. If the traversals are non-idempotent then the reconciliation step is needed.
-+
-Keep in mind that our recommended tools for data migration and reconciliation are CQL-based, so they can be used for migrations where the origin cluster is a database that uses the new {dse-short} Graph engine released with {dse-short} 6.8, but *cannot be used for the old Graph engine* that older {dse-short} versions relied on.
-See <<non-idempotent-operations,this section>> for more information about non-idempotent operations.
-
-Search::
-Read-only {dse-short} Search workloads can be moved directly from the origin to the target without {product-proxy} being involved.
-If your client application uses Search and also issues writes, or if you need the read routing capabilities from {product-proxy}, then you can connect your Search workloads to it as long as you are using xref:datastax-drivers:compatibility:driver-matrix.adoc[{company}-compatible drivers] to submit these queries.
-This approach means the queries are regular CQL `SELECT` statements, so {product-proxy} handles them as regular read requests.
-+
-If you use the HTTP API then you can either modify your applications to use the CQL API instead or you will have to move those applications directly from the origin to the target when the migration is complete if that is acceptable.
-
-For more {dse-short}-specific migration considerations, see xref:6.9@dse:managing:operations/migrate-data.adoc[].
+To ensure that your client application retries requests that fail due to connection errors caused by the rolling restart process, check your driver's retry policies and whether your requests are marked as idempotent.
+Most drivers treat all statements as non-idempotent by default, and they don't automatically retry them.
+This means that you must explicitly mark statements as idempotent to trigger retries after connection errors.
+For more information, see xref:datastax-drivers:developing:query-idempotence.adoc[] and xref:datastax-drivers:connecting:retry-policies.adoc[].
 
 == Client compression
 
-The binary protocol used by {cass-short}, {dse-short}, {hcd-short}, and {astra-db} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
+The binary protocol used by {astra}, {dse-short}, {hcd-short}, and open-source {cass-short} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
 
 When establishing connections from client applications, {product-proxy} responds with a list of compression algorithms supported by both clusters.
 The compression algorithm configured in your {company}-compatible driver must match any item from the common list, or CQL request compression must be disabled completely.
@@ -248,7 +183,6 @@ Storage/table compression doesn't affect the client application or {product-prox
 A cluster's _authorizer_ doesn't affect client applications or {product-proxy}, which means that you can use any kind of authorizer configuration on your clusters, and they can use different authorizers.
 
 In contrast, a cluster's _authenticator_ must be compatible with {product-proxy}.
-
 {product-proxy} supports the following cluster authenticator configurations:
 
 * No authenticator
@@ -259,8 +193,62 @@ In contrast, a cluster's _authenticator_ must be compatible with {product-proxy}
 
 The origin and target clusters can have different authentication configurations because {product-proxy} treats them independently.
 
-[#considerations-for-multi-datacenter-clusters-and-other-complex-migrations]
-== Considerations for multi-datacenter clusters and other complex migrations
+== {dse-short} advanced workloads
+
+This section describes how {product-proxy} handles certain {dse-short} advanced workloads.
+For more {dse-short}-specific migration considerations, see xref:6.9@dse:managing:operations/migrate-data.adoc[].
+
+{dse-short} Graph::
+{product-proxy} handles all {dse-short} Graph requests as write requests even if the traversals are read-only.
+There is no special handling for these requests, so you must consider the traversals that your client application sends and determine whether the traversals are idempotent.
+If the traversals are non-idempotent, then your must thoroughly validate and reconcile the data and the end of xref:ROOT:migrate-and-validate-data.adoc[Phase 2] to ensure that the target cluster is truly consistent with the origin cluster.
+For more information, see <<non-idempotent-operations>>.
++
+{company}'s recommended tools for data migration and reconciliation are CQL-based, so they only support migrations where the origin cluster is a database that uses the new {dse-short} Graph engine ({dse-short} 6.8 and later).
+They _cannot_ be used with the earlier Graph engine in {dse-short} versions prior to 6.8.
+
+{dse-short} Search::
+Read-only {dse-short} Search workloads can be moved directly from the origin to the target without {product-proxy} being involved.
+If your client application uses Search and also issues writes, or if you need the read routing capabilities from {product-proxy}, then you can connect your Search workloads to {product-proxy} as long as you are using xref:datastax-drivers:compatibility:driver-matrix.adoc[{company}-compatible drivers] to submit these queries.
+This approach means the queries are regular CQL `SELECT` statements, so {product-proxy} handles them as regular read requests.
++
+If you use the HTTP API then you can either modify your applications to use the CQL API instead, or you must move those applications directly from the origin to the target when the migration is complete, if that is acceptable for your use case.
+
+== {astra} migrations
+
+This section describes specific considerations for {astra} migrations.
+If you need to make any changes to your data model or application logic for compatibility with {astra}, do so before starting the migration.
+As mentioned previously, this is because {product-proxy} requires that the same CQL statements can be executed successfully on both clusters, and the data migration tools require matching schemas.
+
+{astra} guardrails, limits, and CQL compatibility::
+As a managed database-as-a-service (DBaaS) offering, {astra} implements xref:astra-db-serverless:databases:database-limits.adoc[guardrails and limits] on its databases, and xref:astra-db-serverless:cql:develop-with-cql.adoc[{astra} doesn't support all CQL functionality].
+Make sure your application workloads and CQL statements are compatible with these limitations.
++
+In self-managed clusters, such as {dse-short} and {cass-short}, you can configure the database limits in `cassandra.yml`.
+Many of these limits aren't configurable in {astra}, and those that can be changed require intervention by {company} Support.
+
+{astra} doesn't support consistency level ONE::
+`CL.ONE` isn't supported by {astra}, and read and write requests sent through {product-proxy} with `CL.ONE` to {astra-db} databases always fail.
+{product-proxy} doesn't mute these failures because you need to be aware of them.
+You must adapt your client application to use a consistency level that is supported by both clusters to ensure that the migration is seamless and error-free.
+
+{astra} doesn't support the Stargate APIs::
+The Stargate APIs (Document, REST, GraphQL, gRPC) are deprecated for {astra}.
+If you are migrating to {astra} from an origin cluster that uses any of these APIs, your client applications won't work with {astra}.
+Before you migrate, you must change your applications to use other programmatic access, such as {cass-short} drivers or the {data-api}.
+For more information, see xref:astra-db-serverless:api-reference:compare-dataapi-to-stargate.adoc[].
+
+[[_read_only_applications]]Read-only applications::
+In versions 2.1.0 and later, {product-proxy} sends periodic heartbeats to keep idle cluster connections alive.
+The default interval is 30,000 milliseconds, and it can be configured with the `xref:ROOT:manage-proxy-instances.adoc#change-mutable-config-variable[heartbeat_interval_ms]` variable, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you aren't using {product-automation}.
++
+In {product-proxy} versions earlier than 2.1.0, read-only applications require special handling to avoid connection termination due to inactivity.
++
+{company} recommends that you use {product-proxy} version 2.1.0 or later to benefit from the heartbeat feature.
+If you cannot use version 2.1.0 or later, see the alternatives described in xref:ROOT:troubleshooting-tips.adoc#client-application-closed-connection-errors-every-10-minutes-when-migrating-to-astra-db[Client application closed connection errors every 10 minutes when migrating to {astra-db}].
+
+[#multi-datacenter-clusters-and-other-complex-migrations]
+== Multi-datacenter clusters and other complex migrations
 
 Complex migration scenarios, such as multi-datacenter migrations or many-to-one migrations, require additional planning to configure {product-proxy} and migrate the data efficiently.
 
