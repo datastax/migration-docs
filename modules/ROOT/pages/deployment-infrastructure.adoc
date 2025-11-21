@@ -1,23 +1,29 @@
 = Prepare the {product-proxy} deployment infrastructure
 :navtitle: Prepare {product-proxy} infrastructure
 
-As part of planning your migration, you need to prepare your infrastructure.
+After confirming that your clusters, data model, and application logic meet the xref:ROOT:feasibility-checklists.adoc[compatibility requirements for {product-proxy}], you must prepare the infrastructure to deploy your {product-proxy} instances.
+
+{company} recommends using {product-automation} and {product-utility} to manage your {product-proxy} deployment.
+If you choose to use these tools, you must also prepare infrastructure for {product-automation}.
 
 == Choose where to deploy the proxy
 
 A typical {product-proxy} deployment is made up of multiple proxy instances.
-A minimum of three proxy instances is recommended for any deployment apart from those for demo or local testing purposes.
+{company} recommends a minimum of three proxy instances for any deployment other than local test or demo environments.
 
-All {product-proxy} instances must be reachable by the client application and must be able to connect to your origin and target clusters.
-The {product-proxy} process is lightweight, requiring only a small amount of resources and no storage to persist state (apart from logs).
+All {product-proxy} instances must be reachable by your client application, and they must be able to connect to your origin and target clusters.
+{company} recommends that you deploy {product-proxy} as close to your client application instances as possible.
+For more information, see <<connectivity-requirements>>.
 
-{product-proxy} should be deployed close to your client application instances.
-This can be on any cloud provider as well as on-premise, depending on your existing infrastructure.
+You can deploy {product-proxy} on any cloud provider or on-premises, depending on your existing infrastructure.
 
 The following diagram shows a typical deployment with connectivity between client applications, {product-proxy} instances, and clusters:
 
-image::zdm-during-migration3.png[Connectivity between client applications, proxy instances, and clusters.]
+image::zdm-during-migration3.png[Connectivity between client applications, proxy instances, and clusters]
 
+The {product-proxy} process is lightweight, requiring only a small amount of resources and no storage to persist its state aside from logs.
+
+[#multiple-datacenter-clusters]
 === Multiple datacenter clusters
 
 If you have a multi-datacenter cluster with multiple set of client application instances deployed to geographically distributed datacenters, you must plan a separate {product-proxy} deployment for each datacenter.
@@ -40,137 +46,169 @@ This deployment model provides maximum resilience and failure tolerance guarante
 Conversely, deploying a single {product-proxy} instance undermines this resilience mechanism and creates a single point of failure, which can affect client applications if one or more nodes of the underlying origin or target clusters go offline.
 In a sidecar deployment, each client application instance would be connecting to a single {product-proxy} instance, and would, therefore, be exposed to this risk.
 
-== Infrastructure requirements
-
-To deploy {product-proxy} and its companion monitoring stack, you must provision infrastructure that meets the following requirements.
-
 [[_machines]]
-=== Machines
+== Hardware requirements
 
-We will use the term "machine" to indicate a cloud instance (on any cloud provider), a VM, or a physical server.
+You need a number of machines to run your {product-proxy} instances, plus additional machines for the centralized jumphost, and for running {dsbulk-migrator} or {cass-migrator} (which are recommended data migration and validation tools).
 
-* N machines to run the desired number of {product-proxy} instances:
-** You will need one machine for each {product-proxy} instance.
-** Requirements for each {product-proxy} instance:
-*** Ubuntu Linux 20.04 or 22.04, Red Hat Family Linux 7 or newer
-*** 4 vCPUs
-*** 8GB RAM
-*** 20GB - 100GB root volume
-*** Equivalent to AWS `c5.xlarge` / GCP `e2-standard-4` / Azure `A4 v2`
-* One machine for the jumphost, which is typically also used as Ansible Control Host and to run the monitoring stack (Prometheus + Grafana):
-** The most common option is using a single machine for all these functions, but you could split these functions across different machines if you prefer.
-** Requirements:
-*** Ubuntu Linux 20.04 or 22.04, Red Hat Family Linux 7 or newer
-*** 8 vCPUs
-*** 16GB RAM
-*** 200GB - 500GB storage (depending on the amount of metrics history that you wish to retain)
-*** Equivalent to AWS `c5.2xlarge` / GCP `e2-standard-8` / Azure `A8 v2`
-* 1-M machines to run either {dsbulk-migrator} or {cass-migrator}.
-** It's recommended that you start with at least one VM with 16 vCPUs and 64GB RAM and a minimum of 200GB storage. Depending on the total amount of data that is planned for migration, more than one VM may be needed.
-** Requirements:
-*** Ubuntu Linux 20.04 or 22.04, Red Hat Family Linux 7 or newer
-*** 16 vCPUs
-*** 64GB RAM
-*** 200GB - 2TB storage (if you use dsbulk-migrator to unload multiple terabytes of data from origin, then load into target, you may need to consider more space to accommodate the data that needs to be staged)
-*** Equivalent to AWS `m5.4xlarge` / GCP `e2-standard-16` / Azure `D16v5`
+This section uses the term _machine_ broadly to refer to a cloud instance (on any cloud provider), a VM, or a physical server.
 
-[NOTE]
-====
-* Scenario: If you have 20 TBs of existing data to be migrated and want to speed up the migration, you could use multiple VMs.
-For example, you can use four VMs that are the equivalent of an AWS m5.4xlarge, a GCP e2-standard-16 or an Azure D16v5.
+{product-proxy} instances::
+You need one machine for each {product-proxy} instance.
+{company} recommends a minimum of three proxy instances for all migrations that aren't for local testing purposes.
 +
-Next, run {dsbulk-migrator} or {cass-migrator} in parallel on each VM with each one responsible for migrating around 5TB of data.
-If there is one super large table (e.g. 15 TB of 20 TB is in one table), you can choose to migrate this table in three parts on three separate VMs in parallel by splitting the full token range into three parts and migrating the rest of the tables on the fourth VM. 
+Each machine must meet the following specifications:
++
+* Ubuntu Linux 20.04 or 22.04, Red Hat Family Linux 7 or newer
+* 4 vCPUs
+* 8 GB RAM
+* 20 to 100 GB of storage for the root volume
+* Equivalent to AWS **c5.xlarge**, GCP **e2-standard-4**, or Azure **A4 v2**
 
-* Ensure that your origin and target clusters can handle high traffic from {cass-migrator} or {dsbulk-migrator} in addition to the live traffic from your application. 
++
+These machines can be on any cloud provider or on-premises, depending on your existing infrastructure, and they should be as close as possible to your client application instances for best performance.
 
-* Test any migration in a lower environment before you plan to do it in production.
+Jumphost and monitoring::
+You need at least one machine for the jumphost, which is the centralized manager for the {product-proxy} instances and runs the monitoring stack (Prometheus and Grafana).
+With {product-automation}, the jumphost also runs the Ansible Control Host container.
++
+Typically, a single machine is used for all of these functions, but you can split them across different machines if you prefer.
+This documentation assumes you are using a single machine.
++
+The jumphost machine must meet the following specifications:
++
+* Ubuntu Linux 20.04 or 22.04, Red Hat Family Linux 7 or newer
+* 8 vCPUs
+* 16 GB RAM
+* 200 to 500 GB of storage depending on the amount of metrics history that you want to retain
+* Equivalent to AWS **c5.2xlarge**, GCP **e2-standard-8**, or Azure **A8 v2**
 
-* Contact {support-url}[{company} Support] for help configuring your workload.
+Data migration tools ({dsbulk-migrator} or {cass-migrator})::
+You need at least one machine to run {dsbulk-migrator} or {cass-migrator} for the data migration and validation (xref:ROOT:migrate-and-validate-data.adoc[Phase 2]).
+Even if you plan to use another data migration tool, you might need infrastructure for these tools or your chosen tool.
+For example, you can use {dsbulk-migrator} to generate DDL statements to help you recreate your origin cluster's schema on your target cluster, and {cass-migrator} is used for data validation after migrating data with {sstable-sideloader}.
++
+{company} recommends that you start with at least one VM that meets the following minimum specifications:
++
+* Ubuntu Linux 20.04 or 22.04, Red Hat Family Linux 7 or newer
+* 16 vCPUs
+* 64 GB RAM
+* 200 GB to 2 TB of storage
++
+If you plan to use {dsbulk-migrator} to unload and load multiple terabytes of data from the origin cluster to the target cluster, consider allocating additional space for data that needs to be staged between unloading and loading.
+* Equivalent to AWS **m5.4xlarge**, GCP **e2-standard-16**, or Azure **D16 v5**
+
++
+--
+Whether you need additional machines depends on the total amount of data you need to migrate.
+All machines must meet the minimum specifications.
+
+For example, if you have 20 TBs of existing data to migrate, you could use 4 VMs to speed up the migration.
+Then, you would run {dsbulk-migrator} or {cass-migrator} in parallel on each VM with each one responsible for migrating specific tables or a portion of the data, such as 25% or 5 TB.
+
+If you have one especially large table, such as 75% of the total data in one table, you can use multiple VMs to migrate that one table.
+For example, if you have 4 VMs, you can use three VMs in parallel for the large table by splitting the table's full token range into three groups.
+Then, each VM migrates one group of tokens, and you use the fourth VM to migrate the remaining smaller portion of the data.
+
+[IMPORTANT]
+====
+Make sure that your origin and target clusters can handle high traffic from your chosen data migration tool in addition to the live traffic from your application.
+
+Test migrations in a lower environment before you proceed with production migrations.
+
+If you need assistance with your migration, contact {support-url}[{company} Support].
+====
+--
+
+[#connectivity-requirements]
+== Connectivity requirements
+
+[IMPORTANT]
+====
+Don't allow external machines to directly access the {product-proxy} machines.
+The jumphost is the only machine that should have direct access to the {product-proxy} machines.
 ====
 
-// TODO: investigate how to "leverage the parallelism of {cass-migrator} to run the migration process across all 4 machines."
-
-=== Connectivity
-
-The {product-proxy} machines must be reachable by:
-
-* The client application instances, on port 9042
-* The monitoring machine on port 14001
+Core infrastructure ports::
+The {product-proxy} machines must be reachable by the following:
++
+* The client application instances on port 9042
 * The jumphost on port 22
+* The machine running the monitoring stack (the jumphost or a separate machine) on port 14001
 
+Clusters::
+The {product-proxy} machines must be able to connect to the origin and target cluster nodes.
++
+For self-managed clusters like {cass-short} and {dse-short}, {product-proxy} must be able to connect on the {cass-short} Native Protocol port, which is typically 9042.
++
+For {astra}, you must ensure that outbound connectivity is possible over the {astra} endpoint indicated in the xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb}].
+Connections over xref:astra-db-serverless:administration:manage-private-endpoints.adoc[private endpoints] are supported.
+
+Jumphost and monitoring::
+The following connectivity requirements apply to the jumphost and monitoring machine.
+If you use separate machines for these functions, these requirements apply to both machines.
++
+* Connect to {product-proxy} instances on port 14001 for metrics collection.
+* Connect to {product-proxy} instances on port 22 for {product-automation}, log inspection, and troubleshooting.
+* Allow incoming, external SSH connections.
++
 [IMPORTANT]
 ====
-The {product-proxy} machines should not be directly accessible by external machines.
-The only direct access to these machines should be from the jumphost.
+{company} strongly recommends that you limit external access to specific IP ranges.
+For example, limit access to the IP ranges of your corporate networks or trusted VPNs.
 ====
+* Expose the Grafana UI on port 3000.
 
-The {product-proxy} machines must be able to connect to the origin and target cluster nodes:
-
-* For self-managed clusters ({cass} or {dse-short}), connectivity is needed to the {cass-short} native protocol port (typically 9042).
-* For {astra-db}, you will need to ensure outbound connectivity to the {astra} endpoint indicated in the xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb}].
-Connectivity over Private Link is also supported.
-
-The connectivity requirements for the jumphost / monitoring machine are:
-
-* Connecting to the {product-proxy} instances: on port 14001 for metrics collection, and on port 22 to run the Ansible automation and for log inspection or troubleshooting.
-* Allowing incoming ssh connections from outside, potentially from allowed IP ranges only.
-* Exposing the Grafana UI on port 3000.
-
-[IMPORTANT]
-====
-It is strongly recommended **to restrict external access** to this machine to specific IP ranges (for example, the IP range of your corporate networks or trusted VPNs).
-====
-
-The {product-proxy} and monitoring machines must be able to connect externally, as the automation will download:
-
-* Various software packages (Docker, Prometheus, Grafana).
-* {product-proxy} image from DockerHub repo.
++
+External connections are required so that {product-automation} can download the necessary software packages (Docker, Prometheus, Grafana) and the {product-proxy} image from DockerHub.
 
 === Connect to {product-proxy} infrastructure from an external machine
 
 To connect to the jumphost from an external machine, ensure that its IP address belongs to a permitted IP range.
-If you are connecting through a VPN that only intercepts connections to selected destinations, you may have to add a route from your VPN IP gateway to the public IP of the jumphost.
+If you are connecting through a VPN that only intercepts connections to selected destinations, you might need to add a route from your VPN IP gateway to the public IP of the jumphost.
 
-To simplify connecting to the jumphost and, through it, to the {product-proxy} instances, you can create a custom SSH config file.
-You can use this template and replace all the placeholders in angle brackets with the appropriate values for your deployment, adding more entries if you have more than three proxy instances.
-Save this file, for example calling it `zdm_ssh_config`.
+A custom SSH config file can simplify the process of connecting to the jumphost and, by extension, the {product-proxy} instances.
 
-[source,bash]
+To use the following template, replace all placeholders with the appropriate values for your deployment.
+Add more entries if you have more than three proxy instances.
+Save the file with any name you prefer, such as `zdm_ssh_config`.
+
+.zdm_ssh_config
+[source,config,subs="+quotes"]
 ----
-Host <jumphost_private_IP_address> jumphost
-  Hostname <jumphost_public_IP_address>
+Host **JUMPHOST_PRIVATE_IP_ADDRESS** jumphost
+  Hostname **JUMPHOST_PUBLIC_IP_ADDRESS**
   Port 22
 
-Host <private_IP_address_of_proxy_instance_0> zdm-proxy-0
-  Hostname <private_IP_address_of_proxy_instance_0>
+Host **PRIVATE_IP_ADDRESS_OF_PROXY_INSTANCE_0** zdm-proxy-0
+  Hostname **PRIVATE_IP_ADDRESS_OF_PROXY_INSTANCE_0**
   ProxyJump jumphost
 
-Host <private_IP_address_of_proxy_instance_1> zdm-proxy-1
-  Hostname <private_IP_address_of_proxy_instance_1>
+Host **PRIVATE_IP_ADDRESS_OF_PROXY_INSTANCE_1** zdm-proxy-1
+  Hostname **PRIVATE_IP_ADDRESS_OF_PROXY_INSTANCE_1**
   ProxyJump jumphost
 
-Host <private_IP_address_of_proxy_instance_2> zdm-proxy-2
-  Hostname <private_IP_address_of_proxy_instance_2>
+Host **PRIVATE_IP_ADDRESS_OF_PROXY_INSTANCE_2** zdm-proxy-2
+  Hostname **PRIVATE_IP_ADDRESS_OF_PROXY_INSTANCE_2**
   ProxyJump jumphost
 
 Host *
-    User <linux user>
-    IdentityFile < Filename (with absolute path) of the locally generated key pair for the ZDM infrastructure. Example ~/.ssh/zdm-key-XXX >
+    User **LINUX_USER**
+    IdentityFile **ABSOLUTE PATH WITH FILENAME FOR LOCALLY GENERATED KEY PAIR LIKE ~/.ssh/zdm-key-XXX**
     IdentitiesOnly yes
     StrictHostKeyChecking no
     GlobalKnownHostsFile /dev/null
     UserKnownHostsFile /dev/null
 ----
 
-With this file, you can connect to your jumphost simply with:
+Then, use the SSH config file to connect to your jumphost:
 
 [source,bash]
 ----
 ssh -F zdm_ssh_config jumphost
 ----
 
-Likewise, connecting to any {product-proxy} instance is as easy as this (replacing the instance number as desired):
+Connect to a {product-proxy} instance by specifying the corresponding instance number in your config file:
 
 [source,bash]
 ----

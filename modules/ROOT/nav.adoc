@@ -8,7 +8,7 @@
 
 .{product}
 * xref:ROOT:introduction.adoc[]
-* Plan your migration
+* Plan and prepare
 ** xref:ROOT:feasibility-checklists.adoc[]
 ** xref:ROOT:deployment-infrastructure.adoc[]
 ** xref:ROOT:create-target.adoc[]
