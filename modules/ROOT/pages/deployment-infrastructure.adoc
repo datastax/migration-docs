@@ -169,31 +169,32 @@ If you are connecting through a VPN that only intercepts connections to selected
 
 A custom SSH config file can simplify the process of connecting to the jumphost and, by extension, the {product-proxy} instances.
 
-To use the following template, replace all placeholders (in angle brackets) with the appropriate values for your deployment, and add more entries if you have more than three proxy instances.
+To use the following template, replace all placeholders with the appropriate values for your deployment.
+Add more entries if you have more than three proxy instances.
 Save the file with any name you prefer, such as `zdm_ssh_config`.
 
 .zdm_ssh_config
-[source,config]
+[source,config,subs="+quotes"]
 ----
-Host <jumphost_private_IP_address> jumphost
-  Hostname <jumphost_public_IP_address>
+Host **JUMPHOST_PRIVATE_IP_ADDRESS** jumphost
+  Hostname **JUMPHOST_PUBLIC_IP_ADDRESS**
   Port 22
 
-Host <private_IP_address_of_proxy_instance_0> zdm-proxy-0
-  Hostname <private_IP_address_of_proxy_instance_0>
+Host **PRIVATE_IP_ADDRESS_OF_PROXY_INSTANCE_0** zdm-proxy-0
+  Hostname **PRIVATE_IP_ADDRESS_OF_PROXY_INSTANCE_0**
   ProxyJump jumphost
 
-Host <private_IP_address_of_proxy_instance_1> zdm-proxy-1
-  Hostname <private_IP_address_of_proxy_instance_1>
+Host **PRIVATE_IP_ADDRESS_OF_PROXY_INSTANCE_1** zdm-proxy-1
+  Hostname **PRIVATE_IP_ADDRESS_OF_PROXY_INSTANCE_1**
   ProxyJump jumphost
 
-Host <private_IP_address_of_proxy_instance_2> zdm-proxy-2
-  Hostname <private_IP_address_of_proxy_instance_2>
+Host **PRIVATE_IP_ADDRESS_OF_PROXY_INSTANCE_2** zdm-proxy-2
+  Hostname **PRIVATE_IP_ADDRESS_OF_PROXY_INSTANCE_2**
   ProxyJump jumphost
 
 Host *
-    User <linux user>
-    IdentityFile <Filename and absolute path to the locally generated key pair for the ZDM infrastructure, such as ~/.ssh/zdm-key-XXX>
+    User **LINUX_USER**
+    IdentityFile **ABSOLUTE PATH WITH FILENAME FOR LOCALLY GENERATED KEY PAIR LIKE ~/.ssh/zdm-key-XXX**
     IdentitiesOnly yes
     StrictHostKeyChecking no
     GlobalKnownHostsFile /dev/null

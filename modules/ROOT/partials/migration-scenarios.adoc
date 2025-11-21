@@ -3,7 +3,7 @@ Supported migration paths include cross-platform migrations and same-platform up
 
 {company} tests {product-proxy} compatibility with {astra}, {dse-short}, {hcd-short}, and open-source {cass-short}.
 Support for other {cass-short}-based databases is possible if the origin and target clusters share a common xref:ROOT:feasibility-checklists.adoc[protocol version].
-However, {company} neither tests all data store providers nor guarantees support for any specific data source aside from the sources and versions listed here.
+However, {company} doesn't test all data store providers, and {company} doesn't guarantee full support for any specific data store aside from the platforms and versions listed here.
 
 Compatible origin clusters::
 Migrate from one of the following:
