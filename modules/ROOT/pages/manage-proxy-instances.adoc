@@ -211,7 +211,7 @@ If `true`, the credentials from the client application were used to connect to t
 +
 This deprecated variable is no longer functional.
 Instead, the expected credentials are based on the authentication requirements of the origin and target clusters.
-For more information, see xref:ROOT:connect-clients-to-proxy.adoc#_client_application_credentials[Client application credentials].
+For more information, see xref:ROOT:connect-clients-to-proxy.adoc#connect-applications-to-zdm-proxy[Connect applications to {product-proxy}].
 
 == Change immutable configuration variables
 

@@ -5,168 +5,155 @@ This means that your client applications connect to {product-proxy} in the same 
 
 You can communicate with {product-proxy} using the same xref:cql:ROOT:index.adoc[CQL] statements used in your existing client applications.
 It understands the same messaging protocols used by {cass-short}, {dse-short}, {hcd-short}, and {astra-db}.
+As a result, most client applications cannot distinguish between connections to {product-proxy} and direct connections to a {cass-short}-based cluster.
 
-As a result, most client applications won't be able to distinguish between connections to {product-proxy} and direct connections to a {cass-short}-based cluster.
+This page explains how to connect client applications to a {cass-short}-based cluster using {cass-short} drivers, and then describes the how you need to modify your client applications to connect to {product-proxy}.
+It also explains how to connect `cqlsh` to {product-proxy}, which is often used in conjunction with {cass-short} drivers and during the migration process for certain validation tasks.
 
-This page explains how to connect your client applications to a {cass-short}-based cluster, compares this process to connections to {product-proxy}, provides realistic examples of client applications that work effectively with {product-proxy}, and, finally, explains how to connect `cqlsh` to {product-proxy}.
-You can use the provided sample client applications, in addition to your own, as a quick way to validate that the deployed {product-proxy} is reading and writing data from the expected origin and target clusters.
+== Connect applications to {cass-short} clusters
 
-== {company}-compatible drivers
-
-You can use {cass-short} drivers to connect your client applications to {cass-short}, {dse-short}, {hcd-short}, and {astra-db}.
-With drivers, you can allow execute queries, iterate through results, access metadata about your cluster, and perform other related activities.
-
+A common way to connect client applications to {cass-short} clusters is with {cass-short} drivers.
+These drivers can connect to {cass-short}-based clusters, execute queries, iterate through results, access metadata about the clusters, and perform other related activities.
 For available drivers and driver documentation, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
 
-[[_connecting_company_drivers_to_cassandra]]
-== Connect drivers to {cass-short}
+The following pseudocode provides simplified examples of the way a {cass-short} driver interacts with {cass-short} clusters.
+Specifically, these examples are for {astra-db} and self-managed {dse-short}, {hcd-short}, and open-source {cass-short} clusters.
 
-Perhaps the simplest way to demonstrate how to use the drivers to connect your client application to a {cass-short} cluster is an example in the form of some sample code.
-But there's a bit of a problem: the drivers are independent projects implemented natively in the relevant programming language.
+This pseudocode is for illustration purposes only; the exact syntax depends on your driver language and version.
+For specific instructions and examples, see xref:datastax-drivers:connecting:connect-cloud.adoc[].
 
-This approach offers the benefit of allowing each project to provide an API that makes the most sense for the language or platform on which it's implemented.
-Unfortunately it also means there is some variation between languages.
-With that in mind, the following pseudocode provides reasonable guidance for understanding how a client application might use one of the drivers.
-
-[source]
+[tabs]
+======
+Self-managed {cass-short} clusters::
++
+--
+[source,pseudocode]
 ----
-// Create an object to represent a Cassandra cluster listening for connections at
-// 10.20.30.40 on the default port (9042).  The username and password are necessary
-// only if your Cassandra cluster has authentication enabled.
-Cluster my_cluster = Cluster.build_new_cluster(contact_points = "10.20.30.40", username="myusername", password="mypassword")
+// Create an object to represent a Cassandra cluster
+// This example listens for connections at 10.20.30.40 on the default port 9042
+// Username and password are required only if authentication is enabled on the cluster
+Cluster my_cluster = Cluster.build_new_cluster(contact_points = "10.20.30.40", username="cluster_username", password="cluster_password")
 
-// Connect our Cluster object to our Cassandra cluster, returning a Session
+// Connect the Cluster object to the Cassandra cluster, returning a Session
 Session my_session = my_cluster.connect()
 
 // Execute a query, returning a ResultSet
 ResultSet my_result_set = my_session.execute("select release_version from system.local")
 
-// Retrieve the "release_version" column from the first row of our result set
+// Retrieve a specific column from the first row of the result set
 String release_version = my_result_set.first_row().get_column("release_version")
 
-// Close our Session and Cluster
+// Close the Session and Cluster
 my_session.close()
 my_cluster.close()
 
-// Display the release version to the user
+// Print the data retrieved from the result set
 print(release_version)
 ----
+--
 
-As noted, you'll see some differences in individual drivers:
+{astra-db}::
++
+--
+[source,text]
+----
+// Create an object to represent a Cassandra cluster (an Astra database)
+// Don't specify contact points when connecting to Astra DB
+// All connection information is implicitly passed in the SCB
+Cluster my_cluster = Cluster.build_new_cluster(username="token", password="AstraCS:...", secure_connect_bundle="/path/to/scb.zip")
 
-* New versions of the Java driver no longer define a Cluster object.
-Client programs create a Session directly.
-* The Node.js driver has no notion of a Cluster or Session at all, instead using a Client object to represent this functionality.
+// For legacy applications that must use client ID and secret authentication:
+// Cluster my_cluster = Cluster.build_new_cluster(username="my_AstraDB_client_ID", password="my_AstraDB_client_secret", secure_connect_bundle="/path/to/scb.zip")
 
-The details may vary but you'll still see the same general pattern described in the pseudocode in each of the drivers.
+// Connect the Cluster object to the database, returning a Session
+Session my_session = my_cluster.connect()
 
-This topic does not describe details or APIs for any of the drivers mentioned above.
-All the drivers come with a complete set of documentation for exactly this task.
-For driver documentation, see xref:datastax-drivers:ROOT:index.adoc[].
+// Execute a query, returning a ResultSet
+ResultSet my_result_set = my_session.execute("select release_version from system.local")
 
+// Retrieve a specific column from the first row of the result set
+String release_version = my_result_set.first_row().get_column("release_version")
+
+// Close the Session and Cluster
+my_session.close()
+my_cluster.close()
+
+// Print the data retrieved from the result set
+print(release_version)
+----
+--
+======
+
+Review your client application's code to understand how it connects to your existing {cass-short}-based clusters.
+Then, proceed to <<connect-applications-to-zdm-proxy>> to learn how to modify that code to connect to {product-proxy} instead.
+
+[#connect-applications-to-zdm-proxy]
 == Connect applications to {product-proxy}
 
-We mentioned above that connecting to a {product-proxy} should be almost indistinguishable from connecting directly to your {cass-short} cluster.
-This design decision means there isn't much to say here; everything we discussed in the section above also applies when connecting your driver to {product-proxy}.
-There are a few extra considerations to keep in mind, though, when using the proxy.
+By design, {product-proxy} should be transparent to your client application.
+This means that connecting your client application to {product-proxy} should be seamless and nearly identical to the direct cluster connection.
+However, there are some considerations and adjustments you might need to make for {product-proxy}.
 
-[[_client_application_credentials]]
-=== Client application credentials
+=== Understand how {product-proxy} handles certain client behaviors
 
-Client applications provide cluster credentials to authenticate requests.
+If you haven't done so already, thoroughly review the xref:ROOT:feasibility-checklists.adoc[compatibility requirements for {product-proxy}].
+This ensures that your client application's code is compatible with {product-proxy}, and you understand how certain operations and behaviors are handled by {product-proxy}.
+For example:
 
-Client applications connect to {product-proxy} in the same way that they connect to a cluster: by providing a set of credentials.
+* xref:ROOT:feasibility-checklists.adoc#driver-retry-policy-and-query-idempotence[Driver retry policy and query idempotence]
+* xref:ROOT:feasibility-checklists.adoc#client-compression[Client compression]
+* xref:ROOT:feasibility-checklists.adoc#zdm-proxy-ignores-token-aware-routing[Token-aware routing]
 
-Clients have no awareness of the {product-proxy} architecture or the existence of the two separate clusters (the origin and target).
-Therefore, a client only provides a single set of credentials when connecting to {product-proxy}, the same as it would when connecting directly to a cluster.
+=== Set connection points
 
-{product-proxy} uses the credentials provided by the client to forward requests to the cluster that corresponds with those credentials, which is usually the target cluster.
-If necessary, {product-proxy} uses the credentials defined in `xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[zdm_proxy_cluster_config.yml]` to forward requests to the other cluster, which is usually the origin cluster.
+Connect your client application to {product-proxy} instead of directly to the origin cluster by modifying the client's connection points.
+
+Typically, this involves setting the client's connection points to the IP addresses or hostnames of the local {product-proxy} instances.
+The specific connection points for your migration depend on where and how you configured your xref:ROOT:deployment-infrastructure.adoc[{product-proxy} infrastructure].
+
+[#provide-authentication-credentials]
+=== Provide authentication credentials
+
+Make sure {product-proxy} receives the correct authentication credentials from your client application.
+You might need to change the credentials set in your client application depending on your origin and target cluster configuration.
+
+With or without {product-proxy}, client applications must provide cluster credentials to authenticate requests.
+When a client connects directly to a cluster, it provides the authentication credentials for that cluster.
+When a client connects to {product-proxy}, the client still provides only one set of credentials because {product-proxy} is designed to be invisible to the client application.
+
+{product-proxy} uses the credentials provided by the client to forward requests to one of the clusters.
+To forward requests to the other cluster, {product-proxy} uses the credentials defined in `xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[zdm_proxy_cluster_config.yml]`.
 
 .Credential usage by {product-proxy} when authentication is required for both clusters
 image::zdm-proxy-credential-usage.png[{product-proxy} credentials usage when authentication is required for both clusters, 550]
 
-==== Determine which credentials to provide
-
-The credentials your client must provide depend on the authentication requirements of the origin and target clusters:
+The credentials that {product-proxy} expects to receive from the client depend on the authentication requirements of the origin and target clusters.
+Make sure the client passes the correct credentials for your cluster configuration:
 
 * *Authentication required for both clusters*: Your client application must supply credentials for the target cluster.
 * *Authentication required for target cluster only*: Your client application must supply credentials for the target cluster.
 * *Authentication required for origin cluster only*: Your client application must supply credentials for the origin cluster.
 * *No authentication required for either cluster*: Your client application doesn't need to supply any cluster credentials.
 
-==== Expected authentication credentials for self-managed clusters
+After you determine which cluster's credentials are required, set the appropriate credentials in your client application:
 
-For a self-managed clusters that require authentication, your client application must provide valid `username` and `password` values to access the cluster.
-
-For information about self-managed cluster credentials in your {product-proxy} configuration, see xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[Cluster and core configuration].
-
-[#expected-authentication-credentials-for-astra-db]
-==== Expected authentication credentials for {astra-db}
-
-For {astra-db} databases, your client application can provide either application token credentials or a {scb}.
-
-[tabs]
-======
-Application token::
+* **Self-managed clusters**: Provide a valid `username` and `password` to access the cluster.
 +
---
-With token-based authentication, the {product-proxy} automatically calls the {astra} DevOps API to download the {scb-short}.
-The provided application token is used to authenticate this request.
+Make sure the user has the appropriate permissions to perform the operations requested by the client application during the migration.
 
-To use token-based authentication, xref:astra-db-serverless:administration:manage-application-tokens.adoc[generate an application token] with the *Organization Administrator* role.
-This role is recommended to avoid permissions-related request failures during the migration.
-After the migration, you can configure your client applications to use tokens with reduced permissions.
-
-The token has three keys: `clientId`, `secret`, and `token`.
-Using these keys, you must specify one of the following sets of credentials in your {product-proxy} configuration:
-
-* Token-only authentication (Recommended):
-+
-** Set `username` to the literal string `token`.
-** Set `password` to the actual application token value (`AstraCS:...`).
-
-* Legacy authentication for older applications and drivers:
-+
-** Set `username` to the `clientId` value generated with the token.
-** Set `password` to the `secret` value generated with the token.
---
-
-{scb-short}::
-+
---
-To use {scb-short} authentication, xref:astra-db-serverless:databases:secure-connect-bundle.adoc[download your database's {scb-short}], and then provide the path to the {scb-short} zip file in your {product-proxy} configuration.
---
-======
-
-For information about setting {astra-db} credentials in your {product-proxy} configuration, see xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[Cluster and core configuration].
-
-
-. xref:astra-db-serverless:administration:manage-application-tokens.adoc[Generate an application token] with the *Organization Administrator* role.
-
-
-. Download your database's xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb-short}].
+* **{astra-db}**: xref:astra-db-serverless:administration:manage-application-tokens.adoc[Generate an application token] with a role that has sufficient permissions to perform the operations requested by the client application during the migration.
+Then, in your client application, set the `username` to the literal string `token`, and set the `password` to the actual application token value (`AstraCS:...`).
 +
 [IMPORTANT]
 ====
-The {scb-short} contains sensitive information that establishes a connection to your database, including key pairs and certificates.
-Treat it as you would any other sensitive values, such as passwords or tokens.
+_Don't_ provide a xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb}] when connecting your client application to {product-proxy}.
+
+If you include the {scb-short}, the driver ignores the {product-proxy} connection points and connects exclusively to your {astra-db} database instead of {product-proxy}.
 ====
++
+For connections to early {astra} databases with long-lived tokens created prior to the unified `token` approach, you can set the `username` to the token's `clientId` and the `password` to the token's `secret`.
 
-=== Disable client-side compression with {product-proxy}
-
-Client applications must not enable client-side compression when connecting through {product-proxy}, as this is not currently supported.
-This is disabled by default in all drivers, but if it was enabled in your client application configuration, it will have to be temporarily disabled when connecting to {product-proxy}.
-
-=== {product-proxy} ignores token-aware routing
-
-Token-aware routing isn't enforced when connecting through {product-proxy} because these instances don't hold actual token ranges in the same way as database nodes.
-Instead, each {product-proxy} instance has a unique, non-overlapping set of synthetic tokens that simulate token ownership and enable balanced load distribution across the instances.
-
-Upon receiving a request, a {product-proxy} instance routes the request to appropriate origin and target database nodes, independent of token ownership.
-
-If your clients have token-aware routing enabled, you don't need to disable this behavior while using {product-proxy}.
-Clients can continue to operate with token-aware routing enabled without negative impacts to functionality or performance.
+For more information about cluster credentials for {product-proxy}, see xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[Cluster and core configuration].
 
 == Sample client applications
 
@@ -184,25 +171,24 @@ The following sample client applications demonstrate how to use the Java driver 
 
 See your driver's documentation for code samples that are specific to your chosen driver, including cluster connection examples and statement execution examples.
 
-=== {product-demo}
+You can use the provided sample client applications, in addition to your own client applications, to validate that your {product-proxy} deployment is orchestrating read and write requests as expected between the origin cluster, target cluster, and your client applications.
 
+{product-demo}::
 https://github.com/alicel/zdm-demo-client/[{product-demo}] is a minimal Java web application which provides a simple, stripped-down example of an application built to work with {product-proxy}.
 After updating connection information you can compile and run the application locally and interact with it using HTTP clients such as `curl` or `wget`.
-
++
 You can find the details of building and running {product-demo} in the https://github.com/alicel/zdm-demo-client/blob/master/README.md[README].
 
 [[_themis_client]]
-=== Themis client
-
+Themis client::
 https://github.com/absurdfarce/themis[Themis] is a Java command-line client application that allows you to write randomly generated data directly to the origin cluster, directly to the target cluster, or indirectly to both clusters through {product-proxy}.
-
 Then, you can use the client application to query the data and confirm that {product-proxy} is reading and writing data from the expected sources.
-
++
 Configuration details for the clusters and {product-proxy} are defined in a YAML file.
 For more information, see the https://github.com/absurdfarce/themis/blob/main/README.md[Themis README].
-
-In addition to any utility as a validation tool, Themis also serves as an example of a larger client application which uses the Java driver to connect to a {product-proxy} -- as well as directly to {cass-short} clusters or {astra-db} -- and perform operations.
-The configuration logic as well as the cluster and session management code have been cleanly separated into distinct packages to make them easy to understand.
++
+In addition to being a validation tool, Themis also provides an example of a larger client application that uses the Java driver to connect to {product-proxy}, or directly to a {cass-short} cluster, and perform operations.
+The configuration logic, as well as the cluster and session management code, are separated into distinct packages to make them easy to understand.
 
 == Connect cqlsh to {product-proxy}
 
@@ -231,7 +217,7 @@ Replace the following:
 * `**ZDM_PROXY_IP**`: The IP address of your {product-proxy} instance.
 * `**PORT**`: The port on which the {product-proxy} instance listens for client connections.
 If you are using the default port, 9042, you can omit this argument.
-* `**USERNAME**` and `**PASSWORD**`: Valid xref:_client_application_credentials[client connection credentials], depending on the authentication requirements for your origin and target clusters:
+* `**USERNAME**` and `**PASSWORD**`: Valid cluster authentication credentials, depending on the authentication requirements for your origin and target clusters:
 +
 ** *Authentication required for both clusters*: Provide credentials for the target cluster.
 ** *Authentication required for target cluster only*: Provide credentials for the target cluster.
@@ -239,13 +225,19 @@ If you are using the default port, 9042, you can omit this argument.
 ** *No authentication required for either cluster*: Omit the `-u` and `-p` arguments.
 
 +
+--
+For a self-managed cluster, provide a valid `username` and `password` to access the cluster.
+
+For {astra-db}, the username is the literal string `token`, and the password is an xref:astra-db-serverless:administration:manage-application-tokens.adoc[{astra} application token], such as `-u token -p AstraCS:...`.
+
 [IMPORTANT]
 ====
-If you need to provide credentials for an {astra-db} database, don't use the {scb-short} when attempting to connect `cqlsh` to {product-proxy}.
-Instead, use the token-based authentication option explained in <<expected-authentication-credentials-for-astra-db>>.
+For {astra-db}, _don't_ use the {scb-short} to connect `cqlsh` to {product-proxy}.
+Only use an application token.
 
 If you include the {scb-short}, `cqlsh` ignores all other connection arguments and connects exclusively to your {astra-db} database instead of {product-proxy}.
 ====
+--
 
 == Next steps
 

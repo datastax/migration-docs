@@ -157,6 +157,7 @@ Most drivers treat all statements as non-idempotent by default, and they don't a
 This means that you must explicitly mark statements as idempotent to trigger retries after connection errors.
 For more information, see xref:datastax-drivers:developing:query-idempotence.adoc[] and xref:datastax-drivers:connecting:retry-policies.adoc[].
 
+[#client-compression]
 == Client compression
 
 The binary protocol used by {astra}, {dse-short}, {hcd-short}, and open-source {cass-short} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
@@ -167,6 +168,17 @@ The compression algorithm configured in your {company}-compatible driver must ma
 
 This isn't related to storage compression, which you can configure on specific tables with the `compression` table property.
 Storage/table compression doesn't affect the client application or {product-proxy} in any way.
+
+[#zdm-proxy-ignores-token-aware-routing]
+== {product-proxy} ignores token-aware routing
+
+Token-aware routing isn't enforced when connecting through {product-proxy} because these instances don't hold actual token ranges in the same way as database nodes.
+Instead, each {product-proxy} instance has a unique, non-overlapping set of synthetic tokens that simulate token ownership and enable balanced load distribution across the instances.
+
+Upon receiving a request, a {product-proxy} instance routes the request to appropriate origin and target database nodes, independent of token ownership.
+
+If your clients have token-aware routing enabled, you don't need to disable this behavior while using {product-proxy}.
+Clients can continue to operate with token-aware routing enabled without negative impacts to functionality or performance.
 
 == Authenticator and authorizer configuration
 

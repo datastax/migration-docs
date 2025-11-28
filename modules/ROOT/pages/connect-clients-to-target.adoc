@@ -20,7 +20,8 @@ Be sure that you have thoroughly xref:ROOT:migrate-and-validate-data.adoc[valida
 
 == Connect a driver to a generic CQL cluster
 
-If your origin and target clusters are both generic CQL clusters ({cass-short}, {dse-short}, or {hcd-short}), then the driver connection strings can be similar, requiring only minor changes to connect to the target cluster.
+If your origin and target clusters are both generic CQL clusters, such as {cass-short}, {dse-short}, or {hcd-short}, then the driver connection strings can be extremely similar.
+It's possible that your code requires only minor changes to connect to the target cluster.
 
 . At minimum, update your driver configuration to use the appropriate contact points for your target cluster.
 +
@@ -54,7 +55,7 @@ You must specify one of the following sets of credentials in your driver configu
 *** Set `username` to the literal string `token`.
 *** Set `password` to the actual application token value (`AstraCS:...`).
 +
-** Legacy authentication for earlier drivers:
+** Legacy authentication (Earlier drivers only):
 +
 *** Set `username` to the `clientId` value generated with the token.
 *** Set `password` to the `secret` value generated with the token.
@@ -112,17 +113,83 @@ a| Required.
 * Client ID and secret authentication (Legacy): Set to the `secret` generated with your token.
 |===
 
+.Driver pseudocode comparison
+[%collapsible]
+====
+The two pseudocode examples provide a simplified comparison of the way a {cass-short} driver interacts with {astra-db} and self-managed {cass-short} clusters.
+This pseudocode is for illustration purposes only; the exact syntax depends on your driver language and version.
+
+The first pseudocode example illustrates the connection to a self-managed {cass-short} cluster.
+This should be somewhat familiar to you based on your current {cass-short} driver.
+
+[source,pseudocode]
+----
+// Create an object to represent a Cassandra cluster
+// This example listens for connections at 10.20.30.40 on the default port 9042
+// Username and password are required only if authentication is enabled on the cluster
+Cluster my_cluster = Cluster.build_new_cluster(contact_points = "10.20.30.40", username="cluster_username", password="cluster_password")
+
+// Connect the Cluster object to the Cassandra cluster, returning a Session
+Session my_session = my_cluster.connect()
+
+// Execute a query, returning a ResultSet
+ResultSet my_result_set = my_session.execute("select release_version from system.local")
+
+// Retrieve a specific column from the first row of the result set
+String release_version = my_result_set.first_row().get_column("release_version")
+
+// Close the Session and Cluster
+my_session.close()
+my_cluster.close()
+
+// Print the data retrieved from the result set
+print(release_version)
+----
+
+The second example modifies the same pseudocode to connect to {astra-db}.
+The primary difference lies in the initial connection string.
+After that point, the interaction through the root object (`Cluster`/`Session`) is typical.
+
+[source,text]
+----
+// Create an object to represent a Cassandra cluster (an Astra database)
+// Don't specify contact points when connecting to Astra DB
+// All connection information is implicitly passed in the SCB
+Cluster my_cluster = Cluster.build_new_cluster(username="token", password="AstraCS:...", secure_connect_bundle="/path/to/scb.zip")
+
+// For legacy applications that must use client ID and secret authentication:
+// Cluster my_cluster = Cluster.build_new_cluster(username="my_AstraDB_client_ID", password="my_AstraDB_client_secret", secure_connect_bundle="/path/to/scb.zip")
+
+// Connect the Cluster object to the database, returning a Session
+Session my_session = my_cluster.connect()
+
+// Execute a query, returning a ResultSet
+ResultSet my_result_set = my_session.execute("select release_version from system.local")
+
+// Retrieve a specific column from the first row of the result set
+String release_version = my_result_set.first_row().get_column("release_version")
+
+// Close the Session and Cluster
+my_session.close()
+my_cluster.close()
+
+// Print the data retrieved from the result set
+print(release_version)
+----
+====
+
 === Verify driver compatibility and update connection strings
 
 Verify that your driver version is compatible with {astra-db} and the features that you want to use in {astra-db}, such as the vector data type.
 For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
 
-If your client application uses an earlier driver version without built-in {scb-short} support, {company} strongly recommends upgrading to a compatible driver to simplify configuration and get the latest features and bug fixes.
-If you prefer to make this change after the migration, or you must support a legacy application that relies on an earlier driver, you can connect to {astra-db} with https://github.com/datastax/cql-proxy[CQL Proxy], or by extracting the {scb-short} archive and using the individual files to enable mTLS in your driver's configuration.
+If your driver version is fully compatible with {astra-db}, then it has built-in support for the {astra-db} {scb-short}.
+The changes required to connect your application to {astra-db} are minimal.
 
-If your driver has built-in support for the {astra-db} {scb-short}, the changes to enable your application to connect to {astra-db} are minimal.
-The following example demonstrates an {astra-db} connection through the Python driver using an {scb-short} and application token.
-For more information and examples, see <<compare-connection-parameters>> and xref:datastax-drivers:connecting:connect-cloud.adoc[].
+If your client application uses an earlier driver version without built-in {scb-short} support, {company} strongly recommends upgrading to a compatible driver to simplify configuration and get the latest features and bug fixes.
+If you prefer to make this change after the migration, or you must support a legacy application that relies on an earlier driver, you can connect to {astra-db} with https://github.com/datastax/cql-proxy[CQL Proxy], or you must extract the {scb-short} archive and provide the individual files to enable mTLS in your driver's configuration.
+
+The following example demonstrates how the {cass-short} Python driver connects to {astra-db} using an application token and {scb-short}:
 
 [source,python]
 ----
@@ -131,44 +198,20 @@ from cassandra.cluster import Cluster
 from cassandra.auth import PlainTextAuthProvider
 import json
 
+# Provide the path to the SCB
 cloud_config= {
         'secure_connect_bundle': '/path/to/scb.zip'
         }
+
+# The username is 'token' and the password is the application token value
 auth_provider = PlainTextAuthProvider("token", os.environ["APPLICATION_TOKEN"])
+
+# Create the Cluster and Session objects with Astra credentials
 cluster = Cluster(cloud=cloud_config, auth_provider=auth_provider)
 session = cluster.connect()
 ----
 
-.Driver pseudocode to connect to {astra-db}
-[%collapsible]
-====
-The following pseudocode provides guidance on how you might change your driver's code to connect directly to {astra-db}.
-This is for illustration purposes only; the exact syntax depends on your driver and programming language.
-
-[source,text]
-----
-// Create an object to represent a Cassandra cluster
-// Note: there is no need to specify contact points when connecting to Astra DB.
-// All connection information is implicitly passed in the SCB
-Cluster my_cluster = Cluster.build_new_cluster(username="my_AstraDB_client_ID", password="my_AstraDB_client_secret", secure_connect_bundle="/path/to/scb.zip")
-
-// Connect our Cluster object to our Cassandra cluster, returning a Session
-Session my_session = my_cluster.connect()
-
-// Execute a query, returning a ResultSet
-ResultSet my_result_set = my_session.execute("select release_version from system.local")
-
-// Retrieve the "release_version" column from the first row of our result set
-String release_version = my_result_set.first_row().get_column("release_version")
-
-// Close our Session and Cluster
-my_session.close()
-my_cluster.close()
-
-// Display the release version to the user
-print(release_version)
-----
-====
+For more information and examples of {astra-db} connections, see <<compare-connection-parameters>> and xref:datastax-drivers:connecting:connect-cloud.adoc[].
 
 === Other code changes for {astra-db}
 
