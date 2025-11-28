@@ -1,4 +1,133 @@
-= Leverage metrics provided by {product-proxy}
+= Monitor {product-proxy}
+
+
+
+[[_setting_up_the_monitoring_stack]]
+== Setting up the Monitoring stack
+
+{product-automation} enables you to easily set up a self-contained monitoring stack that is preconfigured to collect metrics from your {product-proxy} instances and display them in ready-to-use Grafana dashboards.
+
+The monitoring stack is deployed entirely on Docker.
+It includes the following components, all deployed as Docker containers:
+
+* Prometheus node exporter, which runs on each {product-proxy} host and makes OS- and host-level metrics available to Prometheus.
+* Prometheus server, to collect metrics from {product-proxy}, its Golang runtime, and the Prometheus node exporter.
+* Grafana, to visualize all these metrics in three preconfigured dashboards (see xref:ROOT:metrics.adoc[]).
+
+After running the playbook described here, you will have a fully configured monitoring stack connected to your {product-proxy} deployment.
+
+[NOTE]
+====
+There are no additional prerequisites or dependencies for this playbook to execute.
+If it is not already present, Docker will automatically be installed by the playbook on your chosen monitoring server.
+====
+
+=== Connect to the Ansible Control Host
+
+Make sure you are connected to the Ansible Control Host docker container.
+As above, you can do so from the jumphost machine by running:
+
+[source,bash]
+----
+docker exec -it zdm-ansible-container bash
+----
+
+You will see a prompt like:
+
+[source,bash]
+----
+ubuntu@52772568517c:~$
+----
+
+=== Configure the Grafana credentials
+
+Edit the file `zdm_monitoring_config.yml`, stored at `zdm-proxy-automation/ansible/vars`:
+
+* `grafana_admin_user`: leave unchanged (defaults to `admin`)
+* `grafana_admin_password`: set to the password of your choice
+
+=== Run the monitoring playbook
+
+Ensure that you are in `/home/ubuntu/zdm-proxy-automation/ansible` and then run the following command:
+
+[source,bash]
+----
+ansible-playbook deploy_zdm_monitoring.yml -i zdm_ansible_inventory
+----
+
+=== Check the Grafana dashboard
+
+In a browser, open \http://<jumphost_public_ip>:3000
+
+Login with:
+
+* *username*: admin
+* *password*: the password you configured
+
+[TIP]
+====
+Details about the metrics you can observe are available in xref:ROOT:metrics.adoc[].
+====
+
+[#call-the-liveliness-and-readiness-endpoints]
+== Call the `liveness` and `readiness` HTTP endpoints
+
+To confirm that the {product-proxy} instances are running, you can call the `liveness` and `readiness` HTTP endpoints for the {product-proxy} instances.
+
+{product-short} metrics provide `/health/liveness` and `/health/readiness` HTTP endpoints, which you can call to determine the state of the {product-proxy} instances.
+It's often fine to simply submit the `readiness` check to return the proxy's state.
+
+The format:
+
+[source,plaintext,subs="+quotes"]
+----
+http://**ZDM_PROXY_PRIVATE_IP**:**METRICS_PORT**/health/liveness
+http://**ZDM_PROXY_PRIVATE_IP**:**METRICS_PORT**/health/readiness
+----
+
+Readiness expanded GET format:
+
+[source,bash]
+----
+curl -G "http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:{{ metrics_port }}/health/readiness"
+----
+
+The default port for metrics collection is `14001`.
+You can override this port if you deploy {product-proxy} with `metrics_port` set to a non-default port.
+For more information, see <<ports>>.
+
+Readiness example:
+
+[source,bash]
+----
+curl -G "http://172.18.10.40:14001/health/readiness"
+----
+
+.Result
+[%collapsible]
+====
+[source,json]
+----
+{
+   "OriginStatus":{
+      "Addr":"<origin_node_addr>",
+      "CurrentFailureCount":0,
+      "FailureCountThreshold":1,
+      "Status":"UP"
+   },
+   "TargetStatus":{
+      "Addr":"<target_node_addr>",
+      "CurrentFailureCount":0,
+      "FailureCountThreshold":1,
+      "Status":"UP"
+   },
+   "Status":"UP"
+}
+----
+====
+
+
+
 
 This topic provides detailed information about the metrics captured by {product-proxy} and explains how to interpret the metrics. 
 
@@ -13,7 +142,7 @@ For this reason, we strongly encourage you to monitor {product-proxy}, either by
 
 {product-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format.
 
-{product-automation} can deploy Prometheus and Grafana, configuring them automatically, as explained xref:deploy-proxy-monitoring.adoc#_setting_up_the_monitoring_stack[here].
+<<_setting_up_the_monitoring_stack,{product-automation} can deploy and configure Prometheus and Grafana automatically>>.
 The Grafana dashboards are ready to go with metrics that are being scraped from the {product-proxy} instances.
 
 If you already have a Grafana deployment then you can import the dashboards from the two {product-short} dashboard files from this {product-automation-repo}/tree/main/grafana-dashboards[{product-automation} GitHub location].
@@ -134,3 +263,7 @@ Some examples of problem areas on these Go runtime metrics:
 The {product-short} monitoring stack also includes a system-level dashboard collected through the Prometheus Node Exporter.
 This dashboard contains hardware and OS-level metrics for the host on which the proxy runs.
 This can be useful to check the available resources and identify low-level bottlenecks or issues.
+
+== Next steps
+
+To continue Phase 1 of the migration, xref:ROOT:connect-clients-to-proxy.adoc[connect your client applications to {product-proxy}].

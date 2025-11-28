@@ -3,7 +3,7 @@
 {product-automation} uses Ansible to deploy and configure the {product-proxy} instances and the associated monitoring stack.
 Specifically, these configuration processes are defined in Ansible playbooks that you execute from the Ansible Control Host container.
 
-First, you must use {product-utility} to set up the Ansible Control Host container, and then you can xref:deploy-proxy-monitoring.adoc[use {product-automation} to deploy your {product-proxy} instances and the monitoring stack].
+First, you must use {product-utility} to set up the Ansible Control Host container, and then you can xref:deploy-proxy-monitoring.adoc[use {product-automation} to deploy your {product-proxy} instances] and the xref:ROOT:metrics.adoc[monitoring stack].
 After you complete both of these procedures, you will have an active and fully monitored {product-proxy} deployment.
 
 {product-utility} is a Golang (Go) executable program that runs anywhere.
@@ -235,4 +235,4 @@ image::zdm-go-utility-success3.png[Ansible Docker container success messages]
 
 == Next steps
 
-After you use {product-utility} to set up the Ansible Control Host container, you can xref:deploy-proxy-monitoring.adoc[use {product-automation} to deploy your {product-proxy} instances and the monitoring stack].
+After you use {product-utility} to set up the Ansible Control Host container, xref:deploy-proxy-monitoring.adoc[use {product-automation} to deploy your {product-proxy} instances].

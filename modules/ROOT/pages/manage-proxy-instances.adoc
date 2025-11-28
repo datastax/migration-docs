@@ -62,7 +62,7 @@ The playbook performs the following actions automatically:
 
 . {product-automation} stops one container gracefully, and then waits for it to shut down.
 . {product-automation} recreates the container, and then starts it.
-. {product-automation} calls the xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[readiness endpoint] to check the container's status:
+. {product-automation} calls the xref:ROOT:metrics.adoc#call-the-liveliness-and-readiness-endpoints[readiness endpoint] to check the container's status:
 +
 * If the status check fails, {product-automation} repeats the check up to six times at 5-second intervals.
 If all six attempts fail, {product-automation} interrupts the entire rolling restart process.
@@ -371,4 +371,3 @@ Additionally, if you need to restart {product-proxy} instances, and there is onl
 == See also
 
 * xref:ROOT:troubleshooting-tips.adoc[]
-* xref:deploy-proxy-monitoring.adoc#_indications_of_success_on_origin_and_target_clusters[Indications of success on origin and target clusters]
