@@ -1,9 +1,15 @@
 = Monitor {product-proxy}
 
+{product-proxy} can gather a large number of metrics that provide you with insight into its health and operations, communication with client applications and clusters, and request handling.
 
+This visibility is important to your migration.
+It builds confidence in the health of your deployment, and it helps you investigate errors or performance degradation.
 
-[[_setting_up_the_monitoring_stack]]
-== Setting up the Monitoring stack
+{company} strongly recommends that you use {product-automation} to deploy the {product-proxy} monitoring stack, or import the pre-built Grafana dashboards into your own monitoring infrastructure.
+
+Do this after you xref:ROOT:setup-ansible-playbooks.adoc[set up {product-automation}] and xref:ROOT:deploy-proxy-monitoring.adoc[deploy the {product-proxy} instances].
+
+== Deploy the monitoring stack
 
 {product-automation} enables you to easily set up a self-contained monitoring stack that is preconfigured to collect metrics from your {product-proxy} instances and display them in ready-to-use Grafana dashboards.
 
@@ -12,100 +18,133 @@ It includes the following components, all deployed as Docker containers:
 
 * Prometheus node exporter, which runs on each {product-proxy} host and makes OS- and host-level metrics available to Prometheus.
 * Prometheus server, to collect metrics from {product-proxy}, its Golang runtime, and the Prometheus node exporter.
-* Grafana, to visualize all these metrics in three preconfigured dashboards (see xref:ROOT:metrics.adoc[]).
+* Grafana, to visualize the metrics in preconfigured dashboards.
 
-After running the playbook described here, you will have a fully configured monitoring stack connected to your {product-proxy} deployment.
+After running the monitoring playbook, you will have a fully configured monitoring stack connected to your {product-proxy} deployment.
 
-[NOTE]
-====
-There are no additional prerequisites or dependencies for this playbook to execute.
-If it is not already present, Docker will automatically be installed by the playbook on your chosen monitoring server.
-====
+Aside from xref:ROOT:deployment-infrastructure.adoc[preparing the infrastructure], you don't need to install any {product-proxy} dependencies on the monitoring host machine. The playbook automatically installs all required software packages.
 
-=== Connect to the Ansible Control Host
-
-Make sure you are connected to the Ansible Control Host docker container.
-As above, you can do so from the jumphost machine by running:
-
+. Connect to the Ansible Control Host Docker container.
+You can do this from the jumphost machine by running the following command:
++
 [source,bash]
 ----
 docker exec -it zdm-ansible-container bash
 ----
-
-You will see a prompt like:
-
++
+.Result
+[%collapsible]
+====
 [source,bash]
 ----
 ubuntu@52772568517c:~$
 ----
+====
 
-=== Configure the Grafana credentials
+. To configure the Grafana credentials, edit the `zdm_monitoring_config.yml` file that is located at `zdm-proxy-automation/ansible/vars`:
++
+* `grafana_admin_user`: Leave unset or as the default value `admin`.
+If unset, it defaults to `admin`.
+* `grafana_admin_password`: Provide a password.
+Make note of this password because you need it later.
 
-Edit the file `zdm_monitoring_config.yml`, stored at `zdm-proxy-automation/ansible/vars`:
+. Optional: Use the `metrics_port` variable to change the xref:ROOT:deploy-proxy-monitoring.adoc#ports[metrics collection port].
+The default port for metrics collection is `14001`.
 
-* `grafana_admin_user`: leave unchanged (defaults to `admin`)
-* `grafana_admin_password`: set to the password of your choice
+. Edit any other configuration settings as needed.
++
+[IMPORTANT]
+====
+These steps assume you will deploy the monitoring stack on the jumphost machine.
+If you plan to deploy the monitoring stack on another machine, you must set the configuration accordingly so the playbook runs against the correct machine from the Ansible Control Host.
+====
 
-=== Run the monitoring playbook
-
-Ensure that you are in `/home/ubuntu/zdm-proxy-automation/ansible` and then run the following command:
-
+. Make sure you are in the `ansible` directory at `/home/ubuntu/zdm-proxy-automation/ansible`, and then run the monitoring playbook:
++
 [source,bash]
 ----
 ansible-playbook deploy_zdm_monitoring.yml -i zdm_ansible_inventory
 ----
 
-=== Check the Grafana dashboard
+. Wait while the playbook runs.
 
-In a browser, open \http://<jumphost_public_ip>:3000
+. To verify that the stack is running, check the Grafana dashboard at `http://**MONITORING_HOST_PUBLIC_IP**:3000`.
++
+If you deployed the monitoring stack on the jumphost machine, replace `**MONITORING_HOST_PUBLIC_IP**` with the public IP address or hostname of the jumphost.
 
-Login with:
+If you deployed your monitoring stack on another machine, replace `**MONITORING_HOST_PUBLIC_IP**` with the public IP address or hostname of that machine.
 
-* *username*: admin
-* *password*: the password you configured
-
-[TIP]
-====
-Details about the metrics you can observe are available in xref:ROOT:metrics.adoc[].
-====
+. Login with your Grafana `username` and `password`.
 
 [#call-the-liveliness-and-readiness-endpoints]
 == Call the `liveness` and `readiness` HTTP endpoints
 
-To confirm that the {product-proxy} instances are running, you can call the `liveness` and `readiness` HTTP endpoints for the {product-proxy} instances.
+{product-short} metrics provide `/health/liveness` and `/health/readiness` HTTP endpoints, that you can call to determine the state of the {product-proxy} instances.
 
-{product-short} metrics provide `/health/liveness` and `/health/readiness` HTTP endpoints, which you can call to determine the state of the {product-proxy} instances.
-It's often fine to simply submit the `readiness` check to return the proxy's state.
+For example, after deploying the {product-proxy} monitoring stack, you can use the `liveness` and `readiness` HTTP endpoints to confirm that your {product-proxy} instances are running.
 
-The format:
-
+[tabs]
+======
+Liveliness endpoint::
++
+--
 [source,plaintext,subs="+quotes"]
 ----
 http://**ZDM_PROXY_PRIVATE_IP**:**METRICS_PORT**/health/liveness
+----
+
+Replace the following:
+
+* `**METRICS_PORT**`: The `metrics_port` you set in the `zdm_monitoring_config.yml` file.
+The default port is 14001.
+
+* `**ZDM_PROXY_PRIVATE_IP**`: The private IP address, hostname, or other valid identifier for the {product-proxy} instance you want to check.
+
+Example request with variables:
+
+[source,bash]
+----
+curl -G "http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:{{ metrics_port }}/health/liveliness"
+----
+
+Example request with plaintext values:
+
+[source,bash]
+----
+curl -G "http://172.18.10.40:14001/health/liveliness"
+----
+--
+
+Readiness endpoint::
+--
+[source,plaintext,subs="+quotes"]
+----
 http://**ZDM_PROXY_PRIVATE_IP**:**METRICS_PORT**/health/readiness
 ----
 
-Readiness expanded GET format:
+Replace the following:
+
+* `**METRICS_PORT**`: The `metrics_port` you set in the `zdm_monitoring_config.yml` file.
+The default port is 14001.
+
+* `**ZDM_PROXY_PRIVATE_IP**`: The private IP address, hostname, or other valid identifier for the {product-proxy} instance you want to check.
+
+Example request with variables:
 
 [source,bash]
 ----
 curl -G "http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:{{ metrics_port }}/health/readiness"
 ----
 
-The default port for metrics collection is `14001`.
-You can override this port if you deploy {product-proxy} with `metrics_port` set to a non-default port.
-For more information, see <<ports>>.
-
-Readiness example:
+Example request with plaintext values:
 
 [source,bash]
 ----
 curl -G "http://172.18.10.40:14001/health/readiness"
 ----
 
-.Result
-[%collapsible]
-====
+Example result:
+
 [source,json]
 ----
 {
@@ -124,97 +163,91 @@ curl -G "http://172.18.10.40:14001/health/readiness"
    "Status":"UP"
 }
 ----
-====
 
+--
+======
 
-
-
-This topic provides detailed information about the metrics captured by {product-proxy} and explains how to interpret the metrics. 
-
-== Benefits
-
-{product-proxy} gathers a large number of metrics, which allows you to gain deep insights into how it is operating with regard to its communication with client applications and clusters, as well as its request handling.
-
-Having visibility on all aspects of {product-proxy}'s behavior is extremely important in the context of a migration of critical client applications, and is a great help in building confidence in the process and troubleshooting any issues.
-For this reason, we strongly encourage you to monitor {product-proxy}, either by deploying the self-contained monitoring stack provided by {product-automation} or by importing the pre-built Grafana dashboards in your own monitoring infrastructure.
-
-== Retrieving the {product-proxy} metrics
+== Inspect {product-proxy} metrics
 
 {product-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format.
 
-<<_setting_up_the_monitoring_stack,{product-automation} can deploy and configure Prometheus and Grafana automatically>>.
-The Grafana dashboards are ready to go with metrics that are being scraped from the {product-proxy} instances.
+After you deploy the monitoring stack, the {product-proxy} Grafana dashboards automatically start displaying these metrics as they are scraped from the instances.
 
-If you already have a Grafana deployment then you can import the dashboards from the two {product-short} dashboard files from this {product-automation-repo}/tree/main/grafana-dashboards[{product-automation} GitHub location].
+If you already have a Grafana deployment, then you can import the dashboards from the {product-automation-repo}/tree/main/grafana-dashboards[{product-short} dashboard files] in the {product-short} GitHub repository.
 
-== Grafana dashboard for {product-proxy} metrics
+=== Grafana dashboard for {product-proxy} metrics
 
-There are three groups of metrics in this dashboard:
-
-* Proxy level metrics
-* Node level metrics
-* Asynchronous read requests metrics
+The {product-proxy} metrics dashboard includes proxy level metrics, node level metrics, and asynchronous read requests metrics.
 
 image::zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of {product-short} metrics for the proxy.]
 
-[#proxy-level-metrics]
-=== Proxy-level metrics
+This dashboard can help you identify issues such as the following:
 
-* Latency
+* If the number of client connections is near 1000 per {product-proxy} instance, be aware that {product-proxy} will start rejecting client connections after accepting 1000 connections.
+* If Prepared Statement cache metrics are always increasing, check the **entries** and **misses** metrics.
+* If you have error metrics reporting for specific error types, evaluate these issues on a case-by-case basis.
+
+[#proxy-level-metrics]
+==== Proxy-level metrics
+
+* **Latency**:
 +
-** Read Latency: Total latency measured by {product-proxy} per read request, including post-processing, such as response aggregation.
+** **Read Latency**: Total latency measured by {product-proxy} per read request, including post-processing, such as response aggregation.
 This metric has two labels: `reads_origin` and `reads_target`.
 The label that has data depends on which cluster is receiving the reads, which is the current xref:ROOT:faqs.adoc#what-are-origin-target-primary-and-secondary-clusters[primary cluster].
-** Write Latency: Total latency measured by {product-proxy} per write request, including post-processing, such as response aggregation.
+** **Write Latency**: Total latency measured by {product-proxy} per write request, including post-processing, such as response aggregation.
 This metric is measured as the total latency across both clusters for a single xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[bifurcated write request].
 
-* Throughput (same structure as the previous latency metrics):
-** Read Throughput
-** Write Throughput
+* **Throughput**: Follows the same structure as the latency metrics but measures **Read Throughput** and **Write Throughput**.
 
-* In-flight requests
+* **In-flight requests**
 
-* Number of client connections
+* **Number of client connections**
 
-* Prepared Statement cache:
-** Cache Misses: If a prepared statement is sent to {product-proxy} but the statement's `preparedID` isn't present in the node's cache, then {product-proxy} sends an `UNPREPARED` response to the client to reprepare the statement.
+* **Prepared Statement cache**:
++
+** **Cache Misses**: If a prepared statement is sent to {product-proxy} but the statement's `preparedID` isn't present in the node's cache, then {product-proxy} sends an `UNPREPARED` response to the client to reprepare the statement.
 This metric tracks the number of times this happens.
-** Number of cached prepared statements.
+** **Number of cached prepared statements**
 
-* Request Failure Rates: the number of request failures per interval.
-You can set the interval in the `Error Rate interval` dashboard variable at the top.
-** Connect Failure Rate: one `cluster` label with two settings, `origin` and `target`, which represent the cluster to which the connection attempt failed.
-** Read Failure Rate: one `cluster` label with two settings, `origin` and `target`.
+* **Request Failure Rates**: The number of request failures per interval.
+You can set the interval with the **Error Rate interval** dashboard setting.
++
+** **Connect Failure Rate**: One `cluster` label with two settings (`origin` and `target`) that represent the cluster to which the connection attempt failed.
+** **Read Failure Rate**: One `cluster` label with two settings (`origin` and `target`).
 The label that contains data depends on which cluster is currently considered the primary, the same as the latency and throughput metrics explained above.
-** Write Failure Rate: one `failed_on` label with three settings, `origin`, `target`, and `both`.
-*** `failed_on=origin`: the write request failed on the origin only.
-*** `failed_on=target`: the write request failed on the target only.
-*** `failed_on=both`: the write request failed on both the origin and target clusters.
+** **Write Failure Rate**: One `failed_on` label with three settings, `origin`, `target`, and `both`:
++
+*** `failed_on=origin`: The write request failed on the origin only.
+*** `failed_on=target`: The write request failed on the target only.
+*** `failed_on=both`: The write request failed on both the origin and target clusters.
 
-* Request Failure Counters: Number of total request failures (resets when the {product-proxy} instance is restarted)
-** Connect Failure Counters: the same labels as the connect failure rate.
-** Read Failure Counters: the same labels as the read failure rate.
-** Write Failure Counters: the same labels as the write failure rate.
+* **Request Failure Counters**: Number of total request failures.
+Resets if the {product-proxy} instance restarts.
++
+** **Connect Failure Counters**: Has the same labels as the connect failure rate.
+** **Read Failure Counters**: Has the same labels as the read failure rate.
+** **Write Failure Counters**: Has the same labels as the write failure rate.
 
-To see error metrics by error type, see the node-level error metrics on the next section.
+For error metrics by error type, see the <<_node_level_metrics,node-level error metrics>>.
 
 [[_node_level_metrics]]
-=== Node-level metrics
+==== Node-level metrics
 
-* Latency: Node-level latency metrics report combined read and write latency per cluster, not per request.
+* **Latency**: Node-level latency metrics report combined read and write latency per cluster, not per request.
 For latency by request type, see <<proxy-level-metrics>>.
 +
-** Origin: Latency, as measured by {product-proxy}, up to the point that it received a response from the origin connection.
-** Target: latency, as measured by {product-proxy}, up to the point it received a response from the target connection.
+** **Origin**: Latency, as measured by {product-proxy}, up to the point that it received a response from the origin connection.
+** **Target**: Latency, as measured by {product-proxy}, up to the point it received a response from the target connection.
 
-* Throughput: same as node level latency metrics, reads and writes are mixed together.
+* **Throughput**: Same as the node-level latency metrics.
+Reads and writes are combined.
 
-* Number of connections per origin node and per target node.
+* **Number of connections per origin node and per target node**
 
-* Number of Used Stream Ids:
-** Tracks the total number of used xref:manage-proxy-instances.adoc#zdm_proxy_max_stream_ids[stream ids] ("request ids") per connection type (`Origin`, `Target`, and `Async`).
+* **Number of Used Stream Ids**: Tracks the total number of used xref:manage-proxy-instances.adoc#zdm_proxy_max_stream_ids[stream IDs] (request IDs) per connection type (`Origin`, `Target`, and `Async`).
 
-* Number of errors per error type per origin node and per target node.
+* **Number of errors per error type per origin node and per target node**:
 Possible values for the `error` type label:
 +
 ** `error=client_timeout`
@@ -227,40 +260,36 @@ Possible values for the `error` type label:
 ** `error=unprepared`
 
 [[_asynchronous_read_requests_metrics]]
-=== Asynchronous read requests metrics
+==== Asynchronous read requests metrics
 
-These metrics are only recorded if you xref:ROOT:enable-async-dual-reads.adoc[enable asynchronous dual reads].
+These metrics are recorded only if you xref:ROOT:enable-async-dual-reads.adoc[enable asynchronous dual reads].
 
 These metrics track the following information for asynchronous read requests:
 
-* Latency
-* Throughput
-* Number of dedicated connections per node for the cluster receiving the asynchronous read requests
-* Number of errors per node, separated by error type
+* *Latency*
+* *Throughput*
+* *Number of dedicated connections per node for the cluster receiving the asynchronous read requests*
+* *Number of errors per node, separated by error type*
 
-=== Insights from the {product-proxy} metrics
+=== Go runtime metrics dashboard
 
-Some examples of problems manifesting on these metrics:
+The Go runtime metrics dashboard is used less often than the {product-proxy} metrics dashboard.
 
-* Number of client connections close to 1000 per {product-proxy} instance: by default, {product-proxy} starts rejecting client connections after having accepted 1000 of them.
-* Always increasing Prepared Statement cache metrics: both the **entries** and **misses** metrics.
-* Error metrics depending on the error type: these need to be evaluated on a per-case basis.
-
-== Go runtime metrics dashboard and system dashboard
-
-This dashboard in Grafana is not as important as the {product-proxy} dashboard. However, it may be useful to troubleshoot performance issues.
-Here you can see memory usage, Garbage Collection (GC) duration, open fds (file descriptors - useful to detect leaked connections), and the number of goroutines:
+This dashboard can be helpful for troubleshooting {product-proxy} performance issues.
+It provides metrics for memory usage, Garbage Collection (GC) duration, open FDs (file descriptors), and the number of goroutines.
 
 image::zdm-golang-dashboard.png[Golang metrics dashboard example is shown.]
 
-Some examples of problem areas on these Go runtime metrics:
+Watch for the following problem areas on the Go runtime metrics dashboard:
 
-* An always increasing “open fds” metric.
-* GC latencies in (or close to) the triple digits of milliseconds frequently.
-* Always increasing memory usage.
-* Always increasing number of goroutines.
+* An always increasing **open fds** metric; this can indicate leaked connections.
+* GC latencies that are frequently near or above hundreds of milliseconds.
+* Persistently increasing memory usage.
+* Persistently increasing number of goroutines.
 
-The {product-short} monitoring stack also includes a system-level dashboard collected through the Prometheus Node Exporter.
+=== System-level metrics dashboard
+
+The {product-short} monitoring stack's system-level dashboard metrics are collected through the Prometheus Node Exporter.
 This dashboard contains hardware and OS-level metrics for the host on which the proxy runs.
 This can be useful to check the available resources and identify low-level bottlenecks or issues.
 

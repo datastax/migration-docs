@@ -3,7 +3,7 @@
 After you xref:setup-ansible-playbooks.adoc[set up the jumphost and {product-automation}], use the Ansible playbooks to deploy your {product-proxy} instances.
 Then, xref:ROOT:metrics.adoc[deploy the monitoring stack] to complete your {product-proxy} deployment.
 
-Aside from xref:ROOT:deployment-infrastructure.adoc[preparing the infrastructure], you don't need to install any {product-proxy} dependencies on the {product-proxy} machines. The playbooks automatically install all required software packages.
+Aside from xref:ROOT:deployment-infrastructure.adoc[preparing the infrastructure], you don't need to install any {product-proxy} dependencies on the {product-proxy} machines. The playbook automatically installs all required software packages.
 
 == Access the Control Host and locate the configuration files
 
