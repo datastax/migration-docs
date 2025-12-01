@@ -1,4 +1,5 @@
 = Deploy {product-proxy}
+:page-aliases: ROOT:tls.adoc
 
 After you xref:setup-ansible-playbooks.adoc[set up the jumphost and {product-automation}], use the Ansible playbooks to deploy your {product-proxy} instances.
 Then, xref:ROOT:metrics.adoc[deploy the monitoring stack] to complete your {product-proxy} deployment.
@@ -253,13 +254,212 @@ You can seamlessly change them after deploying {product-proxy} with a rolling re
 Immutable variables require you to recreate the entire deployment and result in downtime for your {product-proxy} deployment.
 For more information, see xref:manage-proxy-instances.adoc[].
 
+[#enable-tls-encryption]
 === Enable TLS encryption
 
-TLS encryption is optional and disabled by default.
+Transportation Layer Security (TLS) encryption is optional and disabled by default.
 
-If you want to enable TLS encryption between the client application and {product-proxy}, or between {product-proxy} and one or both self-managed clusters, you must configure TLS settings in the `zdm_proxy_custom_tls_config.yml` file.
+{product-proxy} supports TLS encryption between {product-proxy} and either or both clusters, and between {product-proxy} and your client application.
 
-For instructions, see xref:ROOT:tls.adoc[].
+To enable TLS encryption, you must provide the necessary files and configure TLS settings in the `zdm_proxy_custom_tls_config.yml` file.
+
+[tabs]
+======
+Proxy-to-cluster TLS::
++
+--
+Use these steps to enable TLS encryption between {product-proxy} and one or both clusters if required.
+
+Each cluster has its own TLS configuration.
+One-way TLS and Mutual TLS (mTLS) are both supported, and they can be enabled as needed for each cluster's requirements.
+
+In this case, {product-proxy} acts as the TLS client and the cluster acts as the TLS server.
+
+[TIP]
+====
+This is required for self-managed clusters only.
+For {astra-db}, {product-proxy} uses mTLS automatically with the xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb-short}].
+====
+
+. Find the required files for each cluster where you want to enable TLS encryption.
+All files must be in plain-text, non-binary format.
++
+* **One-way TLS**: Find the server CA.
+* **Mutual TLS**: Find the server CA, the client certificate, and the client key.
+
++
+If your client application and origin cluster already use TLS encryption, then the required files should already be used in the client application's configuration (TLS client files) and the origin cluster's configuration (TLS Server files).
+
+. For each self-managed cluster (origin or target) where you want to enable TLS encrypted {product-proxy} connections, do the following:
++
+.. If your TLS files are in a JKS keystore, you must extract them as plain text because {product-proxy} cannot accept a JKS keystore.
+You must provide the raw files.
++
+... Get the files contained in your JKS keystore and their aliases:
++
+[source,bash]
+----
+keytool -list -keystore **PATH/TO/KEYSTORE.JKS**
+----
++
+Replace `**PATH/TO/KEYSTORE.JKS**` with the path to your JKS keystore.
+
+... Extract each file from your JKS keystore:
++
+[source,bash,subs="+quotes"]
+----
+keytool -exportcert -keystore **PATH/TO/KEYSTORE.JKS** -alias **FILE_ALIAS** -file **PATH/TO/DESTINATION/FILE** -rfc
+----
++
+Replace the following:
++
+** `**PATH/TO/KEYSTORE.JKS**`: The path to your JKS keystore
+** `**FILE_ALIAS**`: The alias of the file you want to extract
+** `**PATH/TO/DESTINATION/FILE**`: The path where you want to save the extracted file
+
++
+The `-rfc` option extracts the files in non-binary PEM format.
+For more information, see the https://docs.oracle.com/javase/8/docs/technotes/tools/windows/keytool.html[keytool syntax documentation].
+
++
+.. Upload the required TLS files to the jumphost:
++
+** **One-way TLS**: Upload the server CA.
+** **mTLS**: Upload the server CA, the client certificate, and the client key.
+
+.. From a shell on the jumphost, copy each file to the `origin_tls_files` or `target_tls_files` directory in the Ansible Control Host container:
++
+** Copy origin files to the `origin_tls_files` directory, replacing `**TLS_FILE**` with the path to each required files:
++
+[source,bash,subs="+quotes"]
+----
+docker cp **TLS_FILE** zdm-ansible-container:/home/ubuntu/origin_tls_files
+----
+
+** Copy target files to the `target_tls_files` directory, replacing `**TLS_FILE**` with the path to each required files:
++
+[source,bash,subs="+quotes"]
+----
+docker cp **TLS_FILE** zdm-ansible-container:/home/ubuntu/target_tls_files
+----
+
+.. If you want to enable TLS encryption for both clusters, make sure that you complete the previous steps for both clusters, copying the appropriate files to the appropriate directory for each cluster.
+
+. Open a shell to the Ansible Control Host container if you don't already have one:
++
+[source,bash]
+----
+docker exec -it zdm-ansible-container bash
+----
+
+. From this shell, edit the `zdm_proxy_tls_config.yml` file at `zdm-proxy-automation/ansible/vars/zdm_proxy_custom_tls_config.yml`.
+
+. Uncomment and populate the TLS configuration variables for the clusters where you want to enable TLS encryption.
+For example, if you want to enable TLS encryption for both clusters, configure both sets of variables: `origin_tls_{asterisk}` and `target_tls_{asterisk}`.
++
+In the proxy-to-cluster configuration, the word `server` in the variable names refers to the cluster, which acts as the TLS server, and the word `client` refers to {product-proxy}, which acts as the TLS client.
++
+[tabs]
+====
+Origin cluster TLS encryption variables::
++
+* `origin_tls_user_dir_path`: Use the default value of `/home/ubuntu/origin_tls_files`.
+* `origin_tls_server_ca_filename`: Required. Provide the filename (without the path) of the server CA.
+* `origin_tls_client_cert_filename`: Required for mTLS only. Provide the filename (without the path) of the client cert.
+Must be unset for one-way TLS.
+* `origin_tls_client_key_filename`:  Required for mTLS only. Provide the filename (without the path) of the client key.
+Must be unset for one-way TLS.
+
+Target cluster TLS encryption variables::
++
+* `target_tls_user_dir_path`: Use the default value of `/home/ubuntu/target_tls_files`.
+* `target_tls_server_ca_filename`: Required. Provide the filename (without the path) of the server CA.
+* `target_tls_client_cert_filename`: Required for mTLS only. Provide the filename (without the path) of the client cert.
+Must be unset for one-way TLS.
+* `target_tls_client_key_filename`:  Required for mTLS only. Provide the filename (without the path) of the client key.
+Must be unset for one-way TLS.
+====
+--
+
+Client application-to-proxy TLS::
++
+--
+Use these steps to enable TLS encryption between your client application and {product-proxy} if required.
+
+In this case, your client application is the TLS client, and {product-proxy} is the TLS server.
+
+One-way TLS and Mutual TLS (mTLS) are both supported.
+
+. Get the server CA, server certificate, and server key files.
+All files must be in plain-text, non-binary format.
++
+If your client application and origin cluster already use TLS encryption, then the required files should already be used in the client application's configuration (TLS client files) and the origin cluster's configuration (TLS Server files).
+
+. If your TLS files are in a JKS keystore, extract them as plain text.
++
+{product-proxy} cannot accept a JKS keystore.
+You must provide the raw files.
++
+.. Get the files contained in your JKS keystore and their aliases:
++
+[source,bash]
+----
+keytool -list -keystore **PATH/TO/KEYSTORE.JKS**
+----
++
+Replace `**PATH/TO/KEYSTORE.JKS**` with the path to your JKS keystore.
+
+.. Extract each file from your JKS keystore:
++
+[source,bash,subs="+quotes"]
+----
+keytool -exportcert -keystore **PATH/TO/KEYSTORE.JKS** -alias **FILE_ALIAS** -file **PATH/TO/DESTINATION/FILE** -rfc
+----
++
+Replace the following:
++
+** `**PATH/TO/KEYSTORE.JKS**`: The path to your JKS keystore
+** `**FILE_ALIAS**`: The alias of the file you want to extract
+** `**PATH/TO/DESTINATION/FILE**`: The path where you want to save the extracted file
+
++
+The `-rfc` option extracts the files in non-binary PEM format.
+For more information, see the https://docs.oracle.com/javase/8/docs/technotes/tools/windows/keytool.html[keytool syntax documentation].
+
+. Upload the files to the jumphost.
+
+. From a shell on the jumphost, copy each file to the `zdm_proxy_tls_files` directory in the Ansible Control Host container:
++
+[source,bash,subs="+quotes"]
+----
+docker cp **TLS_FILE** zdm-ansible-container:/home/ubuntu/zdm_proxy_tls_files
+----
++
+Replace `**TLS_FILE**` with the path to each of your TLS files.
+
+. Open a shell to the Ansible Control Host container if you don't already have one:
++
+[source,bash]
+----
+docker exec -it zdm-ansible-container bash
+----
+
+. From this shell, edit the `zdm_proxy_tls_config.yml` file at `zdm-proxy-automation/ansible/vars/zdm_proxy_custom_tls_config.yml`.
+
+. Uncomment and populate the following TLS configuration variables, which are prefixed with `zdm_proxy_*`.
+The word `server` in the variable names refers to {product-proxy}, which acts as the TLS server in this configuration.
++
+* `zdm_proxy_tls_user_dir_path_name`: Use the default value of `/home/ubuntu/zdm_proxy_tls_files`.
+* `zdm_proxy_tls_server_ca_filename`: Required. Provide the filename (without the path) of the server CA that the proxy must use.
+* `zdm_proxy_tls_server_cert_filename`: Required. Provide the filename (without the path) of the server certificate that the proxy must use.
+* `zdm_proxy_tls_server_key_filename` : Required. Provide the filename (without the path) of the server key that the proxy must use.
+* `zdm_proxy_tls_require_client_auth`: Set to `false` (default) for one-way TLS between the application and proxy.
+Set to `true` to enable mTLS between the application and the proxy.
+--
+======
+
+When you deploy the {product-proxy} instances with {product-automation}, the deployment playbook automatically distributes the TLS files and applies the TLS configuration to all {product-proxy} instances.
+If you want to enable TLS after the initial deployment, you must rerun the deployment playbook to redeploy the instances with the new TLS configuration.
 
 [#run-the-deployment-playbook]
 == Run the deployment playbook
