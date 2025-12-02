@@ -158,6 +158,12 @@ For more information, see xref:components.adoc#how-zdm-proxy-handles-reads-and-w
 
 In the context of the {product-short} process, the terms _cluster_ and _database_ are used interchangeably to refer to the source and destination for the data that you are moving during your migration.
 
+== What happened to {dsbulk-migrator}?
+
+The {dsbulk-migrator} tool, which was an extension of {dsbulk-loader}, is deprecated.
+This tool is no longer recommended.
+Instead, use xref:dsbulk:overview:dsbulk-about.adoc[{dsbulk-loader}] or use another xref:ROOT:components.adoc[data migration tool].
+
 == See also
 
 * https://github.com/datastax/zdm-proxy/blob/main/faq.md[{product-proxy} FAQ on GitHub]
