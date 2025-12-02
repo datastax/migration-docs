@@ -7,8 +7,7 @@ image::migration-phase1ra.png[In migration Phase 1, you deploy {product-proxy} i
 To complete Phase 1, do the following:
 
 . xref:setup-ansible-playbooks.adoc[].
-. xref:deploy-proxy-monitoring.adoc[] with optional xref:tls.adoc[TLS].
+. xref:deploy-proxy-monitoring.adoc[].
+. Deploy the xref:metrics.adoc[{product-proxy} monitoring stack] and learn about {product-proxy} metrics.
 . xref:connect-clients-to-proxy.adoc[].
-
-During the migration you will modify {product-proxy} configuration settings and monitor your {product-proxy} instances.
-Before you proceed to Phase 2, make sure you understand how to xref:manage-proxy-instances.adoc[manage {product-proxy} instances] and xref:metrics.adoc[use {product-proxy} metrics].
+. Learn how to xref:manage-proxy-instances.adoc[manage {product-proxy} instances], including scaling, upgrading, reconfiguring, and restarting them.

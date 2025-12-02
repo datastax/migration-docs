@@ -519,7 +519,7 @@ Connection failure: Remote end closed connection without response", "redirected"
 ----
 
 This can indicate that the {astra} DevOps API is temporarily unavailable.
-You can either wait to retry the operation, or you can xref:astra-db-serverless:databases:secure-connect-bundle.adoc[download your database's {scb} from the {astra-ui}], and then provide the path the {scb-short} zip file in the xref:deploy-proxy-monitoring.adoc#_core_configuration[{product-automation} configuration].
+You can either wait to retry the operation, or you can xref:astra-db-serverless:databases:secure-connect-bundle.adoc[download your database's {scb} from the {astra-ui}], and then provide the path the {scb-short} zip file in the xref:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[{product-automation} configuration].
 
 === Metadata service returned not successful status code (4xx or 5xx)
 

@@ -118,7 +118,7 @@ Yes, see `https://github.com/datastax/zdm-proxy/blob/main/CONTRIBUTING.md[CONTRI
 
 == Does {product-proxy} support Transport Layer Security (TLS)?
 
-Yes, see xref:tls.adoc[].
+Yes, see xref:ROOT:deploy-proxy-monitoring.adoc#enable-tls-encryption[Enable TLS encryption].
 
 == How does {product-proxy} handle Lightweight Transactions (LWTs)?
 
