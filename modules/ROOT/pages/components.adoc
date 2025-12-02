@@ -165,9 +165,7 @@ For more information, see xref:dsbulk:overview:dsbulk-about.adoc[].
 
 [TIP]
 ====
-The {dsbulk-migrator} tool, which was an extension of {dsbulk-loader}, is deprecated.
-This tool is no longer recommended.
-Instead, use {dsbulk-loader}'s unload, load, and count commands, or use another data migration tool, such as {cass-migrator-short}.
+include::ROOT:partial$dsbulk-migrator-deprecation.adoc[]
 ====
 
 === Other data migration processes

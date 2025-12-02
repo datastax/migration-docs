@@ -93,9 +93,7 @@ For example, {cass-migrator} is used for data validation after migrating data wi
 * Ubuntu Linux 20.04 or 22.04, Red Hat Family Linux 7 or newer
 * 16 vCPUs
 * 64 GB RAM
-* 200 GB to 2 TB of storage
-+
-If you plan to use {dsbulk-loader} to unload and load multiple terabytes of data from the origin cluster to the target cluster, consider allocating additional space for data that needs to be staged between unloading and loading.
+* 200 GB to 2 TB of storage or more for larger migrations
 * Equivalent to AWS **m5.4xlarge**, GCP **e2-standard-16**, or Azure **D16 v5**
 
 +
@@ -112,7 +110,9 @@ Then, each VM migrates one group of tokens, and you use the fourth VM to migrate
 
 [IMPORTANT]
 ====
-Make sure that your origin and target clusters can handle high traffic from your chosen data migration tool in addition to the live traffic from your application.
+Regardless of the number of data migration machines or the amount of data you need to migrate, make sure the machines have enough space to stage data between unloading and loading during the migration.
+
+Additionally, make sure that your origin and target clusters can handle high traffic from your chosen data migration tool in addition to the live traffic from your application.
 
 Test migrations in a lower environment before you proceed with production migrations.
 
