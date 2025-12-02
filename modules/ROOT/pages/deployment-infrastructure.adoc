@@ -49,7 +49,7 @@ In a sidecar deployment, each client application instance would be connecting to
 [[_machines]]
 == Hardware requirements
 
-You need a number of machines to run your {product-proxy} instances, plus additional machines for the centralized jumphost, and for running {dsbulk-migrator} or {cass-migrator} (which are recommended data migration and validation tools).
+You need a number of machines to run your {product-proxy} instances, plus additional machines for the centralized jumphost, and for running {dsbulk-loader} or {cass-migrator} (which are recommended data migration and validation tools).
 
 This section uses the term _machine_ broadly to refer to a cloud instance (on any cloud provider), a VM, or a physical server.
 
@@ -83,10 +83,10 @@ The jumphost machine must meet the following specifications:
 * 200 to 500 GB of storage depending on the amount of metrics history that you want to retain
 * Equivalent to AWS **c5.2xlarge**, GCP **e2-standard-8**, or Azure **A8 v2**
 
-Data migration tools ({dsbulk-migrator} or {cass-migrator})::
-You need at least one machine to run {dsbulk-migrator} or {cass-migrator} for the data migration and validation (xref:ROOT:migrate-and-validate-data.adoc[Phase 2]).
+Data migration tools ({dsbulk-loader} or {cass-migrator})::
+You need at least one machine to run {dsbulk-loader} or {cass-migrator} for the data migration and validation (xref:ROOT:migrate-and-validate-data.adoc[Phase 2]).
 Even if you plan to use another data migration tool, you might need infrastructure for these tools or your chosen tool.
-For example, you can use {dsbulk-migrator} to generate DDL statements to help you recreate your origin cluster's schema on your target cluster, and {cass-migrator} is used for data validation after migrating data with {sstable-sideloader}.
+For example, {cass-migrator} is used for data validation after migrating data with {sstable-sideloader}.
 +
 {company} recommends that you start with at least one VM that meets the following minimum specifications:
 +
@@ -95,7 +95,7 @@ For example, you can use {dsbulk-migrator} to generate DDL statements to help yo
 * 64 GB RAM
 * 200 GB to 2 TB of storage
 +
-If you plan to use {dsbulk-migrator} to unload and load multiple terabytes of data from the origin cluster to the target cluster, consider allocating additional space for data that needs to be staged between unloading and loading.
+If you plan to use {dsbulk-loader} to unload and load multiple terabytes of data from the origin cluster to the target cluster, consider allocating additional space for data that needs to be staged between unloading and loading.
 * Equivalent to AWS **m5.4xlarge**, GCP **e2-standard-16**, or Azure **D16 v5**
 
 +
@@ -104,7 +104,7 @@ Whether you need additional machines depends on the total amount of data you nee
 All machines must meet the minimum specifications.
 
 For example, if you have 20 TBs of existing data to migrate, you could use 4 VMs to speed up the migration.
-Then, you would run {dsbulk-migrator} or {cass-migrator} in parallel on each VM with each one responsible for migrating specific tables or a portion of the data, such as 25% or 5 TB.
+Then, you would run {dsbulk-loader} or {cass-migrator} in parallel on each VM with each one responsible for migrating specific tables or a portion of the data, such as 25% or 5 TB.
 
 If you have one especially large table, such as 75% of the total data in one table, you can use multiple VMs to migrate that one table.
 For example, if you have 4 VMs, you can use three VMs in parallel for the large table by splitting the table's full token range into three groups.

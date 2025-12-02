@@ -60,7 +60,7 @@ Yes, you can use the xref:ROOT:introduction.adoc#lab[{product-short} interactive
 The {product-short} tools are {product-proxy}, {product-utility}, and {product-automation}.
 These tools orchestrate the traffic between your client applications and the origin and target clusters during the migration process.
 
-For the actual data migration, there are many tools you can use, such as {sstable-sideloader}, {cass-migrator}, {dsbulk-migrator}, and custom data migration scripts.
+For the actual data migration, there are many tools you can use, such as {sstable-sideloader}, {cass-migrator}, {dsbulk-loader}, and custom data migration scripts.
 
 For more information, see xref:ROOT:components.adoc[].
 
@@ -97,7 +97,7 @@ You can have the confidence that you are using tools designed specifically to ha
 
 == What is the pricing model?
 
-{product-proxy}, {product-utility}, {product-automation}, {cass-migrator}, and {dsbulk-migrator} are free and open-sourced.
+{product-proxy}, {product-utility}, {product-automation}, {cass-migrator}, and {dsbulk-loader} are free and open-sourced.
 
 {sstable-sideloader} is part of an {astra-db} *Enterprise* subscription plan, and it incurs costs based on usage.
 
@@ -110,7 +110,7 @@ For any observed problems with {product-proxy} or the other open-source {product
 * {product-proxy-repo}[{product-proxy} repository]
 * {product-automation-repo}[{product-automation} repository] (includes {product-automation} and {product-utility})
 * {cass-migrator-repo}[{cass-migrator} repository]
-* {dsbulk-migrator-repo}[{dsbulk-migrator} repository]
+* {dsbulk-loader-repo}[{dsbulk-loader} repository]
 
 == Can I contribute to {product-proxy}?
 

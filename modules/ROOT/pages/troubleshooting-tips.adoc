@@ -682,7 +682,7 @@ To report an issue or get additional support, submit an issue in the {product-sh
 * {product-proxy-repo}/issues[{product-proxy} repository]
 * {product-automation-repo}/issues[{product-automation} repository] (includes {product-automation} and {product-utility})
 * {cass-migrator-repo}/issues[{cass-migrator} repository]
-* {dsbulk-migrator-repo}/issues[{dsbulk-migrator} repository]
+* {dsbulk-loader-repo}/issues[{dsbulk-loader} repository]
 
 [IMPORTANT]
 ====
