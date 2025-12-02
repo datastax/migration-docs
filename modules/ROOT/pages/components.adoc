@@ -152,15 +152,21 @@ You can use {cass-migrator-short} by itself, with {product-proxy}, or for data v
 
 For more information, see xref:ROOT:cassandra-data-migrator.adoc[].
 
-=== {dsbulk-migrator}
+=== {dsbulk-loader}
 
-{dsbulk-migrator} extends {dsbulk-loader} with migration-specific commands: `migrate-live`, `generate-script`, and `generate-ddl`.
+{dsbulk-loader} is a high-performance data loading and unloading tool for {cass-short}-based databases.
+You can use it to load, unload, and count records.
 
-It is best for smaller migrations or migrations that don't require extensive data validation, aside from post-migration row counts.
+Because {dsbulk-loader} doesn't have the same data validation capabilities as {cass-migrator-short}, it is best for migrations that don't require extensive data validation, aside from post-migration row counts.
 
-You can use {dsbulk-migrator} alone or with {product-proxy}.
+You can use {dsbulk-loader} alone or with {product-proxy}.
 
-For more information, see xref:ROOT:dsbulk-migrator.adoc[].
+For more information, see xref:dsbulk:overview:dsbulk-about.adoc[].
+
+[TIP]
+====
+include::ROOT:partial$dsbulk-migrator-deprecation.adoc[]
+====
 
 === Other data migration processes
 

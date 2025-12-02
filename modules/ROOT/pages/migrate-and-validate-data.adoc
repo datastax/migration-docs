@@ -1,5 +1,5 @@
 = Phase 2: Migrate and validate data
-:page-aliases: ROOT:sideloader-zdm.adoc
+:page-aliases: ROOT:sideloader-zdm.adoc, ROOT:dsbulk-migrator-overview.adoc, ROOT:dsbulk-migrator.adoc
 
 In xref:ROOT:phase1.adoc[Phase 1], you set up {product-proxy} to orchestrate live traffic to your origin and target clusters.
 
@@ -7,7 +7,7 @@ In Phase 2 of {product}, you migrate data from the origin to the target, and the
 
 image::migration-phase2ra.png[In {product-short} Phase 2, you migrate data from the origin cluster to the target cluster]
 
-To move and validate data, you can use a dedicated data migration tool, such as {sstable-sideloader}, {cass-migrator}, or {dsbulk-migrator}, or your can create your own custom data migration script.
+To move and validate data, you can use a dedicated data migration tool, such as {sstable-sideloader}, {cass-migrator}, or {dsbulk-loader}, or your can create your own custom data migration script.
 
 //Migration tool summaries are also on ROOT:components.adoc.
 
@@ -16,7 +16,7 @@ To move and validate data, you can use a dedicated data migration tool, such as 
 This tool is exclusively for migrations that move data to {astra-db}.
 
 {sstable-sideloader} is a service running in {astra-db} that imports data from snapshots of your existing {cass-reg}-based cluster.
-Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like {dsbulk-migrator} and {cass-migrator}, including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
+Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like {dsbulk-loader} and {cass-migrator}, including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
 
 To migrate data with {sstable-sideloader}, you use `nodetool`, a cloud provider's CLI, and the {astra} {devops-api}:
 
@@ -41,15 +41,21 @@ You can use {cass-migrator-short} alone, with {product-proxy}, or for data valid
 
 For more information, see xref:ROOT:cassandra-data-migrator.adoc[].
 
-== {dsbulk-migrator}
+== {dsbulk-loader}
 
-{dsbulk-migrator} extends {dsbulk-loader} with migration-specific commands: `migrate-live`, `generate-script`, and `generate-ddl`.
+{dsbulk-loader} is a high-performance data loading and unloading tool for {cass-short}-based databases.
+You can use it to load, unload, and count records.
 
-It is best for smaller migrations or migrations that don't require extensive data validation, aside from post-migration row counts.
+Because {dsbulk-loader} doesn't have the same data validation capabilities as {cass-migrator-short}, it is best for migrations that don't require extensive data validation, aside from post-migration row counts.
 
-You can use {dsbulk-migrator} alone or with {product-proxy}.
+You can use {dsbulk-loader} alone or with {product-proxy}.
 
-For more information, see xref:ROOT:dsbulk-migrator.adoc[].
+For more information, see xref:dsbulk:overview:dsbulk-about.adoc[].
+
+[TIP]
+====
+include::ROOT:partial$dsbulk-migrator-deprecation.adoc[]
+====
 
 == Other data migration processes
 

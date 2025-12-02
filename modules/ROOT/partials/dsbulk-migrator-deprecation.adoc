@@ -1,0 +1,3 @@
+The DSBulk Migrator tool, which was an extension of {dsbulk-loader}, is deprecated.
+This tool is no longer recommended.
+Instead, use {dsbulk-loader}'s unload, load, and count commands, or use another data migration tool, such as {cass-migrator-short}.

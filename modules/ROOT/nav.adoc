@@ -42,5 +42,5 @@
 * xref:ROOT:cassandra-data-migrator.adoc[]
 * {cass-migrator-repo}/releases[{cass-migrator-short} release notes]
 
-.{dsbulk-migrator}
-* xref:ROOT:dsbulk-migrator.adoc[]
+.{dsbulk-loader}
+* xref:dsbulk:overview:dsbulk-about.adoc[]

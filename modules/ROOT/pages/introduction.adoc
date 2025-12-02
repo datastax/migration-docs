@@ -20,7 +20,7 @@ For example, you might move from self-managed clusters to a cloud-based Database
 * You want to consolidate client applications running on separate clusters onto one shared cluster to minimize sprawl and maintenance.
 ====
 
-The {product-short} process uses {product-proxy}, {product-utility}, and {product-automation} to orchestrate live reads and writes on your databases while you move and validate data with a data migration tool, such as {sstable-sideloader}, {cass-migrator}, or {dsbulk-migrator}.
+The {product-short} process uses {product-proxy}, {product-utility}, and {product-automation} to orchestrate live reads and writes on your databases while you move and validate data with a data migration tool, such as {sstable-sideloader}, {cass-migrator}, or {dsbulk-loader}.
 
 {product-proxy} keeps your databases in sync at all times through its dual-writes feature, which means you can seamlessly stop or abandon the migration at any point before the last phase of the migration (the final cutover to the new database).
 For more information about these tools, see xref:ROOT:components.adoc[].
