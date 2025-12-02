@@ -297,7 +297,7 @@ You must provide the raw files.
 +
 ... Get the files contained in your JKS keystore and their aliases:
 +
-[source,bash]
+[source,bash,subs="+quotes"]
 ----
 keytool -list -keystore **PATH/TO/KEYSTORE.JKS**
 ----
@@ -402,7 +402,7 @@ You must provide the raw files.
 +
 .. Get the files contained in your JKS keystore and their aliases:
 +
-[source,bash]
+[source,bash,subs="+quotes"]
 ----
 keytool -list -keystore **PATH/TO/KEYSTORE.JKS**
 ----
@@ -485,6 +485,8 @@ If the entire operation is successful, the final output is a confirmation messag
 +
 Alternatively, after you xref:ROOT:metrics.adoc[deploy the monitoring stack], you can xref:ROOT:metrics.adoc#call-the-liveliness-and-readiness-endpoints[call the `liveliness` and `readiness` endpoints] to confirm that each {product-proxy} instance is running.
 +
+To check the Docker logs, do the following:
++
 .. SSH into one of the servers where a deployed {product-proxy} instance is running.
 You can do this from within the Ansible Control Host Docker container, or directly from the jumphost machine:
 +
@@ -493,8 +495,8 @@ You can do this from within the Ansible Control Host Docker container, or direct
 ssh **USER**@**ZDM_PROXY_IP_ADDRESS**
 ----
 
-. Use the `docker logs` command to view the logs for the {product-proxy} instance:
-
+.. Use the `docker logs` command to view the logs for the {product-proxy} instance:
++
 [source,bash]
 ----
 docker logs zdm-proxy-container
@@ -515,7 +517,7 @@ time="2023-01-13T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SI
 ----
 ====
 
-. In the logs, look for messages containing `Proxy connected` and `Proxy started`:
+.. In the logs, look for messages containing `Proxy connected` and `Proxy started`:
 +
 [source,bash]
 ----

@@ -127,7 +127,11 @@ This should be somewhat familiar to you based on your current {cass-short} drive
 // Create an object to represent a Cassandra cluster
 // This example listens for connections at 10.20.30.40 on the default port 9042
 // Username and password are required only if authentication is enabled on the cluster
-Cluster my_cluster = Cluster.build_new_cluster(contact_points = "10.20.30.40", username="cluster_username", password="cluster_password")
+Cluster my_cluster = Cluster.build_new_cluster(
+    contact_points = "10.20.30.40",
+    username="cluster_username",
+    password="cluster_password"
+)
 
 // Connect the Cluster object to the Cassandra cluster, returning a Session
 Session my_session = my_cluster.connect()
@@ -155,10 +159,18 @@ After that point, the interaction through the root object (`Cluster`/`Session`) 
 // Create an object to represent a Cassandra cluster (an Astra database)
 // Don't specify contact points when connecting to Astra DB
 // All connection information is implicitly passed in the SCB
-Cluster my_cluster = Cluster.build_new_cluster(username="token", password="AstraCS:...", secure_connect_bundle="/path/to/scb.zip")
+Cluster my_cluster = Cluster.build_new_cluster(
+    username="token",
+    password="AstraCS:...",
+    secure_connect_bundle="/path/to/scb.zip"
+)
 
 // For legacy applications that must use client ID and secret authentication:
-// Cluster my_cluster = Cluster.build_new_cluster(username="my_AstraDB_client_ID", password="my_AstraDB_client_secret", secure_connect_bundle="/path/to/scb.zip")
+// Cluster my_cluster = Cluster.build_new_cluster(
+//     username="my_AstraDB_client_ID",
+//     password="my_AstraDB_client_secret",
+//     secure_connect_bundle="/path/to/scb.zip"]
+// )
 
 // Connect the Cluster object to the database, returning a Session
 Session my_session = my_cluster.connect()

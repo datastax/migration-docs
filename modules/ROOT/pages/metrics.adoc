@@ -71,7 +71,7 @@ ansible-playbook deploy_zdm_monitoring.yml -i zdm_ansible_inventory
 . To verify that the stack is running, check the Grafana dashboard at `http://**MONITORING_HOST_PUBLIC_IP**:3000`.
 +
 If you deployed the monitoring stack on the jumphost machine, replace `**MONITORING_HOST_PUBLIC_IP**` with the public IP address or hostname of the jumphost.
-
++
 If you deployed your monitoring stack on another machine, replace `**MONITORING_HOST_PUBLIC_IP**` with the public IP address or hostname of that machine.
 
 . Login with your Grafana `username` and `password`.
@@ -113,9 +113,11 @@ Example request with plaintext values:
 ----
 curl -G "http://172.18.10.40:14001/health/liveliness"
 ----
+
 --
 
 Readiness endpoint::
++
 --
 [source,plaintext,subs="+quotes"]
 ----
