@@ -58,8 +58,6 @@ scp -i some-key.pem /path/to/scb.zip user@client-ip-or-host:
 [IMPORTANT]
 ====
 On your new database, the keyspace names, table names, column names, data types, and primary keys must be identical to the schema on the origin cluster or the migration will fail.
-
-To help you prepare the schema from the DDL in your origin cluster, consider using the `generate-ddl` functionality in the {dsbulk-migrator-repo}[{dsbulk-migrator}].
 ====
 +
 Note the following limitations and exceptions for tables in {astra-db}:
@@ -106,7 +104,6 @@ On your new cluster, the keyspace names, table names, column names, data types, 
 ====
 +
 To copy the schema, you can run CQL `DESCRIBE` on the origin cluster to get the schema that is being migrated, and then run the output on your new cluster.
-Alternatively, you can use the `generate-ddl` functionality in the {dsbulk-migrator-repo}[{dsbulk-migrator}].
 +
 If your origin cluster is running an earlier version, you might need to edit CQL clauses that are no longer supported in newer versions, such as `COMPACT STORAGE`.
 For specific changes in each version, see the release notes for your database platform and {cass-short} driver.
