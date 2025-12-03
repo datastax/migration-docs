@@ -1,6 +1,4 @@
-= Understand the rollback options
-:navtitle: Understand rollback options
-:page-tag: migration,zdm,zero-downtime,rollback
+= Understand rollback options
 
 At any point from Phase 1 through Phase 4, if you encounter an unexpected issue and need to stop or roll back the migration, you can revert your client applications to connect directly to the origin cluster.
 
@@ -20,4 +18,4 @@ In this case, you use your original target cluster as the new origin cluster, an
 
 == Next steps
 
-* xref:ROOT:phase1.adoc[]
+After preparing the infrastructure for {product-proxy} and your target cluster, begin xref:ROOT:phase1.adoc[Phase 1] of the migration.

@@ -115,7 +115,10 @@ include::sideloader:partial$validate.adoc[]
 
 == Use {sstable-sideloader} with {product-proxy}
 
-include::sideloader:partial$sideloader-zdm.adoc[]
+If you need to migrate a live database, you can use {sstable-sideloader} instead of {dsbulk-loader} or {cass-migrator} during of xref:ROOT:migrate-and-validate-data.adoc[Phase 2 of {product}].
+
+.Use {sstable-sideloader} with {product-proxy}
+svg::sideloader:astra-migration-toolkit.svg[]
 
 == Next steps
 

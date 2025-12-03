@@ -40,7 +40,7 @@ Migrate data from {dse-short}::
 When migrating _from_ {dse-short} to another {cass-short}-based database, follow the migration guidance for your target database to determine cluster compatibility, migration options, and recommendations.
 For example, for {astra-db}, see xref:ROOT:astra-migration-paths.adoc[], and for {hcd-short}, see xref:ROOT:hcd-migration-paths.adoc[].
 
-For information about source and target clusters that are supported by the {product-short} tools, see xref:ROOT:zdm-proxy-migration-paths.adoc[].
+For information about origin and target clusters that are supported by the {product-short} tools, see xref:ROOT:zdm-proxy-migration-paths.adoc[].
 
 If your target database isn't directly compatible with a migration from {dse-short}, you might need to take interim steps to prepare your data for migration, such as upgrading your {dse-short} version, modifying the data in your existing database to be compatible with the target database, or running an extract, transform, load (ETL) pipeline.
 --

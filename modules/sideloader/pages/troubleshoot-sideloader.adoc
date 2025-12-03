@@ -61,7 +61,6 @@ If the migration fails again, see <<restart>>.
 ////
 Future:
 === Reset failed migration endpoint
-https://datastax.slack.com/archives/C044Q060210/p1741772318884679?thread_ts=1741691860.400749&cid=C044Q060210
 TODO: Add to this page and stop-restart page.
 
 "resetting" a failed/aborted migration:

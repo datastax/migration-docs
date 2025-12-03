@@ -1,4 +1,0 @@
-= {cass-migrator} ({cass-migrator-short}) overview
-:description: You can use {cass-migrator} ({cass-migrator-short}) for data migration and validation between {cass-reg}-based databases.
-
-include::ROOT:partial$cassandra-data-migrator-body.adoc[]

@@ -1,7 +1,10 @@
-= Enable asynchronous dual reads
+= Phase 3: Enable asynchronous dual reads
 :description: Use asynchronous dual reads to test your target database's ability to handle a simulated production workload.
 
-In this optional phase, you can enable the _asynchronous dual reads_ feature to test the secondary (target) cluster's ability to handle a production workload before you permanently redirect read requests in xref:ROOT:change-read-routing.adoc[phase 4].
+After migrating and validating your data in xref:ROOT:migrate-and-validate-data.adoc[Phase 2], you can begin to test your target cluster's production readiness.
+
+Phase 3 is optional but highly recommended.
+In this phase, you enable the _asynchronous dual reads_ feature to test the secondary (target) cluster's ability to handle a production workload before you permanently redirect read requests in xref:ROOT:change-read-routing.adoc[Phase 4].
 
 By default, {product-proxy} sends all reads to the primary (origin) cluster, and then returns the result to the client application.
 
@@ -10,14 +13,14 @@ When you enable _asynchronous dual reads_, {product-proxy} sends asynchronous re
 At this point in the migration process, the secondary cluster is typically the target cluster.
 Because this feature is intended to test your target cluster's ability to handle a simulated production workload, there is no reason to run it against the origin cluster that is already capable of handling production workloads.
 
-image:migration-phase3ra.png["Migration phase 3 diagram with asynchronous dual reads sent to the secondary cluster."]
+image:migration-phase3ra.png[In migration Phase 3, enable asynchronous dual reads to send read requests to both clusters]
 
 This allows you to assess the target cluster's performance and make any adjustments before permanently switching your workloads to the target cluster.
 
 == Response and error handling with asynchronous dual reads
 
 With or without asynchronous dual reads, the client application only receives results from synchronous reads on the primary cluster.
-The client never receives results from asynchronous reads on the secondary cluster because these results are used only for {product-proxy}'s asynchronous dual read metrics.
+The client never receives results from asynchronous reads on the secondary cluster because these results are used only for {product-proxy}'s asynchronous dual read metrics and testing purposes.
 
 By design, if an asynchronous read fails or times out, it has no impact on client operations and the client application doesn't receive an error.
 However, the increased workload from read requests can cause write requests to fail or time out on the secondary cluster.
@@ -25,15 +28,15 @@ With or without asynchronous dual reads, a failed write on either cluster return
 
 This functionality is intentional so you can simulate production-scale read traffic on the secondary cluster, in addition to the existing write traffic from {product-proxy}'s xref:components.adoc#how-zdm-proxy-handles-reads-and-writes[dual writes], with the least impact to your applications.
 
-To avoid unnecessary failures due to unmigrated data, enable asynchronous dual reads only after you migrate, validate, and reconcile all data from the origin cluster to the target cluster.
+To avoid unnecessary failures due to missing unmigrated data, don't enable asynchronous dual reads until you migrate, validate, and reconcile _all_ data from the origin cluster to the target cluster.
 
 [#configure-asynchronous-dual-reads]
 == Configure asynchronous dual reads
 
 Use the `read_mode` variable to enable or disable asynchronous dual reads.
-Then, perform rolling restarts of your {product-proxy} instances to apply the configuration change.
+Then, perform a rolling restart of your {product-proxy} instances to apply the configuration change.
 
-. In `vars/zdm_proxy_core_config.yml`, edit the `read_mode` variable:
+. Edit `vars/zdm_proxy_core_config.yml`, and then set the `read_mode` variable:
 +
 [tabs]
 ======
@@ -56,31 +59,7 @@ read_mode: PRIMARY_ONLY
 --
 ======
 
-. Perform rolling restarts to apply the configuration change to your {product-proxy} instances.
-+
-[tabs]
-======
-With {product-automation}::
-+
---
-If you use {product-automation} to manage your {product-proxy} deployment, run the following command:
-
-[source,bash]
-----
-ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
-----
---
-
-Without {product-automation}::
-+
---
-If you don't use {product-automation}, you must manually restart each instance.
-
-To avoid downtime, wait for each instance to fully restart and begin receiving traffic before restarting the next instance.
---
-======
-+
-For more information about rolling restarts and changing {product-proxy} configuration variables, see xref:manage-proxy-instances.adoc[].
+. xref:ROOT:manage-proxy-instances.adoc#perform-a-rolling-restart-of-the-proxies[Perform a rolling restart] to apply the configuration change to your {product-proxy} instances.
 
 == Monitor the target cluster's performance
 
@@ -93,6 +72,23 @@ To assess performance, you can monitor the following:
 
 If needed, adjust the target cluster's configuration and continue monitoring until the cluster reaches your performance targets.
 
+If read requests fail due to missing data, go back to xref:ROOT:migrate-and-validate-data.adoc[Phase 2] and repeat your data validation and reconciliation processes as needed to rectify the missing data errors.
+
+If your data model includes non-idempotent operations, ensure that this data is handled correctly during data migration, reconciliation, and ongoing dual writes.
+For more information, see xref:ROOT:feasibility-checklists.adoc#non-idempotent-operations[Lightweight Transactions and other non-idempotent operations].
+
 == Next steps
 
-When you are confident that the target cluster is prepared to handle production workloads, you can <<configure-asynchronous-dual-reads,disable asynchronous dual reads>>, and then permanently xref:ROOT:change-read-routing.adoc[route read requests to the target cluster].
+[IMPORTANT]
+====
+Don't rush through this phase.
+
+Take time to verify that the target cluster can handle the expected production workloads successfully before proceeding to Phase 4.
+Make adjustments and reassess performance until you are confident in the cluster's readiness.
+
+Asynchronous dual reads simulate real read requests without impacting your applications or end users.
+However, in Phase 4, genuine production read requests are directed to the target cluster _exclusively_.
+If your target cluster hasn't been fully tested and prepared for production workloads, your applications can experience performance degradation, timeouts, and other issues.
+====
+
+When you are confident that the target cluster is prepared to handle production workloads, you can <<configure-asynchronous-dual-reads,disable asynchronous dual reads>>, and then proceed to xref:ROOT:change-read-routing.adoc[Phase 4] where you will permanently route read requests to the target cluster.

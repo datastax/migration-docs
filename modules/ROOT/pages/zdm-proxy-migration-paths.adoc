@@ -1,20 +1,25 @@
 = Cluster compatibility for {product}
 :description: Learn which sources and targets are eligible for {product}.
 
-True zero downtime migration is only possible if your database meets the minimum requirements described in xref:ROOT:feasibility-checklists.adoc[], including compatibility of the source and target clusters.
+True zero downtime migration is only possible if your database meets the minimum requirements described in xref:ROOT:feasibility-checklists.adoc[], including compatibility of the origin (source) and target (destination) clusters.
 
-== Compatible source and target clusters for migrations with zero downtime
+== Compatible origin and target clusters for migrations with zero downtime
 
 include::ROOT:partial$migration-scenarios.adoc[]
 
+[#incompatible-clusters-and-migrations-with-some-downtime]
 == Incompatible clusters and migrations with some downtime
 
 If you don't want to use {product-proxy} or your databases don't meet the zero-downtime requirements, you can still complete the migration, but some downtime might be necessary to finish the migration.
 
-If your clusters are incompatible, you might be able to use data migration tools such as xref:ROOT:dsbulk-migrator-overview.adoc[{dsbulk-migrator}] or a custom data migration script.
+If your origin cluster is incompatible with {product-proxy}, {product-utility}, and {product-automation}, you might be able to use standalone xref:ROOT:components.adoc#data-migration-tools[data migration tools] such as {dsbulk-loader} or a custom data migration script.
 Make sure you transform or prepare the data to comply with the target cluster's schema.
+
+For more complex migrations, such as RDBMS-to-NoSQL migrations, it is likely that your migration will require downtime for additional processing, such as extract, transform, and load (ETL) operations.
+For example, see the data modeling and compatibility considerations for xref:6.9@dse:managing:operations/migrate-data.adoc[migrating to {dse-short}].
+
+{company} recommends that you contact your {company} account representative or {support-url}[{company} Support] for guidance on incompatible or partially compatible migrations.
 
 == See also
 
 * xref:ROOT:components.adoc[]
-* xref:ROOT:feasibility-checklists.adoc[]
