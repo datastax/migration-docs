@@ -314,7 +314,7 @@ For more information, see the documentation for your version of the Java driver:
 
 These messages indicate that a protocol version downgrades happened because {product-proxy} or one of the clusters doesn't support the version requested by the client.
 
-Protocol version downgrades results from a request by a cluster that doesn't support the version that the client requested.
+Protocol version downgrades result from a request by a cluster that doesn't support the version that the client requested.
 {product-proxy} supports `V3`, `V4`, `V5`, `DSE_V1` and `DSE_V2`.
 
 In the following example, notice that the `PROTOCOL ERROR` message is introduced by `level=debug`, indicating that it isn't a true error:

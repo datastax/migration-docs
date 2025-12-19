@@ -44,8 +44,8 @@ You might choose to use an earlier protocol version in the following scenarios:
 
 * Both clusters support `V5` but you don't want to use `V5`.
 * Your client application's driver supports `V5` but you don't want to use `V5`.
-* One or both clusters don't support `V5`
-* You observe unacceptable performance degradation with `V5` with or without {product-proxy}
+* One or both clusters don't support `V5`.
+* You observe unacceptable performance degradation with `V5` with or without {product-proxy}.
 
 === Thrift isn't supported by {product-proxy}
 
