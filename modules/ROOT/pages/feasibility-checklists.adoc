@@ -10,11 +10,42 @@ If you cannot meet these requirements, particularly the cluster and schema compa
 
 == Supported {cass-short} Native Protocol versions
 
-{product-proxy} supports protocol versions `v3`, `v4`, `DSE_V1`, and `DSE_V2`.
+{product-proxy} supports protocol `V3`, `V4`, `V5`, `DSE_V1`, and `DSE_V2`.
 
-{product-proxy} technically doesn't support `v5`.
-If `v5` is requested, the proxy handles protocol negotiation so that the client application properly downgrades the protocol version to `v4`.
-This means that you can use {product-proxy} with any client application that uses a driver version supporting protocol version `v5`, as long as the application doesn't use `v5`-specific functionality.
+When a specific protocol version is requested, {product-proxy} handles protocol negotiation to ensure the requested version is supported by both clusters.
+For example, to use protocol `V5`, both the origin and target clusters must support `V5`, such as {hcd-short} or open source {cass-reg} 4.0 or later.
+Otherwise, a lower protocol version must be used.
+
+If the requested version isn't mutually supported, then {product-proxy} can force the client application to downgrade to a mutually supported protocol version.
+If automatic forced downgrade isn't possible, then the connection fails, and you must modify your client application to request a different protocol version.
+
+.Potential performance impact when upgrading to V5 from earlier versions
+[IMPORTANT]
+====
+Protocol `V5` has improved integrity checks compared to earlier versions.
+This can cause slight performance degradation when upgrading your client applications to `V5`.
+
+{company} performance tests showed potential throughput reductions ranging from 0 to 15 percent.
+This performance impact can occur with and without {product-proxy}.
+
+If your client application is already using `V5` (before your migration), it is likely that the performance impact will be much smaller, if it is observed at all.
+
+If you plan to upgrade your client applications to `V5` as part of your migration, first confirm that both clusters support `V5`.
+If your origin cluster doesn't support `V5`, you must wait until after the migration to upgrade your protocol version because {product-proxy} must use a protocol version that is supported by both clusters.
+If both clusters support `V5`, consider upgrading the protocol version before or after from the migration so you can isolate the impact of that change without the added complexity of the migration.
+As a best practice for any major version upgrade, run performance tests in lower environments to evaluate the potential impact before making the change in production.
+====
+
+You are required to use `V5` only if your client application uses `V5`-specific functionality.
+
+If your client application doesn't use any `V5`-specific functionality, you can configure your client application's driver to use any earlier protocol version that is supported by both clusters.
+
+You might choose to use an earlier protocol version in the following scenarios:
+
+* Both clusters support `V5` but you don't want to use `V5`.
+* Your client application's driver supports `V5` but you don't want to use `V5`.
+* One or both clusters don't support `V5`
+* You observe unacceptable performance degradation with `V5` with or without {product-proxy}
 
 === Thrift isn't supported by {product-proxy}
 

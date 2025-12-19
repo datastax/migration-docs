@@ -314,9 +314,8 @@ For more information, see the documentation for your version of the Java driver:
 
 These messages indicate that a protocol version downgrades happened because {product-proxy} or one of the clusters doesn't support the version requested by the client.
 
-`V5` downgrades are enforced by {product-proxy}.
-Any other downgrade results from a request by a cluster that doesn't support the version that the client requested.
-{product-proxy} supports `V3`, `V4`, `DSE_V1` and `DSE_V2`.
+Protocol version downgrades results from a request by a cluster that doesn't support the version that the client requested.
+{product-proxy} supports `V3`, `V4`, `V5`, `DSE_V1` and `DSE_V2`.
 
 In the following example, notice that the `PROTOCOL ERROR` message is introduced by `level=debug`, indicating that it isn't a true error:
 
@@ -333,7 +332,7 @@ If you observe this behavior in your logs, <<report-an-issue,report an issue>> s
 
 === Proxy fails to start due to invalid or unsupported protocol version
 
-If the {product-proxy} logs contain `debug` messages with `Invalid or unsupported protocol version: 3`, this means that one of the origin clusters doesn't support protocol version `V3` or later.
+If the {product-proxy} logs contain `debug` messages with `Invalid or unsupported protocol version: 3`, this means that one of the origin clusters doesn't support protocol `V3` or later.
 
 .Invalid or unsupported protocol version logs
 [%collapsible]
