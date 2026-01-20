@@ -27,9 +27,9 @@ ubuntu@52772568517c:~$
 
 . List (`ls`) the contents of the Ansible Control Host Docker container, and then find the `zdm-proxy-automation` directory.
 
-. Change (`cd`) to the `zdm-proxy-automation/ansible` directory.
+. Change (`cd`) to the `zdm-proxy-automation/ansible/vars` directory.
 
-. List the contents of the `ansible` directory, and then find the following YAML configuration files:
+. List the contents of the `vars` directory, and then find the following YAML configuration files:
 +
 * `zdm_proxy_container_config.yml`: Internal configuration for the proxy container itself.
 * `zdm_proxy_cluster_config.yml`: Configuration properties to connect {product-proxy} to the origin and target clusters.
@@ -486,6 +486,8 @@ If you want to enable TLS after the initial deployment, you must rerun the deplo
 After modifying all necessary configuration variables, you are ready to deploy your {product-proxy} instances.
 
 . From your shell connected to the Control Host, make sure you are in the `ansible` directory at `/home/ubuntu/zdm-proxy-automation/ansible`.
++
+If you are in the `vars` directory, then you must go up one level to the `ansible` directory.
 
 . Run the deployment playbook:
 +

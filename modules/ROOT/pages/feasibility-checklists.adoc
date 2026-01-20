@@ -240,6 +240,11 @@ For more information, see xref:datastax-drivers:developing:query-idempotence.ado
 [#client-compression]
 == Client compression
 
+[IMPORTANT]
+====
+LZ4 and Snappy compression algorithms require {product-proxy} version 2.4.0 or later.
+====
+
 The binary protocol used by {astra}, {dse-short}, {hcd-short}, and open-source {cass-short} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
 
 When establishing connections from client applications, {product-proxy} responds with a list of compression algorithms supported by both clusters.
