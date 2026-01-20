@@ -228,7 +228,12 @@ For more information, see xref:ROOT:manage-proxy-instances.adoc[].
 Typically the advanced configuration variables don't need to be changed.
 Only modify the variables in `zdm_proxy_advanced_config.yml` if you have a specific use case that requires changing them.
 
-If the following advanced configuration variables need to be changed, only do so _before_ deploying {product-proxy}:
+[IMPORTANT]
+====
+If you need to change the following advanced configuration variables, {company} recommends that you do so _before_ deploying {product-proxy}.
+If you change these later, then you must recreate your entire {product-proxy} deployment to apply the changes.
+For more information, see xref:ROOT:manage-proxy-instances.adoc#change-immutable-configuration-variables[Change immutable configuration variables].
+====
 
 Multi-datacenter clusters::
 For xref:ROOT:deployment-infrastructure.adoc#multiple-datacenter-clusters[multi-datacenter origin clusters], specify the name of the datacenter that {product-proxy} should consider local.
@@ -253,6 +258,20 @@ All other advanced configuration variables in `zdm_proxy_advanced_config.yml` ar
 You can seamlessly change them after deploying {product-proxy} with a rolling restart.
 Immutable variables require you to recreate the entire deployment and result in downtime for your {product-proxy} deployment.
 For more information, see xref:manage-proxy-instances.adoc[].
+
+[#blocked-protocol-versions]
+Blocked protocol versions::
+This variable requires version 2.4.0 or later of {product-proxy} and, if used, {product-automation}.
++
+Use `blocked_protocol_versions` to block specific {cass-short} Native Protocol versions.
+Provide a comma-separated list of disallowed versions.
+For example, `blocked_protocol_versions: "V2,V3"`.
++
+This can be useful if you notice performance degradation with specific protocol versions, and you want to disallow the protocol version at the proxy level instead of the driver level.
+For more information, see xref:ROOT:feasibility-checklists.adoc#supported-cassandra-native-protocol-versions[Supported {cass-short} Native Protocol versions].
+//TODO: How to set if not using automation?
+//TODO: is this mutable? If so, add to manage-proxy-instances.adoc#change-mutable-config-variable and edit the note at the top of this section.
+//TODO: List format? Case sensitive?
 
 [#enable-tls-encryption]
 === Enable TLS encryption

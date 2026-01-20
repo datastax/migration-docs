@@ -1,0 +1,1 @@
+{product-proxy} supports protocol `V2`, `V3`, `V4`, `V5`, `DSE_V1`, and `DSE_V2`.

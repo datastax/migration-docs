@@ -213,6 +213,7 @@ This deprecated variable is no longer functional.
 Instead, the expected credentials are based on the authentication requirements of the origin and target clusters.
 For more information, see xref:ROOT:connect-clients-to-proxy.adoc#connect-applications-to-zdm-proxy[Connect applications to {product-proxy}].
 
+[#change-immutable-configuration-variables]
 == Change immutable configuration variables
 
 All configuration variables not listed in <<change-mutable-config-variable>> are _immutable_ and can only be changed by recreating the deployment with the xref:ROOT:deploy-proxy-monitoring.adoc[initial deployment playbook] (`deploy_zdm_proxy.yml`):
