@@ -8,13 +8,98 @@ You might need to adjust your data model or application logic to ensure compatib
 
 If you cannot meet these requirements, particularly the cluster and schema compatibility requirements, see xref:ROOT:components.adoc[] for alternative migration tools and strategies.
 
+[#supported-cassandra-native-protocol-versions]
 == Supported {cass-short} Native Protocol versions
 
-{product-proxy} supports protocol versions `v3`, `v4`, `DSE_V1`, and `DSE_V2`.
+include::ROOT:partial$cassandra-protocol-versions.adoc[]
 
-{product-proxy} technically doesn't support `v5`.
-If `v5` is requested, the proxy handles protocol negotiation so that the client application properly downgrades the protocol version to `v4`.
-This means that you can use {product-proxy} with any client application that uses a driver version supporting protocol version `v5`, as long as the application doesn't use `v5`-specific functionality.
+When a specific protocol version is requested, {product-proxy} handles protocol negotiation to ensure the requested version is supported by both clusters.
+For example, to use protocol `V5` with {product-proxy}, both the origin and target clusters must support `V5`, such as {hcd-short} or open source {cass-reg} 4.0 or later.
+Otherwise, a lower protocol version must be used.
+
+If the requested version isn't mutually supported, then {product-proxy} can force the client application to downgrade to a mutually supported protocol version.
+If automatic forced downgrade isn't possible, then the connection fails, and you must modify your client application to request a different protocol version.
+
+.Determine your client application's supported and negotiated protocol versions
+[%collapsible]
+====
+Outside of a migration scenario (without {product-proxy}), the supported protocol versions depend on your origin cluster's version and client application's driver version.
+
+Generally, when connecting to a cluster, the driver requests the highest protocol version that it supports.
+If the cluster supports that version, then the connection uses that version.
+If the cluster doesn't support that version, then the driver progressively requests lower versions until it finds a mutually supported version.
+
+For example, if the cluster and driver both support `V5`, then your client application uses `V5` automatically unless you explicitly disable `V5` in your driver configuration.
+
+If you upgrade your cluster, driver, or both to a version with a higher mutually supported protocol version, then the driver automatically starts using the higher version unless you explicitly disable it in your driver configuration.
+
+When you introduce {product-proxy}, the target cluster is integrated into the protocol negotiation process to ensure that the negotiated protocol version is supported by the origin cluster, target cluster, and driver.
+====
+
+=== Considerations and requirements for `V5`
+
+Required {product-proxy} version::
+Official support for `V5` requires {product-proxy} version 2.4.0 or later.
+
+Use cases requiring `V5`::
+You are required to use `V5` only if your client application uses `V5`-specific functionality.
+
+Potential performance impact between `V5` and earlier versions::
+Protocol `V5` has improved integrity checks compared to earlier versions.
+This can cause slight performance degradation when your client application begins to use `V5` after using an earlier version.
++
+{company} performance tests showed potential throughput reductions ranging from 0 to 15 percent.
+This performance impact can occur with and without {product-proxy}.
++
+[TIP]
+====
+If your client application already uses `V5`, it is likely that you already adjusted to any potential performance impact, and the protocol version will have little or no impact on performance during your migration.
+====
++
+If you plan to upgrade to a `V5`-compatible driver before or during your migration, then the potential performance impact depends on which clusters support `V5`:
++
+--
+* **Neither cluster supports `V5`**: You won't notice any protocol-related performance impact before or during the migration because the driver and {product-proxy} cannot negotiate `V5` in this scenario.
+
+* **Only the target cluster supports `V5`**: You won't notice any protocol-related performance impact during the migration because {product-proxy} must negotiate a protocol version that is supported by both clusters.
+If the origin cluster doesn't support `V5`, then {product-proxy} cannot negotiate `V5` during the migration, and the driver cannot negotiate `V5` before the migration.
++
+However, you might experience a protocol-related performance impact at the end of the migration when you connect your client application directly to the target cluster.
+This phase removes {product-proxy} and the origin cluster from the protocol negotiation, allowing the driver to negotiate directly with the target cluster.
+If the target cluster supports `V5`, the driver can use `V5` automatically.
+
+* **Both clusters support `V5`**: Unless you <<disallow-or-explicitly-downgrade-the-protocol-version,block `V5`>>, you might experience performance impacts because the driver and {product-proxy} can use `V5` automatically in this scenario.
+Consider upgrading the driver before or after the migration so you can isolate the impact of that change without the added complexity of the migration.
+As a best practice for any significant version upgrade, run performance tests in lower environments to evaluate the potential impact before making the change in production.
+--
+
+[#disallow-or-explicitly-downgrade-the-protocol-version]
+=== Disallow or explicitly downgrade the protocol version
+
+You can restrict protocol versions in the driver and {product-proxy} configuration:
+
+Driver configuration::
+You can explicitly downgrade the protocol version in your client application's driver configuration.
+Make sure the enforced protocol version is supported by both clusters.
++
+Use this option if you need to enforce the protocol version outside of the migration.
+For example:
++
+* Both clusters and the driver support `V5` but you don't want to use `V5`: Configure the protocol version in the driver before the migration if you haven't done so already.
+* The origin cluster _doesn't_ support `V5` and you want to ensure `V5` isn't used automatically after the migration: Configure the protocol version in the driver at any point before the end of the migration when you connect your client application directly to the target cluster.
+* You observe unacceptable performance degradation when using `V5` before the migration (without {product-proxy}):
+Either mitigate the performance issues before the migration, or configure the protocol version in the driver before the migration.
+
+{product-proxy} configuration::
+You can use the `xref:ROOT:manage-proxy-instances.adoc#blocked-protocol-versions[blocked_protocol_versions]` configuration variable to block specific protocol versions at the proxy level.
+Make sure at least one mutually supported protocol version isn't blocked.
++
+This option applies _only_ while {product-proxy} is in use.
+It _doesn't_ persist after the migration.
++
+Use this option if you observe unacceptable performance degradation when {product-proxy} is active _and_ it negotiates `V5`.
+If unacceptable performance degradation occurs _without_ {product-proxy}, then configure the protocol version in the driver instead.
+However, be aware that {product-proxy} itself can have a performance impact, regardless of the protocol version.
 
 === Thrift isn't supported by {product-proxy}
 
@@ -159,6 +244,11 @@ For more information, see xref:datastax-drivers:developing:query-idempotence.ado
 
 [#client-compression]
 == Client compression
+
+[IMPORTANT]
+====
+LZ4 and Snappy compression algorithms require {product-proxy} version 2.4.0 or later.
+====
 
 The binary protocol used by {astra}, {dse-short}, {hcd-short}, and open-source {cass-short} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
 

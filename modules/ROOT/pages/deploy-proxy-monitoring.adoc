@@ -27,9 +27,9 @@ ubuntu@52772568517c:~$
 
 . List (`ls`) the contents of the Ansible Control Host Docker container, and then find the `zdm-proxy-automation` directory.
 
-. Change (`cd`) to the `zdm-proxy-automation/ansible` directory.
+. Change (`cd`) to the `zdm-proxy-automation/ansible/vars` directory.
 
-. List the contents of the `ansible` directory, and then find the following YAML configuration files:
+. List the contents of the `vars` directory, and then find the following YAML configuration files:
 +
 * `zdm_proxy_container_config.yml`: Internal configuration for the proxy container itself.
 * `zdm_proxy_cluster_config.yml`: Configuration properties to connect {product-proxy} to the origin and target clusters.
@@ -228,7 +228,13 @@ For more information, see xref:ROOT:manage-proxy-instances.adoc[].
 Typically the advanced configuration variables don't need to be changed.
 Only modify the variables in `zdm_proxy_advanced_config.yml` if you have a specific use case that requires changing them.
 
-If the following advanced configuration variables need to be changed, only do so _before_ deploying {product-proxy}:
+[IMPORTANT]
+====
+The following advanced configuration variables are immutable.
+If you need to change these variables, {company} recommends that you do so _before_ deploying {product-proxy}.
+Future changes require you to recreate your entire {product-proxy} deployment.
+For more information, see xref:ROOT:manage-proxy-instances.adoc#change-immutable-configuration-variables[Change immutable configuration variables].
+====
 
 Multi-datacenter clusters::
 For xref:ROOT:deployment-infrastructure.adoc#multiple-datacenter-clusters[multi-datacenter origin clusters], specify the name of the datacenter that {product-proxy} should consider local.
@@ -241,8 +247,8 @@ For information about downloading a region-specific {scb-short}, see xref:astra-
 
 [#ports]
 Ports::
-Each {product-proxy} instance listens on port 9042 by default, like a regular {cass-short} cluster.
-This can be overridden by setting `zdm_proxy_listen_port` to a different value.
+Each {product-proxy} instance listens on port 9042 by default, like a default {cass-short} cluster.
+You can override this by setting `zdm_proxy_listen_port` to your preferred port.
 This can be useful if the origin nodes listen on a port that is not 9042 and you want to configure {product-proxy} to listen on that same port to avoid changing the port in your client application configuration.
 +
 {product-proxy} exposes metrics on port 14001 by default.
@@ -467,6 +473,8 @@ If you want to enable TLS after the initial deployment, you must rerun the deplo
 After modifying all necessary configuration variables, you are ready to deploy your {product-proxy} instances.
 
 . From your shell connected to the Control Host, make sure you are in the `ansible` directory at `/home/ubuntu/zdm-proxy-automation/ansible`.
++
+If you are in the `vars` directory, then you must go up one level to the `ansible` directory.
 
 . Run the deployment playbook:
 +

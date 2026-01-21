@@ -96,22 +96,25 @@ After you edit mutable variables in their corresponding configuration files (`va
 
 === Mutable variables in `vars/zdm_proxy_core_config.yml`
 
-* `primary_cluster`: Determines which cluster is currently considered the xref:ROOT:faqs.adoc#what-are-origin-target-primary-and-secondary-clusters[primary cluster], either `ORIGIN` or `TARGET`.
+`primary_cluster`::
+Determines which cluster is currently considered the xref:ROOT:faqs.adoc#what-are-origin-target-primary-and-secondary-clusters[primary cluster], either `ORIGIN` or `TARGET`.
 +
 At the start of the migration, the primary cluster is the origin cluster because it contains all of the data.
 After all the existing data has been transferred and validated/reconciled on the new cluster, you can switch the primary cluster to the target cluster.
 
-* `read_mode`: Determines how reads are handled by {product-proxy}:
+`read_mode`::
+Determines how reads are handled by {product-proxy}:
 +
-** `PRIMARY_ONLY` (default): Reads are sent synchronously to the primary cluster only.
-** `DUAL_ASYNC_ON_SECONDARY`: Reads are sent synchronously to the primary cluster, and also asynchronously to the secondary cluster.
+* **`PRIMARY_ONLY` (default)**: Reads are sent synchronously to the primary cluster only.
+* **`DUAL_ASYNC_ON_SECONDARY`**: Reads are sent synchronously to the primary cluster, and also asynchronously to the secondary cluster.
 See xref:enable-async-dual-reads.adoc[].
 +
 Typically, you only set `read_mode` to `DUAL_ASYNC_ON_SECONDARY` if the `primary_cluster` variable is set to `ORIGIN`.
 This is because asynchronous dual reads are primarily intended to help test production workloads against the target cluster near the end of the migration.
 When you are ready to switch `primary_cluster` to `TARGET`, revert `read_mode` to `PRIMARY_ONLY` because there is no need to send writes to both clusters at that point in the migration.
 
-* `log_level`: Set the {product-proxy} log level as `INFO` (default) or `DEBUG`.
+`log_level`::
+Set the {product-proxy} log level as `INFO` (default) or `DEBUG`.
 +
 Only use `DEBUG` while temporarily troubleshooting an issue.
 Revert to `INFO` as soon as possible because the extra logging can impact performance slightly.
@@ -120,23 +123,23 @@ For more information, see xref:ROOT:troubleshooting-tips.adoc#proxy-logs[Check {
 
 === Mutable variables in `vars/zdm_proxy_cluster_config.yml`
 
-* Origin username and password
-
-* Target username and password
+In `vars/zdm_proxy_cluster_config.yml`, you can change the connection credentials (username and password) for the origin and target clusters.
 
 === Mutable variables in `vars/zdm_proxy_advanced_config.yml`
 
-* `zdm_proxy_max_clients_connections`: The maximum number of client connections that {product-proxy} can accept.
+`zdm_proxy_max_clients_connections`::
+The maximum number of client connections that {product-proxy} can accept.
 Each client connection results in additional cluster connections and causes the allocation of several in-memory structures.
 A high number of client connections per proxy instance can cause performance degradation, especially at high throughput.
 Adjust this variable to limit the total number of connections on each instance.
 +
 Default: `1000`
 
-* `replace_cql_functions`: Whether {product-proxy} replaces standard `now()` CQL function calls in write requests with an explicit timeUUID value computed at proxy level.
+`replace_cql_functions`::
+Whether {product-proxy} replaces standard `now()` CQL function calls in write requests with an explicit timeUUID value computed at proxy level.
 +
-If `false` (default), replacement of `now()` is disabled.
-If `true`, {product-proxy} replaces instances of `now()` in write requests with an explicit timeUUID value before sending the write to each cluster.
+* **`false` (default)**: Replacement of `now()` is disabled.
+* **`true`**: {product-proxy} replaces instances of `now()` in write requests with an explicit timeUUID value before sending the write to each cluster.
 +
 [IMPORTANT]
 ====
@@ -153,7 +156,9 @@ If `now()` is used in any of your primary key columns, {company} recommends enab
 For more information, see xref:ROOT:feasibility-checklists.adoc#cql-function-replacement[Server-side non-deterministic functions in the primary key].
 ====
 
-* [[zdm_proxy_request_timeout_ms]]`zdm_proxy_request_timeout_ms`: Global timeout in milliseconds of a request at proxy level.
+[[zdm_proxy_request_timeout_ms]]
+`zdm_proxy_request_timeout_ms`::
+Global timeout in milliseconds of a request at proxy level.
 Determines how long {product-proxy} waits for one cluster (for reads) or both clusters (for writes) to reply to a request.
 Upon reaching the timeout limit, {product-proxy} abandons the request and no longer considers it pending, which frees up internal resources to processes other requests.
 +
@@ -165,31 +170,35 @@ If the client has an especially high timeout because it routinely generates long
 +
 Default: `10000`
 
-* `origin_connection_timeout_ms` and `target_connection_timeout_ms`: Timeout in milliseconds for establishing a connection from the proxy to the origin or target cluster, respectively.
+`origin_connection_timeout_ms` and `target_connection_timeout_ms`::
+Timeout in milliseconds for establishing a connection from the proxy to the origin or target cluster, respectively.
 +
 Default: `30000`
 
-* `async_handshake_timeout_ms`: Timeout in milliseconds for the initialization (handshake) of the connection that is used solely for asynchronous dual reads between the proxy and the secondary cluster.
+`async_handshake_timeout_ms`::
+Timeout in milliseconds for the initialization (handshake) of the connection that is used solely for asynchronous dual reads between the proxy and the secondary cluster.
 +
 Upon reaching the timeout limit, the asynchronous reads aren't sent because the connection failed to be established.
 This has no impact on the handling of synchronous requests: {product-proxy} continues to handle all synchronous reads and writes as normal against the primary cluster.
 +
 Default: `4000`
 
-* `heartbeat_interval_ms`: The interval in milliseconds that heartbeats are sent to keep idle cluster connections alive.
+`heartbeat_interval_ms`::
+The interval in milliseconds that heartbeats are sent to keep idle cluster connections alive.
 This includes all control and request connections to the origin and the target clusters.
 +
 Default: `30000`
 
-* `metrics_enabled`: Whether to enable metrics collection.
+`metrics_enabled`::
+Whether to enable metrics collection.
 +
-If `false`, {product-proxy} metrics collection is completely disabled.
+* **`true` (default)**: {product-proxy} collects and exposes metrics.
+* **`false`**: {product-proxy} metrics collection is completely disabled.
 This isn't recommended.
-+
-Default: `true` (enabled)
 
 [[zdm_proxy_max_stream_ids]]
-* `zdm_proxy_max_stream_ids`: Set the maximum pool size of available stream IDs managed by {product-proxy} per client connection.
+`zdm_proxy_max_stream_ids`::
+Set the maximum pool size of available stream IDs managed by {product-proxy} per client connection.
 Use the same value as your driver's maximum stream IDs configuration.
 +
 In the CQL protocol, every request has a unique stream ID.
@@ -200,19 +209,58 @@ If you have a custom driver configuration with a higher value, make sure `zdm_pr
 +
 Default: `2048`
 
+[#blocked-protocol-versions]
+`blocked_protocol_versions`::
+This variable requires {product-proxy} and {product-automation} version 2.4.0 or later.
++
+Use `blocked_protocol_versions` to block specific {cass-short} Native Protocol versions that are supported by {product-proxy}.
+Blocking unsupported versions isn't necessary because {product-proxy} automatically rejects those versions.
++
+Allowed values include the following:
++
+* **Omitted or empty (default)**: All supported protocol versions are allowed.
+include::ROOT:partial$cassandra-protocol-versions.adoc[]
+* **One or more protocol versions**: Provide a case-insensitive, comma-separated list of one or more protocol versions that you want to block.
+The `v` prefix is optional.
++
+For example, all of the following configurations are valid:
++
+[source,yml]
+----
+# Block none
+blocked_protocol_versions:
+
+# Block one
+blocked_protocol_versions: V2
+blocked_protocol_versions: v2
+blocked_protocol_versions: 2
+
+# Block multiple
+blocked_protocol_versions: V2,V3,DSEV1
+blocked_protocol_versions: v2,v3,dsev1
+blocked_protocol_versions: 2,3,dse1
+----
++
+This variable can be useful if you notice performance degradation with specific protocol versions, and you want to disallow the protocol version at the proxy level instead of the driver level.
+For more information, see xref:ROOT:feasibility-checklists.adoc#supported-cassandra-native-protocol-versions[Supported {cass-short} Native Protocol versions].
+
 === Deprecated mutable variables
 
 Deprecated variables will be removed in a future {product-proxy} release.
 Replace them with their recommended alternatives as soon as possible.
 
-* `forward_client_credentials_to_origin`: Whether to use the credentials provided by the client application to connect to the origin cluster.
-If `false` (default), the credentials from the client application were used to connect to the target cluster.
-If `true`, the credentials from the client application were used to connect to the origin cluster.
+`forward_client_credentials_to_origin`::
+Whether to use the credentials provided by the client application to connect to the origin cluster.
++
+* **`false` (default)**: The credentials from the client application were used to connect to the target cluster.
+* **`true`**: The credentials from the client application were used to connect to the origin cluster.
+
 +
 This deprecated variable is no longer functional.
 Instead, the expected credentials are based on the authentication requirements of the origin and target clusters.
 For more information, see xref:ROOT:connect-clients-to-proxy.adoc#connect-applications-to-zdm-proxy[Connect applications to {product-proxy}].
 
+[#change-immutable-configuration-variables]
 == Change immutable configuration variables
 
 All configuration variables not listed in <<change-mutable-config-variable>> are _immutable_ and can only be changed by recreating the deployment with the xref:ROOT:deploy-proxy-monitoring.adoc[initial deployment playbook] (`deploy_zdm_proxy.yml`):
