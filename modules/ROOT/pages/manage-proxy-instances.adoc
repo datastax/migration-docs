@@ -254,6 +254,7 @@ Whether to use the credentials provided by the client application to connect to 
 +
 * **`false` (default)**: The credentials from the client application were used to connect to the target cluster.
 * **`true`**: The credentials from the client application were used to connect to the origin cluster.
+
 +
 This deprecated variable is no longer functional.
 Instead, the expected credentials are based on the authentication requirements of the origin and target clusters.
