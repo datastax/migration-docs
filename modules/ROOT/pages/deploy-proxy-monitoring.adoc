@@ -230,8 +230,9 @@ Only modify the variables in `zdm_proxy_advanced_config.yml` if you have a speci
 
 [IMPORTANT]
 ====
-If you need to change the following advanced configuration variables, {company} recommends that you do so _before_ deploying {product-proxy}.
-If you change these later, then you must recreate your entire {product-proxy} deployment to apply the changes.
+The following advanced configuration variables are immutable.
+If you need to change these variables, {company} recommends that you do so _before_ deploying {product-proxy}.
+Future changes require you to recreate your entire {product-proxy} deployment.
 For more information, see xref:ROOT:manage-proxy-instances.adoc#change-immutable-configuration-variables[Change immutable configuration variables].
 ====
 
@@ -246,8 +247,8 @@ For information about downloading a region-specific {scb-short}, see xref:astra-
 
 [#ports]
 Ports::
-Each {product-proxy} instance listens on port 9042 by default, like a regular {cass-short} cluster.
-This can be overridden by setting `zdm_proxy_listen_port` to a different value.
+Each {product-proxy} instance listens on port 9042 by default, like a default {cass-short} cluster.
+You can override this by setting `zdm_proxy_listen_port` to your preferred port.
 This can be useful if the origin nodes listen on a port that is not 9042 and you want to configure {product-proxy} to listen on that same port to avoid changing the port in your client application configuration.
 +
 {product-proxy} exposes metrics on port 14001 by default.
@@ -258,20 +259,6 @@ All other advanced configuration variables in `zdm_proxy_advanced_config.yml` ar
 You can seamlessly change them after deploying {product-proxy} with a rolling restart.
 Immutable variables require you to recreate the entire deployment and result in downtime for your {product-proxy} deployment.
 For more information, see xref:manage-proxy-instances.adoc[].
-
-[#blocked-protocol-versions]
-Blocked protocol versions::
-This variable requires version 2.4.0 or later of {product-proxy} and, if used, {product-automation}.
-+
-Use `blocked_protocol_versions` to block specific {cass-short} Native Protocol versions.
-Provide a comma-separated list of disallowed versions.
-For example, `blocked_protocol_versions: "V2,V3"`.
-+
-This can be useful if you notice performance degradation with specific protocol versions, and you want to disallow the protocol version at the proxy level instead of the driver level.
-For more information, see xref:ROOT:feasibility-checklists.adoc#supported-cassandra-native-protocol-versions[Supported {cass-short} Native Protocol versions].
-//TODO: How to set if not using automation?
-//TODO: is this mutable? If so, add to manage-proxy-instances.adoc#change-mutable-config-variable and edit the note at the top of this section.
-//TODO: List format? Case sensitive?
 
 [#enable-tls-encryption]
 === Enable TLS encryption

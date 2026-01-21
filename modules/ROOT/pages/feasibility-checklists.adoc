@@ -33,7 +33,7 @@ For example, if the cluster and driver both support `V5`, then your client appli
 
 If you upgrade your cluster, driver, or both to a version with a higher mutually supported protocol version, then the driver automatically starts using the higher version unless you explicitly disable it in your driver configuration.
 
-When you introduce {product-proxy}, the target cluster is integrated into the protocol negotiation process to ensure that the negotiated protocol version is supported by the origin cluster, target cluster, and the driver.
+When you introduce {product-proxy}, the target cluster is integrated into the protocol negotiation process to ensure that the negotiated protocol version is supported by the origin cluster, target cluster, and driver.
 ====
 
 === Considerations and requirements for `V5`
@@ -51,9 +51,12 @@ This can cause slight performance degradation when your client application begin
 {company} performance tests showed potential throughput reductions ranging from 0 to 15 percent.
 This performance impact can occur with and without {product-proxy}.
 +
+[TIP]
+====
 If your client application already uses `V5`, it is likely that you already adjusted to any potential performance impact, and the protocol version will have little or no impact on performance during your migration.
+====
 +
-If you plan to upgrade to a `V5`-compatible driver before or during your migration, the potential performance impact depends on which clusters support `V5`:
+If you plan to upgrade to a `V5`-compatible driver before or during your migration, then the potential performance impact depends on which clusters support `V5`:
 +
 --
 * **Neither cluster supports `V5`**: You won't notice any protocol-related performance impact before or during the migration because the driver and {product-proxy} cannot negotiate `V5` in this scenario.
@@ -75,18 +78,20 @@ As a best practice for any significant version upgrade, run performance tests in
 
 You can restrict protocol versions in the driver and {product-proxy} configuration:
 
-* **Driver configuration**: You can explicitly downgrade the protocol version in your client application's driver configuration.
+Driver configuration::
+You can explicitly downgrade the protocol version in your client application's driver configuration.
 Make sure the enforced protocol version is supported by both clusters.
 +
 Use this option if you need to enforce the protocol version outside of the migration.
 For example:
 +
-** Both clusters and the driver support `V5` but you don't want to use `V5`: Configure the protocol version in the driver before the migration if you haven't done so already.
-** The origin cluster _doesn't_ support `V5` and you want to ensure `V5` isn't used automatically after the migration: Configure the protocol version in the driver at any point before the end of the migration when you connect your client application directly to the target cluster.
-** You observe unacceptable performance degradation when using `V5` before the migration (without {product-proxy}):
+* Both clusters and the driver support `V5` but you don't want to use `V5`: Configure the protocol version in the driver before the migration if you haven't done so already.
+* The origin cluster _doesn't_ support `V5` and you want to ensure `V5` isn't used automatically after the migration: Configure the protocol version in the driver at any point before the end of the migration when you connect your client application directly to the target cluster.
+* You observe unacceptable performance degradation when using `V5` before the migration (without {product-proxy}):
 Either mitigate the performance issues before the migration, or configure the protocol version in the driver before the migration.
 
-* **{product-proxy} configuration**: You can use the `xref:ROOT:deploy-proxy-monitoring.adoc#blocked-protocol-versions[blocked_protocol_versions]` configuration variable to block specific protocol versions at the proxy level.
+{product-proxy} configuration::
+You can use the `xref:ROOT:manage-proxy-instances.adoc#blocked-protocol-versions[blocked_protocol_versions]` configuration variable to block specific protocol versions at the proxy level.
 Make sure at least one mutually supported protocol version isn't blocked.
 +
 This option applies _only_ while {product-proxy} is in use.

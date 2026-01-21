@@ -179,7 +179,7 @@ The following sample client applications demonstrate how to use the Java driver 
 
 See your driver's documentation for code samples that are specific to your chosen driver, including cluster connection examples and statement execution examples.
 
-You can use the provided sample client applications, in addition to your own client applications, to validate that your {product-proxy} deployment is orchestrating read and write requests as expected between the origin cluster, target cluster, and your client applications.
+You can use the provided sample client applications, in addition to your own client applications, to validate that your {product-proxy} deployment orchestrates read and write requests as expected between the origin cluster, target cluster, and client applications.
 
 {product-demo}::
 https://github.com/alicel/zdm-demo-client/[{product-demo}] is a minimal Java web application which provides a simple, stripped-down example of an application built to work with {product-proxy}.
