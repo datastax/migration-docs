@@ -31,7 +31,7 @@ If you have a multi-datacenter cluster with multiple set of client application i
 In the configuration for each {product-proxy} deployment, specify only the contact points that belong to that datacenter, and set the `xref:ROOT:deploy-proxy-monitoring.adoc#_advanced_configuration_optional[origin_local_datacenter]` and `xref:ROOT:deploy-proxy-monitoring.adoc#_advanced_configuration_optional[target_local_datacenter]` properties as needed.
 
 If your origin and target clusters are both multi-datacenter clusters, this configuration will be more complicated to correctly orchestrate traffic routing through {product-proxy}.
-{company} recommends contacting {support-url}[{company} Support] for assistance with complex multi-region and multi-datacenter migrations.
+{company} recommends contacting {support-url}[IBM Support] for assistance with complex multi-region and multi-datacenter migrations.
 
 === Don't deploy {product-proxy} as a sidecar
 
@@ -116,7 +116,7 @@ Additionally, make sure that your origin and target clusters can handle high tra
 
 Test migrations in a lower environment before you proceed with production migrations.
 
-If you need assistance with your migration, contact {support-url}[{company} Support].
+If you need assistance with your migration, contact {support-url}[IBM Support].
 ====
 --
 

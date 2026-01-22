@@ -97,4 +97,4 @@ In this case, if the migration _didn't_ fail due to a problem with the snapshot 
 +
 This starts a fresh migration with a new migration directory, a migration ID, and upload credentials.
 
-. If the migration fails again and you are unable to determine the cause of the failure, contact {support-url}[{company} Support].
+. If the migration fails again and you are unable to determine the cause of the failure, contact {support-url}[IBM Support].

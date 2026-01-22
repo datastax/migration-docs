@@ -5,7 +5,7 @@
 
 This page provides general troubleshooting advice and describes some common issues you might encounter with {product} ({product-short}).
 
-For additional assistance, you can <<report-an-issue,report an issue>>, contact your {company} account representative, or contact {support-url}[{company} Support].
+For additional assistance, you can <<report-an-issue,report an issue>>, contact your {company} account representative, or contact {support-url}[IBM Support].
 
 [#proxy-logs]
 == Check {product-proxy} logs

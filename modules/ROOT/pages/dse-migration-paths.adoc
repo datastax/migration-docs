@@ -58,7 +58,7 @@ For database-specific connection information, see the documentation for your tar
 
 == Get support for your migration
 
-If you have questions about your {dse-short} migration, contact your {company} account representative or {support-url}[{company} Support].
+If you have questions about your {dse-short} migration, contact your {company} account representative or {support-url}[IBM Support].
 
 == See also
 
