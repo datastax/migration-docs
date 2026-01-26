@@ -70,7 +70,7 @@ For more information about connecting to {hcd-short} databases, see the xref:hyp
 
 == Get support for your migration
 
-If you have questions about your {hcd-short} migration, contact your {company} account representative or {support-url}[{company} Support].
+If you have questions about your {hcd-short} migration, contact your {company} account representative or {support-url}[IBM Support].
 
 == See also
 

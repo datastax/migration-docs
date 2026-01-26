@@ -4,7 +4,7 @@
 The {astra} migration toolkit includes all xref:ROOT:components.adoc[{company} migration tools] that are designed to help you xref:astra-db-serverless:databases:migration-path-serverless.adoc[migrate your data to {astra-db}].
 
 Use the following table to learn which tools are compatible with your current database provider or service.
-If you have questions about migrating from a specific source to {astra-db}, contact your {company} account representative or {support-url}[{company} Support].
+If you have questions about migrating from a specific source to {astra-db}, contact your {company} account representative or {support-url}[IBM Support].
 
 .Migration tool compatibility
 [cols="2,1,1,1,1"]

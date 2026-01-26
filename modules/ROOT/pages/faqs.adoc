@@ -103,7 +103,7 @@ You can have the confidence that you are using tools designed specifically to ha
 
 == Where can I get help with my migration?
 
-Technical assistance with the {product-short} process is available from {support-url}[{company} Support] for {dse-short} users, https://www.ibm.com/docs/en/esfac[IBM Elite Support for {cass}] subscribers, and {astra} organizations on an **Enterprise** plan.
+Technical assistance with the {product-short} process is available from {support-url}[IBM Support] for {dse-short} users, https://www.ibm.com/docs/en/esfac[IBM Elite Support for {cass}] subscribers, and {astra} organizations on an **Enterprise** plan.
 
 For any observed problems with {product-proxy} or the other open-source {product-short} and data migration tools, you can report an issue in their respective GitHub repositories:
 

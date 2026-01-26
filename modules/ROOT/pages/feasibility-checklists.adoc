@@ -317,7 +317,7 @@ As a managed database-as-a-service (DBaaS) offering, {astra} implements xref:ast
 Make sure your application workloads and CQL statements are compatible with these limitations.
 +
 In self-managed clusters, such as {dse-short} and {cass-short}, you can configure the database limits in `cassandra.yml`.
-Many of these limits aren't configurable in {astra}, and those that can be changed require intervention by {company} Support.
+However, the xref:astra-db-serverless:databases:database-limits.adoc#cassandra-configuration-properties[{astra} `cassandra.yml`] cannot be changed unless explicitly approved and implemented by {company}.
 
 {astra} doesn't support consistency level ONE::
 `CL.ONE` isn't supported by {astra}, and read and write requests sent through {product-proxy} with `CL.ONE` to {astra-db} databases always fail.

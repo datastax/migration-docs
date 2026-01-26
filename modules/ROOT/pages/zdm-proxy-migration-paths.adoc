@@ -18,7 +18,7 @@ Make sure you transform or prepare the data to comply with the target cluster's 
 For more complex migrations, such as RDBMS-to-NoSQL migrations, it is likely that your migration will require downtime for additional processing, such as extract, transform, and load (ETL) operations.
 For example, see the data modeling and compatibility considerations for xref:6.9@dse:managing:operations/migrate-data.adoc[migrating to {dse-short}].
 
-{company} recommends that you contact your {company} account representative or {support-url}[{company} Support] for guidance on incompatible or partially compatible migrations.
+{company} recommends that you contact your {company} account representative or {support-url}[IBM Support] for guidance on incompatible or partially compatible migrations.
 
 == See also
 

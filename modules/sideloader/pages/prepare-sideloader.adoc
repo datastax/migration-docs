@@ -60,12 +60,12 @@ Target database is a {db-serverless} database::
 * Maximum capacity: Greater than the minimum by several units to allow autoscaling during resource intensive stages of the migration.
 +
 For non-trivial migrations, consider setting the maximum to 10.
-For extremely large migrations, contact your {company} account representative or {support-url}[{company} Support] to request more than 10 units to support your migration.
+For extremely large migrations, contact your {company} account representative or {support-url}[IBM Support] to request more than 10 units to support your migration.
 
 Target database is a {db-serverless-vector} database::
 +
 By default, {db-serverless-vector} databases can have no more than one unit per PCU group.
-For any non-trivial migration, contact your {company} account representative or {support-url}[{company} Support] for assistance configuring a PCU group for your target {db-serverless-vector} database.
+For any non-trivial migration, contact your {company} account representative or {support-url}[IBM Support] for assistance configuring a PCU group for your target {db-serverless-vector} database.
 ====
 
 After the migration, you can move your target database out of the flexible capacity PCU group, and then park or delete the group.
@@ -104,14 +104,14 @@ If the minimum is greater than the reserved capacity, the surplus capacity is pr
 * Maximum capacity: Greater than the minimum by several units to allow autoscaling during resource intensive stages of the migration.
 +
 For non-trivial migrations, consider setting the maximum to 10.
-For extremely large migrations, contact your {company} account representative or {support-url}[{company} Support] to request more than 10 units to support your migration.
+For extremely large migrations, contact your {company} account representative or {support-url}[IBM Support] to request more than 10 units to support your migration.
 +
 After the migration, you can reduce the minimum and maximum capacity down to the levels required for normal database operations.
 
 Target database is a {db-serverless-vector} database::
 +
 By default, {db-serverless-vector} databases can have no more than one unit per PCU group.
-For any non-trivial migration, contact your {company} account representative or {support-url}[{company} Support] for assistance configuring a PCU group for your target {db-serverless-vector} database.
+For any non-trivial migration, contact your {company} account representative or {support-url}[IBM Support] for assistance configuring a PCU group for your target {db-serverless-vector} database.
 ====
 --
 ======
