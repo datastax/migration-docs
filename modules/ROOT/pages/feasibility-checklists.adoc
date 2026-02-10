@@ -325,7 +325,7 @@ However, the xref:astra-db-serverless:databases:database-limits.adoc#cassandra-c
 You must adapt your client application to use a consistency level that is supported by both clusters to ensure that the migration is seamless and error-free.
 
 {astra} doesn't support the Stargate APIs::
-The Stargate APIs (Document, REST, GraphQL, gRPC) are deprecated for {astra}.
+The Stargate APIs (Document, REST, GraphQL, gRPC) don't support {astra}.
 If you are migrating to {astra} from an origin cluster that uses any of these APIs, your client applications won't work with {astra}.
 Before you migrate, you must change your applications to use other programmatic access, such as {cass-short} drivers or the {data-api}.
 For more information, see xref:astra-db-serverless:api-reference:compare-dataapi-to-stargate.adoc[].
