@@ -12,4 +12,4 @@ This strategy allows {astra-db}'s eventual consistency model to replicate the da
 However, this approach isn't suitable for all migrations.
 
 It is difficult to provide a one-size-fits-all solution for multi-region migrations due to the potential complexity and variability of these scenarios.
-For assistance planning a multi-region migration, contact your {company} account representative or {support-url}[{company} Support].
+For assistance planning a multi-region migration, contact your {company} account representative or {support-url}[IBM Support].

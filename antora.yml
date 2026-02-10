@@ -10,7 +10,7 @@ asciidoc:
   attributes:
     #General attributes
     company: 'DataStax'
-    support-url: 'https://support.datastax.com'
+    support-url: 'https://www.ibm.com/mysupport/s/'
     #Other product attributes
     cass-reg: 'Apache Cassandra(R)'
     cass: 'Apache Cassandra'
