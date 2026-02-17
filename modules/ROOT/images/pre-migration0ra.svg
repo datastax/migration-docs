@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 800" width="1600" height="800">
+  <defs>
+    <style>
+      .phase-box { fill: white; stroke: #333; stroke-width: 2; }
+      .phase-text { font-family: 'IBM Plex Sans', Arial, sans-serif; font-size: 24px; font-weight: bold; fill: #161616; }
+      .phase-desc { font-family: 'IBM Plex Sans', Arial, sans-serif; font-size: 18px; fill: #525252; }
+      .section-title { font-family: 'IBM Plex Sans', Arial, sans-serif; font-size: 32px; font-weight: bold; fill: #161616; }
+      .box { fill: white; stroke: #8d8d8d; stroke-width: 2; rx: 10; }
+      .app-box { fill: white; stroke: #8d8d8d; stroke-width: 2; }
+      .driver-box { fill: #0043ce; stroke: #0043ce; stroke-width: 2; }
+      .label-text { font-family: 'IBM Plex Sans', Arial, sans-serif; font-size: 20px; fill: #161616; }
+      .driver-text { font-family: 'IBM Plex Sans', Arial, sans-serif; font-size: 18px; fill: white; }
+      .arrow { stroke-width: 3; fill: none; }
+      .arrow-writes { stroke: #ee5396; marker-end: url(#arrowhead-writes); }
+      .arrow-reads { stroke: #ff832b; marker-end: url(#arrowhead-reads); }
+      .arrow-label { font-family: 'IBM Plex Sans', Arial, sans-serif; font-size: 20px; font-weight: 600; }
+      .writes-label { fill: #ee5396; }
+      .reads-label { fill: #ff832b; }
+      .logo-text { font-family: 'IBM Plex Sans', Arial, sans-serif; font-size: 16px; font-weight: bold; fill: #161616; }
+      .cassandra-text { font-family: 'IBM Plex Sans', Arial, sans-serif; font-size: 20px; font-weight: bold; fill: #1287a8; }
+    </style>
+    <marker id="arrowhead-writes" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#ee5396" />
+    </marker>
+    <marker id="arrowhead-reads" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+      <polygon points="0 0, 10 3, 0 6" fill="#ff832b" />
+    </marker>
+  </defs>
+  
+  <!-- Phase boxes at top -->
+  <g id="phases">
+    <!-- Phase 1 -->
+    <polygon class="phase-box" points="70,45 320,45 350,110 320,175 70,175 100,110" />
+    <text class="phase-text" x="195" y="95" text-anchor="middle">Phase 1</text>
+    <text class="phase-desc" x="195" y="125" text-anchor="middle">Connect clients</text>
+    <text class="phase-desc" x="195" y="150" text-anchor="middle">to ZDM proxies</text>
+    
+    <!-- Phase 2 -->
+    <polygon class="phase-box" points="360,45 610,45 640,110 610,175 360,175 390,110" />
+    <text class="phase-text" x="485" y="95" text-anchor="middle">Phase 2</text>
+    <text class="phase-desc" x="485" y="125" text-anchor="middle">Migrate and</text>
+    <text class="phase-desc" x="485" y="150" text-anchor="middle">validate data</text>
+    
+    <!-- Phase 3 -->
+    <polygon class="phase-box" points="650,45 900,45 930,110 900,175 650,175 680,110" />
+    <text class="phase-text" x="775" y="95" text-anchor="middle">Phase 3</text>
+    <text class="phase-desc" x="775" y="125" text-anchor="middle">Enable async dual</text>
+    <text class="phase-desc" x="775" y="150" text-anchor="middle">reads (optional)</text>
+    
+    <!-- Phase 4 -->
+    <polygon class="phase-box" points="940,45 1190,45 1220,110 1190,175 940,175 970,110" />
+    <text class="phase-text" x="1065" y="95" text-anchor="middle">Phase 4</text>
+    <text class="phase-desc" x="1065" y="125" text-anchor="middle">Change read routing</text>
+    <text class="phase-desc" x="1065" y="150" text-anchor="middle">to Target</text>
+    
+    <!-- Phase 5 -->
+    <polygon class="phase-box" points="1230,45 1480,45 1510,110 1480,175 1230,175 1260,110" />
+    <text class="phase-text" x="1355" y="95" text-anchor="middle">Phase 5</text>
+    <text class="phase-desc" x="1355" y="125" text-anchor="middle">Connect apps to</text>
+    <text class="phase-desc" x="1355" y="150" text-anchor="middle">Target directly</text>
+  </g>
+  
+  <!-- Pre-Migration Environment title -->
+  <text class="section-title" x="70" y="270">Pre-Migration Environment</text>
+  
+  <!-- Client Applications box -->
+  <rect class="box" x="70" y="310" width="290" height="400" />
+  <text class="label-text" x="100" y="345" font-weight="bold">Client</text>
+  <text class="label-text" x="100" y="370" font-weight="bold">Applications</text>
+  
+  <!-- First App + Driver -->
+  <ellipse class="app-box" cx="160" cy="445" rx="85" ry="32" />
+  <text class="label-text" x="160" y="453" text-anchor="middle">App</text>
+  <ellipse class="driver-box" cx="280" cy="475" rx="75" ry="28" />
+  <text class="driver-text" x="280" y="482" text-anchor="middle">Driver</text>
+  
+  <!-- Second App + Driver -->
+  <ellipse class="app-box" cx="160" cy="585" rx="85" ry="32" />
+  <text class="label-text" x="160" y="593" text-anchor="middle">App</text>
+  <ellipse class="driver-box" cx="280" cy="615" rx="75" ry="28" />
+  <text class="driver-text" x="280" y="622" text-anchor="middle">Driver</text>
+  
+  <!-- Writes arrow -->
+  <line class="arrow arrow-writes" x1="360" y1="440" x2="830" y2="440" />
+  <text class="arrow-label writes-label" x="570" y="420">Writes</text>
+  
+  <!-- Reads arrow -->
+  <line class="arrow arrow-reads" x1="360" y1="560" x2="830" y2="560" />
+  <text class="arrow-label reads-label" x="570" y="590">Reads</text>
+  
+  <!-- Origin box -->
+  <rect class="box" x="830" y="410" width="300" height="180" />
+  <text class="label-text" x="980" y="480" text-anchor="middle" font-weight="bold" font-size="28">Origin</text>
+  <text class="label-text" x="980" y="520" text-anchor="middle" font-weight="bold" font-size="28">Database</text>
+</svg>
+
+<!-- Made with Bob -->
