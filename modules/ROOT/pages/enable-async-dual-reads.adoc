@@ -13,7 +13,7 @@ When you enable _asynchronous dual reads_, {product-proxy} sends asynchronous re
 At this point in the migration process, the secondary cluster is typically the target cluster.
 Because this feature is intended to test your target cluster's ability to handle a simulated production workload, there is no reason to run it against the origin cluster that is already capable of handling production workloads.
 
-image:migration-phase3ra.svg[In migration Phase 3, enable asynchronous dual reads to send read requests to both clusters]
+image:ROOT:migration-phase3ra.svg[In migration Phase 3, enable asynchronous dual reads to send read requests to both clusters]
 
 This allows you to assess the target cluster's performance and make any adjustments before permanently switching your workloads to the target cluster.
 

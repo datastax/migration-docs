@@ -5,7 +5,7 @@ In xref:ROOT:phase1.adoc[Phase 1], you set up {product-proxy} to orchestrate liv
 
 In Phase 2 of {product}, you migrate data from the origin to the target, and then validate the migrated data.
 
-image::migration-phase2ra.svg[In {product-short} Phase 2, you migrate data from the origin cluster to the target cluster]
+image::ROOT:migration-phase2ra.svg[In {product-short} Phase 2, you migrate data from the origin cluster to the target cluster]
 
 To move and validate data, you can use a dedicated data migration tool, such as {sstable-sideloader}, {cass-migrator}, or {dsbulk-loader}, or your can create your own custom data migration script.
 

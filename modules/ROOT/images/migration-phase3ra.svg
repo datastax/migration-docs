@@ -1,4 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 800" width="1600" height="800">
+  <!-- White background -->
+  <rect width="1600" height="800" fill="#ffffff"/>
+  
   <defs>
     <style>
       .phase-box { fill: white; stroke: #333; stroke-width: 2; }

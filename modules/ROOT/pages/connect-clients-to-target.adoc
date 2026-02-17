@@ -6,7 +6,7 @@ Phase 5 is the last phase of the xref:ROOT:introduction.adoc[migration process],
 In this final phase, you connect your client applications directly and exclusively to the target cluster.
 This removes the dependency on {product-proxy} and the origin cluster, thereby completing the migration process.
 
-image::migration-phase5ra.svg[In Phase 5, your applications no longer use the proxy and, instead, connect directly to the target cluster]
+image::ROOT:migration-phase5ra.svg[In Phase 5, your applications no longer use the proxy and, instead, connect directly to the target cluster]
 
 The minimum requirements for reconfiguring these connections depend on whether your target cluster is {astra-db} or a generic CQL cluster, such as {cass-reg}, {dse}, or {hcd}.
 
