@@ -106,6 +106,7 @@ asciidoc:
     cql-short: 'CQL'
     cql-shell: 'CQL shell'
     cql-console: 'CQL console'
+    cql-service: 'CQL Service'
     pulsar-reg: 'Apache Pulsar(TM)'
     pulsar: 'Apache Pulsar'
     pulsar-short: 'Pulsar'
