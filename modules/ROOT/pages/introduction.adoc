@@ -108,7 +108,7 @@ At this point, the target database becomes the primary database.
 
 For more information and instructions, see xref:ROOT:change-read-routing.adoc[].
 
-image::ROOT:migration-phase4ra9.svg[In Phase 4, you route reads to the target cluster exclusively]
+image::ROOT:migration-phase4ra.svg[In Phase 4, you route reads to the target cluster exclusively]
 
 === Phase 5: Connect directly to the target database
 

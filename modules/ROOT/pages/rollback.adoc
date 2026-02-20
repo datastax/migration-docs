@@ -4,7 +4,7 @@ At any point from Phase 1 through Phase 4, if you encounter an unexpected issue 
 
 After addressing the issue, you can restart the migration from the beginning.
 
-image::migration-all-phases.png[Migration phases from start to finish.]
+image::migration-all-phases.svg[Migration phases from start to finish.]
 
 == Phase 5 is the point of no return
 
