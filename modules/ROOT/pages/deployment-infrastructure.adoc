@@ -19,7 +19,7 @@ You can deploy {product-proxy} on any cloud provider or on-premises, depending o
 
 The following diagram shows a typical deployment with connectivity between client applications, {product-proxy} instances, and clusters:
 
-image::zdm-during-migration3.png[Connectivity between client applications, proxy instances, and clusters]
+image::ROOT:zdm-during-migration3.png[Connectivity between client applications, proxy instances, and clusters]
 
 The {product-proxy} process is lightweight, requiring only a small amount of resources and no storage to persist its state aside from logs.
 
