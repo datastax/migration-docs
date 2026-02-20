@@ -181,7 +181,7 @@ If you already have a Grafana deployment, then you can import the dashboards fro
 
 The {product-proxy} metrics dashboard includes proxy level metrics, node level metrics, and asynchronous read requests metrics.
 
-image::zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of {product-short} metrics for the proxy.]
+image::ROOT:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of {product-short} metrics for the proxy.]
 
 This dashboard can help you identify issues such as the following:
 
@@ -280,7 +280,7 @@ The Go runtime metrics dashboard is used less often than the {product-proxy} met
 This dashboard can be helpful for troubleshooting {product-proxy} performance issues.
 It provides metrics for memory usage, Garbage Collection (GC) duration, open FDs (file descriptors), and the number of goroutines.
 
-image::zdm-golang-dashboard.png[Golang metrics dashboard example is shown.]
+image::ROOT:zdm-golang-dashboard.png[Golang metrics dashboard example is shown.]
 
 Watch for the following problem areas on the Go runtime metrics dashboard:
 
