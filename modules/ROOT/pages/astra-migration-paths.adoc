@@ -9,7 +9,7 @@ If you have questions about migrating from a specific source to {astra-db}, cont
 .Migration tool compatibility
 [cols="2,1,1,1,1"]
 |===
-|Origin |{sstable-sideloader} |{cass-migrator} |{product-proxy} |{dsbulk-loader}
+|Origin |{sstable-sideloader} |{cass-migrator} |{product-proxy} |{dsbulk}
 
 |Aiven for {cass-short}
 |icon:check[role="text-success",alt="Supported"]

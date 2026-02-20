@@ -136,7 +136,7 @@ Adjust this variable to limit the total number of connections on each instance.
 Default: `1000`
 
 `replace_cql_functions`::
-Whether {product-proxy} replaces standard `now()` CQL function calls in write requests with an explicit timeUUID value computed at proxy level.
+Whether {product-proxy} replaces standard `now()` {cql-short} function calls in write requests with an explicit timeUUID value computed at proxy level.
 +
 * **`false` (default)**: Replacement of `now()` is disabled.
 * **`true`**: {product-proxy} replaces instances of `now()` in write requests with an explicit timeUUID value before sending the write to each cluster.
@@ -201,7 +201,7 @@ This isn't recommended.
 Set the maximum pool size of available stream IDs managed by {product-proxy} per client connection.
 Use the same value as your driver's maximum stream IDs configuration.
 +
-In the CQL protocol, every request has a unique stream ID.
+In the {cql-short} protocol, every request has a unique stream ID.
 However, if there are a lot of requests in a given amount of time, errors can occur due to xref:datastax-drivers:developing:speculative-retry.adoc#stream-id-exhaustion[stream ID exhaustion].
 +
 In the client application, the stream IDs are managed internally by the driver, and, in most drivers, the max number is 2048, which is the same default value used by {product-proxy}.

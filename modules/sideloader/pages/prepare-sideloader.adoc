@@ -162,7 +162,7 @@ If you choose the alternative option, you must modify the commands accordingly f
 * *{sstable-sideloader} doesn't support encrypted data*: If your origin cluster uses xref:6.9@dse:securing:transparent-data-encryption.adoc[{dse-short} Transparent Data Encryption], be aware that {sstable-sideloader} cannot migrate these SSTables.
 +
 If you have a mix of encrypted and unencrypted data, you can use {sstable-sideloader} to migrate the unencrypted data.
-After the initial migration, you can use another strategy to move the encrypted data, such as {cass-migrator-repo}[{cass-migrator} ({cass-migrator-short})] or a manual export and reupload.
+After the initial migration, you can use another strategy to move the encrypted data, such as {cass-migrator-repo}[{cass-migrator}] or a manual export and reupload.
 
 * *{sstable-sideloader} doesn't support secondary indexes*: If you don't remove or replace these in your origin cluster, {sstable-sideloader} ignores these directories when importing the data to your {astra-db} database.
 
@@ -174,7 +174,7 @@ Your administration server must have SSH access to each node in your origin clus
 
 {company} recommends that you install the following additional software on your administration server:
 
-* {cass-migrator-repo}[{cass-migrator} ({cass-migrator-short})] to validate imported data and, with {product-proxy}, reconcile it with the origin cluster.
+* {cass-migrator-repo}[{cass-migrator-short}] to validate imported data and, with {product-proxy}, reconcile it with the origin cluster.
 * https://jqlang.github.io/jq/[jq] to format JSON responses from the {astra} {devops-api}.
 The {devops-api} commands in this guide use this tool.
 
@@ -186,18 +186,18 @@ The following information can help you prepare for specific migration scenarios,
 [#minimum-migration-scope]
 === Minimum migration scope
 
-To minimize data reconciliation issues, the recommended minimum migration scope is one CQL table across all nodes.
+To minimize data reconciliation issues, the recommended minimum migration scope is one {cql-short} table across all nodes.
 
-This means that a single migration process, from start to finish, should encapsulate the data for one CQL table as it exists on all of your origin nodes.
-For example, if you are migrating one table, you need to upload snapshots of all SSTables from all nodes for that CQL table.
+This means that a single migration process, from start to finish, should encapsulate the data for one {cql-short} table as it exists on all of your origin nodes.
+For example, if you are migrating one table, you need to upload snapshots of all SSTables from all nodes for that {cql-short} table.
 
-Avoid breaking one table into multiple migrations because migrating a subset of SSTables for one CQL table will likely result in data loss, corruption, or resurrection of previously deleted data.
+Avoid breaking one table into multiple migrations because migrating a subset of SSTables for one {cql-short} table will likely result in data loss, corruption, or resurrection of previously deleted data.
 
 Each migration is performed separately, and each migration has no awareness of prior migrations.
 This means that data from later migrations can be incorrectly applied to the table.
 For example, if your first migration includes tombstones, that data could be resurrected if it is present in a subsequent migration from another node.
 
-In contrast, if you use a single large migration to migrate all SSTables for a CQL table across all nodes, {astra-db} can reconcile the data across all nodes, ensuring that your migration is accurate and complete.
+In contrast, if you use a single large migration to migrate all SSTables for a {cql-short} table across all nodes, {astra-db} can reconcile the data across all nodes, ensuring that your migration is accurate and complete.
 
 === Multi-region migrations
 
@@ -241,7 +241,7 @@ The number of node snapshots that you uploaded to the migration bucket doesn't d
 The success of the import depends primarily on the validity of the schemas and the data in the snapshots.
 
 . After the import, validate the migrated data to ensure that it matches the data in the origin cluster.
-For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator} ({cass-migrator-short}) in validation mode].
+For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator-short} in validation mode].
 --
 
 Migrate multiple nodes to multiple databases::
@@ -284,7 +284,7 @@ The number of node snapshots that you uploaded to the migration bucket doesn't d
 The success of the import depends primarily on the validity of the schemas and the data in the snapshots.\
 
 . After the import, validate the migrated data to ensure that it matches the data in the origin cluster.
-For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator} ({cass-migrator-short}) in validation mode].
+For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator-short} in validation mode].
 --
 ======
 
@@ -297,7 +297,7 @@ If you initialize multiple migrations for the same database, you generate multip
 
 This can be useful for breaking large migrations into smaller batches.
 For example, if you have 100 snapshots, you could initialize 10 migrations, and then upload 10 different snapshots to each migration directory.
-However, don't break one CQL table into multiple migrations, as explained in <<minimum-migration-scope>>.
+However, don't break one {cql-short} table into multiple migrations, as explained in <<minimum-migration-scope>>.
 
 You can upload snapshots to multiple migration directories at once.
 However, when you reach the import phase of the migration, {sstable-sideloader} can import from only one migration directory at a time per database.
@@ -305,7 +305,7 @@ For example, if you have 10 migration IDs for the same database, you must run 10
 Each import must completely finish before starting the next import.
 
 After all of the imports are complete, validate the migrated data in your target database to ensure that it matches the data in the origin cluster.
-For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator} ({cass-migrator-short}) in validation mode].
+For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator-short} in validation mode].
 
 == Next steps
 

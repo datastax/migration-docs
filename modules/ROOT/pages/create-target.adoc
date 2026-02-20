@@ -62,13 +62,13 @@ On your new database, the keyspace names, table names, column names, data types,
 +
 Note the following limitations and exceptions for tables in {astra-db}:
 +
-* In {astra-db}, you must xref:astra-db-serverless:databases:manage-keyspaces.adoc[create keyspaces in the {astra-ui} or with the {devops-api}] because xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL for {astra-db}] doesn't support `CREATE KEYSPACE`.
-* You can use `cqlsh`, drivers, or the {data-api} to xref:astra-db-serverless:databases:manage-collections.adoc#create-a-table[create tables in {astra-db}].
+* In {astra-db}, you must xref:astra-db-serverless:databases:manage-keyspaces.adoc[create keyspaces in the {astra-ui} or with the {devops-api}] because xref:astra-db-serverless:cql:develop-with-cql.adoc[{cql-short} for {astra-db}] doesn't support `CREATE KEYSPACE`.
+* You can use the {cql-shell} (`cqlsh`), {cass-short} drivers, or the {data-api} to xref:astra-db-serverless:databases:manage-collections.adoc#create-a-table[create tables in {astra-db}].
 However, the only optional table properties that {astra-db} supports are `default_time_to_live` and `comment`.
 As a best practice, omit xref:astra-db-serverless:cql:develop-with-cql.adoc#unsupported-values-are-ignored[unsupported DDL properties], such as compaction strategy and `gc_grace_seconds`, when creating tables in {astra-db}.
 * {astra-db} doesn't support Materialized Views (MVs) and certain types of indexes.
 You must adjust your data model and application logic to discard or replace these structures before beginning your migration.
-For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc#limitations-on-cql-for-astra-db[Limitations on CQL for {astra-db}].
+For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc#limitations-on-cql-for-astra-db[Limitations on {cql-short} for {astra-db}].
 * If you plan to use {sstable-sideloader} for xref:ROOT:migrate-and-validate-data.adoc[Phase 2], see the xref:sideloader:migrate-sideloader.adoc#record-schema[target database configuration requirements for migrating data with {sstable-sideloader}].
 --
 
@@ -103,16 +103,16 @@ Store the authentication credentials securely for use by your client application
 On your new cluster, the keyspace names, table names, column names, data types, and primary keys must be identical to the schema on the origin cluster or the migration will fail.
 ====
 +
-To copy the schema, you can run CQL `DESCRIBE` on the origin cluster to get the schema that is being migrated, and then run the output on your new cluster.
+To copy the schema, you can run {cql-short} `DESCRIBE` on the origin cluster to get the schema that is being migrated, and then run the output on your new cluster.
 +
-If your origin cluster is running an earlier version, you might need to edit CQL clauses that are no longer supported in newer versions, such as `COMPACT STORAGE`.
+If your origin cluster is running an earlier version, you might need to edit {cql-short} clauses that are no longer supported in newer versions, such as `COMPACT STORAGE`.
 For specific changes in each version, see the release notes for your database platform and {cass-short} driver.
 --
 
-Other CQL-compatible data stores::
+Other {cql-short}-compatible data stores::
 +
 --
-Support for other CQL-compatible data stores isn't guaranteed for {product-proxy}.
+Support for other {cql-short}-compatible data stores isn't guaranteed for {product-proxy}.
 
 If your origin and target clusters meet the xref:ROOT:feasibility-checklists.adoc[protocol version compatibility requirements], you might be able to use {product-proxy} for your migration.
 As with any migration, {company} recommends that you test this in isolation before attempting a full-scale production migration.

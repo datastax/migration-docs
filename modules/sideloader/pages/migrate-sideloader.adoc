@@ -11,7 +11,7 @@ Before you use {sstable-sideloader} for a migration, xref:sideloader:sideloader-
 [#create-snapshots]
 == Create snapshots
 
-On _each node_ in your origin cluster, use `nodetool` to create a backup of the data that you want to migrate, including all keyspaces and CQL tables that you want to migrate.
+On _each node_ in your origin cluster, use `nodetool` to create a backup of the data that you want to migrate, including all keyspaces and {cql-short} tables that you want to migrate.
 
 . Be aware of the {sstable-sideloader} limitations related to materialized views, secondary indexes, and encrypted data that are described in xref:sideloader:prepare-sideloader.adoc#origin-cluster-requirements[Origin cluster requirements].
 If necessary, modify the data model on your origin cluster to prepare for the migration.
@@ -233,7 +233,7 @@ CREATE TABLE smart_home.sensor_readings (
 +
 .. In the {astra-ui-link} navigation menu, click *Databases*, and then click the name of your {astra-db} database.
 .. xref:astra-db-serverless:databases:manage-keyspaces.adoc#keyspaces[Create a keyspace] with the exact same name as your origin cluster's keyspace.
-.. In your database's xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL console], create tables with the exact same names and schemas as your origin cluster.
+.. In your database's xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[{cql-console}], create tables with the exact same names and schemas as your origin cluster.
 +
 image::sideloader:cql-console-create-identical-schema.png[]
 +

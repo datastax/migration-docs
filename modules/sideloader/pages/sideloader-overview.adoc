@@ -4,7 +4,7 @@
 
 {sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-reg}, {dse}, or {hcd} cluster.
 
-Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like xref:dsbulk:overview:dsbulk-about.adoc[{company} Bulk Loader (DSBulk)] and xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator} ({cass-migrator-short})], including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
+Because it imports data directly, {sstable-sideloader} can offer several advantages over {cql-short}-based tools like xref:dsbulk:overview:dsbulk-about.adoc[{dsbulk}] and xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator}], including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
 
 == {sstable-sideloader} concepts
 
@@ -19,7 +19,7 @@ A server where you run the migration commands, including CLI commands and {astra
 It must have SSH access to each node in your origin cluster.
 
 Migration::
-A workflow that you initiate within {sstable-sideloader} that encompasses the lifecycle of uploading and importing snapshot backups of a specific set of keyspaces or CQL tables.
+A workflow that you initiate within {sstable-sideloader} that encompasses the lifecycle of uploading and importing snapshot backups of a specific set of keyspaces or {cql-short} tables.
 +
 This process produces artifacts and parameters including migration buckets, migration IDs, migration directories, and upload credentials.
 You use these components throughout the migration workflow.
@@ -40,7 +40,7 @@ For more information, see xref:sideloader:prepare-sideloader.adoc[].
 === Create snapshot backups
 
 {sstable-sideloader} uses snapshot backup files to import SSTable data from your existing origin cluster.
-Each snapshot for each node in the origin cluster must include all the keyspaces and individual CQL tables that you want to migrate.
+Each snapshot for each node in the origin cluster must include all the keyspaces and individual {cql-short} tables that you want to migrate.
 
 These snapshots are ideal for database migrations because creating snapshots has a negligible performance impact on the origin cluster, and the snapshots preserve metadata like `writetime` and `ttl` values.
 
@@ -115,7 +115,7 @@ include::sideloader:partial$validate.adoc[]
 
 == Use {sstable-sideloader} with {product-proxy}
 
-If you need to migrate a live database, you can use {sstable-sideloader} instead of {dsbulk-loader} or {cass-migrator} during of xref:ROOT:migrate-and-validate-data.adoc[Phase 2 of {product}].
+If you need to migrate a live database, you can use {sstable-sideloader} instead of {dsbulk-short} or {cass-migrator-short} during of xref:ROOT:migrate-and-validate-data.adoc[Phase 2 of {product}].
 
 .Use {sstable-sideloader} with {product-proxy}
 svg::sideloader:astra-migration-toolkit.svg[]

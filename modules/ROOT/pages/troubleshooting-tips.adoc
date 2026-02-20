@@ -228,7 +228,7 @@ This flag will prevent you from accessing the logs when {product-proxy} stops or
 
 Querying `system.peers` and `system.local` can help you investigate {product-proxy} configuration issues:
 
-. xref:ROOT:connect-clients-to-proxy.adoc#connect-cqlsh-to-zdm-proxy[Connect cqlsh to a {product-proxy} instance].
+. xref:ROOT:connect-clients-to-proxy.adoc#connect-cqlsh-to-zdm-proxy[Connect the {cql-shell} to a {product-proxy} instance].
 
 . Query `system.peers`:
 +
@@ -409,7 +409,7 @@ This happens because the application specifies the custom port as part of the co
 
 For example, if the {product-proxy} instances were listening on port 14035, the contact points for the {cass-short} Java driver might be specified as `.addContactPoints("172.18.10.36:14035", "172.18.11.48:14035", "172.18.12.61:14035")`.
 
-The contact point is the first point of contact to the cluster, but the driver discovers the rest of the nodes through CQL queries.
+The contact point is the first point of contact to the cluster, but the driver discovers the rest of the nodes through {cql-short} queries.
 However, this discovery process finds the addresses only, not the ports.
 The driver uses the addresses it discovers with the port that is configured at startup.
 As a result, the custom port is used for the initial contact point only, and the default port is used with all other nodes.
@@ -441,7 +441,7 @@ Most {company}-compatible drivers have {dse-short} Insights reporting enabled by
 The driver might also have it enabled for {astra-db} depending on what server version {astra-db} is returning for queries involving the `system.local` and `system.peers` tables.
 
 These log messages are harmless, but if you need to remove them, you can disable {dse-short} Insights in the driver configuration.
-For example, in the Java driver, you can set `https://github.com/apache/cassandra-java-driver/blob/4.x/core/src/main/resources/reference.conf#L1365[advanced.monitor-reporting]` to `false`.
+For example, in the Java driver, you can set `{java-driver-url}/blob/4.x/core/src/main/resources/reference.conf#L1365[advanced.monitor-reporting]` to `false`.
 
 === Default Grafana credentials don't work
 
@@ -625,7 +625,7 @@ If you choose to adjust the infrastructure, you must repeat your tests to determ
 
 === Permission errors related to InsightsRpc
 
-If the {product-proxy} logs contain messages such as the following, it's likely that you have an origin {dse-short} cluster where Metrics Collector is enabled, and the user named in the logs doesn't have sufficient permissions to report Insights data:
+If the {product-proxy} logs contain messages such as the following, it's likely that you have an origin {dse-short} cluster where {metrics-collector} is enabled, and the user named in the logs doesn't have sufficient permissions to report Insights data:
 
 [source,log]
 ----
@@ -639,10 +639,10 @@ There are two ways to resolve this issue:
 
 [tabs]
 ======
-Disable {dse-short} Metrics Collector (recommended)::
+Disable {metrics-collector} (recommended)::
 +
 --
-. On the origin {dse-short} cluster, disable Metrics Collector:
+. On the origin {dse-short} cluster, disable {metrics-collector}:
 +
 [source,bash]
 ----
@@ -660,7 +660,7 @@ dsetool insights_config --show_config
 Grant InsightsRpc permissions::
 +
 --
-Only use this option if you cannot disable Metrics Collector.
+Only use this option if you cannot disable {metrics-collector}.
 
 Using a superuser role, grant the appropriate permissions to the user named in the logs:
 
@@ -680,8 +680,8 @@ To report an issue or get additional support, submit an issue in the {product-sh
 
 * {product-proxy-repo}/issues[{product-proxy} repository]
 * {product-automation-repo}/issues[{product-automation} repository] (includes {product-automation} and {product-utility})
-* {cass-migrator-repo}/issues[{cass-migrator} repository]
-* {dsbulk-loader-repo}/issues[{dsbulk-loader} repository]
+* {cass-migrator-repo}/issues[{cass-migrator-short} repository]
+* {dsbulk-repo}/issues[{dsbulk-short} repository]
 
 [IMPORTANT]
 ====
@@ -715,11 +715,11 @@ For performance-related issues, provide the following additional information:
 * If you use batch statements:
 +
 ** Which driver API do you use to create these batches?
-** Are you passing a `BEGIN BATCH` CQL query string to a simple/prepared statement, or do you use the actual batch statement objects that the drivers allow you to create?
+** Are you passing a `BEGIN BATCH` {cql-short} query string to a simple/prepared statement, or do you use the actual batch statement objects that the drivers allow you to create?
 
 * How many parameters does each statement have?
 
-* Is CQL function replacement enabled?
+* Is {cql-short} function replacement enabled?
 This feature is disabled by default.
 To determine if this feature is enabled, check the following variables:
 +
