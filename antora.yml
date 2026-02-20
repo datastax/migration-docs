@@ -59,5 +59,4 @@ asciidoc:
     cass-migrator-short: 'CDM'
     cass-migrator-repo: 'https://github.com/datastax/cassandra-data-migrator'
     cass-migrator-shield: 'image:https://img.shields.io/github/v/release/datastax/cassandra-data-migrator?label=latest[alt="Latest cassandra-data-migrator release on GitHub",link="{cass-migrator-repo}/packages"]'
-    # Sideloader has a specific name in this repo. It is not identical to the one in the Serverless repo.
     sstable-sideloader: '{astra-db} Sideloader'
