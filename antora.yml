@@ -8,19 +8,27 @@ nav:
 
 asciidoc:
   attributes:
-    #General attributes
     company: 'DataStax'
     support-url: 'https://www.ibm.com/mysupport/s/'
-    #Other product attributes
+    spark-reg: 'Apache Spark(TM)'
+    spark: 'Apache Spark'
+    spark-short: 'Spark'
+    hadoop-reg: 'Apache Hadoop(R)'
     cass-reg: 'Apache Cassandra(R)'
     cass: 'Apache Cassandra'
     cass-short: 'Cassandra'
+    cql: 'Cassandra Query Language (CQL)'
+    cql-short: 'CQL'
+    cql-shell: 'CQL shell'
+    cql-console: 'CQL console'
+    cql-proxy-url: 'https://github.com/datastax/cql-proxy'
+    java-driver-url: 'https://github.com/apache/cassandra-java-driver'
     dse: 'DataStax Enterprise (DSE)'
     dse-short: 'DSE'
+    metrics-collector: 'DSE Metrics Collector'
     hcd: 'Hyper-Converged Database (HCD)'
     hcd-short: 'HCD'
     mc: 'Mission Control'
-    #Astra DB attributes
     astra-db: 'Astra DB'
     astra: 'Astra'
     db-serverless: 'Serverless (non-vector)'
@@ -31,14 +39,9 @@ asciidoc:
     scb: 'Secure Connect Bundle (SCB)'
     scb-short: 'SCB'
     scb-brief: 'Secure Connect Bundle'
-    #Sideloader has a specific name in this repo. It is not identical to the one in the Serverless repo.
-    sstable-sideloader: '{astra-db} Sideloader'
-    #devops api attributes
     devops-api: 'DevOps API'
     devops-api-ref-url: 'xref:astra-api-docs:ROOT:attachment$devops-api/index.html'
-    #data api attributes
     data-api: 'Data API'
-    #Migration docs attributes
     product: 'Zero Downtime Migration'
     product-short: 'ZDM'
     product-proxy: 'ZDM Proxy'
@@ -48,9 +51,12 @@ asciidoc:
     product-automation-repo: 'https://github.com/datastax/zdm-proxy-automation'
     product-automation-shield: 'image:https://img.shields.io/github/v/release/datastax/zdm-proxy-automation?label=latest[alt="Latest zdm-proxy-automation release on GitHub",link="{product-automation-repo}/releases"]'
     product-demo: 'ZDM Demo Client'
-    dsbulk-loader: 'DSBulk Loader'
-    dsbulk-loader-repo: 'https://github.com/datastax/dsbulk'
-    cass-migrator: 'Cassandra Data Migrator'
+    dsbulk: 'DataStax Bulk Loader (DSBulk)'
+    dsbulk-short: 'DSBulk'
+    dsbulk-repo: 'https://github.com/datastax/dsbulk'
+    dsbulk-migrator: 'DSBulk Migrator'
+    cass-migrator: 'Cassandra Data Migrator (CDM)'
     cass-migrator-short: 'CDM'
     cass-migrator-repo: 'https://github.com/datastax/cassandra-data-migrator'
     cass-migrator-shield: 'image:https://img.shields.io/github/v/release/datastax/cassandra-data-migrator?label=latest[alt="Latest cassandra-data-migrator release on GitHub",link="{cass-migrator-repo}/packages"]'
+    sstable-sideloader: '{astra-db} Sideloader'

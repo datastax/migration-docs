@@ -8,7 +8,7 @@ This removes the dependency on {product-proxy} and the origin cluster, thereby c
 
 image::ROOT:migration-phase5ra.svg[In Phase 5, your applications no longer use the proxy and, instead, connect directly to the target cluster]
 
-The minimum requirements for reconfiguring these connections depend on whether your target cluster is {astra-db} or a generic CQL cluster, such as {cass-reg}, {dse}, or {hcd}.
+The minimum requirements for reconfiguring these connections depend on whether your target cluster is {astra-db} or a self-managed {cass-short} cluster, such as {cass-reg}, {dse}, or {hcd}.
 
 [WARNING]
 ====
@@ -18,9 +18,9 @@ From this point onward, the clusters will diverge, and the target cluster become
 Be sure that you have thoroughly xref:ROOT:migrate-and-validate-data.adoc[validated your data (Phase 2)], xref:ROOT:enable-async-dual-reads.adoc[tested your target cluster's performance (Phase 3)], and xref:ROOT:change-read-routing.adoc[routed all reads to the target (Phase 4)] before permanently switching the connection.
 ====
 
-== Connect a driver to a generic CQL cluster
+== Connect a driver to a self-managed {cass-short} cluster
 
-If your origin and target clusters are both generic CQL clusters, such as {cass-short}, {dse-short}, or {hcd-short}, then the driver connection strings can be extremely similar.
+If your origin and target clusters are both self-managed {cass-short} clusters, such as {cass-short}, {dse-short}, or {hcd-short}, then the driver connection strings can be extremely similar.
 It's possible that your code requires only minor changes to connect to the target cluster.
 
 . At minimum, update your driver configuration to use the appropriate contact points for your target cluster.
@@ -40,7 +40,7 @@ For more information on supported drivers, see xref:datastax-drivers:compatibili
 
 == Connect a driver to {astra-db}
 
-Connections to {astra-db} are different from connections to generic CQL clusters.
+Connections to {astra-db} are different from connections to self-managed {cass-short} clusters.
 
 === Get {astra-db} credentials
 
@@ -199,7 +199,7 @@ If your driver version is fully compatible with {astra-db}, then it has built-in
 The changes required to connect your application to {astra-db} are minimal.
 
 If your client application uses an earlier driver version without built-in {scb-short} support, {company} strongly recommends upgrading to a compatible driver to simplify configuration and get the latest features and bug fixes.
-If you prefer to make this change after the migration, or you must support a legacy application that relies on an earlier driver, you can connect to {astra-db} with https://github.com/datastax/cql-proxy[CQL Proxy], or you must extract the {scb-short} archive and provide the individual files to enable mTLS in your driver's configuration.
+If you prefer to make this change after the migration, or you must support a legacy application that relies on an earlier driver, you can connect to {astra-db} with `{cql-proxy-url}[cql-proxy]`, or you must extract the {scb-short} archive and provide the individual files to enable mTLS in your driver's configuration.
 
 The following example demonstrates how the {cass-short} Python driver connects to {astra-db} using an application token and {scb-short}:
 
@@ -231,7 +231,7 @@ In addition to updating connection strings, you might also need to make the foll
 
 * Feature compatibility between your previous and current database platform.
 +
-For example, after migrating to {astra-db}, your drivers cannot create keyspaces because xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL for {astra-db}] doesn't support `CREATE KEYSPACE`.
+For example, after migrating to {astra-db}, your drivers cannot create keyspaces because xref:astra-db-serverless:cql:develop-with-cql.adoc[{cql-short} for {astra-db}] doesn't support `CREATE KEYSPACE`.
 +
 Similarly, {astra-db} doesn't support {dse-short}-specific features like {dse-short} Insights Monitoring.
 
@@ -239,19 +239,19 @@ Similarly, {astra-db} doesn't support {dse-short}-specific features like {dse-sh
 
 Depending on your application's requirements, you might need to make these changes immediately, or you might make them after switching the connection.
 
-== Switch to the Data API
+== Switch to the {data-api}
 
-If you migrated to {astra-db} or {hcd-short}, you have the option of using the Data API instead of, or in addition to, a {cass-short} driver.
+If you migrated to {astra-db} or {hcd-short}, you have the option of using the {data-api} instead of, or in addition to, a {cass-short} driver.
 
-Although the Data API can read and write to CQL tables, it is significantly different from driver code.
-To use the Data API, you must rewrite your application code or create a new application.
+Although the {data-api} can read and write to {cql-short} tables, it is significantly different from driver code.
+To use the {data-api}, you must rewrite your application code or create a new application.
 
 For more information, see the following:
 
-* xref:astra-db-serverless:api-reference:dataapiclient.adoc[Get started with the Data API in {astra-db}]
-* xref:astra-db-serverless:api-reference:compare-dataapi-to-cql.adoc[Migrate to the Data API from CQL in {astra-db}]
-* xref:hyper-converged-database:api-reference:dataapiclient.adoc[Get started with the Data API in {hcd-short}]
-* xref:hyper-converged-database:api-reference:compare-dataapi-to-cql.adoc[Migrate to the Data API from CQL in {hcd-short}]
+* xref:astra-db-serverless:api-reference:dataapiclient.adoc[Get started with the {data-api} in {astra-db}]
+* xref:astra-db-serverless:api-reference:compare-dataapi-to-cql.adoc[Migrate to the {data-api} from {cql-short} in {astra-db}]
+* xref:hyper-converged-database:api-reference:dataapiclient.adoc[Get started with the {data-api} in {hcd-short}]
+* xref:hyper-converged-database:api-reference:compare-dataapi-to-cql.adoc[Migrate to the {data-api} from {cql-short} in {hcd-short}]
 
 == Migration complete
 

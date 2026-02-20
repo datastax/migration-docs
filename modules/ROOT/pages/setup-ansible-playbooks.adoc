@@ -108,9 +108,9 @@ The package filename format is `zdm-util-**PLATFORM**-**VERSION**.tgz`.
 The following example downloads {product-utility} version 2.3.1 for Linux amd64.
 To download a different package, change the version and package filename accordingly.
 +
-[source,bash]
+[source,bash,subs="+attributes"]
 ----
-wget https://github.com/datastax/zdm-proxy-automation/releases/download/v2.3.1/zdm-util-linux-amd64-v2.3.1.tgz
+wget {product-automation-repo}/releases/download/v2.3.1/zdm-util-linux-amd64-v2.3.1.tgz
 ----
 
 . Extract the archive:

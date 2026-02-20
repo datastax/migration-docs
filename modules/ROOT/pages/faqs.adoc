@@ -6,7 +6,7 @@ This page includes common questions about the {company} {product} ({product-shor
 
 == What is a zero-downtime migration?
 
-A zero-downtime migration with the {company} {product-short} tools means you can reliably migrate your client applications and data between CQL clusters with no interruption of service.
+A zero-downtime migration with the {company} {product-short} tools means you can reliably migrate your client applications and data between {cass-short}-based clusters with no interruption of service.
 
 == Which platforms and versions are supported by the {product-short} tools?
 
@@ -41,7 +41,7 @@ Endless validation and testing time::
 Because your client applications remain fully operational during the migration, and your clusters are kept in sync by {product-proxy}, you can take as much time as you need to validate and test the target cluster before switching over permanently.
 
 Migrate to a different platform or perform major version upgrades::
-The {product-short} tools support migrations between different CQL-based platforms, such as open-source {cass-reg} to {astra-db}, as well as major version upgrades of the same platform, such as {dse-short} 5.0 to {dse-short} 6.9.
+The {product-short} tools support migrations between different {cass-short}-based platforms, such as open-source {cass-reg} to {astra-db}, as well as major version upgrades of the same platform, such as {dse-short} 5.0 to {dse-short} 6.9.
 
 == What are the requirements for true zero-downtime migrations?
 
@@ -60,7 +60,7 @@ Yes, you can use the xref:ROOT:introduction.adoc#lab[{product-short} interactive
 The {product-short} tools are {product-proxy}, {product-utility}, and {product-automation}.
 These tools orchestrate the traffic between your client applications and the origin and target clusters during the migration process.
 
-For the actual data migration, there are many tools you can use, such as {sstable-sideloader}, {cass-migrator}, {dsbulk-loader}, and custom data migration scripts.
+For the actual data migration, there are many tools you can use, such as {sstable-sideloader}, {cass-migrator}, {dsbulk}, and custom data migration scripts.
 
 For more information, see xref:ROOT:components.adoc[].
 
@@ -92,12 +92,12 @@ At the end of the migration process, your client application connects exclusivel
 
 Before the {product-short} tools were available, migrating client applications between clusters involved granular and intrusive client application code changes, extensive migration preparation, and a window of downtime for the client application's end users.
 
-With the {product-short} tools, you can migrate your client applications and data between CQL clusters with minimal code changes and no interruption of service.
+With the {product-short} tools, you can migrate your client applications and data between {cass-short}-based clusters with minimal code changes and no interruption of service.
 You can have the confidence that you are using tools designed specifically to handle the complexities of live traffic during large enterprise migrations.
 
 == What is the pricing model?
 
-{product-proxy}, {product-utility}, {product-automation}, {cass-migrator}, and {dsbulk-loader} are free and open-sourced.
+{product-proxy}, {product-utility}, {product-automation}, {cass-migrator-short}, and {dsbulk-short} are free and open-sourced.
 
 {sstable-sideloader} is part of an {astra-db} *Enterprise* subscription plan, and it incurs costs based on usage.
 
@@ -109,12 +109,12 @@ For any observed problems with {product-proxy} or the other open-source {product
 
 * {product-proxy-repo}[{product-proxy} repository]
 * {product-automation-repo}[{product-automation} repository] (includes {product-automation} and {product-utility})
-* {cass-migrator-repo}[{cass-migrator} repository]
-* {dsbulk-loader-repo}[{dsbulk-loader} repository]
+* {cass-migrator-repo}[{cass-migrator-short} repository]
+* {dsbulk-repo}[{dsbulk-short} repository]
 
 == Can I contribute to {product-proxy}?
 
-Yes, see `https://github.com/datastax/zdm-proxy/blob/main/CONTRIBUTING.md[CONTRIBUTING.md]`.
+Yes, see `{product-proxy-repo}/blob/main/CONTRIBUTING.md[CONTRIBUTING.md]`.
 
 == Does {product-proxy} support Transport Layer Security (TLS)?
 
@@ -158,10 +158,10 @@ For more information, see xref:components.adoc#how-zdm-proxy-handles-reads-and-w
 
 In the context of the {product-short} process, the terms _cluster_ and _database_ are used interchangeably to refer to the source and destination for the data that you are moving during your migration.
 
-== What happened to DSBulk Migrator?
+== What happened to {dsbulk-migrator}?
 
 include::ROOT:partial$dsbulk-migrator-deprecation.adoc[]
 
 == See also
 
-* https://github.com/datastax/zdm-proxy/blob/main/faq.md[{product-proxy} FAQ on GitHub]
+* {product-proxy-repo}/blob/main/faq.md[{product-proxy} FAQ on GitHub]

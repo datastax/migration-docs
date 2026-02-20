@@ -103,7 +103,7 @@ However, be aware that {product-proxy} itself can have a performance impact, reg
 
 === Thrift isn't supported by {product-proxy}
 
-If you are using an earlier driver or cluster version that only supports Thrift, you must change your client application to use CQL, and, if needed, upgrade your cluster before starting the migration process.
+If you are using an earlier driver or cluster version that only supports Thrift, you must change your client application to use {cql} statements, and, if needed, upgrade your cluster before starting the migration process.
 
 == Supported data store providers, versions, and migration paths
 
@@ -114,26 +114,26 @@ include::ROOT:partial$migration-scenarios.adoc[]
 [IMPORTANT]
 ====
 To successfully migrate with {product-proxy}, the origin and target clusters must have matching schemas, including keyspace names, table names, column names, and data types.
-A CQL statement produced by your client application must be able to succeed _without modification_ on both clusters because {product-proxy} routes the exact same CQL statements to both clusters.
+A {cql-short} statement produced by your client application must be able to succeed _without modification_ on both clusters because {product-proxy} routes the exact same {cql-short} statements to both clusters.
 
-Even without {product-proxy}, matching schemas are required for most CQL-based data migration tools, such as {sstable-sideloader} and {cass-migrator}.
+Even without {product-proxy}, matching schemas are required for most {cql-short}-based data migration tools, such as {sstable-sideloader} and {cass-migrator}.
 If it is impossible to match the schemas, your migration cannot use {product-proxy}.
 See xref:ROOT:components.adoc[] for alternative migration tools and strategies, such as extract, transform, and load (ETL) processes.
 ====
 
-{product-proxy} _doesn't_ modify or transform CQL statements with the exception of <<cql-function-replacement,optional replacement for `now()`>>.
+{product-proxy} _doesn't_ modify or transform {cql-short} statements with the exception of <<cql-function-replacement,optional replacement for `now()`>>.
 
-A CQL statement that your client application sends to {product-proxy} must be able to succeed on both clusters.
+A {cql-short} statement that your client application sends to {product-proxy} must be able to succeed on both clusters.
 This means that any keyspace that your client application uses must exist on both the origin and target clusters with the same keyspace name, table names, column names, and compatible data types.
 However, the keyspaces can have different replication strategies and durable write settings.
 
-At the column level, the schema doesn't need to be a one-to-one match as long as the CQL statements can be executed successfully on both clusters.
+At the column level, the schema doesn't need to be a one-to-one match as long as the {cql-short} statements can be executed successfully on both clusters.
 For example, if a table has 10 columns, and your client application uses only five of those columns, then you can recreate the table on the target cluster with only the five required columns.
 However, the data from the other columns won't be migrated to the target cluster if those columns don't exist on the target cluster.
 Before you decide to omit a column from the target cluster, make sure that it is acceptable to permanently lose that data after the migration.
 
 In some cases, you can change the primary key on the target cluster.
-For example, if your compound primary key is `PRIMARY KEY (A, B)`, and you always provide parameters for the `A` and `B` columns in your CQL statements, then you could change the key to `PRIMARY KEY (B, A)` when creating the schema on the target because your CQL statements will still run successfully.
+For example, if your compound primary key is `PRIMARY KEY (A, B)`, and you always provide parameters for the `A` and `B` columns in your {cql-short} statements, then you could change the key to `PRIMARY KEY (B, A)` when creating the schema on the target because your {cql-short} statements will still run successfully.
 
 == Request and error handling with {product-proxy}
 
@@ -142,7 +142,7 @@ See xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[How {produc
 [[non-idempotent-operations]]
 == Lightweight Transactions and other non-idempotent operations
 
-Non-idempotent CQL operations don't produce the exact same result each time the request is executed.
+Non-idempotent {cql-short} operations don't produce the exact same result each time the request is executed.
 Whether the request is executed and the actual value written to the database depend on the column's current value or other conditions at the time of the request.
 Examples of non-idempotent operations include the following:
 
@@ -155,7 +155,7 @@ By design, a {product-short} migration involves two separate clusters, and it is
 
 If you use non-idempotent operations, {company} recommends adding a reconciliation phase to your migration before and after xref:ROOT:change-read-routing.adoc[Phase 4].
 This allows you an additional opportunity to resolve any data inconsistencies that are produced by non-idempotent operations.
-The xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator}] is ideal for detecting and reconciling these types of inconsistencies.
+The xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator-short}] is ideal for detecting and reconciling these types of inconsistencies.
 
 However, if your application workloads can tolerate inconsistencies produced by LWTs and non-idempotent operations, you might not need to perform any additional validation or reconciliation steps.
 This depends entirely on your application business logic and requirements.
@@ -253,8 +253,8 @@ LZ4 and Snappy compression algorithms require {product-proxy} version 2.4.0 or l
 The binary protocol used by {astra}, {dse-short}, {hcd-short}, and open-source {cass-short} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
 
 When establishing connections from client applications, {product-proxy} responds with a list of compression algorithms supported by both clusters.
-The compression algorithm configured in your {company}-compatible driver must match any item from the common list, or CQL request compression must be disabled completely.
-{product-proxy} cannot decompress and recompress CQL requests using different compression algorithms.
+The compression algorithm configured in your {company}-compatible driver must match any item from the common list, or {cql-short} request compression must be disabled completely.
+{product-proxy} cannot decompress and recompress {cql-short} requests using different compression algorithms.
 
 This isn't related to storage compression, which you can configure on specific tables with the `compression` table property.
 Storage/table compression doesn't affect the client application or {product-proxy} in any way.
@@ -296,25 +296,25 @@ There is no special handling for these requests, so you must consider the traver
 If the traversals are non-idempotent, then your must thoroughly validate and reconcile the data and the end of xref:ROOT:migrate-and-validate-data.adoc[Phase 2] to ensure that the target cluster is truly consistent with the origin cluster.
 For more information, see <<non-idempotent-operations>>.
 +
-{company}'s recommended tools for data migration and reconciliation are CQL-based, so they only support migrations where the origin cluster is a database that uses the new {dse-short} Graph engine ({dse-short} 6.8 and later).
+{company}'s recommended tools for data migration and reconciliation are {cql-short}-based, so they only support migrations where the origin cluster is a database that uses the new {dse-short} Graph engine ({dse-short} 6.8 and later).
 They _cannot_ be used with the earlier Graph engine in {dse-short} versions prior to 6.8.
 
 {dse-short} Search::
 Read-only {dse-short} Search workloads can be moved directly from the origin to the target without {product-proxy} being involved.
 If your client application uses Search and also issues writes, or if you need the read routing capabilities from {product-proxy}, then you can connect your Search workloads to {product-proxy} as long as you are using xref:datastax-drivers:compatibility:driver-matrix.adoc[{company}-compatible drivers] to submit these queries.
-This approach means the queries are regular CQL `SELECT` statements, so {product-proxy} handles them as regular read requests.
+This approach means the queries are regular {cql-short} `SELECT` statements, so {product-proxy} handles them as regular read requests.
 +
-If you use the HTTP API then you can either modify your applications to use the CQL API instead, or you must move those applications directly from the origin to the target when the migration is complete, if that is acceptable for your use case.
+If you use the HTTP API then you can either modify your applications to use the {cql-short} API instead, or you must move those applications directly from the origin to the target when the migration is complete, if that is acceptable for your use case.
 
 == {astra} migrations
 
 This section describes specific considerations for {astra} migrations.
 If you need to make any changes to your data model or application logic for compatibility with {astra}, do so before starting the migration.
-As mentioned previously, this is because {product-proxy} requires that the same CQL statements can be executed successfully on both clusters, and the data migration tools require matching schemas.
+As mentioned previously, this is because {product-proxy} requires that the same {cql-short} statements can be executed successfully on both clusters, and the data migration tools require matching schemas.
 
-{astra} guardrails, limits, and CQL compatibility::
-As a managed database-as-a-service (DBaaS) offering, {astra} implements xref:astra-db-serverless:databases:database-limits.adoc[guardrails and limits] on its databases, and xref:astra-db-serverless:cql:develop-with-cql.adoc[{astra} doesn't support all CQL functionality].
-Make sure your application workloads and CQL statements are compatible with these limitations.
+{astra} guardrails, limits, and {cql-short} compatibility::
+As a managed database-as-a-service (DBaaS) offering, {astra} implements xref:astra-db-serverless:databases:database-limits.adoc[guardrails and limits] on its databases, and xref:astra-db-serverless:cql:develop-with-cql.adoc[{astra} doesn't support all {cql-short} functionality].
+Make sure your application workloads and {cql-short} statements are compatible with these limitations.
 +
 In self-managed clusters, such as {dse-short} and {cass-short}, you can configure the database limits in `cassandra.yml`.
 However, the xref:astra-db-serverless:databases:database-limits.adoc#cassandra-configuration-properties[{astra} `cassandra.yml`] cannot be changed unless explicitly approved and implemented by {company}.

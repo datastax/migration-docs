@@ -20,7 +20,7 @@ For example, you might move from self-managed clusters to a cloud-based Database
 * You want to consolidate client applications running on separate clusters onto one shared cluster to minimize sprawl and maintenance.
 ====
 
-The {product-short} process uses {product-proxy}, {product-utility}, and {product-automation} to orchestrate live reads and writes on your databases while you move and validate data with a data migration tool, such as {sstable-sideloader}, {cass-migrator}, or {dsbulk-loader}.
+The {product-short} process uses {product-proxy}, {product-utility}, and {product-automation} to orchestrate live reads and writes on your databases while you move and validate data with a data migration tool, such as {sstable-sideloader}, {cass-migrator}, or {dsbulk}.
 
 {product-proxy} keeps your databases in sync at all times through its dual-writes feature, which means you can seamlessly stop or abandon the migration at any point before the last phase of the migration (the final cutover to the new database).
 For more information about these tools, see xref:ROOT:components.adoc[].
@@ -45,7 +45,7 @@ The _target cluster_ is your new {cass-short}-based environment where you want t
 
 === Plan and prepare for your migration
 
-From a functional standpoint, before you begin a migration, your client applications perform read/write operations directly with your existing xref:cql:ROOT:index.adoc[CQL]-compatible database, such as {cass}, {dse-short}, {hcd-short}, or {astra-db}.
+From a functional standpoint, before you begin a migration, your client applications perform read/write operations directly with your existing xref:cql:ROOT:index.adoc[{cql-short}]-compatible database, such as {cass}, {dse-short}, {hcd-short}, or {astra-db}.
 Over the course of the migration, the contact points change to incorporate {product-proxy} and eventually switch to the target database.
 
 image::ROOT:pre-migration0ra.svg[Before the migration begins, your applications connect exclusively to your origin cluster]
