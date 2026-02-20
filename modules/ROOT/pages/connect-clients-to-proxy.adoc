@@ -133,7 +133,7 @@ When a client connects to {product-proxy}, the client still provides only one se
 To forward requests to the other cluster, {product-proxy} uses the credentials defined in `xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[zdm_proxy_cluster_config.yml]`.
 
 .Credential usage by {product-proxy} when authentication is required for both clusters
-image::zdm-proxy-credential-usage.png[{product-proxy} credentials usage when authentication is required for both clusters, 550]
+image::ROOT:zdm-proxy-credential-usage.png[{product-proxy} credentials usage when authentication is required for both clusters, 550]
 
 The credentials that {product-proxy} expects to receive from the client depend on the authentication requirements of the origin and target clusters.
 Make sure the client passes the correct credentials for your cluster configuration:

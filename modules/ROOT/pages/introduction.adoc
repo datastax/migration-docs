@@ -48,7 +48,7 @@ The _target cluster_ is your new {cass-short}-based environment where you want t
 From a functional standpoint, before you begin a migration, your client applications perform read/write operations directly with your existing xref:cql:ROOT:index.adoc[CQL]-compatible database, such as {cass}, {dse-short}, {hcd-short}, or {astra-db}.
 Over the course of the migration, the contact points change to incorporate {product-proxy} and eventually switch to the target database.
 
-image:pre-migration0ra.png[Before the migration begins, your applications connect exclusively to your origin cluster]
+image::ROOT:pre-migration0ra.svg[Before the migration begins, your applications connect exclusively to your origin cluster]
 
 To plan and prepare for the migration, do the following:
 
@@ -75,7 +75,7 @@ Writes are sent to both the origin and target databases, while reads are execute
 
 For more information and instructions, see xref:ROOT:phase1.adoc[Phase 1: Deploy and connect {product-proxy}].
 
-image:migration-phase1ra.png[In Phase 1, you deploy and connect {product-proxy}]
+image::ROOT:migration-phase1ra.svg[In Phase 1, you deploy and connect {product-proxy}]
 
 === Phase 2: Migrate data
 
@@ -85,7 +85,7 @@ Then, you thoroughly validate the migrated data, resolving missing and mismatche
 
 For more information and instructions, see xref:ROOT:migrate-and-validate-data.adoc[].
 
-image:migration-phase2ra.png[In Phase 2, you migrate and validate data from the origin cluster to the target cluster]
+image::ROOT:migration-phase2ra.svg[In Phase 2, you migrate and validate data from the origin cluster to the target cluster]
 
 === Phase 3: Enable asynchronous dual reads
 
@@ -97,7 +97,7 @@ When enabled, {product-proxy} sends asynchronous read requests to the secondary 
 
 For more information, see xref:ROOT:enable-async-dual-reads.adoc[] and xref:ROOT:components.adoc#how_zdm_proxy_handles_reads_and_writes[How {product-proxy} handles reads and writes].
 
-image:migration-phase3ra.png[In Phase 3, you test your target cluster's production readiness]
+image::ROOT:migration-phase3ra.svg[In Phase 3, you test your target cluster's production readiness]
 
 === Phase 4: Route reads to the target database
 
@@ -108,7 +108,7 @@ At this point, the target database becomes the primary database.
 
 For more information and instructions, see xref:ROOT:change-read-routing.adoc[].
 
-image:migration-phase4ra9.png[In Phase 4, you route reads to the target cluster exclusively]
+image::ROOT:migration-phase4ra.svg[In Phase 4, you route reads to the target cluster exclusively]
 
 === Phase 5: Connect directly to the target database
 
@@ -121,7 +121,7 @@ However, be aware that the origin database is no longer synchronized with the ta
 
 For more information, see xref:ROOT:connect-clients-to-target.adoc[].
 
-image:migration-phase5ra.png[In Phase 5, you connect your client applications directly and exclusively to the target cluster]
+image::ROOT:migration-phase5ra.svg[In Phase 5, you connect your client applications directly and exclusively to the target cluster]
 
 [#lab]
 == {product} interactive lab
