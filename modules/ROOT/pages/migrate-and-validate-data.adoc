@@ -16,7 +16,7 @@ To move and validate data, you can use a dedicated data migration tool, such as 
 This tool is exclusively for migrations that move data to {astra-db}.
 
 {sstable-sideloader} is a service running in {astra-db} that imports data from snapshots of your existing {cass-reg}-based cluster.
-Because it imports data directly, {sstable-sideloader} can offer several advantages over {cql-short}-based tools like {dsbulk-short} and {cass-migrator-short}, including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
+Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like {dsbulk-short} and {cass-migrator-short}, including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
 
 To migrate data with {sstable-sideloader}, you use `nodetool`, a cloud provider's CLI, and the {astra} {devops-api}:
 

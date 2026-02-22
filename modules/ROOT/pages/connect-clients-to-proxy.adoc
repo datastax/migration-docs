@@ -200,14 +200,14 @@ The configuration logic, as well as the cluster and session management code, are
 
 == Connect the {cql-shell} to {product-proxy}
 
-The {cql-shell} (`cqlsh`) is a command-line tool that you can use to send {cql-short} and `cqlsh` commands to your {cass-short}-based clusters, including {astra-db}, {dse-short}, {hcd-short}, and {cass} databases.
+The {cql-shell} (`cqlsh`) is a command-line tool that you can use to send CQL and `cqlsh` commands to your {cass-short}-based clusters, including {astra-db}, {dse-short}, {hcd-short}, and {cass} databases.
 
 When issuing these commands directly to a cluster, you can use your database's included version of `cqlsh`, or you can download and run a standalone `cqlsh`.
 
 With {product-proxy}, you use a standalone `cqlsh` installation to issue commands to both clusters through {product-proxy}.
 
 Your origin and target clusters must have a common `cql_version` between them.
-If there is no {cql-short} version that is compatible with both clusters, `cqlsh` won't be able to connect to {product-proxy}.
+If there is no CQL version that is compatible with both clusters, `cqlsh` won't be able to connect to {product-proxy}.
 
 To connect `cqlsh` to a {product-proxy} instance, do the following:
 

@@ -103,7 +103,6 @@ asciidoc:
     cass: 'Apache Cassandra'
     cass-short: 'Cassandra'
     cql: 'Cassandra Query Language (CQL)'
-    cql-short: 'CQL'
     cql-shell: 'CQL shell'
     cql-console: 'CQL console'
     cql-service: 'CQL Service'

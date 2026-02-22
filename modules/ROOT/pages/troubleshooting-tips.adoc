@@ -409,7 +409,7 @@ This happens because the application specifies the custom port as part of the co
 
 For example, if the {product-proxy} instances were listening on port 14035, the contact points for the {cass-short} Java driver might be specified as `.addContactPoints("172.18.10.36:14035", "172.18.11.48:14035", "172.18.12.61:14035")`.
 
-The contact point is the first point of contact to the cluster, but the driver discovers the rest of the nodes through {cql-short} queries.
+The contact point is the first point of contact to the cluster, but the driver discovers the rest of the nodes through CQL queries.
 However, this discovery process finds the addresses only, not the ports.
 The driver uses the addresses it discovers with the port that is configured at startup.
 As a result, the custom port is used for the initial contact point only, and the default port is used with all other nodes.
@@ -715,11 +715,11 @@ For performance-related issues, provide the following additional information:
 * If you use batch statements:
 +
 ** Which driver API do you use to create these batches?
-** Are you passing a `BEGIN BATCH` {cql-short} query string to a simple/prepared statement, or do you use the actual batch statement objects that the drivers allow you to create?
+** Are you passing a `BEGIN BATCH` CQL query string to a simple/prepared statement, or do you use the actual batch statement objects that the drivers allow you to create?
 
 * How many parameters does each statement have?
 
-* Is {cql-short} function replacement enabled?
+* Is CQL function replacement enabled?
 This feature is disabled by default.
 To determine if this feature is enabled, check the following variables:
 +

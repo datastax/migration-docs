@@ -11,7 +11,7 @@ Before you use {sstable-sideloader} for a migration, xref:sideloader:sideloader-
 [#create-snapshots]
 == Create snapshots
 
-On _each node_ in your origin cluster, use `nodetool` to create a backup of the data that you want to migrate, including all keyspaces and {cql-short} tables that you want to migrate.
+On _each node_ in your origin cluster, use `nodetool` to create a backup of the data that you want to migrate, including all keyspaces and CQL tables that you want to migrate.
 
 . Be aware of the {sstable-sideloader} limitations related to materialized views, secondary indexes, and encrypted data that are described in xref:sideloader:prepare-sideloader.adoc#origin-cluster-requirements[Origin cluster requirements].
 If necessary, modify the data model on your origin cluster to prepare for the migration.

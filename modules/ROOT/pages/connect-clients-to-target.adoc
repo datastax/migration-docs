@@ -231,7 +231,7 @@ In addition to updating connection strings, you might also need to make the foll
 
 * Feature compatibility between your previous and current database platform.
 +
-For example, after migrating to {astra-db}, your drivers cannot create keyspaces because xref:astra-db-serverless:cql:develop-with-cql.adoc[{cql-short} for {astra-db}] doesn't support `CREATE KEYSPACE`.
+For example, after migrating to {astra-db}, your drivers cannot create keyspaces because xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL for {astra-db}] doesn't support `CREATE KEYSPACE`.
 +
 Similarly, {astra-db} doesn't support {dse-short}-specific features like {dse-short} Insights Monitoring.
 
@@ -243,15 +243,15 @@ Depending on your application's requirements, you might need to make these chang
 
 If you migrated to {astra-db} or {hcd-short}, you have the option of using the {data-api} instead of, or in addition to, a {cass-short} driver.
 
-Although the {data-api} can read and write to {cql-short} tables, it is significantly different from driver code.
+Although the {data-api} can read and write to CQL tables, it is significantly different from driver code.
 To use the {data-api}, you must rewrite your application code or create a new application.
 
 For more information, see the following:
 
 * xref:astra-db-serverless:api-reference:dataapiclient.adoc[Get started with the {data-api} in {astra-db}]
-* xref:astra-db-serverless:api-reference:compare-dataapi-to-cql.adoc[Migrate to the {data-api} from {cql-short} in {astra-db}]
+* xref:astra-db-serverless:api-reference:compare-dataapi-to-cql.adoc[Migrate to the {data-api} from CQL in {astra-db}]
 * xref:hyper-converged-database:api-reference:dataapiclient.adoc[Get started with the {data-api} in {hcd-short}]
-* xref:hyper-converged-database:api-reference:compare-dataapi-to-cql.adoc[Migrate to the {data-api} from {cql-short} in {hcd-short}]
+* xref:hyper-converged-database:api-reference:compare-dataapi-to-cql.adoc[Migrate to the {data-api} from CQL in {hcd-short}]
 
 == Migration complete
 
