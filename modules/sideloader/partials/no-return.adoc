@@ -1,2 +1,2 @@
 You can abort a migration up until the point at which {sstable-sideloader} starts importing SSTable metadata.
-After this point, you must wait for the migration to finish, and then you can use `cqlsh` to drop the keyspace/table in your target database before repeating the entire migration procedure.
+After this point, you must wait for the migration to finish, and then you can use the {cql-shell} (`cqlsh`) to drop the keyspace/table in your target database before repeating the entire migration procedure.

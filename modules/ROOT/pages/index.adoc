@@ -68,7 +68,7 @@ svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-
 
     svg:common:ROOT:icons/datastax/insert-data.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
-    <h3 class="discrete !text-h2 !m-0">{cass-migrator} ({cass-migrator-short})</h3>
+    <h3 class="discrete !text-h2 !m-0">{cass-migrator}</h3>
 
     <p>{cass-migrator-short} can migrate and validate data between {cass-short}-based clusters, with optional logging and reconciliation support.</p>
 
@@ -81,12 +81,12 @@ svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-
 
     svg:common:ROOT:icons/datastax/migrate.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
-    <h3 class="discrete !text-h2 !m-0">{dsbulk-loader}</h3>
+    <h3 class="discrete !text-h2 !m-0">{dsbulk}</h3>
 
-    <p>{dsbulk-loader} can load, unload, and count large volumes of data from your {cass-short}-based clusters.</p>
+    <p>{dsbulk-short} can load, unload, and count large volumes of data from your {cass-short}-based clusters.</p>
 
     <div class="landing-a mt-auto">
-        xref:dsbulk:overview:dsbulk-about.adoc[Get started with {dsbulk-loader}]
+        xref:dsbulk:overview:dsbulk-about.adoc[Get started with {dsbulk-short}]
     </div>
 
   </div>
