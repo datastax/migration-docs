@@ -211,7 +211,7 @@ If there is no CQL version that is compatible with both clusters, `cqlsh` won't 
 
 To connect `cqlsh` to a {product-proxy} instance, do the following:
 
-. On a machine that can connect to your {product-proxy} instance, xref:cql:connect:start-cqlsh-linux-mac.adoc[download and install the {cql-shell}].
+. On a machine that can connect to your {product-proxy} instance, xref:cql:cqlsh:use-cql-shell.adoc[download and install the {cql-shell}].
 +
 Any version of `cqlsh` can connect to {product-proxy}, but some clusters require a specific `cqlsh` version.
 
