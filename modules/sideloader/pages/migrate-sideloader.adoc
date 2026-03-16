@@ -205,7 +205,7 @@ During the migration, {sstable-sideloader} automatically populates any SAI defin
 * Exact primary key definition as defined in your origin cluster, including the partition key, clustering columns, and ascending/descending ordering clauses.
 You must define partition key columns and clustering columns in the exact order that they are defined on your origin cluster.
 +
-To retrieve schema properties, you can run the `xref:astra@cql:reference:cqlsh-commands/describe-keyspace.adoc[DESCRIBE KEYSPACE]` command on your origin cluster:
+To retrieve schema properties, you can run the `xref:astra@cql:cqlsh:cqlsh-commands/describe-keyspace.adoc[DESCRIBE KEYSPACE]` command on your origin cluster:
 +
 [source,cql,subs="+quotes"]
 ----
