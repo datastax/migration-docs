@@ -24,7 +24,7 @@ This infrastructure can be on-premise or in any cloud provider of your choice.
 +
 If your {product-proxy} machines use private IPs, which are recommended for production deployments, configure these before running {product-utility}.
 If you enable private IPs later, you must reconfigure and redeploy your {product-proxy} instances.
-This is a disruptive operation that requires a small amount of downtime because the deployment playbook decommissions and recreates all {product-proxy} containers simultaneously.
+This is a disruptive operation that requires a small amount of downtime because the deployment playbook decommissions and re-creates all {product-proxy} containers simultaneously.
 
 * https://docs.docker.com/engine/install/#server[Install Docker] on the machine that will run the Ansible Control Host container, and ensure that the `docker` command https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[doesn't require superuser privileges].
 +

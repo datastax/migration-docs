@@ -266,7 +266,7 @@ If the schemas don't match, the migration fails.
 +
 You don't need to make any changes based on the number of nodes, as long as the keyspaces and table schemas are replicated in the target databases.
 +
-If you want to migrate the same data to multiple databases, you must recreate the schemas in each of those databases.
+If you want to migrate the same data to multiple databases, you must re-create the schemas in each of those databases.
 {sstable-sideloader} requires a schema to be present in the target database in order to migrate data.
 
 . For each target database, initialize a migration to prompt {sstable-sideloader} to create migration buckets for each database.
