@@ -72,7 +72,7 @@ asciidoc:
     astra-ui: 'Astra Portal'
     astra-url: 'https://astra.datastax.com'
     astra-ui-link: '{astra-url}[{astra-ui}^]'
-    db-classic: 'Managed Cluster'
+    db-classic: 'Astra Managed Clusters'
     db-serverless: 'Serverless (non-vector)'
     db-serverless-vector: 'Serverless (vector)'
     scb: 'Secure Connect Bundle (SCB)'
@@ -84,7 +84,6 @@ asciidoc:
     astra-stream: 'Astra Streaming'
     starlight-kafka: 'Starlight for Kafka'
     starlight-rabbitmq: 'Starlight for RabbitMQ'
-    astra-streaming-examples-repo: 'https://github.com/datastax/astra-streaming-examples'
     sstable-sideloader: '{astra-db} Sideloader'
     zdm: 'Zero Downtime Migration'
     zdm-short: 'ZDM'
@@ -223,10 +222,6 @@ asciidoc:
     capacity-service: 'Capacity Service'
     lcm: 'Lifecycle Manager (LCM)'
     lcm-short: 'LCM'
-    cr: 'custom resource (CR)'
-    cr-short: 'CR'
-    crd: 'custom resource definition (CRD)'
-    crd-short: 'CRD'
     # Antora Atlas
     primary-site-url: https://docs.datastax.com/en
     primary-site-manifest-url: https://docs.datastax.com/en/site-manifest.json

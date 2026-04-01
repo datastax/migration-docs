@@ -5,7 +5,7 @@ After you review the xref:ROOT:feasibility-checklists.adoc[compatibility require
 This includes the following:
 
 * Create the new cluster that will be the target of your migration.
-* Recreate the schema from your origin cluster on the target cluster.
+* Re-create the schema from your origin cluster on the target cluster.
 * Gather authentication credentials and connection details for the target cluster.
 
 The preparation steps depend on your target platform.
@@ -53,7 +53,7 @@ For example, you could use `scp`:
 scp -i some-key.pem /path/to/scb.zip user@client-ip-or-host:
 ----
 
-. Recreate your client application's schema on your {astra-db} database, including each keyspace and table that you want to migrate.
+. Re-create your client application's schema on your {astra-db} database, including each keyspace and table that you want to migrate.
 +
 [IMPORTANT]
 ====
@@ -96,7 +96,7 @@ Store the authentication credentials securely for use by your client application
 
 . Note your cluster's connection details, including the contact points (IP addresses or hostnames) and port number.
 
-. Recreate your origin cluster's schema on your new cluster, including each keyspace and table that you want to migrate.
+. Re-create your origin cluster's schema on your new cluster, including each keyspace and table that you want to migrate.
 +
 [IMPORTANT]
 ====

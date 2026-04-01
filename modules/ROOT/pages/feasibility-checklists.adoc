@@ -128,7 +128,7 @@ This means that any keyspace that your client application uses must exist on bot
 However, the keyspaces can have different replication strategies and durable write settings.
 
 At the column level, the schema doesn't need to be a one-to-one match as long as the CQL statements can be executed successfully on both clusters.
-For example, if a table has 10 columns, and your client application uses only five of those columns, then you can recreate the table on the target cluster with only the five required columns.
+For example, if a table has 10 columns, and your client application uses only five of those columns, then you can re-create the table on the target cluster with only the five required columns.
 However, the data from the other columns won't be migrated to the target cluster if those columns don't exist on the target cluster.
 Before you decide to omit a column from the target cluster, make sure that it is acceptable to permanently lose that data after the migration.
 
