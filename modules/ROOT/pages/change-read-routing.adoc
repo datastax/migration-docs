@@ -8,7 +8,7 @@ This phase routes production read requests to the target cluster exclusively.
 Make sure all data is present on the target cluster, and it is prepared to handle full-scale production workloads.
 ====
 
-image::migration-phase4ra9.png[In migration Phase 4, {product-proxy}'s read routing switches to the target cluster]
+image::ROOT:migration-phase4ra.svg[In migration Phase 4, {product-proxy}'s read routing switches to the target cluster]
 
 == Prerequisites
 

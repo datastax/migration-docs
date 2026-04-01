@@ -232,7 +232,7 @@ Only modify the variables in `zdm_proxy_advanced_config.yml` if you have a speci
 ====
 The following advanced configuration variables are immutable.
 If you need to change these variables, {company} recommends that you do so _before_ deploying {product-proxy}.
-Future changes require you to recreate your entire {product-proxy} deployment.
+Future changes require you to re-create your entire {product-proxy} deployment.
 For more information, see xref:ROOT:manage-proxy-instances.adoc#change-immutable-configuration-variables[Change immutable configuration variables].
 ====
 
@@ -257,7 +257,7 @@ This can be changed by setting `metrics_port` to a different value if desired.
 
 All other advanced configuration variables in `zdm_proxy_advanced_config.yml` are mutable.
 You can seamlessly change them after deploying {product-proxy} with a rolling restart.
-Immutable variables require you to recreate the entire deployment and result in downtime for your {product-proxy} deployment.
+Immutable variables require you to re-create the entire deployment and result in downtime for your {product-proxy} deployment.
 For more information, see xref:manage-proxy-instances.adoc[].
 
 [#enable-tls-encryption]

@@ -30,7 +30,7 @@ Typically, you only need to update the connection string.
 === How {product-proxy} handles reads and writes
 
 {company} created {product-proxy} to orchestrate requests between a client application and both the origin and target clusters.
-These clusters can be any xref:cql:ROOT:index.adoc[CQL]-compatible data store, such as {cass-reg}, {dse}, and {astra-db}.
+These clusters can be any data store that supports the xref:cql:ROOT:index.adoc[{cql}], such as {cass-reg}, {dse}, {hcd}, and {astra-db}.
 
 During the migration process, you designate one cluster as the _primary cluster_, which serves as the source of truth for reads.
 For the majority of the migration process, this is typically the origin cluster.
@@ -145,21 +145,21 @@ For more information, see xref:sideloader:sideloader-overview.adoc[].
 
 === {cass-migrator}
 
-You can use {cass-migrator} ({cass-migrator-short}) for data migration and validation between {cass-reg}-based databases.
+You can use {cass-migrator-short} for data migration and validation between {cass-short}-based databases.
 It offers extensive functionality and configuration options to support large and complex migrations as well as post-migration data validation.
 
 You can use {cass-migrator-short} by itself, with {product-proxy}, or for data validation after using another data migration tool.
 
 For more information, see xref:ROOT:cassandra-data-migrator.adoc[].
 
-=== {dsbulk-loader}
+=== {dsbulk}
 
-{dsbulk-loader} is a high-performance data loading and unloading tool for {cass-short}-based databases.
+{dsbulk-short} is a high-performance data loading and unloading tool for {cass-short}-based databases.
 You can use it to load, unload, and count records.
 
-Because {dsbulk-loader} doesn't have the same data validation capabilities as {cass-migrator-short}, it is best for migrations that don't require extensive data validation, aside from post-migration row counts.
+Because {dsbulk-short} doesn't have the same data validation capabilities as {cass-migrator-short}, it is best for migrations that don't require extensive data validation, aside from post-migration row counts.
 
-You can use {dsbulk-loader} alone or with {product-proxy}.
+You can use {dsbulk-short} alone or with {product-proxy}.
 
 For more information, see xref:dsbulk:overview:dsbulk-about.adoc[].
 
@@ -171,7 +171,7 @@ include::ROOT:partial$dsbulk-migrator-deprecation.adoc[]
 === Other data migration processes
 
 Depending on your origin and target databases, there might be other data migration tools available for your migration.
-For example, if you want to write your own custom data migration processes, you can use a tool like Apache Spark(TM).
+For example, if you want to write your own custom data migration processes, you can use a tool like {spark-reg}.
 
 To use a data migration tool with {product-proxy}, it must meet the following requirements:
 

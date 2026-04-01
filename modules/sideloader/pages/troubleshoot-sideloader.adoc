@@ -89,7 +89,7 @@ There are two reasons you might need to do this:
 +
 ** The origin and target schemas don't match.
 ** The migration reached a point that some data was loaded to the target database.
-This is unlikely, but, if this happens, you must xref:astra-db-serverless:databases:manage-collections.adoc#delete-a-table-in-the-astra-portal[drop the table] from your target database, and then recreate the table in the target database.
+This is unlikely, but, if this happens, you must xref:astra-db-serverless:databases:manage-collections.adoc#delete-a-table-in-the-astra-portal[drop the table] from your target database, and then re-create the table in the target database.
 +
 In this case, if the migration _didn't_ fail due to a problem with the snapshot data, you can potentially reuse the existing snapshots for the new migration.
 

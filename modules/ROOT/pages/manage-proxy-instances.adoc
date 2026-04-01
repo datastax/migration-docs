@@ -54,14 +54,14 @@ ubuntu@52772568517c:~$
 ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
 ----
 
-The rolling restart playbook recreates each {product-proxy} container, one by one.
+The rolling restart playbook re-creates each {product-proxy} container, one by one.
 The {product-proxy} deployment remains available at all times, and you can safely use it throughout this operation.
 If you modified mutable configuration variables, the new containers use the updated configuration files.
 
 The playbook performs the following actions automatically:
 
 . {product-automation} stops one container gracefully, and then waits for it to shut down.
-. {product-automation} recreates the container, and then starts it.
+. {product-automation} re-creates the container, and then starts it.
 . {product-automation} calls the xref:ROOT:metrics.adoc#call-the-liveliness-and-readiness-endpoints[readiness endpoint] to check the container's status:
 +
 * If the status check fails, {product-automation} repeats the check up to six times at 5-second intervals.
@@ -271,7 +271,7 @@ ansible-playbook deploy_zdm_proxy.yml -i zdm_ansible_inventory
 ----
 
 You can re-run the deployment playbook as many times as necessary.
-However, this playbook decommissions and recreates _all_ {product-proxy} instances simultaneously.
+However, this playbook decommissions and re-creates _all_ {product-proxy} instances simultaneously.
 This results in a brief period of time where the entire {product-proxy} deployment is offline because no instances are available.
 
 For more information, see xref:ROOT:troubleshooting-tips.adoc#configuration-changes-arent-applied-by-zdm-automation[Configuration changes aren't applied by {product-automation}].
@@ -280,7 +280,7 @@ For more information, see xref:ROOT:troubleshooting-tips.adoc#configuration-chan
 == Upgrade the proxy version
 
 The same playbook that you use for configuration changes can also be used to upgrade the {product-proxy} version in a rolling fashion.
-All containers are recreated with the given image version.
+All containers are re-created with the given image version.
 
 [IMPORTANT]
 ====

@@ -1,6 +1,6 @@
 = Use {cass-migrator} with {product-proxy}
-:navtitle: Use {cass-migrator}
-:description: You can use {cass-migrator} ({cass-migrator-short}) for data migration and validation between {cass-reg}-based databases.
+:navtitle: Use {cass-migrator-short}
+:description: You can use {cass-migrator} for data migration and validation between {cass-reg}-based databases.
 :page-aliases: cdm-parameters.adoc, ROOT:cdm-steps.adoc, ROOT:cdm-overview.adoc
 
 {description}
@@ -51,41 +51,41 @@ The container's `assets` directory includes all required migration tools: `cassa
 Install as a JAR file::
 +
 --
-. Install Java 11 or later, which includes Spark binaries.
+. Install Java 11 or later, which includes {spark-short} binaries.
 
-. Install https://spark.apache.org/downloads.html[Apache Spark(TM)] version 3.5.x with Scala 2.13 and Hadoop 3.3 and later.
+. Install https://spark.apache.org/downloads.html[{spark-reg}] version 3.5.x with Scala 2.13 and {hadoop-reg} 3.3 and later.
 +
 [tabs]
 ====
 Single VM::
 +
-For one-off migrations, you can install the Spark binary on a single VM where you will run the {cass-migrator-short} job.
+For one-off migrations, you can install the {spark-short} binary on a single VM where you will run the {cass-migrator-short} job.
 +
-. Get the Spark tarball from the Apache Spark archive.
+. Get the {spark-reg} tarball from the {spark} archive.
 +
 [source,bash,subs="+quotes"]
 ----
 wget https://archive.apache.org/dist/spark/spark-3.5.**PATCH**/spark-3.5.**PATCH**-bin-hadoop3-scala2.13.tgz
 ----
 +
-Replace `**PATCH**` with your Spark patch version.
+Replace `**PATCH**` with your {spark-short} patch version.
 +
-. Change to the directory where you want install Spark, and then extract the tarball:
+. Change to the directory where you want install {spark-short}, and then extract the tarball:
 +
 [source,bash,subs="+quotes"]
 ----
 tar -xvzf spark-3.5.**PATCH**-bin-hadoop3-scala2.13.tgz
 ----
 +
-Replace `**PATCH**` with your Spark patch version.
+Replace `**PATCH**` with your {spark-short} patch version.
 
-Spark cluster::
+{spark-reg} cluster::
 +
-For large (several terabytes) migrations, complex migrations, and use of {cass-migrator-short} as a long-term data transfer utility, {company} recommends that you use a Spark cluster or Spark Serverless platform.
+For large (several terabytes) migrations, complex migrations, and use of {cass-migrator-short} as a long-term data transfer utility, {company} recommends that you use a {spark} cluster or {spark-short} Serverless platform.
 +
-If you deploy CDM on a Spark cluster, you must modify your `spark-submit` commands as follows:
+If you deploy {cass-migrator-short} on a {spark-short} cluster, you must modify your `spark-submit` commands as follows:
 +
-* Replace `--master "local[*]"` with the host and port for your Spark cluster, as in `--master "spark://**MASTER_HOST**:**PORT**"`.
+* Replace `--master "local[*]"` with the host and port for your {spark-short} cluster, as in `--master "spark://**MASTER_HOST**:**PORT**"`.
 * Remove parameters related to single-VM installations, such as `--driver-memory` and `--executor-memory`.
 ====
 
@@ -167,7 +167,7 @@ You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file
 * `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
 --
 
-Spark cluster::
+{spark-reg} cluster::
 +
 --
 [source,bash,subs="+quotes"]
@@ -188,7 +188,7 @@ Depending on where your properties file is stored, you might need to specify the
 +
 You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file using the same format of `**KEYSPACE_NAME**.**TABLE_NAME**`.
 
-* `--master`: Provide the URL of your Spark cluster.
+* `--master`: Provide the URL of your {spark-short} cluster.
 
 * `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
 --
@@ -236,7 +236,7 @@ You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file
 * `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
 --
 
-Spark cluster::
+{spark-reg} cluster::
 +
 --
 [source,bash,subs="+quotes"]
@@ -257,7 +257,7 @@ Depending on where your properties file is stored, you might need to specify the
 +
 You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file using the same format of `**KEYSPACE_NAME**.**TABLE_NAME**`.
 
-* `--master`: Provide the URL of your Spark cluster.
+* `--master`: Provide the URL of your {spark-short} cluster.
 
 * `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
 --
@@ -331,15 +331,15 @@ Specifically, see the {cass-migrator-repo}/blob/main/src/resources/cdm-detailed.
 .Java NoSuchMethodError
 [%collapsible]
 ====
-If you installed Spark as a JAR file, and your Spark and Scala versions aren't compatible with your installed version of {cass-migrator-short}, {cass-migrator-short} jobs can throw exceptions such a the following:
+If you installed {spark-short} as a JAR file, and your {spark-short} and Scala versions aren't compatible with your installed version of {cass-migrator-short}, {cass-migrator-short} jobs can throw exceptions such a the following:
 
 [source,console]
 ----
 Exception in thread "main" java.lang.NoSuchMethodError: 'void scala.runtime.Statics.releaseFence()'
 ----
 
-Make sure that your Spark binary is compatible with your {cass-migrator-short} version.
-If you installed an earlier version of {cass-migrator-short}, you might need to install an earlier Spark binary.
+Make sure that your {spark-short} binary is compatible with your {cass-migrator-short} version.
+If you installed an earlier version of {cass-migrator-short}, you might need to install an earlier {spark-short} binary.
 ====
 
 .Rerun a failed or partially completed job

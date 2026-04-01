@@ -10,7 +10,7 @@ After you complete both of these procedures, you will have an active and fully m
 This utility prompts you for a few configuration values, with helpful embedded explanations and error handling, and then it creates and prepares the Ansible Control Host container automatically.
 From this container, you will configure and run the {product-automation} Ansible playbooks.
 
-image::docker-container-and-zdm-utility.png[{product-proxy} connections from Docker container created by {product-utility}]
+image::ROOT:docker-container-and-zdm-utility.png[{product-proxy} connections from Docker container created by {product-utility}]
 
 For more information about {product-utility} and {product-automation}, see xref:ROOT:components.adoc[].
 
@@ -24,7 +24,7 @@ This infrastructure can be on-premise or in any cloud provider of your choice.
 +
 If your {product-proxy} machines use private IPs, which are recommended for production deployments, configure these before running {product-utility}.
 If you enable private IPs later, you must reconfigure and redeploy your {product-proxy} instances.
-This is a disruptive operation that requires a small amount of downtime because the deployment playbook decommissions and recreates all {product-proxy} containers simultaneously.
+This is a disruptive operation that requires a small amount of downtime because the deployment playbook decommissions and re-creates all {product-proxy} containers simultaneously.
 
 * https://docs.docker.com/engine/install/#server[Install Docker] on the machine that will run the Ansible Control Host container, and ensure that the `docker` command https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user[doesn't require superuser privileges].
 +
@@ -108,9 +108,9 @@ The package filename format is `zdm-util-**PLATFORM**-**VERSION**.tgz`.
 The following example downloads {product-utility} version 2.3.1 for Linux amd64.
 To download a different package, change the version and package filename accordingly.
 +
-[source,bash]
+[source,bash,subs="+attributes"]
 ----
-wget https://github.com/datastax/zdm-proxy-automation/releases/download/v2.3.1/zdm-util-linux-amd64-v2.3.1.tgz
+wget {product-automation-repo}/releases/download/v2.3.1/zdm-util-linux-amd64-v2.3.1.tgz
 ----
 
 . Extract the archive:
@@ -222,7 +222,7 @@ The following example uses the same IP address as the Ansible Control Host machi
 . Review the configuration summary printed to the terminal by {product-utility}.
 At this point, {product-utility} has created the Ansible inventory file name `zdm_ansible_inventory` (unless you provided your own custom file), and it has written the {product-utility} configuration to `ansible_container_init_config`.
 +
-image::zdm-go-utility-results3.png[A summary of the configuration provided is displayed in the terminal]
+image::ROOT:zdm-go-utility-results3.png[A summary of the configuration provided is displayed in the terminal]
 
 . Type kbd:[Y] to continue and trigger the following processes:
 +
@@ -231,7 +231,7 @@ image::zdm-go-utility-results3.png[A summary of the configuration provided is di
 .. {product-utility} prints a message when the Ansible container is fully initialized and ready to use.
 
 +
-image::zdm-go-utility-success3.png[Ansible Docker container success messages]
+image::ROOT:zdm-go-utility-success3.png[Ansible Docker container success messages]
 
 == Next steps
 

@@ -5,7 +5,7 @@ After you review the xref:ROOT:feasibility-checklists.adoc[compatibility require
 This includes the following:
 
 * Create the new cluster that will be the target of your migration.
-* Recreate the schema from your origin cluster on the target cluster.
+* Re-create the schema from your origin cluster on the target cluster.
 * Gather authentication credentials and connection details for the target cluster.
 
 The preparation steps depend on your target platform.
@@ -53,7 +53,7 @@ For example, you could use `scp`:
 scp -i some-key.pem /path/to/scb.zip user@client-ip-or-host:
 ----
 
-. Recreate your client application's schema on your {astra-db} database, including each keyspace and table that you want to migrate.
+. Re-create your client application's schema on your {astra-db} database, including each keyspace and table that you want to migrate.
 +
 [IMPORTANT]
 ====
@@ -63,7 +63,7 @@ On your new database, the keyspace names, table names, column names, data types,
 Note the following limitations and exceptions for tables in {astra-db}:
 +
 * In {astra-db}, you must xref:astra-db-serverless:databases:manage-keyspaces.adoc[create keyspaces in the {astra-ui} or with the {devops-api}] because xref:astra-db-serverless:cql:develop-with-cql.adoc[CQL for {astra-db}] doesn't support `CREATE KEYSPACE`.
-* You can use `cqlsh`, drivers, or the {data-api} to xref:astra-db-serverless:databases:manage-collections.adoc#create-a-table[create tables in {astra-db}].
+* You can use the {cql-shell} (`cqlsh`), {cass-short} drivers, or the {data-api} to xref:astra-db-serverless:databases:manage-collections.adoc#create-a-table[create tables in {astra-db}].
 However, the only optional table properties that {astra-db} supports are `default_time_to_live` and `comment`.
 As a best practice, omit xref:astra-db-serverless:cql:develop-with-cql.adoc#unsupported-values-are-ignored[unsupported DDL properties], such as compaction strategy and `gc_grace_seconds`, when creating tables in {astra-db}.
 * {astra-db} doesn't support Materialized Views (MVs) and certain types of indexes.
@@ -96,7 +96,7 @@ Store the authentication credentials securely for use by your client application
 
 . Note your cluster's connection details, including the contact points (IP addresses or hostnames) and port number.
 
-. Recreate your origin cluster's schema on your new cluster, including each keyspace and table that you want to migrate.
+. Re-create your origin cluster's schema on your new cluster, including each keyspace and table that you want to migrate.
 +
 [IMPORTANT]
 ====

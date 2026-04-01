@@ -184,7 +184,7 @@ Snapshots have a specific directory structure, such as `*KEYSPACE_NAME*/*TABLE_N
 [#record-schema]
 == Configure the target database
 
-To prepare your target database for the migration, you must record the schema for each table in your origin cluster that you want to migrate, recreate these schemas in your target database, and then set environment variables required to connect to your database.
+To prepare your target database for the migration, you must record the schema for each table in your origin cluster that you want to migrate, re-create these schemas in your target database, and then set environment variables required to connect to your database.
 
 [WARNING]
 ====
@@ -205,7 +205,7 @@ During the migration, {sstable-sideloader} automatically populates any SAI defin
 * Exact primary key definition as defined in your origin cluster, including the partition key, clustering columns, and ascending/descending ordering clauses.
 You must define partition key columns and clustering columns in the exact order that they are defined on your origin cluster.
 +
-To retrieve schema properties, you can run the `xref:astra@cql:reference:cqlsh-commands/describe-keyspace.adoc[DESCRIBE KEYSPACE]` command on your origin cluster:
+To retrieve schema properties, you can run the `xref:astra@cql:cqlsh:cqlsh-commands/describe-keyspace.adoc[DESCRIBE KEYSPACE]` command on your origin cluster:
 +
 [source,cql,subs="+quotes"]
 ----
@@ -229,11 +229,11 @@ CREATE TABLE smart_home.sensor_readings (
 ) WITH CLUSTERING ORDER BY (room_id ASC, reading_timestamp DESC);
 ----
 
-. Recreate the schemas in your target database:
+. Re-create the schemas in your target database:
 +
 .. In the {astra-ui-link} navigation menu, click *Databases*, and then click the name of your {astra-db} database.
 .. xref:astra-db-serverless:databases:manage-keyspaces.adoc#keyspaces[Create a keyspace] with the exact same name as your origin cluster's keyspace.
-.. In your database's xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[CQL console], create tables with the exact same names and schemas as your origin cluster.
+.. In your database's xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[{cql-console}], create tables with the exact same names and schemas as your origin cluster.
 +
 image::sideloader:cql-console-create-identical-schema.png[]
 +

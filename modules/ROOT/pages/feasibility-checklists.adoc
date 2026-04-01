@@ -103,7 +103,7 @@ However, be aware that {product-proxy} itself can have a performance impact, reg
 
 === Thrift isn't supported by {product-proxy}
 
-If you are using an earlier driver or cluster version that only supports Thrift, you must change your client application to use CQL, and, if needed, upgrade your cluster before starting the migration process.
+If you are using an earlier driver or cluster version that only supports Thrift, you must change your client application to use {cql} statements, and, if needed, upgrade your cluster before starting the migration process.
 
 == Supported data store providers, versions, and migration paths
 
@@ -128,7 +128,7 @@ This means that any keyspace that your client application uses must exist on bot
 However, the keyspaces can have different replication strategies and durable write settings.
 
 At the column level, the schema doesn't need to be a one-to-one match as long as the CQL statements can be executed successfully on both clusters.
-For example, if a table has 10 columns, and your client application uses only five of those columns, then you can recreate the table on the target cluster with only the five required columns.
+For example, if a table has 10 columns, and your client application uses only five of those columns, then you can re-create the table on the target cluster with only the five required columns.
 However, the data from the other columns won't be migrated to the target cluster if those columns don't exist on the target cluster.
 Before you decide to omit a column from the target cluster, make sure that it is acceptable to permanently lose that data after the migration.
 
@@ -155,7 +155,7 @@ By design, a {product-short} migration involves two separate clusters, and it is
 
 If you use non-idempotent operations, {company} recommends adding a reconciliation phase to your migration before and after xref:ROOT:change-read-routing.adoc[Phase 4].
 This allows you an additional opportunity to resolve any data inconsistencies that are produced by non-idempotent operations.
-The xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator}] is ideal for detecting and reconciling these types of inconsistencies.
+The xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator-short}] is ideal for detecting and reconciling these types of inconsistencies.
 
 However, if your application workloads can tolerate inconsistencies produced by LWTs and non-idempotent operations, you might not need to perform any additional validation or reconciliation steps.
 This depends entirely on your application business logic and requirements.
