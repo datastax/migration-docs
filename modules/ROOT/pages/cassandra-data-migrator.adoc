@@ -81,7 +81,7 @@ Replace `**PATCH**` with your {spark-short} patch version.
 
 {spark-reg} cluster::
 +
-For large (several terabytes) migrations, complex migrations, and use of {cass-migrator-short} as a long-term data transfer utility, {company} recommends that you use a {spark} cluster or {spark-short} Serverless platform.
+For large (several terabytes) migrations, complex migrations, and use of {cass-migrator-short} as a long-term data transfer utility, {company} recommends that you use an {spark} cluster or {spark-short} Serverless platform.
 +
 If you deploy {cass-migrator-short} on a {spark-short} cluster, you must modify your `spark-submit` commands as follows:
 +
