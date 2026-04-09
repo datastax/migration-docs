@@ -30,7 +30,7 @@ However, paid plans offer premium features that can facilitate your migration, i
 All databases start with an initial keyspace.
 If the name of this keyspace doesn't match your origin cluster's schema, you can delete the initial keyspace after recreating the schema later in this process.
 
-. When your database reaches **Active** status, xref:astra-db-serverless:administration:manage-application-tokens.adoc[create an application token] with a role like *Read/Write User* or **Database Administrator**, and then store the credentials (Client ID, Client Secret, and Token) securely.
+. When your database reaches **Active** status, xref:astra-db-serverless:administration:manage-application-tokens.adoc[create an application token] with a role like {read-write-user-role} or {database-administrator-role}, and then store the credentials (Client ID, Client Secret, and Token) securely.
 +
 These credentials are used by the client application and {product-proxy} to read and write to your target database.
 Make sure the token's role has sufficient permission to perform the actions required by your client application.

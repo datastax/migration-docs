@@ -540,7 +540,7 @@ To resolve this issue, sign in to the {astra-ui}, and then check the xref:astra-
 If the database isn't in *Active* status, xref:astra-db-serverless:databases:database-statuses.adoc#hibernated[reactivate] or wait for the database to return to **Active** status, and then retry the connection.
 
 If the database is in *Active* status, then the credentials likely have insufficient permissions.
-Try using an xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token scoped to a database], specifically a token with the *Database Administrator* role for your target database.
+Try using an xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token scoped to a database], specifically a token with the {database-administrator-role} role for your target database.
 
 [[_async_read_timeouts_stream_id_map_exhausted]]
 === Async read timeouts / stream id map exhausted
