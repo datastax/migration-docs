@@ -248,7 +248,7 @@ export dbID=*DATABASE_ID*
 export token=*TOKEN*
 ----
 +
-Replace *`DATABASE_ID`* with the xref:astra-db-serverless:databases:create-database.adoc#get-db-id[database ID], and replace *`TOKEN`* with an xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token] with the *Database Administrator* role.
+Replace *`DATABASE_ID`* with the xref:astra-db-serverless:databases:create-database.adoc#get-db-id[database ID], and replace *`TOKEN`* with an xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token] with the {database-administrator-role} role.
 +
 [TIP]
 ====
