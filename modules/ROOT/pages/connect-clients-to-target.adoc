@@ -46,7 +46,7 @@ Connections to {astra-db} are different from connections to self-managed {cass-s
 
 To connect a driver to {astra-db}, you need the following:
 
-* An xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token] with sufficient permissions to execute the required operations, such as the **Database Administrator** role.
+* An xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token] with sufficient permissions to execute the required operations, such as the {database-administrator-role} role.
 +
 You must specify one of the following sets of credentials in your driver configuration:
 +

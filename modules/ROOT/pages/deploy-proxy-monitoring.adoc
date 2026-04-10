@@ -90,7 +90,7 @@ If authentication isn't enabled, no credentials are required.
 {astra-db}::
 +
 --
-For {astra-db} databases, xref:astra-db-serverless:administration:manage-application-tokens.adoc[generate an application token] with a role that can read and write to your database, such as the *Database Administrator* role, and then store the token securely.
+For {astra-db} databases, xref:astra-db-serverless:administration:manage-application-tokens.adoc[generate an application token] with a role that can read and write to your database, such as the {database-administrator-role} role, and then store the token securely.
 
 At minimum, store the core token that is prefixed by `AstraCS:...`.
 
