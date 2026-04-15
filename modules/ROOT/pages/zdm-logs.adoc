@@ -60,13 +60,10 @@ docker exec -it zdm-ansible-container bash
 ----
 +
 .Result
-[%collapsible]
-====
 [source,bash]
 ----
 ubuntu@52772568517c:~$
 ----
-====
 
 . Run the log collection playbook:
 +

@@ -266,11 +266,7 @@ If you don't have jq installed, remove `| jq .` from the end of each command.
 
 Use the {devops-api} to initialize the migration and get your migration directory path and credentials.
 
-.What happens during initialization?
-[%collapsible]
-====
-include::sideloader:partial$initialize.adoc[]
-====
+To learn more about the initialization process, see xref:sideloader:sideloader-overview.adoc[About {sstable-sideloader}: Initialize a migration].
 
 The initialization process can take several minutes to complete, especially if the migration bucket doesn't already exist.
 
@@ -521,8 +517,6 @@ include::sideloader:partial$command-placeholders-common.adoc[]
 
 +
 .Example: Upload a snapshot with AWS CLI
-[%collapsible]
-====
 [source,bash]
 ----
 # Set environment variables
@@ -534,7 +528,6 @@ export AWS_SESSION_TOKEN=XXXXXXXXXX
 du -sh /var/lib/cassandra/data/smart_home/*/snapshots/*sensor_readings*; \
 aws s3 sync --only-show-errors --exclude '*' --include '*/snapshots/sensor_readings*' /var/lib/cassandra/data/ s3://ds-mig-b7e7761f-6f7f-4116-81a5-e8eefcf0cc1d/272eac1d-df8e-4d1b-a7c6-71d5af232182/sstables/dse0
 ----
-====
 
 . Monitor upload progress:
 +
@@ -605,8 +598,6 @@ include::sideloader:partial$command-placeholders-common.adoc[]
 
 +
 .Example: Upload a snapshot with gcloud and gsutil
-[%collapsible]
-====
 [source,bash,subs="attributes"]
 ----
 # Authenticate
@@ -615,7 +606,6 @@ gcloud auth activate-service-account --key-file=creds.json
 # Upload "sensor_readings" snapshot from "dse0" node
 gsutil -m rsync -r -d /var/lib/cassandra/data/smart_home/{asterisk}{asterisk}/snapshots/sensor_readings/ gs://ds-mig-b7e7761f-6f7f-4116-81a5-e8eefcf0cc1d/272eac1d-df8e-4d1b-a7c6-71d5af232182/sstables/dse0
 ----
-====
 
 . Monitor upload progress:
 +
@@ -737,11 +727,7 @@ Data import is a multi-step operation that requires complete success.
 If one step fails, then the entire import operation stops and the migration fails.
 //Does all data fail to import or is it possible to have a partial import?
 
-.What happens during data import?
-[%collapsible]
-======
-include::sideloader:partial$import.adoc[]
-======
+To learn more about the data import process, see xref:sideloader:sideloader-overview.adoc[About {sstable-sideloader}: Import data].
 
 [WARNING]
 ====

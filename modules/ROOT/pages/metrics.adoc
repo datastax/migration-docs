@@ -33,13 +33,10 @@ docker exec -it zdm-ansible-container bash
 ----
 +
 .Result
-[%collapsible]
-====
 [source,bash]
 ----
 ubuntu@52772568517c:~$
 ----
-====
 
 . To configure the Grafana credentials, edit the `zdm_monitoring_config.yml` file that is located at `zdm-proxy-automation/ansible/vars`:
 +

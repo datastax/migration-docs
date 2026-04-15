@@ -32,16 +32,13 @@ For example, you can use the following Docker command, replacing `**TAG**` with 
 docker run --rm datastax/zdm-proxy:**TAG** -version
 ----
 
-.Result
-[%collapsible]
-====
 The output shows the binary version of {product-proxy} that is currently running:
 
+.Result
 [source,console]
 ----
 ZDM proxy version 2.1.0
 ----
-====
 
 [IMPORTANT]
 ====
@@ -159,9 +156,10 @@ If you observe this behavior in your logs, <<report-an-issue,report an issue>> s
 
 If the {product-proxy} logs contain `debug` messages with `Invalid or unsupported protocol version: 3`, this means that one of the origin clusters doesn't support protocol `V3` or later.
 
-.Invalid or unsupported protocol version logs
-[%collapsible]
-====
+Specifically, this happens with {cass-short} 2.0 and {dse-short} 4.6.
+{product-short} cannot be used for these migrations because the {product-proxy} control connections don't perform protocol version negotiation; they only attempt to use `V3`.
+
+.Example: Invalid or unsupported protocol version logs
 [source,log]
 ----
 time="2022-10-01T19:58:15+01:00" level=info msg="Starting proxy..."
@@ -189,10 +187,6 @@ time="2022-10-01T19:58:15+01:00" level=debug msg="Shutting down the schedulers a
 time="2022-10-01T19:58:15+01:00" level=info msg="Proxy shutdown complete."
 time="2022-10-01T19:58:15+01:00" level=error msg="Couldn't start proxy, retrying in 2.229151525s: failed to initialize origin control connection: could not open control connection to ORIGIN, tried endpoints: [127.0.0.1:9042]."
 ----
-====
-
-Specifically, this happens with {cass-short} 2.0 and {dse-short} 4.6.
-{product-short} cannot be used for these migrations because the {product-proxy} control connections don't perform protocol version negotiation; they only attempt to use `V3`.
 
 === Authentication errors
 
