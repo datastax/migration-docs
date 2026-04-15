@@ -48,8 +48,8 @@ Replace *`SNAPSHOT_NAME`* with a descriptive name for the snapshot.
 Use the same snapshot name on each node.
 This makes it easier to programmatically upload the snapshots to the migration directory.
 
-.Optional: Use a for loop to simplify snapshot creation
-[%collapsible]
+.Use a `for` loop to simplify snapshot creation
+[TIP]
 ====
 If the nodes in your origin cluster are named in a predictable way (for example, `dse0`, `dse1`, `dse2`, etc.), you can use a `for` loop to simplify snapshot creation.
 For example:
@@ -95,8 +95,8 @@ To include multiple keyspaces, list each keyspace separated by a space as shown 
 Use the same snapshot name on each node.
 This makes it easier to programmatically upload the snapshots to the migration directory.
 
-.Optional: Use a for loop to simplify snapshot creation
-[%collapsible]
+.Use a `for` loop to simplify snapshot creation
+[TIP]
 ====
 If the nodes in your origin cluster are named in a predictable way (for example, `dse0`, `dse1`, `dse2`, etc.), you can use a `for` loop to simplify snapshot creation.
 For example:
@@ -147,8 +147,8 @@ To include multiple tables from one or more keyspaces, list each *`KEYSPACE_NAME
 Use the same snapshot name on each node.
 This makes it easier to programmatically upload the snapshots to the migration directory.
 
-.Optional: Use a for loop to simplify snapshot creation
-[%collapsible]
+.Use a `for` loop to simplify snapshot creation
+[TIP]
 ====
 If the nodes in your origin cluster are named in a predictable way (for example, `dse0`, `dse1`, `dse2`, etc.), you can use a `for` loop to simplify snapshot creation.
 For example:
@@ -549,9 +549,9 @@ However, upload time primarily depends on the snapshot size, network throughput 
 . Repeat the upload process for each snapshot (*`SNAPSHOT_NAME`*) and node (*`NODE_NAME`*) in your origin cluster.
 +
 If your credentials expire, see xref:sideloader:troubleshoot-sideloader.adoc#get-new-upload-credentials[Get new upload credentials].
-
-.Optional: Use a for loop to simplify snapshot uploads
-[%collapsible]
++
+.Use a `for` loop to simplify snapshot creation
+[TIP]
 ====
 If the nodes in your origin cluster have predictable names (for example, `dse0`, `dse1`, and `dse2`), then you can use a `for` loop to streamline the execution of the upload commands.
 For example:
@@ -625,9 +625,9 @@ The `https://cloud.google.com/storage/docs/gsutil/commands/rsync#description[-m]
 However, upload time primarily depends on the snapshot size, network throughput from your origin cluster to the migration bucket, and whether the origin cluster and migration bucket are in the same region.
 
 . Repeat the upload process for each snapshot (*`SNAPSHOT_NAME`*) and node (*`NODE_NAME`*) in your origin cluster.
-
-.Optional: Use a for loop to simplify snapshot uploads
-[%collapsible]
++
+.Use a `for` loop to simplify snapshot creation
+[TIP]
 ====
 If the nodes in your origin cluster have predictable names (for example, `dse0`, `dse1`, and `dse2`), then you can use a `for` loop to streamline the execution of the `gsutil rsync` commands.
 For example:
