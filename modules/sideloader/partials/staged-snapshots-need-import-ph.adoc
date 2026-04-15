@@ -1,0 +1,2 @@
+Uploaded snapshots are staged in the migration directory, but the data is not yet written to the target database.
+After uploading snapshots, you must xref:sideloader:migrate-sideloader.adoc#import-data[import the data] to finish the migration.
