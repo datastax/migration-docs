@@ -15,11 +15,8 @@ A rolling restart is a destructive action because it stops the previous containe
 xref:ROOT:zdm-logs.adoc[Collect the logs] before you apply the configuration change if you want to keep them.
 ====
 
-[tabs]
-======
-With {product-automation}::
-+
---
+=== Rolling restart with {product-automation}
+
 If you use {product-automation} to manage your {product-proxy} deployment, you can use a dedicated playbook to perform rolling restarts of all {product-proxy} instances in a deployment:
 
 . Connect to your Ansible Control Host container.
@@ -66,16 +63,12 @@ If all six attempts fail, {product-automation} interrupts the entire rolling res
 * If the check succeeds, {product-automation} waits a fixed amount of time, and then moves on to the next container.
 The default pause between containers is 10 seconds.
 You can change the pause duration in `zdm-proxy-automation/ansible/vars/zdm_playbook_internal_config.yml`.
---
 
-Without {product-automation}::
-+
---
+=== Rolling restart without {product-automation}
+
 If you don't use {product-automation}, you must manually restart each instance.
 
 To avoid downtime, wait for each instance to fully restart and begin receiving traffic before restarting the next instance.
---
-======
 
 == Inspect {product-proxy} logs
 
@@ -306,18 +299,14 @@ zdm_proxy_image: datastax/zdm-proxy:2.3.4
 
 == Scale {product-proxy} instances
 
-[tabs]
-======
-Scale with {product-automation}::
-+
---
+The process for scaling your {product-proxy} instance depends on whether you use {product-automation} to manage your deployment.
+
+=== Scale with {product-automation}
+
 {product-automation} doesn't provide a way to scale operations up or down in a rolling fashion.
 If you are using {product-automation} and you need a larger {product-proxy} deployment, you can create a new deployment, or you can add instances to an existing deployment.
 
-[tabs]
-====
 Create a new deployment (recommended)::
-+
 This option is the recommended way to scale your {product-proxy} deployment because it requires no downtime.
 +
 Create a new {product-proxy} deployment, and then reconfigure your client application to use the new instance:
@@ -331,7 +320,6 @@ The application instances switch seamlessly from the old deployment to the new o
 . After restarting all application instances, you can safely remove the old {product-proxy} deployment.
 
 Add instances to an existing deployment::
-+
 This option requires manual configuration and a small amount of downtime.
 +
 Change the topology of your existing {product-proxy} deployment, and then restart the entire deployment to apply the change:
@@ -349,46 +337,30 @@ ansible-playbook deploy_zdm_proxy.yml -i zdm_ansible_inventory
 +
 Rerunning the playbook stops the existing instances, destroys them, and then creates and starts a new deployment with new instances based on the amended inventory.
 This results in a brief interruption of service for your entire {product-proxy} deployment.
-====
---
 
-Scale without {product-automation}::
-+
---
+=== Scale without {product-automation}
+
 If you aren't using {product-automation}, use these steps to add, change, or remove {product-proxy} instances.
 
-[tabs]
-====
 Add an instance::
 +
 . Prepare and configure the new {product-proxy} instances appropriately based on your other instances.
-+
 Make sure the new instance's configuration references all planned {product-proxy} cluster nodes.
-+
 . On all {product-proxy} instances, add the new instance's address to the `ZDM_PROXY_TOPOLOGY_ADDRESSES` environment variable.
-+
 Make sure to include all new nodes.
-+
 . On the new {product-proxy} instance, set the `ZDM_PROXY_TOPOLOGY_INDEX` to the next sequential integer after the greatest one in your existing deployment.
-+
 . Perform a rolling restart of all {product-proxy} instances, one at a time.
 
 Vertically scale existing instances::
-+
 Use these steps to increase or decrease resources for existing {product-proxy} instances, such as CPU or memory.
 To avoid downtime, perform the following steps on one instance at a time:
 +
 . Stop the first {product-proxy} instance that you want to modify.
-+
 . Modify the instance's resources as required.
-+
 Make sure the instance's IP address remains the same.
-If the IP address changes, you must treat it as a new instance; follow the steps on the **Add an instance** tab.
-+
+If the IP address changes, you must treat it as a new instance; follow the steps to **Add an instance** instead.
 . Restart the modified {product-proxy} instance.
-+
 . Wait until the instance starts, and then confirm that it is receiving traffic.
-+
 . Repeat these steps to modify each additional instance, one at a time.
 
 Remove an instance::
@@ -396,9 +368,6 @@ Remove an instance::
 . On all {product-proxy} instances, remove the unused instance's address from the `ZDM_PROXY_TOPOLOGY_ADDRESSES` environment variable.
 . Perform a rolling restart of all remaining {product-proxy} instances.
 . Clean up resources used by the removed instance, such as the container or VM.
-====
---
-======
 
 === Proxy topology addresses enable failover and high availability
 

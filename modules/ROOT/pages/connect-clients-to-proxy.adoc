@@ -22,11 +22,7 @@ Specifically, these examples are for {astra-db} and self-managed {dse-short}, {h
 This pseudocode is for illustration purposes only; the exact syntax depends on your driver language and version.
 For specific instructions and examples, see xref:datastax-drivers:connecting:connect-cloud.adoc[].
 
-[tabs]
-======
-Self-managed {cass-short} clusters::
-+
---
+.Self-managed {cass-short} clusters
 [source,pseudocode]
 ----
 // Create an object to represent a Cassandra cluster
@@ -56,9 +52,7 @@ print(release_version)
 ----
 --
 
-{astra-db}::
-+
---
+.{astra-db}
 [source,text]
 ----
 // Create an object to represent a Cassandra cluster (an Astra database)
@@ -89,8 +83,6 @@ my_cluster.close()
 // Print the data retrieved from the result set
 print(release_version)
 ----
---
-======
 
 Review your client application's code to understand how it connects to your existing {cass-short}-based clusters.
 Then, proceed to <<connect-applications-to-zdm-proxy>> to learn how to modify that code to connect to {product-proxy} instead.
