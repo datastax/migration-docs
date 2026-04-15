@@ -462,41 +462,33 @@ These are reported as `level=debug`, so {product-proxy} isn't affected by them.
 
 There are two ways to resolve this issue:
 
-[tabs]
-======
 Disable {metrics-collector} (recommended)::
 +
---
 . On the origin {dse-short} cluster, disable {metrics-collector}:
 +
 [source,bash]
 ----
 dsetool insights_config --mode DISABLED
 ----
-
++
 . Run the following command to verify that `mode` is set to `DISABLED`:
 +
 [source,bash]
 ----
 dsetool insights_config --show_config
 ----
---
 
 Grant InsightsRpc permissions::
-+
---
 Only use this option if you cannot disable {metrics-collector}.
-
++
 Using a superuser role, grant the appropriate permissions to the user named in the logs:
-
++
 [source,bash,subs="+quotes"]
 ----
 GRANT EXECUTE ON REMOTE OBJECT InsightsRpc TO **USER**;
 ----
-
++
 Replace **USER** with the actual username given in the logs.
---
-======
 
 [#report-an-issue]
 == Report an issue

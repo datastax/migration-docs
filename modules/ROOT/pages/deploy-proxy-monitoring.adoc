@@ -75,28 +75,19 @@ If you previously populated the variables in `zdm_proxy_core_config.yml`, these 
 However, consider updating your configuration to use the new file and take advantage of new features in later releases.
 ====
 
-. Get connection credentials for your origin and target clusters.
+. Get connection credentials for your origin and target clusters:
 +
-[tabs]
-======
 Self-managed clusters::
-+
---
 For self-managed clusters with authentication enabled, you need a valid username and password for the cluster.
-
++
 If authentication isn't enabled, no credentials are required.
---
 
 {astra-db}::
-+
---
 For {astra-db} databases, xref:astra-db-serverless:administration:manage-application-tokens.adoc[generate an application token] with a role that can read and write to your database, such as the {database-administrator-role} role, and then store the token securely.
-
-At minimum, store the core token that is prefixed by `AstraCS:...`.
-
++
+At minimum, store the primary token that is prefixed by `AstraCS:...`.
++
 For legacy authentication to earlier {astra-db} databases with an older token generated prior to the unified `AstraCS` token, you can use the `clientId` and `secret` instead of the core token.
---
-======
 
 . Edit the `zdm_proxy_cluster_config.yml` file.
 The `vi` and `nano` text editors are available in the container.
