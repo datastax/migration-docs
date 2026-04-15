@@ -38,30 +38,20 @@ For example, if a new write occurs in your target cluster with a `writetime` of 
 
 {company} recommends that you always install the latest version of {cass-migrator-short} to get the latest features, dependencies, and bug fixes.
 
-[tabs]
-======
-Install as a container::
-+
---
+=== Install as a container
+
 Get the latest `cassandra-data-migrator` image that includes all dependencies from https://hub.docker.com/r/datastax/cassandra-data-migrator[DockerHub].
-
 The container's `assets` directory includes all required migration tools: `cassandra-data-migrator`, `dsbulk`, and `cqlsh`.
---
 
-Install as a JAR file::
-+
---
+=== Install as a JAR file on a single VM
+
+For one-off migrations, you can install the {spark-short} binary on a single VM where you will run the {cass-migrator-short} job:
+
 . Install Java 11 or later, which includes {spark-short} binaries.
 
-. Install https://spark.apache.org/downloads.html[{spark-reg}] version 3.5.x with Scala 2.13 and {hadoop-reg} 3.3 and later.
+. Install https://spark.apache.org/downloads.html[{spark-reg}] version 3.5.x with Scala 2.13 and {hadoop-reg} 3.3 and later:
 +
-[tabs]
-====
-Single VM::
-+
-For one-off migrations, you can install the {spark-short} binary on a single VM where you will run the {cass-migrator-short} job.
-+
-. Get the {spark-reg} tarball from the {spark} archive.
+.. Get the {spark-reg} tarball from the {spark} archive:
 +
 [source,bash,subs="+quotes"]
 ----
@@ -70,7 +60,7 @@ wget https://archive.apache.org/dist/spark/spark-3.5.**PATCH**/spark-3.5.**PATCH
 +
 Replace `**PATCH**` with your {spark-short} patch version.
 +
-. Change to the directory where you want install {spark-short}, and then extract the tarball:
+.. Change to the directory where you want install {spark-short}, and then extract the tarball:
 +
 [source,bash,subs="+quotes"]
 ----
@@ -79,12 +69,35 @@ tar -xvzf spark-3.5.**PATCH**-bin-hadoop3-scala2.13.tgz
 +
 Replace `**PATCH**` with your {spark-short} patch version.
 
-{spark-reg} cluster::
+. Download the latest {cass-migrator-repo}/packages/1832128/versions[cassandra-data-migrator JAR file] {cass-migrator-shield}.
+
+. Add the `cassandra-data-migrator` dependency to `pom.xml`:
 +
+[source,xml,subs="+quotes"]
+----
+<dependency>
+  <groupId>datastax.cdm</groupId>
+  <artifactId>cassandra-data-migrator</artifactId>
+  <version>**VERSION**</version>
+</dependency>
+----
++
+Replace `**VERSION**` with your {cass-migrator-short} version.
+
+. Run `mvn install`.
+
+=== Install as a JAR file on a {spark} cluster or {spark-short} Serverless platform
+
 For large (several terabytes) migrations, complex migrations, and use of {cass-migrator-short} as a long-term data transfer utility, {company} recommends that you use an {spark} cluster or {spark-short} Serverless platform.
+
+. Install Java 11 or later, which includes {spark-short} binaries.
+
+. Deploy a https://spark.apache.org/downloads.html[{spark-reg} cluster or {spark-short} Serverless instance] running version 3.5.x with Scala 2.13 and {hadoop-reg} 3.3 and later.
 +
+[IMPORTANT]
+====
 If you deploy {cass-migrator-short} on a {spark-short} cluster, you must modify your `spark-submit` commands as follows:
-+
+
 * Replace `--master "local[*]"` with the host and port for your {spark-short} cluster, as in `--master "spark://**MASTER_HOST**:**PORT**"`.
 * Remove parameters related to single-VM installations, such as `--driver-memory` and `--executor-memory`.
 ====
@@ -106,9 +119,9 @@ Replace `**VERSION**` with your {cass-migrator-short} version.
 
 . Run `mvn install`.
 
-If you need to build the JAR for local development or your environment only has Scala version 2.12.x, see the alternative installation instructions in the {cass-migrator-repo}?tab=readme-ov-file[{cass-migrator-short} README].
---
-======
+=== Build for local development or Scala 2.12.x environments
+
+If you need to build the JAR for local development, or your environment only has Scala version 2.12.x, see the alternative installation instructions in the {cass-migrator-repo}?tab=readme-ov-file[{cass-migrator-short} README].
 
 == Configure {cass-migrator-short}
 
@@ -139,11 +152,7 @@ To optimize large-scale migrations, {cass-migrator-short} can run multiple concu
 The following `spark-submit` command migrates one table from the origin to the target cluster, using the configuration in your properties file.
 The migration job is specified in the `--class` argument.
 
-[tabs]
-======
-Local installation::
-+
---
+.Migration job using a local installation
 [source,bash,subs="+quotes,+attributes"]
 ----
 ./spark-submit --properties-file cdm.properties \
@@ -152,24 +161,7 @@ Local installation::
 --class com.datastax.cdm.job.Migrate cassandra-data-migrator-**VERSION**.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
 
-Replace or modify the following, if needed:
-
-* `--properties-file cdm.properties`: If your properties file has a different name, specify the actual name of your properties file.
-+
-Depending on where your properties file is stored, you might need to specify the full or relative file path.
-
-* `**KEYSPACE_NAME**.**TABLE_NAME**`: Specify the name of the table that you want to migrate and the keyspace that it belongs to.
-+
-You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file using the same format of `**KEYSPACE_NAME**.**TABLE_NAME**`.
-
-* `--driver-memory` and `--executor-memory`: For local installations, specify the appropriate memory settings for your environment.
-
-* `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
---
-
-{spark-reg} cluster::
-+
---
+.Migration job using a {spark-reg} cluster
 [source,bash,subs="+quotes"]
 ----
 ./spark-submit --properties-file cdm.properties \
@@ -188,14 +180,13 @@ Depending on where your properties file is stored, you might need to specify the
 +
 You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file using the same format of `**KEYSPACE_NAME**.**TABLE_NAME**`.
 
-* `--master`: Provide the URL of your {spark-short} cluster.
+* `--driver-memory` and `--executor-memory` (local installations only): Specify the appropriate memory settings for your environment.
+
+* `--master` ({spark-short} cluster deployments only): Provide the URL of your {spark-short} cluster.
 
 * `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
---
-======
 
 This command generates a log file (`logfile_name_**TIMESTAMP**.txt`) instead of logging output to the console.
-
 For additional modifications to this command, see <<advanced>>.
 
 [#cdm-validation-steps]
@@ -208,11 +199,7 @@ Optionally, {cass-migrator-short} can automatically correct discrepancies in the
 . Use the following `spark-submit` command to run a data validation job using the configuration in your properties file.
 The data validation job is specified in the `--class` argument.
 +
-[tabs]
-======
-Local installation::
-+
---
+.Validation job using a local installation
 [source,bash,subs="+quotes,+attributes"]
 ----
 ./spark-submit --properties-file cdm.properties \
@@ -220,25 +207,8 @@ Local installation::
 --master "local[{asterisk}]" --driver-memory 25G --executor-memory 25G \
 --class com.datastax.cdm.job.DiffData cassandra-data-migrator-**VERSION**.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
-
-Replace or modify the following, if needed:
-
-* `--properties-file cdm.properties`: If your properties file has a different name, specify the actual name of your properties file.
 +
-Depending on where your properties file is stored, you might need to specify the full or relative file path.
-
-* `**KEYSPACE_NAME**.**TABLE_NAME**`: Specify the name of the table that you want to validate and the keyspace that it belongs to.
-+
-You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file using the same format of `**KEYSPACE_NAME**.**TABLE_NAME**`.
-
-* `--driver-memory` and `--executor-memory`: For local installations, specify the appropriate memory settings for your environment.
-
-* `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
---
-
-{spark-reg} cluster::
-+
---
+.Validation job using a {spark-reg} cluster
 [source,bash,subs="+quotes"]
 ----
 ./spark-submit --properties-file cdm.properties \
@@ -246,9 +216,10 @@ You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file
 --master "spark://**MASTER_HOST**:**PORT**" \
 --class com.datastax.cdm.job.DiffData cassandra-data-migrator-**VERSION**.jar &> logfile_name_$(date +%Y%m%d_%H_%M).txt
 ----
-
++
 Replace or modify the following, if needed:
-
++
+--
 * `--properties-file cdm.properties`: If your properties file has a different name, specify the actual name of your properties file.
 +
 Depending on where your properties file is stored, you might need to specify the full or relative file path.
@@ -257,11 +228,12 @@ Depending on where your properties file is stored, you might need to specify the
 +
 You can also set `spark.cdm.schema.origin.keyspaceTable` in your properties file using the same format of `**KEYSPACE_NAME**.**TABLE_NAME**`.
 
-* `--master`: Provide the URL of your {spark-short} cluster.
+* `--driver-memory` and `--executor-memory` (local installations only): Specify the appropriate memory settings for your environment.
+
+* `--master` ({spark-short} cluster deployments only): Provide the URL of your {spark-short} cluster.
 
 * `**VERSION**`: Specify the full {cass-migrator-short} version that you installed, such as `5.2.1`.
 --
-======
 
 . Allow the command some time to run, and then open the log file (`logfile_name_**TIMESTAMP**.txt`) and look for `ERROR` entries.
 +
