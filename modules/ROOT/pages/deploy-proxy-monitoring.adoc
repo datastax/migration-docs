@@ -212,7 +212,7 @@ For the majority of the migration, leave this set to the default value of `ORIGI
 At the end of the migration, when you're preparing to switch over to the target cluster permanently, you can change it to `TARGET` after migrating all data from the origin cluster.
 * `read_mode`: Controls the xref:enable-async-dual-reads.adoc[asynchronous dual reads] feature.
 Until you reach Phase 3, leave this set to the default value of `PRIMARY_ONLY`.
-* `log_level`: You might need to xref:ROOT:troubleshooting-tips.adoc#proxy-logs[modify the log level] when troubleshooting issues.
+* `log_level`: You might need to xref:ROOT:zdm-logs.adoc[modify the log level] when troubleshooting issues.
 Unless you are investigating an issue, leave this set to the default value of `INFO`.
 
 [IMPORTANT]

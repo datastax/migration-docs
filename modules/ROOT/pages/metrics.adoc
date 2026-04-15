@@ -83,11 +83,8 @@ If you deployed your monitoring stack on another machine, replace `**MONITORING_
 
 For example, after deploying the {product-proxy} monitoring stack, you can use the `liveness` and `readiness` HTTP endpoints to confirm that your {product-proxy} instances are running.
 
-[tabs]
-======
-Liveliness endpoint::
-+
---
+=== Liveliness endpoint
+
 [source,plaintext,subs="+quotes"]
 ----
 http://**ZDM_PROXY_PRIVATE_IP**:**METRICS_PORT**/health/liveness
@@ -114,11 +111,8 @@ Example request with plaintext values:
 curl -G "http://172.18.10.40:14001/health/liveliness"
 ----
 
---
+=== Readiness endpoint
 
-Readiness endpoint::
-+
---
 [source,plaintext,subs="+quotes"]
 ----
 http://**ZDM_PROXY_PRIVATE_IP**:**METRICS_PORT**/health/readiness
@@ -165,9 +159,6 @@ Example result:
    "Status":"UP"
 }
 ----
-
---
-======
 
 == Inspect {product-proxy} metrics
 

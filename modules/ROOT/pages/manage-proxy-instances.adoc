@@ -12,7 +12,7 @@ Rolling restarts of the {product-proxy} instances are useful to apply configurat
 [IMPORTANT]
 ====
 A rolling restart is a destructive action because it stops the previous containers, and then starts new containers.
-xref:ROOT:troubleshooting-tips.adoc#proxy-logs[Collect the logs] before you apply the configuration change if you want to keep them.
+xref:ROOT:zdm-logs.adoc[Collect the logs] before you apply the configuration change if you want to keep them.
 ====
 
 [tabs]
@@ -82,8 +82,8 @@ To avoid downtime, wait for each instance to fully restart and begin receiving t
 
 == Inspect {product-proxy} logs
 
-{product-proxy} logs can help you verify that your {product-proxy} instances are operating normally, investigate how processes are executed, and troubleshoot issues.
-For information about configuring, retrieving, and interpreting {product-proxy} logs, see xref:ROOT:troubleshooting-tips.adoc#proxy-logs[Viewing and interpreting {product-proxy} logs].
+include::ROOT:partial$zdm-logs-intro.adoc[]
+For more information, see xref:ROOT:zdm-logs.adoc[].
 
 [[change-mutable-config-variable]]
 == Change mutable configuration variables
@@ -119,7 +119,7 @@ Set the {product-proxy} log level as `INFO` (default) or `DEBUG`.
 Only use `DEBUG` while temporarily troubleshooting an issue.
 Revert to `INFO` as soon as possible because the extra logging can impact performance slightly.
 +
-For more information, see xref:ROOT:troubleshooting-tips.adoc#proxy-logs[Check {product-proxy} logs].
+For more information, see xref:ROOT:zdm-logs.adoc[].
 
 === Mutable variables in `vars/zdm_proxy_cluster_config.yml`
 
@@ -285,7 +285,7 @@ All containers are re-created with the given image version.
 [IMPORTANT]
 ====
 A version change is a destructive action because the rolling restart playbook removes the previous containers and their logs, replacing them with new containers using the new image.
-xref:ROOT:troubleshooting-tips.adoc#proxy-logs[Collect the logs] before you run the playbook if you want to keep them.
+xref:ROOT:zdm-logs.adoc[Collect the logs] before you run the playbook if you want to keep them.
 ====
 
 To check your current {product-proxy} version, see xref:ROOT:troubleshooting-tips.adoc#check-version[Check your {product-proxy} version].
