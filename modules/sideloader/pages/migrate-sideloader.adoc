@@ -13,8 +13,10 @@ Before you use {sstable-sideloader} for a migration, xref:sideloader:sideloader-
 
 On _each node_ in your origin cluster, use `nodetool` to create a backup of the data that you want to migrate, including all keyspaces and CQL tables that you want to migrate.
 
-. Be aware of the {sstable-sideloader} limitations related to materialized views, secondary indexes, and encrypted data that are described in xref:sideloader:prepare-sideloader.adoc#origin-cluster-requirements[Origin cluster requirements].
-If necessary, modify the data model on your origin cluster to prepare for the migration.
+=== Prepare to create snapshots
+
+. Due to {sstable-sideloader} limitations related to materialized views, secondary indexes, and encrypted data, you might need to modify the data model on your origin cluster to prepare for the migration.
+For more information, see xref:sideloader:prepare-sideloader.adoc#origin-cluster-requirements[Origin cluster requirements].
 
 . Optional: Before you create snapshots, consider running `xref:dse:managing:tools/nodetool/cleanup.adoc[nodetool cleanup]` to remove data that no longer belongs to your nodes.
 This command is particularly useful after adding more nodes to a cluster because it helps ensure that each node only contains the data that it is responsible for, according to the current cluster configuration and partitioning scheme.
@@ -24,80 +26,101 @@ Smaller snapshots can lead to lower overall migration times and lower network tr
 +
 However, take adequate precautions before you run this command because the cleanup operations can introduce additional load on your origin cluster.
 
-. Use `xref:dse:managing:tools/nodetool/snapshot.adoc[nodetool snapshot]` to create snapshots for the tables that you want to migrate.
-+
+=== Run nodetool snapshot
+
+Use `xref:dse:managing:tools/nodetool/snapshot.adoc[nodetool snapshot]` to create snapshots for the tables that you want to migrate.
+
 Don't create snapshots of system tables or tables that you don't want to migrate.
 The migration can fail if you attempt to migrate snapshots that don't have a matching schema in the target database.
 {sstable-sideloader} ignores system keyspaces.
-+
-The structure of the `nodetool snapshot` command depends on the keyspaces and tables that you want to migrate:
-+
-Snapshot all keyspaces::
+
+The structure of the `nodetool snapshot` command depends on the keyspaces and tables that you want to migrate.
+
+==== Snapshot all keyspaces
+
 Create a snapshot of all tables in all keyspaces:
-+
+
 [source,bash,subs="+quotes"]
 ----
 nodetool snapshot -t *SNAPSHOT_NAME*
 ----
-+
+
 Replace the following:
-+
+
 * *`SNAPSHOT_NAME`*: A descriptive name for the snapshot.
 Use the same snapshot name for each node's snapshot; this makes it easier to programmatically upload the snapshots to the migration directory.
 
-Snapshot specific keyspaces::
+==== Snapshot specific keyspaces
+
 Create a snapshot of all tables in one or more specified keyspaces:
-+
+
 .Snapshot one keyspace
 [source,bash,subs="+quotes"]
 ----
 nodetool snapshot -t *SNAPSHOT_NAME* *KEYSPACE_NAME*
 ----
-+
+
 .Snapshot multiple keyspaces
 [source,bash,subs="+quotes"]
 ----
 nodetool snapshot -t *SNAPSHOT_NAME* *KEYSPACE_NAME_1* *KEYSPACE_NAME_2*
 ----
-+
+
 Replace the following:
-+
+
 * *`SNAPSHOT_NAME`*: A descriptive name for the snapshot.
 Use the same snapshot name for each node's snapshot; this makes it easier to programmatically upload the snapshots to the migration directory.
+
 * *`KEYSPACE_NAME`*: The name of the keyspace that you want to migrate.
 +
 To snapshot multiple keyspaces, pass a space-separated list of keyspace names.
 For example, `customer_data product_data purchase_history` specifies three keyspaces.
 
-Snapshot specific tables::
+==== Snapshot specific tables
+
 Create a snapshot of one or more specified tables:
-+
+
 .Snapshot one table
 [source,bash,subs="+quotes"]
 ----
 nodetool snapshot -kt *KEYSPACE_NAME*.*TABLE_NAME* -t *SNAPSHOT_NAME*
 ----
-+
+
 .Snapshot multiple tables
 [source,bash,subs="+quotes"]
 ----
 nodetool snapshot -kt *KEYSPACE_NAME_1*.*TABLE_NAME_A* *KEYSPACE_NAME_1*.*TABLE_NAME_B* *KEYSPACE_NAME_2*.*TABLE_NAME_X* -t *SNAPSHOT_NAME*
 ----
-+
+
 Replace the following:
-+
+
 * *`KEYSPACE_NAME.TABLE_NAME`*: The name of the table that you want to migrate and the keyspace that it belongs to, separated by a period.
 For example, `product_data.appliances` specifies the `appliances` table in the `product_data` keyspace.
 +
 To snapshot multiple tables, pass a space-separated list of keyspace-table pairs.
 For example, `product_data.appliances purchase_history.nevada purchase_history.wisconsin` specifies the `appliances` table in the `product_data` keyspace and the `nevada` and `wisconsin` tables in the `purchase_history` keyspace.
-+
+
 * *`SNAPSHOT_NAME`*: A descriptive name for the snapshot.
 Use the same snapshot name for each node's snapshot; this makes it easier to programmatically upload the snapshots to the migration directory.
 
-.Use a `for` loop to simplify snapshot creation
-[TIP]
+=== Verify snapshot creation with nodetool listsnapshots
+
+Use `xref:6.9@dse:managing:tools/nodetool/list-snapshots.adoc[nodetool listsnapshots]` to verify that the snapshots were created:
+
+[source,bash]
+----
+nodetool listsnapshots
+----
+
+[IMPORTANT]
 ====
+Snapshots have a specific directory structure, such as `*KEYSPACE_NAME*/*TABLE_NAME*/snapshots/*SNAPSHOT_NAME*/...`.
+{sstable-sideloader} relies on this fixed structure to properly interpret the SSTable components.
+**Don't modify the snapshot's directory structure; this can cause your migration to fail.**
+====
+
+=== Optional: Use `for` loops for snapshot creation and validation
+
 If the nodes in your origin cluster are named in a predictable way (for example, `dse0`, `dse1`, `dse2`, etc.), you can use a `for` loop to simplify snapshot creation.
 For example:
 
@@ -145,18 +168,6 @@ You can use the same `for` loop structure to verify that each snapshot was succe
 ----
 for i in 0 1 2; do ssh dse${i} nodetool listsnapshots; done
 ----
-====
-
-. Use `xref:6.9@dse:managing:tools/nodetool/list-snapshots.adoc[nodetool listsnapshots]` to verify that the snapshots were created:
-+
-[source,bash]
-----
-nodetool listsnapshots
-----
-+
-Snapshots have a specific directory structure, such as `*KEYSPACE_NAME*/*TABLE_NAME*/snapshots/*SNAPSHOT_NAME*/...`.
-{sstable-sideloader} relies on this fixed structure to properly interpret the SSTable components.
-**Don't modify the snapshot's directory structure; this can cause your migration to fail.**
 
 [#record-schema]
 == Configure the target database

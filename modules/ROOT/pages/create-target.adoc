@@ -68,7 +68,7 @@ You must adjust your data model and application logic to discard or replace thes
 For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc#limitations-on-cql-for-astra-db[Limitations on CQL for {astra-db}].
 * If you plan to use {sstable-sideloader} for xref:ROOT:migrate-and-validate-data.adoc[Phase 2], see the xref:sideloader:migrate-sideloader.adoc#record-schema[target database configuration requirements for migrating data with {sstable-sideloader}].
 
-== Migrate to {hcd-short}, {dse-short}, or open-source {cass-reg}::
+== Migrate to {hcd-short}, {dse-short}, or open-source {cass-reg}
 
 . Provision the cluster infrastructure, and then create your {hcd-short}, {dse-short}, or {cass-short} cluster with your desired configuration:
 +

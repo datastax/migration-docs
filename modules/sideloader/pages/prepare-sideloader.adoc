@@ -23,7 +23,7 @@ Make sure you understand how to securely store and use sensitive credentials whe
 The following requirements, recommendations, and limitations apply to the target {astra-db} database.
 Review all of these to ensure that your database is compatible with {sstable-sideloader}.
 
-=== {product-short} subscription plan requirement
+=== {astra} subscription plan requirement
 
 Your {astra} organization must be on an *Enterprise* xref:astra-db-serverless:administration:subscription-plans.adoc[subscription plan].
 
@@ -99,7 +99,7 @@ This is the amount of long-term capacity that you want the group to have after t
 +
 If the minimum is greater than the reserved capacity, the surplus capacity is prepared in advance, and there is no autoscaling required to access that capacity.
 
-* **Maximum capacity**: Greater than the minimum by several units to allow autoscaling during resource intensive stages of the migration.
+** **Maximum capacity**: Greater than the minimum by several units to allow autoscaling during resource intensive stages of the migration.
 +
 For non-trivial migrations, consider setting the maximum to 10.
 For extremely large migrations, contact your {company} account representative or {support-url}[IBM Support] to request more than 10 units to support your migration.
