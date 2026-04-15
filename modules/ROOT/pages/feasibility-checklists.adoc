@@ -20,9 +20,8 @@ Otherwise, a lower protocol version must be used.
 If the requested version isn't mutually supported, then {product-proxy} can force the client application to downgrade to a mutually supported protocol version.
 If automatic forced downgrade isn't possible, then the connection fails, and you must modify your client application to request a different protocol version.
 
-.Determine your client application's supported and negotiated protocol versions
-[%collapsible]
-====
+=== Determine your client application's supported and negotiated protocol versions
+
 Outside of a migration scenario (without {product-proxy}), the supported protocol versions depend on your origin cluster's version and client application's driver version.
 
 Generally, when connecting to a cluster, the driver requests the highest protocol version that it supports.
@@ -34,7 +33,6 @@ For example, if the cluster and driver both support `V5`, then your client appli
 If you upgrade your cluster, driver, or both to a version with a higher mutually supported protocol version, then the driver automatically starts using the higher version unless you explicitly disable it in your driver configuration.
 
 When you introduce {product-proxy}, the target cluster is integrated into the protocol negotiation process to ensure that the negotiated protocol version is supported by the origin cluster, target cluster, and driver.
-====
 
 === Considerations and requirements for `V5`
 

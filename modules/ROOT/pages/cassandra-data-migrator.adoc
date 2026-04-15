@@ -328,24 +328,18 @@ Specifically, see the {cass-migrator-repo}/blob/main/src/resources/cdm-detailed.
 
 == Troubleshoot {cass-migrator-short}
 
-.Java NoSuchMethodError
-[%collapsible]
-====
+Java NoSuchMethodError::
 If you installed {spark-short} as a JAR file, and your {spark-short} and Scala versions aren't compatible with your installed version of {cass-migrator-short}, {cass-migrator-short} jobs can throw exceptions such a the following:
-
++
 [source,console]
 ----
 Exception in thread "main" java.lang.NoSuchMethodError: 'void scala.runtime.Statics.releaseFence()'
 ----
-
++
 Make sure that your {spark-short} binary is compatible with your {cass-migrator-short} version.
 If you installed an earlier version of {cass-migrator-short}, you might need to install an earlier {spark-short} binary.
-====
 
-.Rerun a failed or partially completed job
-[%collapsible]
-====
+Rerun a failed or partially completed job::
 You can use the `track-run` feature to track the progress of a migration or validation, and then, if necessary, use the `run-id` to rerun a failed job from the last successful migration or validation point.
-
++
 For more information, see the {cass-migrator-repo}[{cass-migrator-short} repository] and the {cass-migrator-repo}/blob/main/src/resources/cdm-detailed.properties[fully annotated properties file].
-====

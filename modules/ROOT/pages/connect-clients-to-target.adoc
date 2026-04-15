@@ -113,10 +113,9 @@ a| Required.
 * Client ID and secret authentication (Legacy): Set to the `secret` generated with your token.
 |===
 
-.Driver pseudocode comparison
-[%collapsible]
-====
-The two pseudocode examples provide a simplified comparison of the way a {cass-short} driver interacts with {astra-db} and self-managed {cass-short} clusters.
+==== Compare driver pseudocode
+
+The following two pseudocode examples provide a simplified comparison of the way a {cass-short} driver interacts with {astra-db} and self-managed {cass-short} clusters.
 This pseudocode is for illustration purposes only; the exact syntax depends on your driver language and version.
 
 The first pseudocode example illustrates the connection to a self-managed {cass-short} cluster.
@@ -188,7 +187,6 @@ my_cluster.close()
 // Print the data retrieved from the result set
 print(release_version)
 ----
-====
 
 === Verify driver compatibility and update connection strings
 
