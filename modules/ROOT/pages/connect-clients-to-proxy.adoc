@@ -50,7 +50,6 @@ my_cluster.close()
 // Print the data retrieved from the result set
 print(release_version)
 ----
---
 
 .{astra-db}
 [source,text]
