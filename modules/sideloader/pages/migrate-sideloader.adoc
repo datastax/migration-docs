@@ -636,7 +636,7 @@ export NODE_NAME="**NODE_NAME**"
 ----
 
 . Use the Azure CLI to upload one snapshot from one node into the migration directory:
-
++
 [source,bash]
 ----
 for dir in $(find "$CASSANDRA_DATA_DIR" -type d -path "*/snapshots/${SNAPSHOT_NAME}*"); do
