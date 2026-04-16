@@ -20,11 +20,16 @@ Make sure you understand how to securely store and use sensitive credentials whe
 
 == Target {astra-db} database requirements
 
-* Your {astra} organization must be on an *Enterprise* xref:astra-db-serverless:administration:subscription-plans.adoc[subscription plan].
-+
+The following requirements, recommendations, and limitations apply to the target {astra-db} database.
+Review all of these to ensure that your database is compatible with {sstable-sideloader}.
+
+=== {astra} subscription plan requirement
+
+Your {astra} organization must be on an *Enterprise* xref:astra-db-serverless:administration:subscription-plans.adoc[subscription plan].
+
 {sstable-sideloader} is a premium feature that incurs costs based on usage.
 This includes the total amount (GB) of data processed as part of the {sstable-sideloader} workload, and the amount of data stored in the migration bucket is metered at the standard {astra-db} storage rate.
-+
+
 [TIP]
 ====
 Migration directories are automatically cleaned up after one week of idle time.
@@ -32,50 +37,45 @@ Migration directories are automatically cleaned up after one week of idle time.
 To minimize costs, you can xref:sideloader:cleanup-sideloader.adoc[manually clean up migration directories] when you no longer need them.
 ====
 
-* Your target database must be an {astra-db} Serverless database.
-+
-If you don't already have one, xref:astra-db-serverless:databases:create-database.adoc[create a database].
+=== Database type requirement
+
+Your target database must be an {astra-db} Serverless database.
+{sstable-sideloader} isn't compatible with {db-classic} databases.
+
+If you haven't done so already, xref:astra-db-serverless:databases:create-database.adoc[create a database].
 You can use either a {db-serverless} or {db-serverless-vector} database.
-+
-{db-serverless-vector} databases can store both vector and non-vector data.
+{db-serverless-vector} databases support both fixed-schema tables and dynamic-schema collections.
 
-* Your target database must be in a xref:astra-db-serverless:administration:provisioned-capacity-units.adoc[Provisioned Capacity Unit (PCU) group].
+=== PCU group requirement
+
+Your target database must be in a xref:astra-db-serverless:administration:provisioned-capacity-units.adoc[Provisioned Capacity Unit (PCU) group].
 You can use either a flexible capacity PCU group or a committed capacity PCU group, depending on your long-term needs and other PCU group usage.
-+
-[tabs]
-======
-Flexible capacity PCU group::
-+
---
-Because {sstable-sideloader} operations are typically short-term, resource-intensive events, you can create a flexible capacity PCU group exclusively to support your target database during the migration.
 
-{company} recommends the following flexible capacity PCU group configuration for {sstable-sideloader} migrations.
-For instructions, see xref:astra-db-serverless:administration:create-pcu.adoc#flexible-capacity[Create a flexible capacity PCU group].
+==== Use a flexible capacity PCU group (Recommended)
 
-[tabs]
-====
-Target database is a {db-serverless} database::
+Because {sstable-sideloader} operations are typically short-term, resource-intensive events, you can xref:astra-db-serverless:administration:create-pcu.adoc#flexible-capacity[create a flexible capacity PCU group] exclusively to support your target database during the migration.
+
+After the migration, you can move your target database out of the flexible capacity PCU group, and then park or delete the group.
+Don't park the PCU group during the {sstable-sideloader} process because databases in a parked PCU group are hibernated and unavailable for use.
+
+{company} recommends the following configurations for flexible capacity PCU groups for {sstable-sideloader} migrations:
+
+* **Recommended configuration if the target database is a {db-serverless} database**:
 +
-* Minimum capacity: One or more, depending on the scale of the migration.
-* Maximum capacity: Greater than the minimum by several units to allow autoscaling during resource intensive stages of the migration.
+** **Minimum capacity**: One or more, depending on the scale of the migration.
+** **Maximum capacity**: Greater than the minimum by several units to allow autoscaling during resource intensive stages of the migration.
 +
 For non-trivial migrations, consider setting the maximum to 10.
 For extremely large migrations, contact your {company} account representative or {support-url}[IBM Support] to request more than 10 units to support your migration.
 
-Target database is a {db-serverless-vector} database::
+* **Recommended configuration if the target database is a {db-serverless-vector} database**:
 +
 By default, {db-serverless-vector} databases can have no more than one unit per PCU group.
 For any non-trivial migration, contact your {company} account representative or {support-url}[IBM Support] for assistance configuring a PCU group for your target {db-serverless-vector} database.
-====
 
-After the migration, you can move your target database out of the flexible capacity PCU group, and then park or delete the group.
-Don't park the PCU group during the {sstable-sideloader} process because databases in a parked PCU group are hibernated and unavailable for use.
---
+==== Use a committed capacity PCU group
 
-Committed capacity PCU group::
-+
---
-For a long-term PCU group option, you can use a committed capacity PCU group for your target database.
+For a long-term PCU group option, you can use a xref:astra-db-serverless:administration:create-pcu.adoc#committed-capacity[committed capacity PCU group] for your target database.
 This could be your database's permanent PCU group assignment, or it could be a long-lived PCU group that you use for many migrations over time, adding and removing databases from the group as needed.
 
 [IMPORTANT]
@@ -86,37 +86,31 @@ If there are any other databases in the same PCU group, the migration process ca
 To avoid interfering with other databases in the same PCU group, {company} recommends isolating the database during the migration using either a single-database committed capacity PCU group or a flexible capacity PCU group.
 ====
 
-{company} recommends the following committed capacity PCU group configuration for {sstable-sideloader} migrations.
-For instructions, see xref:astra-db-serverless:administration:create-pcu.adoc#committed-capacity[Create a committed capacity PCU group].
+{company} recommends the following configurations for committed capacity PCU groups for {sstable-sideloader} migrations:
 
-[tabs]
-====
-Target database is a {db-serverless} database::
+* **Recommended configuration if the target database is a {db-serverless} database**:
 +
-* Reserved capacity: One or more, depending on the PCU group's normal, long-term workload requirements.
+--
+** **Reserved capacity**: One or more, depending on the PCU group's normal, long-term workload requirements.
 +
 This is the amount of long-term capacity that you want the group to have after the migration is complete.
 
-* Minimum capacity: Equal to or greater than the reserved capacity.
+** **Minimum capacity**: Equal to or greater than the reserved capacity.
 +
 If the minimum is greater than the reserved capacity, the surplus capacity is prepared in advance, and there is no autoscaling required to access that capacity.
 
-* Maximum capacity: Greater than the minimum by several units to allow autoscaling during resource intensive stages of the migration.
+** **Maximum capacity**: Greater than the minimum by several units to allow autoscaling during resource intensive stages of the migration.
 +
 For non-trivial migrations, consider setting the maximum to 10.
 For extremely large migrations, contact your {company} account representative or {support-url}[IBM Support] to request more than 10 units to support your migration.
+--
 +
 After the migration, you can reduce the minimum and maximum capacity down to the levels required for normal database operations.
 
-Target database is a {db-serverless-vector} database::
+* **Recommended configuration if the target database is a {db-serverless-vector} database**:
 +
 By default, {db-serverless-vector} databases can have no more than one unit per PCU group.
 For any non-trivial migration, contact your {company} account representative or {support-url}[IBM Support] for assistance configuring a PCU group for your target {db-serverless-vector} database.
-====
---
-======
-+
-For more information, see xref:astra-db-serverless:administration:provisioned-capacity-units.adoc[].
 
 [#origin-cluster-requirements]
 == Origin cluster requirements
@@ -208,13 +202,10 @@ include::ROOT:partial$multi-region-migrations.adoc[]
 You can migrate data from any number of nodes in your origin cluster to the same target database or multiple target databases.
 
 When you xref:sideloader:migrate-sideloader.adoc[migrate data with {sstable-sideloader}], there is no difference in the core process when migrating from one node or multiple nodes.
-The following steps summarize the process and outline some considerations for migrating multiple nodes.
+The following steps summarize the process and considerations for migrating multiple nodes.
 
-[tabs]
-======
-Migrate multiple nodes to one database::
-+
---
+==== Migrate multiple nodes to one database
+
 . On your origin cluster, make sure your data is valid and ready to migrate, as explained in <<origin-cluster-requirements>>.
 
 . From your origin cluster, create snapshots for all of the nodes that you want to migrate.
@@ -242,11 +233,9 @@ The success of the import depends primarily on the validity of the schemas and t
 
 . After the import, validate the migrated data to ensure that it matches the data in the origin cluster.
 For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator-short} in validation mode].
---
 
-Migrate multiple nodes to multiple databases::
-+
---
+==== Migrate multiple nodes to multiple databases
+
 Orchestrating concurrent migrations from multiple nodes to multiple target databases can be complex.
 
 Consider focusing on one target database at a time, or create a migration plan to track origin nodes, target databases, migration bucket credentials, and timelines for each migration.
@@ -285,8 +274,6 @@ The success of the import depends primarily on the validity of the schemas and t
 
 . After the import, validate the migrated data to ensure that it matches the data in the origin cluster.
 For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator-short} in validation mode].
---
-======
 
 === Multiple migrations to the same database
 

@@ -13,8 +13,10 @@ Before you use {sstable-sideloader} for a migration, xref:sideloader:sideloader-
 
 On _each node_ in your origin cluster, use `nodetool` to create a backup of the data that you want to migrate, including all keyspaces and CQL tables that you want to migrate.
 
-. Be aware of the {sstable-sideloader} limitations related to materialized views, secondary indexes, and encrypted data that are described in xref:sideloader:prepare-sideloader.adoc#origin-cluster-requirements[Origin cluster requirements].
-If necessary, modify the data model on your origin cluster to prepare for the migration.
+=== Prepare to create snapshots
+
+. Due to {sstable-sideloader} limitations related to materialized views, secondary indexes, and encrypted data, you might need to modify the data model on your origin cluster to prepare for the migration.
+For more information, see xref:sideloader:prepare-sideloader.adoc#origin-cluster-requirements[Origin cluster requirements].
 
 . Optional: Before you create snapshots, consider running `xref:dse:managing:tools/nodetool/cleanup.adoc[nodetool cleanup]` to remove data that no longer belongs to your nodes.
 This command is particularly useful after adding more nodes to a cluster because it helps ensure that each node only contains the data that it is responsible for, according to the current cluster configuration and partitioning scheme.
@@ -24,19 +26,18 @@ Smaller snapshots can lead to lower overall migration times and lower network tr
 +
 However, take adequate precautions before you run this command because the cleanup operations can introduce additional load on your origin cluster.
 
-. Use `xref:dse:managing:tools/nodetool/snapshot.adoc[nodetool snapshot]` to create snapshots for the tables that you want to migrate.
-+
+=== Run nodetool snapshot
+
+Use `xref:dse:managing:tools/nodetool/snapshot.adoc[nodetool snapshot]` to create snapshots for the tables that you want to migrate.
+
 Don't create snapshots of system tables or tables that you don't want to migrate.
 The migration can fail if you attempt to migrate snapshots that don't have a matching schema in the target database.
 {sstable-sideloader} ignores system keyspaces.
-+
+
 The structure of the `nodetool snapshot` command depends on the keyspaces and tables that you want to migrate.
-+
-[tabs]
-======
-All keyspaces::
-+
---
+
+==== Snapshot all keyspaces
+
 Create a snapshot of all tables in all keyspaces:
 
 [source,bash,subs="+quotes"]
@@ -44,42 +45,22 @@ Create a snapshot of all tables in all keyspaces:
 nodetool snapshot -t *SNAPSHOT_NAME*
 ----
 
-Replace *`SNAPSHOT_NAME`* with a descriptive name for the snapshot.
-Use the same snapshot name on each node.
-This makes it easier to programmatically upload the snapshots to the migration directory.
+Replace the following:
 
-.Optional: Use a for loop to simplify snapshot creation
-[%collapsible]
-====
-If the nodes in your origin cluster are named in a predictable way (for example, `dse0`, `dse1`, `dse2`, etc.), you can use a `for` loop to simplify snapshot creation.
-For example:
+* *`SNAPSHOT_NAME`*: A descriptive name for the snapshot.
+Use the same snapshot name for each node's snapshot; this makes it easier to programmatically upload the snapshots to the migration directory.
 
-[source,bash,subs="+quotes"]
-----
-for i in 0 1 2; do ssh dse${i} nodetool snapshot -t *SNAPSHOT_NAME*; done
-----
+==== Snapshot specific keyspaces
 
-You can use the same `for` loop to verify that each snapshot was successfully created:
+Create a snapshot of all tables in one or more specified keyspaces:
 
-[source,bash]
-----
-for i in 0 1 2; do ssh dse${i} nodetool listsnapshots; done
-----
-====
---
-
-Specific keyspaces::
-+
---
-Create a snapshot of all tables in one or more keyspaces:
-
-.Single keyspace
+.Snapshot one keyspace
 [source,bash,subs="+quotes"]
 ----
 nodetool snapshot -t *SNAPSHOT_NAME* *KEYSPACE_NAME*
 ----
 
-.Multiple keyspaces
+.Snapshot multiple keyspaces
 [source,bash,subs="+quotes"]
 ----
 nodetool snapshot -t *SNAPSHOT_NAME* *KEYSPACE_NAME_1* *KEYSPACE_NAME_2*
@@ -87,48 +68,25 @@ nodetool snapshot -t *SNAPSHOT_NAME* *KEYSPACE_NAME_1* *KEYSPACE_NAME_2*
 
 Replace the following:
 
-* *`KEYSPACE_NAME`*: The name of the keyspace that contains the tables you want to migrate.
-+
-To include multiple keyspaces, list each keyspace separated by a space as shown in the example above.
 * *`SNAPSHOT_NAME`*: A descriptive name for the snapshot.
+Use the same snapshot name for each node's snapshot; this makes it easier to programmatically upload the snapshots to the migration directory.
+
+* *`KEYSPACE_NAME`*: The name of the keyspace that you want to migrate.
 +
-Use the same snapshot name on each node.
-This makes it easier to programmatically upload the snapshots to the migration directory.
+To snapshot multiple keyspaces, pass a space-separated list of keyspace names.
+For example, `customer_data product_data purchase_history` specifies three keyspaces.
 
-.Optional: Use a for loop to simplify snapshot creation
-[%collapsible]
-====
-If the nodes in your origin cluster are named in a predictable way (for example, `dse0`, `dse1`, `dse2`, etc.), you can use a `for` loop to simplify snapshot creation.
-For example:
+==== Snapshot specific tables
 
-[source,bash,subs="+quotes"]
-----
-for i in 0 1 2; do ssh dse${i} nodetool snapshot -t *SNAPSHOT_NAME* *KEYSPACE_NAME*; done
-----
+Create a snapshot of one or more specified tables:
 
-To include multiple keyspaces in the snapshot, include multiple comma-separated `*KEYSPACE_NAME*` values, such as `keyspace1,keyspace2`.
-
-You can use the same `for` loop to verify that each snapshot was successfully created:
-
-[source,bash]
-----
-for i in 0 1 2; do ssh dse${i} nodetool listsnapshots; done
-----
-====
---
-
-Specific tables::
-+
---
-Create a snapshot of specific tables within one or more keyspaces:
-
-.Single table
+.Snapshot one table
 [source,bash,subs="+quotes"]
 ----
 nodetool snapshot -kt *KEYSPACE_NAME*.*TABLE_NAME* -t *SNAPSHOT_NAME*
 ----
 
-.Multiple tables from one or more keyspaces
+.Snapshot multiple tables
 [source,bash,subs="+quotes"]
 ----
 nodetool snapshot -kt *KEYSPACE_NAME_1*.*TABLE_NAME_A* *KEYSPACE_NAME_1*.*TABLE_NAME_B* *KEYSPACE_NAME_2*.*TABLE_NAME_X* -t *SNAPSHOT_NAME*
@@ -136,50 +94,80 @@ nodetool snapshot -kt *KEYSPACE_NAME_1*.*TABLE_NAME_A* *KEYSPACE_NAME_1*.*TABLE_
 
 Replace the following:
 
-* *`KEYSPACE_NAME`*: The name of the keyspace that contains the table you want to migrate.
-
-* *`TABLE_NAME`*: The name of the table you want to migrate.
+* *`KEYSPACE_NAME.TABLE_NAME`*: The name of the table that you want to migrate and the keyspace that it belongs to, separated by a period.
+For example, `product_data.appliances` specifies the `appliances` table in the `product_data` keyspace.
 +
-To include multiple tables from one or more keyspaces, list each *`KEYSPACE_NAME.TABLE_NAME`* pair separated by a space as shown in the example above.
+To snapshot multiple tables, pass a space-separated list of keyspace-table pairs.
+For example, `product_data.appliances purchase_history.nevada purchase_history.wisconsin` specifies the `appliances` table in the `product_data` keyspace and the `nevada` and `wisconsin` tables in the `purchase_history` keyspace.
 
 * *`SNAPSHOT_NAME`*: A descriptive name for the snapshot.
-+
-Use the same snapshot name on each node.
-This makes it easier to programmatically upload the snapshots to the migration directory.
+Use the same snapshot name for each node's snapshot; this makes it easier to programmatically upload the snapshots to the migration directory.
 
-.Optional: Use a for loop to simplify snapshot creation
-[%collapsible]
+=== Verify snapshot creation with nodetool listsnapshots
+
+Use `xref:6.9@dse:managing:tools/nodetool/list-snapshots.adoc[nodetool listsnapshots]` to verify that the snapshots were created:
+
+[source,bash]
+----
+nodetool listsnapshots
+----
+
+[IMPORTANT]
 ====
+Snapshots have a specific directory structure, such as `*KEYSPACE_NAME*/*TABLE_NAME*/snapshots/*SNAPSHOT_NAME*/...`.
+{sstable-sideloader} relies on this fixed structure to properly interpret the SSTable components.
+**Don't modify the snapshot's directory structure; this can cause your migration to fail.**
+====
+
+=== Optional: Use `for` loops for snapshot creation and validation
+
 If the nodes in your origin cluster are named in a predictable way (for example, `dse0`, `dse1`, `dse2`, etc.), you can use a `for` loop to simplify snapshot creation.
 For example:
 
+Use a `for` loop to snapshot all keyspaces::
+To snapshot all keyspaces on each node, append the `nodetool` command to your `for` loop:
++
+[source,bash,subs="+quotes"]
+----
+for i in 0 1 2; do ssh dse${i} nodetool snapshot -t *SNAPSHOT_NAME*; done
+----
+
+Use a `for` loop to snapshot specific keyspaces::
+To snapshot one keyspace on each node, append the `nodetool` command to your `for` loop:
++
+[source,bash,subs="+quotes"]
+----
+for i in 0 1 2; do ssh dse${i} nodetool snapshot -t *SNAPSHOT_NAME* *KEYSPACE_NAME*; done
+----
++
+To snapshot multiple specific keyspaces on each node, use commas (not spaces) to separate the keyspace names:
++
+[source,bash,subs="+quotes"]
+----
+for i in 0 1 2; do ssh dse${i} nodetool snapshot -t *SNAPSHOT_NAME* *KEYSPACE_NAME_1*,*KEYSPACE_NAME_2*; done
+----
+
+Use a `for` loop to snapshot specific tables::
+To snapshot one table on each node, append the `nodetool` command to your `for` loop:
++
 [source,bash,subs="+quotes"]
 ----
 for i in 0 1 2; do ssh dse${i} nodetool snapshot -kt *KEYSPACE_NAME*.*TABLE_NAME* -t *SNAPSHOT_NAME*; done
 ----
++
+To snapshot multiple specific tables on each node, use commas (not spaces) to separate the keyspace-table pairs:
++
+[source,bash,subs="+quotes"]
+----
+for i in 0 1 2; do ssh dse${i} nodetool snapshot -kt *KEYSPACE_NAME_1*.*TABLE_NAME_A*,*KEYSPACE_NAME_1*.*TABLE_NAME_B* -t *SNAPSHOT_NAME*; done
+----
 
-To include multiple tables in the snapshot, include multiple comma-separated `*KEYSPACE_NAME*.*TABLE_NAME*` pairs, such as `keyspace1.table1,keyspace1.table2`.
-
-You can use the same `for` loop to verify that each snapshot was successfully created:
+You can use the same `for` loop structure to verify that each snapshot was successfully created:
 
 [source,bash]
 ----
 for i in 0 1 2; do ssh dse${i} nodetool listsnapshots; done
 ----
-====
---
-======
-
-. Use `xref:6.9@dse:managing:tools/nodetool/list-snapshots.adoc[nodetool listsnapshots]` to verify that the snapshots were created:
-+
-[source,bash]
-----
-nodetool listsnapshots
-----
-+
-Snapshots have a specific directory structure, such as `*KEYSPACE_NAME*/*TABLE_NAME*/snapshots/*SNAPSHOT_NAME*/...`.
-{sstable-sideloader} relies on this fixed structure to properly interpret the SSTable components.
-**Don't modify the snapshot's directory structure; this can cause your migration to fail.**
 
 [#record-schema]
 == Configure the target database
@@ -266,13 +254,11 @@ If you don't have jq installed, remove `| jq .` from the end of each command.
 
 Use the {devops-api} to initialize the migration and get your migration directory path and credentials.
 
-.What happens during initialization?
-[%collapsible]
-====
-include::sideloader:partial$initialize.adoc[]
-====
+To learn more about the initialization process, see xref:sideloader:sideloader-overview.adoc[About {sstable-sideloader}: Initialize a migration].
 
 The initialization process can take several minutes to complete, especially if the migration bucket doesn't already exist.
+
+=== Get a migration ID
 
 . In your terminal, use the {devops-api} to initialize the data migration:
 +
@@ -317,6 +303,8 @@ export migrationID=*MIGRATION_ID*
 +
 Replace *`MIGRATION_ID`* with the `migrationID` returned by the `initialize` endpoint.
 
+=== Check the migration status to verify initialization
+
 . Check the migration status:
 +
 include::sideloader:partial$check-status.adoc[]
@@ -328,15 +316,15 @@ Proceed to the next step.
 * `"status": "Initializing"`: The migration is still initializing.
 Wait a few minutes before you check the status again.
 
-. Get your migration directory path and upload credentials from the response.
+=== Get migration directory path and upload credentials
+
+Get your migration directory path and upload credentials from the response.
 You need these values to xref:sideloader:migrate-sideloader.adoc#upload-snapshots-to-migration-directory[upload snapshots to the migration directory].
-+
-[tabs]
-======
-AWS::
-+
---
-.MigrationStatus with AWS credentials
+
+==== Get AWS credentials from MigrationStatus
+
+Securely store the `uploadBucketDir`, `accessKeyID`, `secretAccessKey`, and `sessionToken` from the response:
+
 [source,json]
 ----
 {
@@ -359,12 +347,10 @@ AWS::
 }
 ----
 
-Securely store the `uploadBucketDir`, `accessKeyID`, `secretAccessKey`, and `sessionToken`:
-
-* `uploadBucketDir` is the migration directory URL.
+`uploadBucketDir` is the migration directory URL.
 Note the trailing slash.
 
-* `uploadCredentials` contains the AWS credentials that authorize uploads to the migration directory, namely `accessKeyID`, `secretAccessKey`, and `sessionToken`.
+`uploadCredentials` contains the AWS credentials that authorize uploads to the migration directory, namely `accessKeyID`, `secretAccessKey`, and `sessionToken`.
 
 [IMPORTANT]
 ====
@@ -373,12 +359,11 @@ If your total migration takes longer than one hour, xref:sideloader:troubleshoot
 
 If you use automation to handle {sstable-sideloader} migrations, you might need to script a xref:sideloader:stop-restart-sideloader.adoc[pause] every hour so you can generate new credentials without unexpectedly interrupting the migration.
 ====
---
 
-Google Cloud::
+==== Get Google Cloud credentials from MigrationStatus
+
+. Find the `uploadBucketDir` and the `uploadCredentials` in the response:
 +
---
-.MigrationStatus with Google Cloud credentials
 [source,json]
 ----
 {
@@ -397,14 +382,13 @@ Google Cloud::
   "expectedCleanupTime": "2024-08-14T15:14:38Z"
 }
 ----
-
-.. Find the `uploadBucketDir` and the `uploadCredentials` in the response:
 +
-* `uploadBucketDir` is the migration directory URL.
+`uploadBucketDir` is the migration directory URL.
 Note the trailing slash.
-* `uploadCredentials` includes a base64-encoded file containing Google Cloud credentials that authorize uploads to the migration directory.
++
+`uploadCredentials` contains a base64-encoded file containing Google Cloud credentials that authorize uploads to the migration directory.
 
-.. Pipe the Google Cloud credentials `file` to a `creds.json` file:
+. Pipe the Google Cloud credentials `file` to a `creds.json` file:
 +
 [source,bash]
 ----
@@ -415,13 +399,12 @@ curl -X GET \
     | base64 -d > creds.json
 ----
 
-.. Securely store the `uploadBucketDir` and `creds.json`.
---
+. Securely store the `uploadBucketDir` and `creds.json`.
 
-Microsoft Azure::
-+
---
-.MigrationStatus with Azure credentials
+==== Get Azure credentials from MigrationStatus
+
+Securely store the `uploadBucketDir` and `urlSignature` from the response:
+
 [source,json]
 ----
 {
@@ -441,17 +424,13 @@ Microsoft Azure::
   "expectedCleanupTime": "2025-03-04T15:14:38Z"
 }
 ----
-Securely store the `uploadBucketDir` and `urlSignature`:
 
-* `uploadBucketDir` is the migration directory URL.
+`uploadBucketDir` is the migration directory URL.
 Note the trailing slash.
 
-* `uploadCredentials` contains `url` and `urlSignature` keys that represent an https://learn.microsoft.com/en-us/azure/ai-services/translator/document-translation/how-to-guides/create-sas-tokens[Azure Shared Access Signature (SAS) token].
-In the preceding example, these strings are truncated for readability.
-+
+`uploadCredentials` contains `url` and `urlSignature` keys that represent an https://learn.microsoft.com/en-us/azure/ai-services/translator/document-translation/how-to-guides/create-sas-tokens[Azure Shared Access Signature (SAS) token].
 You need the `urlSignature` to upload snapshots to the migration directory.
---
-======
+In the preceding example, these strings are truncated for readability.
 
 [#upload-snapshots-to-migration-directory]
 == Upload snapshots to the migration directory
@@ -477,27 +456,8 @@ For more information, see xref:sideloader:prepare-sideloader.adoc[].
 * You might need to modify these commands depending on your environment, node names, directory structures, and other variables.
 ====
 
-[tabs]
-======
-AWS::
-+
---
-////
-Originals:
-[source,bash,subs="+quotes"]
-----
-export AWS_ACCESS_KEY_ID=**ACCESS_KEY_ID**; export AWS_SECRET_ACCESS_KEY=**SECRET_ACCESS_KEY**; export AWS_SESSION_TOKEN=**SESSION_TOKEN**; \
-du -sh **CASSANDRA_DATA_DIR**/**KEYSPACE_NAME**/\*/snapshots/***SNAPSHOT_NAME***; \
-aws s3 sync --only-show-errors --exclude '\*' --include '*/snapshots/**SNAPSHOT_NAME***' **CASSANDRA_DATA_DIR**/ **MIGRATION_DIR**/**NODE_NAME**
-----
+=== Upload snapshots to AWS
 
-[source,bash]
-----
-export AWS_ACCESS_KEY_ID=ASXXXXXXXXXXXXXXXXXX; export AWS_SECRET_ACCESS_KEY=2XXXXXXXXXXXXXXXWqcdV519ZubYbyfuNxbZg1Rw; AWS_SESSION_TOKEN=XXXXXXXXXX; \
-du -sh /var/lib/cassandra/data/smart_home/*/snapshots/*sensor_readings*; \
-aws s3 sync --only-show-errors --exclude '*' --include '*/snapshots/sensor_readings*' /var/lib/cassandra/data/ s3://ds-mig-b7e7761f-6f7f-4116-81a5-e8eefcf0cc1d/272eac1d-df8e-4d1b-a7c6-71d5af232182/sstables/dse0
-----
-////
 . Set environment variables for the AWS credentials that were generated when you xref:sideloader:migrate-sideloader.adoc#initialize-migration[initialized the migration]:
 +
 [source,bash,subs="+quotes"]
@@ -517,12 +477,11 @@ aws s3 sync --only-show-errors --exclude '{asterisk}' --include '{asterisk}/snap
 +
 Replace the following:
 +
+--
 include::sideloader:partial$command-placeholders-common.adoc[]
-
+--
 +
 .Example: Upload a snapshot with AWS CLI
-[%collapsible]
-====
 [source,bash]
 ----
 # Set environment variables
@@ -534,7 +493,6 @@ export AWS_SESSION_TOKEN=XXXXXXXXXX
 du -sh /var/lib/cassandra/data/smart_home/*/snapshots/*sensor_readings*; \
 aws s3 sync --only-show-errors --exclude '*' --include '*/snapshots/sensor_readings*' /var/lib/cassandra/data/ s3://ds-mig-b7e7761f-6f7f-4116-81a5-e8eefcf0cc1d/272eac1d-df8e-4d1b-a7c6-71d5af232182/sstables/dse0
 ----
-====
 
 . Monitor upload progress:
 +
@@ -556,9 +514,9 @@ However, upload time primarily depends on the snapshot size, network throughput 
 . Repeat the upload process for each snapshot (*`SNAPSHOT_NAME`*) and node (*`NODE_NAME`*) in your origin cluster.
 +
 If your credentials expire, see xref:sideloader:troubleshoot-sideloader.adoc#get-new-upload-credentials[Get new upload credentials].
-
-.Optional: Use a for loop to simplify snapshot uploads
-[%collapsible]
++
+.Use a `for` loop to simplify snapshot uploads
+[TIP]
 ====
 If the nodes in your origin cluster have predictable names (for example, `dse0`, `dse1`, and `dse2`), then you can use a `for` loop to streamline the execution of the upload commands.
 For example:
@@ -576,11 +534,13 @@ for i in 0 1 2; do ssh dse{loop-var} \
 aws s3 sync --only-show-errors --exclude '{asterisk}' --include '{asterisk}/snapshots/**SNAPSHOT_NAME**{asterisk}' **CASSANDRA_DATA_DIR**/ **MIGRATION_DIR**dse{loop-var}" & done
 ----
 ====
---
 
-Google Cloud::
-+
---
+include::sideloader:partial$staged-snapshots-need-import-ph.adoc[]
+
+include::sideloader:partial$idle-migration-directories-note.adoc[]
+
+=== Upload snapshots to Google Cloud Storage
+
 . Authenticate to Google Cloud with the `creds.json` file that you created when you xref:sideloader:migrate-sideloader.adoc#initialize-migration[initialized the migration]:
 +
 [source,bash,subs="+quotes,attributes"]
@@ -601,12 +561,11 @@ gsutil -m rsync -r -d **CASSANDRA_DATA_DIR**/**KEYSPACE_NAME**/{asterisk}{asteri
 +
 Replace the following:
 +
+--
 include::sideloader:partial$command-placeholders-common.adoc[]
-
+--
 +
 .Example: Upload a snapshot with gcloud and gsutil
-[%collapsible]
-====
 [source,bash,subs="attributes"]
 ----
 # Authenticate
@@ -615,7 +574,6 @@ gcloud auth activate-service-account --key-file=creds.json
 # Upload "sensor_readings" snapshot from "dse0" node
 gsutil -m rsync -r -d /var/lib/cassandra/data/smart_home/{asterisk}{asterisk}/snapshots/sensor_readings/ gs://ds-mig-b7e7761f-6f7f-4116-81a5-e8eefcf0cc1d/272eac1d-df8e-4d1b-a7c6-71d5af232182/sstables/dse0
 ----
-====
 
 . Monitor upload progress:
 +
@@ -635,9 +593,9 @@ The `https://cloud.google.com/storage/docs/gsutil/commands/rsync#description[-m]
 However, upload time primarily depends on the snapshot size, network throughput from your origin cluster to the migration bucket, and whether the origin cluster and migration bucket are in the same region.
 
 . Repeat the upload process for each snapshot (*`SNAPSHOT_NAME`*) and node (*`NODE_NAME`*) in your origin cluster.
-
-.Optional: Use a for loop to simplify snapshot uploads
-[%collapsible]
++
+.Use a `for` loop to simplify snapshot uploads
+[TIP]
 ====
 If the nodes in your origin cluster have predictable names (for example, `dse0`, `dse1`, and `dse2`), then you can use a `for` loop to streamline the execution of the `gsutil rsync` commands.
 For example:
@@ -649,21 +607,16 @@ du -sh **CASSANDRA_DATA_DIR**/**KEYSPACE_NAME**/{asterisk}/snapshots/{asterisk}*
 gsutil -m rsync -r -d **CASSANDRA_DATA_DIR**/**KEYSPACE_NAME**/{asterisk}{asterisk}/snapshots/**SNAPSHOT_NAME**/ **MIGRATION_DIR**dse{loop-var} & done
 ----
 ====
---
 
-Microsoft Azure::
-+
---
-//----
-//for dir in $(find "$CASSANDRA_DATA_DIR" -type d -path "*/snapshots/${SNAPSHOT_NAME}*"); do
-//       REL_PATH=${dir#"$CASSANDRA_DATA_DIR"}  # Remove the base path
-//       azcopy sync "$dir" "${MIGRATION_DIR}${NODE_NAME}/${REL_PATH}/"?${AZURE_SAS_TOKEN} --recursive
-//     done
-//   '
-//----
+include::sideloader:partial$staged-snapshots-need-import-ph.adoc[]
+
+include::sideloader:partial$idle-migration-directories-note.adoc[]
+
+=== Upload snapshots to Azure
 
 . Set environment variables for the following values:
 +
+--
 * *`AZURE_SAS_TOKEN`*: The `urlSignature` key that was generated when you xref:sideloader:migrate-sideloader.adoc#initialize-migration[initialized the migration].
 * *`CASSANDRA_DATA_DIR`*: The absolute file system path to where {cass-short} data is stored on the node, including the trailing slash.
 For example, `/var/lib/cassandra/data/`.
@@ -671,7 +624,7 @@ For example, `/var/lib/cassandra/data/`.
 * *`MIGRATION_DIR`*: The entire `uploadBucketDir` value that was generated when you xref:sideloader:migrate-sideloader.adoc#initialize-migration[initialized the migration], including the trailing slash.
 * *`NODE_NAME`*: The host name of the node that your snapshots are from.
 It is important to use the specific node name to ensure that each node has a unique directory in the migration bucket.
-
+--
 +
 [source,bash,subs="+quotes"]
 ----
@@ -710,23 +663,10 @@ Upload time primarily depends on the snapshot size, network throughput from your
 
 . Repeat the upload process for each snapshot and node in your origin cluster.
 Be sure to change the `SNAPSHOT_NAME` and `NODE_NAME` environment variables as needed.
---
-======
 
-Uploaded snapshots are staged in the migration directory, but the data is not yet written to the target database.
-After uploading snapshots, you must xref:sideloader:migrate-sideloader.adoc#import-data[import the data] to finish the migration.
+include::sideloader:partial$staged-snapshots-need-import-ph.adoc[]
 
-=== Idle migration directories are evicted
-
-[WARNING]
-====
-For large migrations, it can take several days to upload snapshots and import data.
-Make sure you xref:sideloader:cleanup-sideloader.adoc#reschedule-a-cleanup[manually reschedule the cleanup] to avoid automatic cleanup.
-====
-
-As an added security measure, migrations that remain continuously idle for one week are subject to xref:sideloader:cleanup-sideloader.adoc[automatic cleanup], which deletes all associated snapshots, revokes any unexpired upload credentials, and then closes the migration.
-
-{company} recommends that you xref:sideloader:cleanup-sideloader.adoc#reschedule-a-cleanup[manually reschedule the cleanup] if you don't plan to launch the migration within one week or if you need several days to upload snapshots or import data.
+include::sideloader:partial$idle-migration-directories-note.adoc[]
 
 [#import-data]
 == Import data
@@ -737,11 +677,7 @@ Data import is a multi-step operation that requires complete success.
 If one step fails, then the entire import operation stops and the migration fails.
 //Does all data fail to import or is it possible to have a partial import?
 
-.What happens during data import?
-[%collapsible]
-======
-include::sideloader:partial$import.adoc[]
-======
+To learn more about the data import process, see xref:sideloader:sideloader-overview.adoc[About {sstable-sideloader}: Import data].
 
 [WARNING]
 ====

@@ -17,13 +17,10 @@ docker exec -it zdm-ansible-container bash
 ----
 +
 .Result
-[%collapsible]
-====
 [source,bash]
 ----
 ubuntu@52772568517c:~$
 ----
-====
 
 . List (`ls`) the contents of the Ansible Control Host Docker container, and then find the `zdm-proxy-automation` directory.
 
@@ -64,8 +61,8 @@ In versions 2.3.0 and later, you can inject the configuration with a YAML file g
 
 For the cluster and core configuration, you need to provide connection credentials and details for both the origin and target clusters.
 
-.{product-automation} version 2.1.0 or earlier
-[%collapsible]
+.Configuration file change in {product-automation} version 2.2.0
+[IMPORTANT]
 ====
 Starting in version 2.2.0 of {product-automation}, all origin and target cluster configuration variables are stored in `zdm_proxy_cluster_config.yml`.
 In earlier versions, these variables are in the `zdm_proxy_core_config.yml` file.
@@ -75,28 +72,19 @@ If you previously populated the variables in `zdm_proxy_core_config.yml`, these 
 However, consider updating your configuration to use the new file and take advantage of new features in later releases.
 ====
 
-. Get connection credentials for your origin and target clusters.
+. Get connection credentials for your origin and target clusters:
 +
-[tabs]
-======
 Self-managed clusters::
-+
---
 For self-managed clusters with authentication enabled, you need a valid username and password for the cluster.
-
++
 If authentication isn't enabled, no credentials are required.
---
 
 {astra-db}::
-+
---
 For {astra-db} databases, xref:astra-db-serverless:administration:manage-application-tokens.adoc[generate an application token] with a role that can read and write to your database, such as the {database-administrator-role} role, and then store the token securely.
-
-At minimum, store the core token that is prefixed by `AstraCS:...`.
-
++
+At minimum, store the primary token that is prefixed by `AstraCS:...`.
++
 For legacy authentication to earlier {astra-db} databases with an older token generated prior to the unified `AstraCS` token, you can use the `clientId` and `secret` instead of the core token.
---
-======
 
 . Edit the `zdm_proxy_cluster_config.yml` file.
 The `vi` and `nano` text editors are available in the container.
@@ -116,56 +104,44 @@ For example, `origin_username` and `target_username`.
 The expected values depend on the type of cluster (self-managed or {astra-db}).
 For example, if your target cluster is an {astra-db} database, provide the {astra-db} connection details in the `TARGET CONFIGURATION` section.
 +
-[tabs]
-======
 Origin/target configuration for a self-managed cluster::
-+
---
 The following configuration is required to connect to a self-managed cluster:
-
++
 * `*_username` and `*_password`: For a self-managed cluster with authentication enabled, provide a valid username and password to access the cluster.
 If authentication isn't enabled, leave both variables unset.
-
 * `*_contact_points`: Provide a comma-separated list of IP addresses for the cluster's seed nodes.
-
 * `*_port`: Provide the port on which the cluster listens for client connections.
 The default is 9042.
-
 * `*_astra_secure_connect_bundle_path`, `*_astra_db_id`, and `*_astra_token`: All of these must be unset.
---
 
 Origin/target configuration for {astra-db}::
-+
---
 The following configuration is required to connect to an {astra-db} database:
-
++
 * `*_username` and `*_password`: Set `username` to the literal string `token`, and set `password` to your {astra-db} application token (`AstraCS:...`).
 +
 For legacy authentication to earlier {astra-db} databases with an older token generated prior to the unified `token` approach, set the `username` to the token's `clientId`, and set the `password` to the token's `secret`.
-
-* `*_contact_points`: Must be unset.
-
-* `*_port`: Must be unset.
-
-* `*_astra_secure_connect_bundle_path`, `*_astra_db_id`, and `*_astra_token`: Provide either `*_astra_secure_connect_bundle_path` only, or both `*_astra_db_id` and `*_astra_token`.
 +
-** If you want {product-automation} to automatically download your database's {scb}, use `*_astra_db_id` and `*_astra_token`.
+* `*_contact_points`: Must be unset.
++
+* `*_port`: Must be unset.
++
+* `*_astra_secure_connect_bundle_path` or `*_astra_db_id` and `*_astra_token`: Provide either of the following, but not both.
+The unused option must be unset.
+For example, if you use `target_astra_db_id` and `target_astra_token`, then `target_astra_secure_connect_bundle_path` must be unset.
++
+--
+** **Both `{asterisk}_astra_db_id` and `{asterisk}_astra_token`**: If you want {product-automation} to automatically download your database's {scb}, use `*_astra_db_id` and `*_astra_token`.
 Set `*_astra_db_id` to your xref:astra-db-serverless:databases:create-database.adoc#get-db-id[database's ID], and set `*_astra_token` to your application token (`AstraCS:...`).
-** If you want to manually provide database's {scb-short} to the jumphost, use `*_astra_secure_connect_bundle_path`, and manually upload the {scb-short} to the jumphost:
+** **Only `{asterisk}_astra_secure_connect_bundle_path`**: If you want to manually provide your database's {scb-short} to the jumphost, use `*_astra_secure_connect_bundle_path`, and manually upload the {scb-short} to the jumphost:
 +
 .. xref:astra-db-serverless:databases:secure-connect-bundle.adoc[Download your database's {scb-short}].
 .. Upload it to the jumphost.
 .. Open a new shell on the jumpost, and then run `docker cp /path/to/scb.zim zdm-ansible-container:/home/ubuntu` to copy the {scb-short} to the container.
 .. Set `*_astra_secure_connect_bundle_path` to the path to the {scb-short} on the jumphost.
+--
 
 +
-The unused option must be unset.
-For example, if you use `target_astra_db_id` and `target_astra_token`, then `target_astra_secure_connect_bundle_path` must be unset.
---
-======
-+
 .Example: Cluster configuration
-[%collapsible]
 ====
 The following example shows the cluster configuration for a migration from a self-managed origin cluster to an {astra-db} target:
 
@@ -212,7 +188,7 @@ For the majority of the migration, leave this set to the default value of `ORIGI
 At the end of the migration, when you're preparing to switch over to the target cluster permanently, you can change it to `TARGET` after migrating all data from the origin cluster.
 * `read_mode`: Controls the xref:enable-async-dual-reads.adoc[asynchronous dual reads] feature.
 Until you reach Phase 3, leave this set to the default value of `PRIMARY_ONLY`.
-* `log_level`: You might need to xref:ROOT:troubleshooting-tips.adoc#proxy-logs[modify the log level] when troubleshooting issues.
+* `log_level`: You might need to xref:ROOT:zdm-logs.adoc[modify the log level] when troubleshooting issues.
 Unless you are investigating an issue, leave this set to the default value of `INFO`.
 
 [IMPORTANT]
@@ -267,13 +243,13 @@ Transportation Layer Security (TLS) encryption is optional and disabled by defau
 
 {product-proxy} supports TLS encryption between {product-proxy} and either or both clusters, and between {product-proxy} and your client application.
 
-To enable TLS encryption, you must provide the necessary files and configure TLS settings in the `zdm_proxy_custom_tls_config.yml` file.
+To enable TLS encryption, you must provide the necessary files and configure TLS settings in the `zdm_proxy_custom_tls_config.yml` file before running the deployment playbook.
 
-[tabs]
-======
-Proxy-to-cluster TLS::
-+
---
+When you deploy the {product-proxy} instances with {product-automation}, the deployment playbook automatically distributes the TLS files and applies the TLS configuration to all {product-proxy} instances.
+If you want to enable TLS after the initial deployment, you must rerun the deployment playbook to redeploy the instances with the new TLS configuration.
+
+==== Configure proxy-to-cluster TLS
+
 Use these steps to enable TLS encryption between {product-proxy} and one or both clusters if required.
 
 Each cluster has its own TLS configuration.
@@ -290,9 +266,10 @@ For {astra-db}, {product-proxy} uses mTLS automatically with the xref:astra-db-s
 . Find the required files for each cluster where you want to enable TLS encryption.
 All files must be in plain-text, non-binary format.
 +
+--
 * **One-way TLS**: Find the server CA.
 * **Mutual TLS**: Find the server CA, the client certificate, and the client key.
-
+--
 +
 If your client application and origin cluster already use TLS encryption, then the required files should already be used in the client application's configuration (TLS client files) and the origin cluster's configuration (TLS Server files).
 
@@ -301,6 +278,7 @@ If your client application and origin cluster already use TLS encryption, then t
 .. If your TLS files are in a JKS keystore, you must extract them as plain text because {product-proxy} cannot accept a JKS keystore.
 You must provide the raw files.
 +
+--
 ... Get the files contained in your JKS keystore and their aliases:
 +
 [source,bash,subs="+quotes"]
@@ -326,8 +304,8 @@ Replace the following:
 +
 The `-rfc` option extracts the files in non-binary PEM format.
 For more information, see the https://docs.oracle.com/javase/8/docs/technotes/tools/windows/keytool.html[keytool syntax documentation].
+--
 
-+
 .. Upload the required TLS files to the jumphost:
 +
 ** **One-way TLS**: Upload the server CA.
@@ -341,7 +319,7 @@ For more information, see the https://docs.oracle.com/javase/8/docs/technotes/to
 ----
 docker cp **TLS_FILE** zdm-ansible-container:/home/ubuntu/origin_tls_files
 ----
-
++
 ** Copy target files to the `target_tls_files` directory, replacing `**TLS_FILE**` with the path to each required files:
 +
 [source,bash,subs="+quotes"]
@@ -361,12 +339,10 @@ docker exec -it zdm-ansible-container bash
 . From this shell, edit the `zdm_proxy_tls_config.yml` file at `zdm-proxy-automation/ansible/vars/zdm_proxy_custom_tls_config.yml`.
 
 . Uncomment and populate the TLS configuration variables for the clusters where you want to enable TLS encryption.
-For example, if you want to enable TLS encryption for both clusters, configure both sets of variables: `origin_tls_{asterisk}` and `target_tls_{asterisk}`.
+For example, if you want to enable TLS encryption for both clusters, configure both sets of variables (`origin_tls_{asterisk}` and `target_tls_{asterisk}`).
 +
 In the proxy-to-cluster configuration, the word `server` in the variable names refers to the cluster, which acts as the TLS server, and the word `client` refers to {product-proxy}, which acts as the TLS client.
 +
-[tabs]
-====
 Origin cluster TLS encryption variables::
 +
 * `origin_tls_user_dir_path`: Use the default value of `/home/ubuntu/origin_tls_files`.
@@ -384,12 +360,9 @@ Target cluster TLS encryption variables::
 Must be unset for one-way TLS.
 * `target_tls_client_key_filename`:  Required for mTLS only. Provide the filename (without the path) of the client key.
 Must be unset for one-way TLS.
-====
---
 
-Client application-to-proxy TLS::
-+
---
+==== Configure client application-to-proxy TLS
+
 Use these steps to enable TLS encryption between your client application and {product-proxy} if required.
 
 In this case, your client application is the TLS client, and {product-proxy} is the TLS server.
@@ -424,10 +397,11 @@ keytool -exportcert -keystore **PATH/TO/KEYSTORE.JKS** -alias **FILE_ALIAS** -fi
 +
 Replace the following:
 +
+--
 ** `**PATH/TO/KEYSTORE.JKS**`: The path to your JKS keystore
 ** `**FILE_ALIAS**`: The alias of the file you want to extract
 ** `**PATH/TO/DESTINATION/FILE**`: The path where you want to save the extracted file
-
+--
 +
 The `-rfc` option extracts the files in non-binary PEM format.
 For more information, see the https://docs.oracle.com/javase/8/docs/technotes/tools/windows/keytool.html[keytool syntax documentation].
@@ -461,11 +435,6 @@ The word `server` in the variable names refers to {product-proxy}, which acts as
 * `zdm_proxy_tls_server_key_filename` : Required. Provide the filename (without the path) of the server key that the proxy must use.
 * `zdm_proxy_tls_require_client_auth`: Set to `false` (default) for one-way TLS between the application and proxy.
 Set to `true` to enable mTLS between the application and the proxy.
---
-======
-
-When you deploy the {product-proxy} instances with {product-automation}, the deployment playbook automatically distributes the TLS files and applies the TLS configuration to all {product-proxy} instances.
-If you want to enable TLS after the initial deployment, you must rerun the deployment playbook to redeploy the instances with the new TLS configuration.
 
 [#run-the-deployment-playbook]
 == Run the deployment playbook
@@ -511,8 +480,6 @@ docker logs zdm-proxy-container
 ----
 +
 .Result
-[%collapsible]
-====
 [source,console]
 ----
 time="2023-01-13T22:21:42Z" level=info msg="Initialized origin control connection. Cluster Name: OriginCluster, Hosts: map[3025c4ad-7d6a-4398-b56e-87d33509581d:Host{addr: 191.100.20.61,
@@ -523,7 +490,6 @@ port: 9042, host_id: 6973271339454cfea5ee0a84c7377eaa} 6ec35bc3-4ff4-4740-a16c-0
 time="2023-01-13T22:21:42Z" level=info msg="Proxy connected and ready to accept queries on 172.18.10.111:9042"
 time="2023-01-13T22:21:42Z" level=info msg="Proxy started. Waiting for SIGINT/SIGTERM to shutdown."
 ----
-====
 
 .. In the logs, look for messages containing `Proxy connected` and `Proxy started`:
 +
@@ -541,14 +507,11 @@ docker ps
 ----
 +
 .Result
-[%collapsible]
-====
 [source,console]
 ----
 CONTAINER ID  IMAGE                     COMMAND  CREATED      STATUS     PORTS   NAMES
 02470bbc1338  datastax/zdm-proxy:2.1.x  "/main"  2 hours ago  Up 2 hours         zdm-proxy-container
 ----
-====
 
 == Troubleshoot deployment issues
 

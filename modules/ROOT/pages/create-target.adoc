@@ -15,11 +15,8 @@ The preparation steps depend on your target platform.
 For complex migrations, such as those that involve multi-datacenter clusters, many-to-one/one-to-many mappings, or unresolvable mismatched schemas, see the xref:ROOT:feasibility-checklists.adoc#multi-datacenter-clusters-and-other-complex-migrations[considerations for complex migrations].
 ====
 
-[tabs]
-======
-Migrate to {astra}::
-+
---
+== Migrate to {astra}
+
 . Sign in to the {astra-ui-link} and xref:astra-db-serverless:administration:manage-organizations.adoc#switch-organizations[switch to the organization] where you want to create the new database.
 +
 {product-proxy} can be used with any xref:astra-db-serverless:administration:subscription-plans.adoc[{astra} subscription plan].
@@ -70,11 +67,9 @@ As a best practice, omit xref:astra-db-serverless:cql:develop-with-cql.adoc#unsu
 You must adjust your data model and application logic to discard or replace these structures before beginning your migration.
 For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc#limitations-on-cql-for-astra-db[Limitations on CQL for {astra-db}].
 * If you plan to use {sstable-sideloader} for xref:ROOT:migrate-and-validate-data.adoc[Phase 2], see the xref:sideloader:migrate-sideloader.adoc#record-schema[target database configuration requirements for migrating data with {sstable-sideloader}].
---
 
-Migrate to {hcd-short}, {dse-short}, or open-source {cass-reg}::
-+
---
+== Migrate to {hcd-short}, {dse-short}, or open-source {cass-reg}
+
 . Provision the cluster infrastructure, and then create your {hcd-short}, {dse-short}, or {cass-short} cluster with your desired configuration:
 +
 Determine the correct topology and specifications for your new cluster, and then provision infrastructure that meets those requirements.
@@ -107,22 +102,18 @@ To copy the schema, you can run CQL `DESCRIBE` on the origin cluster to get the 
 +
 If your origin cluster is running an earlier version, you might need to edit CQL clauses that are no longer supported in newer versions, such as `COMPACT STORAGE`.
 For specific changes in each version, see the release notes for your database platform and {cass-short} driver.
---
 
-Other CQL-compatible data stores::
-+
---
+== Migrate to other CQL-compatible data stores
+
 Support for other CQL-compatible data stores isn't guaranteed for {product-proxy}.
 
 If your origin and target clusters meet the xref:ROOT:feasibility-checklists.adoc[protocol version compatibility requirements], you might be able to use {product-proxy} for your migration.
 As with any migration, {company} recommends that you test this in isolation before attempting a full-scale production migration.
 
 See your data store provider's documentation for information about creating your cluster and schema, generating authentication credentials, and gathering the connection details.
---
-======
 
-[TIP]
-====
+== Test the connection to the target cluster
+
 After you create the target cluster, try connecting your client application directly to the target cluster without {product-proxy}.
 This ensures that the connection will work when you disconnect {product-proxy} at the end of the migration.
 
@@ -132,6 +123,7 @@ This is particularly valuable when migrating to a new platform, such as {dse-sho
 
 Depending on the results of your tests, you might need to adjust your application logic, data model, or cluster configuration to achieve your performance goals.
 For example, you might need to optimize queries to avoid anti-patterns that were acceptable on your origin cluster but degrade performance on the target cluster.
-====
 
-Next, learn about xref:ROOT:rollback.adoc[rollback options] before you begin xref:ROOT:phase1.adoc[Phase 1] of the migration process.
+== Next steps
+
+Learn about xref:ROOT:rollback.adoc[rollback options] before you begin xref:ROOT:phase1.adoc[Phase 1] of the migration process.

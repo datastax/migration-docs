@@ -48,21 +48,17 @@ By design, the data is expected to be identical on both clusters, and your clien
 
 For this reason, the only way to manually test read routing is to intentionally write mismatched test data to the clusters.
 Then, you can send a read request to {product-proxy} and see which cluster-specific data is returned, which indicates the cluster that received the read request.
-There are two ways to do this.
+There are two ways to do this:
 
-[tabs]
-======
 Manually create mismatched tables::
-+
---
 To manually create mismatched data, you can create a test table on each cluster, and then write different data to each table.
-
++
 [IMPORTANT]
 ====
 When you write the mismatched data to the tables, make sure you connect to each cluster directly.
 Don't connect to {product-proxy}, because {product-proxy} will, by design, write the same data to both clusters through dual writes.
 ====
-
++
 . Create a small test table on both clusters, such as a simple key/value table.
 You can use an existing keyspace, or create one for this test specifically.
 For example:
@@ -71,7 +67,7 @@ For example:
 ----
 CREATE TABLE test_keyspace.test_table(k TEXT PRIMARY KEY, v TEXT);
 ----
-
++
 . Use `cqlsh` to connect _directly to the origin cluster_, and then insert a row with any key and a value that is specific to the origin cluster.
 For example:
 +
@@ -79,7 +75,7 @@ For example:
 ----
 INSERT INTO test_keyspace.test_table(k, v) VALUES ('1', 'Hello from the origin cluster!');
 ----
-
++
 . Use `cqlsh` to connect _directly to the target cluster_, and then insert a row with the same key and a value that is specific to the target cluster.
 For example:
 +
@@ -87,7 +83,7 @@ For example:
 ----
 INSERT INTO test_keyspace.test_table(k, v) VALUES ('1', 'Hello from the target cluster!');
 ----
-
++
 . Use `cqlsh` to xref:connect-clients-to-proxy.adoc#_connecting_cqlsh_to_the_zdm_proxy[connect to {product-proxy}], and then issue a read request to your test table.
 For example:
 +
@@ -99,22 +95,19 @@ SELECT * FROM test_keyspace.test_table WHERE k = '1';
 The cluster-specific value in the response tells you which cluster received the read request.
 For example:
 +
+--
 * If the read request was correctly routed to the target cluster, the result from `test_table` contains `Hello from the target cluster!`.
 * If the read request was incorrectly routed to the origin cluster, the result from `test_table` contains `Hello from the origin cluster!`.
-
+--
++
 . When you're done testing, drop the test tables from both clusters.
 If you created dedicated test keyspaces, drop the keyspaces as well.
---
 
 Use the Themis sample client application::
-+
---
 The xref:connect-clients-to-proxy.adoc#_themis_client[Themis sample client application] connects directly to the origin cluster, the target cluster, and {product-proxy}.
 It inserts some test data in its own, dedicated table.
 Then, you can view the results of reads from each source.
 For more information, see the https://github.com/absurdfarce/themis/blob/main/README.md[Themis README].
---
-======
 
 === System tables cannot validate read routing
 

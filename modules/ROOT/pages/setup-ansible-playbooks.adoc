@@ -38,22 +38,15 @@ You don't need to install Docker on any other machines.
 
 If you don't want to pull images from a specific registry, or your servers don't connect to the public internet, there are two alternative Docker configurations you can use.
 
-[tabs]
-======
 Pull from local cache::
-+
---
 If your servers can connect directly to a local Docker registry, the servers can pull containers from the public internet by way of the local Docker registry.
 With this option, only the local Docker registry is connected to the public internet.
 For instructions, see the Docker documentation on https://docs.docker.com/docker-hub/mirror/[configuring a pull-through cache].
---
 
 Airgapped local registry::
-+
---
 Local registries that aren't connected to the internet require administrators to manually add containers to their registry.
 For {product-utility}, you need the following five containers to install and configure the jumphost, {product-proxy}, and monitoring:
-
++
 [source,plaintext]
 ----
 grafana/grafana:7.5.17
@@ -62,8 +55,6 @@ datastax/zdm-ansible:2.x
 prom/node-exporter:latest
 datastax/zdm-proxy:2.x
 ----
---
-======
 
 == Use a jumphost to deploy the Ansible Control Host container
 

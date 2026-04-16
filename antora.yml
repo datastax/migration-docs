@@ -32,6 +32,7 @@ asciidoc:
     astra: 'Astra'
     db-serverless: 'Serverless (non-vector)'
     db-serverless-vector: 'Serverless (vector)'
+    db-classic: 'Astra Managed Clusters'
     astra-ui: 'Astra Portal'
     astra-url: 'https://astra.datastax.com'
     astra-ui-link: '{astra-url}[{astra-ui}^]'

@@ -38,26 +38,21 @@ Then, perform a rolling restart of your {product-proxy} instances to apply the c
 
 . Edit `vars/zdm_proxy_core_config.yml`, and then set the `read_mode` variable:
 +
-[tabs]
-======
-Enable asynchronous dual reads::
+* To enable asynchronous dual reads, set `read_mode` to `DUAL_ASYNC_ON_SECONDARY`:
 +
---
 [source,yml]
 ----
 read_mode: DUAL_ASYNC_ON_SECONDARY
 ----
---
 
-Disable asynchronous dual reads (default)::
+* To disable asynchronous dual reads (default), set `read_mode` to `PRIMARY_ONLY`:
 +
---
 [source,yml]
 ----
 read_mode: PRIMARY_ONLY
 ----
---
-======
++
+The default configuration is disable (`PRIMARY_ONLY`).
 
 . xref:ROOT:manage-proxy-instances.adoc#perform-a-rolling-restart-of-the-proxies[Perform a rolling restart] to apply the configuration change to your {product-proxy} instances.
 

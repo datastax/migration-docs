@@ -1,0 +1,10 @@
+.Idle migration directories are evicted
+[WARNING]
+====
+As an added security measure, migrations that remain continuously idle for one week are subject to xref:sideloader:cleanup-sideloader.adoc[automatic cleanup], which deletes all associated snapshots, revokes any unexpired upload credentials, and then closes the migration.
+
+{company} recommends that you xref:sideloader:cleanup-sideloader.adoc#reschedule-a-cleanup[manually reschedule the cleanup] if you don't plan to launch the migration within one week or if you need several days to upload snapshots or import data.
+
+For large migrations, it can take several days to upload snapshots and import data.
+Make sure you xref:sideloader:cleanup-sideloader.adoc#reschedule-a-cleanup[manually reschedule the cleanup] to avoid automatic cleanup.
+====
