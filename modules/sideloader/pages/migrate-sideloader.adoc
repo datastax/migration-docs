@@ -233,10 +233,16 @@ See xref:astra-db-serverless:databases:database-limits.adoc[] for more informati
 [source,bash,subs="+quotes"]
 ----
 export dbID=*DATABASE_ID*
-export token=*TOKEN*
+export token=*APPLICATION_TOKEN*
 ----
 +
-Replace *`DATABASE_ID`* with the xref:astra-db-serverless:databases:create-database.adoc#get-db-id[database ID], and replace *`TOKEN`* with an xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token] with the {database-administrator-role} role.
+Replace the following:
++
+--
+* *`DATABASE_ID`*: The xref:astra-db-serverless:databases:create-database.adoc#get-db-id[database ID] of your target {astra-db} database.
+* *`APPLICATION_TOKEN`*: An xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token] with a role that has the required permissions for {sstable-sideloader}, which are {create-db-permission} and {view-db-permission}.
+You can use a built-in role, such as the {database-administrator-role} role, or a xref:astra-db-serverless:administration:rbac.adoc#custom-roles[custom role] with the required permissions.
+--
 +
 [TIP]
 ====
