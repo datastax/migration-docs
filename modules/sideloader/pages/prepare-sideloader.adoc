@@ -42,9 +42,14 @@ To minimize costs, you can xref:sideloader:cleanup-sideloader.adoc[manually clea
 Your target database must be an {astra-db} Serverless database.
 {sstable-sideloader} isn't compatible with {db-classic} databases.
 
-If you haven't done so already, xref:astra-db-serverless:databases:create-database.adoc[create a database].
-You can use either a {db-serverless} or {db-serverless-vector} database.
-{db-serverless-vector} databases support both fixed-schema tables and dynamic-schema collections.
+If you haven't done so already, xref:astra-db-serverless:databases:create-database.adoc[create an {astra-db} database].
+{sstable-sideloader} supports both {db-serverless} and {db-serverless-vector} databases.
+Both types support CQL tables.
+However, you must create a {db-serverless-vector} database if you want to use the xref:astra-db-serverless:api-reference:dataapiclient.adoc[{data-api}] or xref:astra-db-serverless:databases:manage-collections.adoc[dynamic-schema collections].
+
+To call the {sstable-sideloader} endpoints, you need the xref:astra-db-serverless:databases:create-database.adoc#get-db-id[database ID] and an xref:astra-db-serverless:administration:manage-application-tokens.adoc[{astra} application token] with a sufficiently privileged role.
+The required permissions for {sstable-sideloader} are {create-db-permission} and {view-db-permission}.
+You can use a built-in role, such as the {database-administrator-role} role, or a xref:astra-db-serverless:administration:rbac.adoc#custom-roles[custom role] with the required permissions.
 
 === PCU group requirement
 

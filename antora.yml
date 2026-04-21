@@ -64,3 +64,7 @@ asciidoc:
     # Astra role attributes (compare with astra-vector-docs antora.yml)
     database-administrator-role: 'xref:astra-db-serverless:administration:rbac.adoc#database-administrator-role[Database Administrator]'
     read-write-user-role: 'xref:astra-db-serverless:administration:rbac.adoc#read-write-user-role[Read/Write User]'
+
+    # Astra permission attributes (compare with astra-vector-docs antora.yml)
+    create-db-permission: 'xref:astra-db-serverless:administration:rbac.adoc#create-db-permission[Create DB]'
+    view-db-permission: 'xref:astra-db-serverless:administration:rbac.adoc#view-db-permission[View DB]'
