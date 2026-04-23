@@ -49,7 +49,7 @@ However, you must create a {db-serverless-vector} database if you want to use th
 
 To call the {sstable-sideloader} endpoints, you need the xref:astra-db-serverless:databases:create-database.adoc#get-db-id[database ID] and an xref:astra-db-serverless:administration:manage-application-tokens.adoc[{astra} application token] with a sufficiently privileged role.
 The required permissions for {sstable-sideloader} are {create-db-permission} and {view-db-permission}.
-You can use a built-in role, such as the {database-administrator-role} role, or a xref:astra-db-serverless:administration:rbac.adoc#custom-roles[custom role] with the required permissions.
+You can use a built-in role, such as the {database-administrator-role} role, or a xref:astra-db-serverless:administration:custom-roles.adoc[custom role] with the required permissions.
 
 === PCU group requirement
 
