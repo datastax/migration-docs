@@ -241,7 +241,7 @@ Replace the following:
 --
 * *`DATABASE_ID`*: The xref:astra-db-serverless:databases:create-database.adoc#get-db-id[database ID] of your target {astra-db} database.
 * *`APPLICATION_TOKEN`*: An xref:astra-db-serverless:administration:manage-application-tokens.adoc[application token] with a role that has the required permissions for {sstable-sideloader}, which are {create-db-permission} and {view-db-permission}.
-You can use a built-in role, such as the {database-administrator-role} role, or a xref:astra-db-serverless:administration:rbac.adoc#custom-roles[custom role] with the required permissions.
+You can use a built-in role, such as the {database-administrator-role} role, or a xref:astra-db-serverless:administration:custom-roles.adoc[custom role] with the required permissions.
 --
 +
 [TIP]
