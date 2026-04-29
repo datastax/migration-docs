@@ -23,9 +23,9 @@ Make sure you understand how to securely store and use sensitive credentials whe
 The following requirements, recommendations, and limitations apply to the target {astra-db} database.
 Review all of these to ensure that your database is compatible with {sstable-sideloader}.
 
-=== {astra} subscription plan requirement
+=== {astra} plan requirement
 
-Your {astra} organization must be on an *Enterprise* xref:astra-db-serverless:administration:subscription-plans.adoc[subscription plan].
+Your {astra} organization must be on an xref:astra-db-serverless:administration:subscription-plans.adoc[*Enterprise* plan].
 
 {sstable-sideloader} is a premium feature that incurs costs based on usage.
 This includes the total amount (GB) of data processed as part of the {sstable-sideloader} workload, and the amount of data stored in the migration bucket is metered at the standard {astra-db} storage rate.

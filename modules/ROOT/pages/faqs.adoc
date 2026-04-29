@@ -99,7 +99,7 @@ You can have the confidence that you are using tools designed specifically to ha
 
 {product-proxy}, {product-utility}, {product-automation}, {cass-migrator-short}, and {dsbulk-short} are free and open-sourced.
 
-{sstable-sideloader} is part of an {astra-db} *Enterprise* subscription plan, and it incurs costs based on usage.
+{sstable-sideloader} is part of an {astra} *Enterprise* plan, and it incurs costs based on usage.
 
 == Where can I get help with my migration?
 
