@@ -75,5 +75,5 @@ If you have questions about your {hcd-short} migration, contact your {company} a
 == See also
 
 * xref:ROOT:mc-migration-paths.adoc[]
-* xref:1.2@hyper-converged-database:migrate:dse-68-to-hcd-12.adoc[In-place upgrade from {dse-short} 6.8 to {hcd-short} 1.2.3]
-* xref:1.1@hyper-converged-database:migrate:dse-51-to-hcd-11.adoc[In-place upgrade from {dse-short} 5.1 to {hcd-short} 1.1]
+// * xref:1.2@hyper-converged-database:migrate:dse-68-to-hcd-12.adoc[In-place upgrade from {dse-short} 6.8 to {hcd-short} 1.2.3]
+// * xref:1.1@hyper-converged-database:migrate:dse-51-to-hcd-11.adoc[In-place upgrade from {dse-short} 5.1 to {hcd-short} 1.1]
