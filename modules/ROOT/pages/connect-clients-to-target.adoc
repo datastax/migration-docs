@@ -72,7 +72,7 @@ For multi-region databases and {astra} organizations that use custom domains, yo
 After making these changes in {astra}, your driver connections will need to be updated to use the appropriate {scb-short} for the desired region or domain when connecting to your databases.
 
 [#compare-connection-parameters]
-=== Compare driver connection parameters for self-managed {cass-short} clusters and {astra-db}
+=== Compare driver connection parameters
 
 To help you understand the required changes for your driver connection strings, the following table compares driver connection parameters for self-managed {cass-short} clusters and {astra-db} databases:
 
@@ -190,16 +190,17 @@ print(release_version)
 
 === Verify driver compatibility and update connection strings
 
-Verify that your driver version is compatible with {astra-db} and the features that you want to use in {astra-db}, such as the vector data type.
+Modifications to driver connection strings depend on driver compatibility with {astra-db}.
+
+Make sure your driver version is compatible with {astra-db} and the features that you want to use in {astra-db}, such as vector data.
 For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
 
-If your driver version is fully compatible with {astra-db}, then it has built-in support for the {astra-db} {scb-short}.
-The changes required to connect your application to {astra-db} are minimal.
+Driver versions that are fully compatible with {astra-db} have built-in support for the {scb-short}.
+In this case the changes required to connect your application to {astra-db} are minimal.
+However, you might need to make <<other-code-changes-for-astra-db,other code changes>>.
 
-If your client application uses an earlier driver version without built-in {scb-short} support, {company} strongly recommends upgrading to a compatible driver to simplify configuration and get the latest features and bug fixes.
-If you prefer to make this change after the migration, or you must support a legacy application that relies on an earlier driver, you can connect to {astra-db} with `{cql-proxy-url}[cql-proxy]`, or you must extract the {scb-short} archive and provide the individual files to enable mTLS in your driver's configuration.
-
-The following example demonstrates how the {cass-short} Python driver connects to {astra-db} using an application token and {scb-short}:
+The following example demonstrates how the {cass-short} Python driver connects to {astra-db} using an application token and {scb-short}.
+For more information and examples of {astra-db} connections, see <<compare-connection-parameters>> and xref:datastax-drivers:connecting:connect-cloud.adoc[].
 
 [source,python]
 ----
@@ -221,8 +222,16 @@ cluster = Cluster(cloud=cloud_config, auth_provider=auth_provider)
 session = cluster.connect()
 ----
 
-For more information and examples of {astra-db} connections, see <<compare-connection-parameters>> and xref:datastax-drivers:connecting:connect-cloud.adoc[].
+If your client application uses an earlier driver version without built-in {scb-short} support, {company} strongly recommends upgrading to a compatible driver to simplify configuration and get the latest features and bug fixes.
+If you prefer to make this change after the migration, or you need to support a legacy application that relies on an earlier driver, you can either connect to {astra-db} with `{cql-proxy-url}[cql-proxy]` or you can extract the {scb-short} archive and provide the individual files to enable mTLS in your driver's configuration.
 
+[TIP]
+====
+For Go applications, replace `gocql` with `xref:astra-db-serverless:drivers:go-driver.adoc[gocql-astra]`.
+This package includes `gocql` and additional support for connections to {astra-db}.
+====
+
+[#other-code-changes-for-astra-db]
 === Other code changes for {astra-db}
 
 In addition to updating connection strings, you might also need to make the following code changes:
