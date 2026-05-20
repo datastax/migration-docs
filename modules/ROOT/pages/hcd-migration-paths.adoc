@@ -57,7 +57,7 @@ Your {cass-short} driver version must be compatible with {hcd-short}.
 
 If you are using an early driver version or a {dse-short}-only driver, you must upgrade to a driver version that is compatible with {hcd-short}.
 
-For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
+For more information, see xref:1.2@hyper-converged-database:drivers:cassandra-drivers-overview.adoc[].
 ====
 
 For some migrations, changing the connection string might be the only change you need to make to your code.
