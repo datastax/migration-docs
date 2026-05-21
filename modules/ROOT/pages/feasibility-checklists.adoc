@@ -219,7 +219,7 @@ This feature is disabled by default because it has a noticeable impact on perfor
 
 If the performance impact is unacceptable for your application, or you are using functions other than `now()`, then you must change your client application to use values calculated locally at the client-level before the statement is sent to the database.
 Most drivers have utility methods that help you compute these values locally.
-For more information, see your driver's documentation and xref:datastax-drivers:developing:query-timestamps.adoc[Query timestamps in {cass-short} drivers].
+For more information, see your driver's documentation and xref:6.9@dse:drivers:timestamps.adoc[Query timestamps in {cass-short} drivers].
 
 [#driver-retry-policy-and-query-idempotence]
 == Driver retry policy and query idempotence
@@ -238,7 +238,7 @@ If your applications already tolerate rolling restarts of your origin cluster, t
 To ensure that your client application retries requests that fail due to connection errors caused by the rolling restart process, check your driver's retry policies and whether your requests are marked as idempotent.
 Most drivers treat all statements as non-idempotent by default, and they don't automatically retry them.
 This means that you must explicitly mark statements as idempotent to trigger retries after connection errors.
-For more information, see xref:datastax-drivers:developing:query-idempotence.adoc[] and xref:datastax-drivers:connecting:retry-policies.adoc[].
+For more information, see xref:6.9@dse:drivers:idempotence.adoc[] and xref:6.9@dse:drivers:retry-policies.adoc[].
 
 [#client-compression]
 == Client compression
@@ -299,7 +299,7 @@ They _cannot_ be used with the earlier Graph engine in {dse-short} versions prio
 
 {dse-short} Search::
 Read-only {dse-short} Search workloads can be moved directly from the origin to the target without {product-proxy} being involved.
-If your client application uses Search and also issues writes, or if you need the read routing capabilities from {product-proxy}, then you can connect your Search workloads to {product-proxy} as long as you are using xref:datastax-drivers:compatibility:driver-matrix.adoc[{company}-compatible drivers] to submit these queries.
+If your client application uses Search and also issues writes, or if you need the read routing capabilities from {product-proxy}, then you can connect your Search workloads to {product-proxy} as long as you are using xref:6.9@dse:drivers:cassandra-drivers-overview.adoc[{dse-short}-compatible drivers] to submit these queries.
 This approach means the queries are regular CQL `SELECT` statements, so {product-proxy} handles them as regular read requests.
 +
 If you use the HTTP API then you can either modify your applications to use the CQL API instead, or you must move those applications directly from the origin to the target when the migration is complete, if that is acceptable for your use case.

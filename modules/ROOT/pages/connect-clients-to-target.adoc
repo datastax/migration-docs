@@ -18,6 +18,18 @@ From this point onward, the clusters will diverge, and the target cluster become
 Be sure that you have thoroughly xref:ROOT:migrate-and-validate-data.adoc[validated your data (Phase 2)], xref:ROOT:enable-async-dual-reads.adoc[tested your target cluster's performance (Phase 3)], and xref:ROOT:change-read-routing.adoc[routed all reads to the target (Phase 4)] before permanently switching the connection.
 ====
 
+[#supported-drivers]
+== Supported drivers
+
+Your target cluster might not be compatible with your current driver version or language.
+For information about supported drivers for your target cluster, see the following:
+
+* xref:1.2@hyper-converged-database:drivers:cassandra-drivers-overview.adoc[Get started with {cass-short} drivers for {hcd-short}]
+* xref:6.9@dse:drivers:cassandra-drivers-overview.adoc[Get started with {cass-short} drivers for {dse-short}]
+* xref:astra-db-serverless:drivers:cassandra-drivers-overview.adoc[Get started with {cass-short} drivers for {astra-db} {db-serverless-short}]
+* xref:astra-db-classic:drivers:cassandra-drivers-overview.adoc[Get started with {cass-short} drivers for {db-classic}]
+* https://cassandra.apache.org/doc/latest/cassandra/getting-started/drivers.html[All {cass} drivers]
+
 == Connect a driver to a self-managed {cass-short} cluster
 
 If your origin and target clusters are both self-managed {cass-short} clusters, such as {cass-short}, {dse-short}, or {hcd-short}, then the driver connection strings can be extremely similar.
@@ -27,16 +39,12 @@ It's possible that your code requires only minor changes to connect to the targe
 +
 You might need to make additional configuration changes depending on your target cluster's setup, such as authentication and encryption.
 For example, if you have execution profiles with unique datacenter-aware load balancing policies, you must update the profiles to use the target datacenters.
-+
-For information about driver connections for different {cass-short}-compatible clusters, see xref:datastax-drivers:connecting:connect-cloud.adoc[].
 
 . Verify that your driver version is compatible with your target cluster and supports the features that you want to use on your new cluster.
 For example, if you want to use the vector data type on an {hcd-short} cluster, you must use a driver version that supports both {hcd-short} and the vector type.
 +
 When upgrading from an earlier driver version, you might need to make additional code changes to account for enhancements, deprecations, removals, and differences in platform features.
 Depending on your application's requirements, you might need to make these changes immediately, or you might make them after switching the connection.
-+
-For more information on supported drivers, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
 
 == Connect a driver to {astra-db}
 
@@ -193,14 +201,14 @@ print(release_version)
 Modifications to driver connection strings depend on driver compatibility with {astra-db}.
 
 Make sure your driver version is compatible with {astra-db} and the features that you want to use in {astra-db}, such as vector data.
-For more information, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
+For more information, see <<supported-drivers>>.
 
 Driver versions that are fully compatible with {astra-db} have built-in support for the {scb-short}.
 In this case the changes required to connect your application to {astra-db} are minimal.
 However, you might need to make <<other-code-changes-for-astra-db,other code changes>>.
 
 The following example demonstrates how the {cass-short} Python driver connects to {astra-db} using an application token and {scb-short}.
-For more information and examples of {astra-db} connections, see <<compare-connection-parameters>> and xref:datastax-drivers:connecting:connect-cloud.adoc[].
+For more information and examples of {astra-db} connections, see <<compare-connection-parameters>> and the documentation for your driver.
 
 [source,python]
 ----

@@ -14,13 +14,19 @@ It also explains how to connect the {cql-shell} (`cqlsh`) to {product-proxy}, wh
 
 A common way to connect client applications to {cass-short} clusters is with {cass-short} drivers.
 These drivers can connect to {cass-short}-based clusters, execute queries, iterate through results, access metadata about the clusters, and perform other related activities.
-For available drivers and driver documentation, see xref:datastax-drivers:compatibility:driver-matrix.adoc[].
+For available drivers and driver documentation, see the following:
+
+* xref:1.2@hyper-converged-database:drivers:cassandra-drivers-overview.adoc[Get started with {cass-short} drivers for {hcd-short}]
+* xref:6.9@dse:drivers:cassandra-drivers-overview.adoc[Get started with {cass-short} drivers for {dse-short}]
+* xref:astra-db-serverless:drivers:cassandra-drivers-overview.adoc[Get started with {cass-short} drivers for {astra-db} {db-serverless-short}]
+* xref:astra-db-classic:drivers:cassandra-drivers-overview.adoc[Get started with {cass-short} drivers for {db-classic}]
+* https://cassandra.apache.org/doc/latest/cassandra/getting-started/drivers.html[All {cass} drivers]
 
 The following pseudocode provides simplified examples of the way a {cass-short} driver interacts with {cass-short} clusters.
 Specifically, these examples are for {astra-db} and self-managed {dse-short}, {hcd-short}, and open-source {cass-short} clusters.
 
 This pseudocode is for illustration purposes only; the exact syntax depends on your driver language and version.
-For specific instructions and examples, see xref:datastax-drivers:connecting:connect-cloud.adoc[].
+For specific instructions and examples, see the documentation for your driver.
 
 .Self-managed {cass-short} clusters
 [source,pseudocode]

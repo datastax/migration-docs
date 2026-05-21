@@ -192,9 +192,10 @@ Set the maximum pool size of available stream IDs managed by {product-proxy} per
 Use the same value as your driver's maximum stream IDs configuration.
 +
 In the CQL protocol, every request has a unique stream ID.
-However, if there are a lot of requests in a given amount of time, errors can occur due to xref:datastax-drivers:developing:speculative-retry.adoc#stream-id-exhaustion[stream ID exhaustion].
+However, if there are a lot of requests in a given amount of time, errors can occur due to xref:6.9@dse:drivers:speculative-execution.adoc#stream-id-exhaustion[stream ID exhaustion].
 +
-In the client application, the stream IDs are managed internally by the driver, and, in most drivers, the max number is 2048, which is the same default value used by {product-proxy}.
+In the client application, the stream IDs are managed internally by the driver.
+For most drivers, the maximum is 2048, which is the same default value used by {product-proxy}.
 If you have a custom driver configuration with a higher value, make sure `zdm_proxy_max_stream_ids` matches your driver's maximum stream IDs.
 +
 Default: `2048`
