@@ -109,7 +109,7 @@ For any observed problems with {product-proxy} or the other open-source {product
 
 * {product-proxy-repo}[{product-proxy} repository]
 * {product-automation-repo}[{product-automation} repository] (includes {product-automation} and {product-utility})
-* {cass-migrator-repo}[{cass-migrator-short} repository]
+* {cass-migrator-repo-url}[{cass-migrator-short} repository]
 * {dsbulk-repo}[{dsbulk-short} repository]
 
 == Can I contribute to {product-proxy}?

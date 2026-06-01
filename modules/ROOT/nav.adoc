@@ -40,8 +40,7 @@
 * xref:sideloader:troubleshoot-sideloader.adoc[]
 
 .{cass-migrator}
-* xref:ROOT:cassandra-data-migrator.adoc[]
-* {cass-migrator-repo}/releases[{cass-migrator-short} release notes]
+* {cass-migrator-repo-url}[About {cass-migrator}]
 
 .{dsbulk}
 * xref:dsbulk:overview:dsbulk-about.adoc[]
