@@ -1,4 +1,0 @@
-After the migration is complete, you can query the migrated data using the xref:astra-db-serverless:cql:develop-with-cql.adoc#connect-to-the-cql-shell[{cql-shell}] (`cqlsh`) or xref:astra-db-serverless:api-reference:row-methods/find-many.adoc[{data-api}].
-
-You can {cass-migrator-repo-url}?tab=readme-ov-file#steps-for-data-validation[run {cass-migrator-short} in validation mode] for more thorough validation.
-{cass-migrator-short} also offers an AutoCorrect mode to reconcile any differences that it detects.

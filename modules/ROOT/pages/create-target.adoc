@@ -66,7 +66,7 @@ As a best practice, omit xref:astra-db-serverless:cql:develop-with-cql.adoc#unsu
 * {astra-db} doesn't support Materialized Views (MVs) and certain types of indexes.
 You must adjust your data model and application logic to discard or replace these structures before beginning your migration.
 For more information, see xref:astra-db-serverless:cql:develop-with-cql.adoc#limitations-on-cql-for-astra-db[Limitations on CQL for {astra-db}].
-* If you plan to use {sstable-sideloader} for xref:ROOT:migrate-and-validate-data.adoc[Phase 2], see the xref:sideloader:migrate-sideloader.adoc#record-schema[target database configuration requirements for migrating data with {sstable-sideloader}].
+* If you plan to use {sstable-sideloader} for xref:ROOT:migrate-and-validate-data.adoc[Phase 2], see the xref:astra-db-serverless:sideloader:migrate-sideloader.adoc#record-schema[target database configuration requirements for migrating data with {sstable-sideloader}].
 
 == Migrate to {hcd-short}, {dse-short}, or open-source {cass-reg}
 

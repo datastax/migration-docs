@@ -32,12 +32,7 @@
 ** {zdm-automation-repo-url}/releases[{zdm-automation} release notes]
 
 .{sstable-sideloader}
-* xref:sideloader:sideloader-overview.adoc[]
-* xref:sideloader:prepare-sideloader.adoc[]
-* xref:sideloader:migrate-sideloader.adoc[]
-* xref:sideloader:stop-restart-sideloader.adoc[]
-* xref:sideloader:cleanup-sideloader.adoc[]
-* xref:sideloader:troubleshoot-sideloader.adoc[]
+* xref:astra-db-serverless:sideloader:sideloader-overview.adoc[]
 
 .{cass-migrator}
 * {cass-migrator-repo-url}[About {cass-migrator-short}]

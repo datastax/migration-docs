@@ -346,7 +346,7 @@ include::ROOT:partial$multi-region-migrations.adoc[]
 
 To configure {zdm-proxy} for a multi-datacenter migration, see the xref:ROOT:deployment-infrastructure.adoc[{zdm-proxy} infrastructure guidelines for multi-datacenter clusters].
 
-For more guidance on migrations to {astra}, see the xref:sideloader:prepare-sideloader.adoc#additional-preparation-for-specific-migration-scenarios[{sstable-sideloader} preparations for specific migration scenarios].
+For more guidance on migrations to {astra}, see the xref:astra-db-serverless:sideloader:prepare-sideloader.adoc#additional-preparation-for-specific-migration-scenarios[{sstable-sideloader} preparations for specific migration scenarios].
 
 == Next steps
 
