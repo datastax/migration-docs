@@ -1,60 +1,60 @@
-= Prepare the {product-proxy} deployment infrastructure
-:navtitle: Prepare {product-proxy} infrastructure
+= Prepare the {zdm-proxy} deployment infrastructure
+:navtitle: Prepare {zdm-proxy} infrastructure
 
-After confirming that your clusters, data model, and application logic meet the xref:ROOT:feasibility-checklists.adoc[compatibility requirements for {product-proxy}], you must prepare the infrastructure to deploy your {product-proxy} instances.
+After confirming that your clusters, data model, and application logic meet the xref:ROOT:feasibility-checklists.adoc[compatibility requirements for {zdm-proxy}], you must prepare the infrastructure to deploy your {zdm-proxy} instances.
 
-{company} recommends using {product-automation} and {product-utility} to manage your {product-proxy} deployment.
-If you choose to use these tools, you must also prepare infrastructure for {product-automation}.
+{company} recommends using {zdm-automation} and {zdm-utility} to manage your {zdm-proxy} deployment.
+If you choose to use these tools, you must also prepare infrastructure for {zdm-automation}.
 
 == Choose where to deploy the proxy
 
-A typical {product-proxy} deployment is made up of multiple proxy instances.
+A typical {zdm-proxy} deployment is made up of multiple proxy instances.
 {company} recommends a minimum of three proxy instances for any deployment other than local test or demo environments.
 
-All {product-proxy} instances must be reachable by your client application, and they must be able to connect to your origin and target clusters.
-{company} recommends that you deploy {product-proxy} as close to your client application instances as possible.
+All {zdm-proxy} instances must be reachable by your client application, and they must be able to connect to your origin and target clusters.
+{company} recommends that you deploy {zdm-proxy} as close to your client application instances as possible.
 For more information, see <<connectivity-requirements>>.
 
-You can deploy {product-proxy} on any cloud provider or on-premises, depending on your existing infrastructure.
+You can deploy {zdm-proxy} on any cloud provider or on-premises, depending on your existing infrastructure.
 
-The following diagram shows a typical deployment with connectivity between client applications, {product-proxy} instances, and clusters:
+The following diagram shows a typical deployment with connectivity between client applications, {zdm-proxy} instances, and clusters:
 
 image::ROOT:zdm-during-migration3.png[Connectivity between client applications, proxy instances, and clusters]
 
-The {product-proxy} process is lightweight, requiring only a small amount of resources and no storage to persist its state aside from logs.
+The {zdm-proxy} process is lightweight, requiring only a small amount of resources and no storage to persist its state aside from logs.
 
 [#multiple-datacenter-clusters]
 === Multiple datacenter clusters
 
-If you have a multi-datacenter cluster with multiple set of client application instances deployed to geographically distributed datacenters, you must plan a separate {product-proxy} deployment for each datacenter.
+If you have a multi-datacenter cluster with multiple set of client application instances deployed to geographically distributed datacenters, you must plan a separate {zdm-proxy} deployment for each datacenter.
 
-In the configuration for each {product-proxy} deployment, specify only the contact points that belong to that datacenter, and set the `xref:ROOT:deploy-proxy-monitoring.adoc#_advanced_configuration_optional[origin_local_datacenter]` and `xref:ROOT:deploy-proxy-monitoring.adoc#_advanced_configuration_optional[target_local_datacenter]` properties as needed.
+In the configuration for each {zdm-proxy} deployment, specify only the contact points that belong to that datacenter, and set the `xref:ROOT:deploy-proxy-monitoring.adoc#_advanced_configuration_optional[origin_local_datacenter]` and `xref:ROOT:deploy-proxy-monitoring.adoc#_advanced_configuration_optional[target_local_datacenter]` properties as needed.
 
-If your origin and target clusters are both multi-datacenter clusters, this configuration will be more complicated to correctly orchestrate traffic routing through {product-proxy}.
+If your origin and target clusters are both multi-datacenter clusters, this configuration will be more complicated to correctly orchestrate traffic routing through {zdm-proxy}.
 {company} recommends contacting {support-url}[IBM Support] for assistance with complex multi-region and multi-datacenter migrations.
 
-=== Don't deploy {product-proxy} as a sidecar
+=== Don't deploy {zdm-proxy} as a sidecar
 
-Don't deploy {product-proxy} as a sidecar because it was designed to mimic communication with a {cass-short}-based cluster.
-For this reason, {company} recommends deploying multiple {product-proxy} instances, each running on a dedicated machine, instance, or VM.
+Don't deploy {zdm-proxy} as a sidecar because it was designed to mimic communication with a {cass-short}-based cluster.
+For this reason, {company} recommends deploying multiple {zdm-proxy} instances, each running on a dedicated machine, instance, or VM.
 
-For best performance, deploy your {product-proxy} instances as close as possible to your client applications,  ideally on the same local network, but don't co-deploy them on the same machines as the client applications.
-This way, each client application instance can connect to all {product-proxy} instances, just as it would connect to all nodes in a {cass-short}-based cluster or datacenter.
+For best performance, deploy your {zdm-proxy} instances as close as possible to your client applications,  ideally on the same local network, but don't co-deploy them on the same machines as the client applications.
+This way, each client application instance can connect to all {zdm-proxy} instances, just as it would connect to all nodes in a {cass-short}-based cluster or datacenter.
 
 This deployment model provides maximum resilience and failure tolerance guarantees, and it allows the client application driver to continue using the same load balancing and retry mechanisms that it would normally use.
 
-Conversely, deploying a single {product-proxy} instance undermines this resilience mechanism and creates a single point of failure, which can affect client applications if one or more nodes of the underlying origin or target clusters go offline.
-In a sidecar deployment, each client application instance would be connecting to a single {product-proxy} instance, and would, therefore, be exposed to this risk.
+Conversely, deploying a single {zdm-proxy} instance undermines this resilience mechanism and creates a single point of failure, which can affect client applications if one or more nodes of the underlying origin or target clusters go offline.
+In a sidecar deployment, each client application instance would be connecting to a single {zdm-proxy} instance, and would, therefore, be exposed to this risk.
 
 [[_machines]]
 == Hardware requirements
 
-You need a number of machines to run your {product-proxy} instances, plus additional machines for the centralized jumphost, and for running {dsbulk} or {cass-migrator} (which are recommended data migration and validation tools).
+You need a number of machines to run your {zdm-proxy} instances, plus additional machines for the centralized jumphost, and for running {dsbulk} or {cass-migrator} (which are recommended data migration and validation tools).
 
 This section uses the term _machine_ broadly to refer to a cloud instance (on any cloud provider), a VM, or a physical server.
 
-{product-proxy} instances::
-You need one machine for each {product-proxy} instance.
+{zdm-proxy} instances::
+You need one machine for each {zdm-proxy} instance.
 {company} recommends a minimum of three proxy instances for all migrations that aren't for local testing purposes.
 +
 Each machine must meet the following specifications:
@@ -69,8 +69,8 @@ Each machine must meet the following specifications:
 These machines can be on any cloud provider or on-premises, depending on your existing infrastructure, and they should be as close as possible to your client application instances for best performance.
 
 Jumphost and monitoring::
-You need at least one machine for the jumphost, which is the centralized manager for the {product-proxy} instances and runs the monitoring stack (Prometheus and Grafana).
-With {product-automation}, the jumphost also runs the Ansible Control Host container.
+You need at least one machine for the jumphost, which is the centralized manager for the {zdm-proxy} instances and runs the monitoring stack (Prometheus and Grafana).
+With {zdm-automation}, the jumphost also runs the Ansible Control Host container.
 +
 Typically, a single machine is used for all of these functions, but you can split them across different machines if you prefer.
 This documentation assumes you are using a single machine.
@@ -125,21 +125,21 @@ If you need assistance with your migration, contact {support-url}[IBM Support].
 
 [IMPORTANT]
 ====
-Don't allow external machines to directly access the {product-proxy} machines.
-The jumphost is the only machine that should have direct access to the {product-proxy} machines.
+Don't allow external machines to directly access the {zdm-proxy} machines.
+The jumphost is the only machine that should have direct access to the {zdm-proxy} machines.
 ====
 
 Core infrastructure ports::
-The {product-proxy} machines must be reachable by the following:
+The {zdm-proxy} machines must be reachable by the following:
 +
 * The client application instances on port 9042
 * The jumphost on port 22
 * The machine running the monitoring stack (the jumphost or a separate machine) on port 14001
 
 Clusters::
-The {product-proxy} machines must be able to connect to the origin and target cluster nodes.
+The {zdm-proxy} machines must be able to connect to the origin and target cluster nodes.
 +
-For self-managed clusters like {cass-short} and {dse-short}, {product-proxy} must be able to connect on the {cass-short} Native Protocol port, which is typically 9042.
+For self-managed clusters like {cass-short} and {dse-short}, {zdm-proxy} must be able to connect on the {cass-short} Native Protocol port, which is typically 9042.
 +
 For {astra}, you must ensure that outbound connectivity is possible over the {astra} endpoint indicated in the xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb}].
 Connections over xref:astra-db-serverless:administration:manage-private-endpoints.adoc[private endpoints] are supported.
@@ -148,8 +148,8 @@ Jumphost and monitoring::
 The following connectivity requirements apply to the jumphost and monitoring machine.
 If you use separate machines for these functions, these requirements apply to both machines.
 +
-* Connect to {product-proxy} instances on port 14001 for metrics collection.
-* Connect to {product-proxy} instances on port 22 for {product-automation}, log inspection, and troubleshooting.
+* Connect to {zdm-proxy} instances on port 14001 for metrics collection.
+* Connect to {zdm-proxy} instances on port 22 for {zdm-automation}, log inspection, and troubleshooting.
 * Allow incoming, external SSH connections.
 +
 [IMPORTANT]
@@ -160,14 +160,14 @@ For example, limit access to the IP ranges of your corporate networks or trusted
 * Expose the Grafana UI on port 3000.
 
 +
-External connections are required so that {product-automation} can download the necessary software packages (Docker, Prometheus, Grafana) and the {product-proxy} image from DockerHub.
+External connections are required so that {zdm-automation} can download the necessary software packages (Docker, Prometheus, Grafana) and the {zdm-proxy} image from DockerHub.
 
-=== Connect to {product-proxy} infrastructure from an external machine
+=== Connect to {zdm-proxy} infrastructure from an external machine
 
 To connect to the jumphost from an external machine, ensure that its IP address belongs to a permitted IP range.
 If you are connecting through a VPN that only intercepts connections to selected destinations, you might need to add a route from your VPN IP gateway to the public IP of the jumphost.
 
-A custom SSH config file can simplify the process of connecting to the jumphost and, by extension, the {product-proxy} instances.
+A custom SSH config file can simplify the process of connecting to the jumphost and, by extension, the {zdm-proxy} instances.
 
 To use the following template, replace all placeholders with the appropriate values for your deployment.
 Add more entries if you have more than three proxy instances.
@@ -208,7 +208,7 @@ Then, use the SSH config file to connect to your jumphost:
 ssh -F zdm_ssh_config jumphost
 ----
 
-Connect to a {product-proxy} instance by specifying the corresponding instance number in your config file:
+Connect to a {zdm-proxy} instance by specifying the corresponding instance number in your config file:
 
 [source,bash]
 ----

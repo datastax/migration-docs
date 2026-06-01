@@ -1,14 +1,14 @@
-= Connect client applications to {product-proxy}
+= Connect client applications to {zdm-proxy}
 
-{product-proxy} is designed to mimic communication with a typical cluster based on {cass-reg}.
-This means that your client applications connect to {product-proxy} in the same way that they already connect to your existing {cass-short}-based clusters.
+{zdm-proxy} is designed to mimic communication with a typical cluster based on {cass-reg}.
+This means that your client applications connect to {zdm-proxy} in the same way that they already connect to your existing {cass-short}-based clusters.
 
-You can communicate with {product-proxy} using the same xref:cql:ROOT:index.adoc[{cql}] statements used in your existing client applications.
+You can communicate with {zdm-proxy} using the same xref:cql:ROOT:index.adoc[{cql}] statements used in your existing client applications.
 It understands the same messaging protocols used by {cass-short}, {dse-short}, {hcd-short}, and {astra-db}.
-As a result, most client applications cannot distinguish between connections to {product-proxy} and direct connections to a {cass-short}-based cluster.
+As a result, most client applications cannot distinguish between connections to {zdm-proxy} and direct connections to a {cass-short}-based cluster.
 
-This page explains how to connect client applications to a {cass-short}-based cluster using {cass-short} drivers, and then describes the how you need to modify your client applications to connect to {product-proxy}.
-It also explains how to connect the {cql-shell} (`cqlsh`) to {product-proxy}, which is often used in conjunction with {cass-short} drivers and during the migration process for certain validation tasks.
+This page explains how to connect client applications to a {cass-short}-based cluster using {cass-short} drivers, and then describes the how you need to modify your client applications to connect to {zdm-proxy}.
+It also explains how to connect the {cql-shell} (`cqlsh`) to {zdm-proxy}, which is often used in conjunction with {cass-short} drivers and during the migration process for certain validation tasks.
 
 == Connect applications to {cass-short} clusters
 
@@ -90,19 +90,19 @@ print(release_version)
 ----
 
 Review your client application's code to understand how it connects to your existing {cass-short}-based clusters.
-Then, proceed to <<connect-applications-to-zdm-proxy>> to learn how to modify that code to connect to {product-proxy} instead.
+Then, proceed to <<connect-applications-to-zdm-proxy>> to learn how to modify that code to connect to {zdm-proxy} instead.
 
 [#connect-applications-to-zdm-proxy]
-== Connect applications to {product-proxy}
+== Connect applications to {zdm-proxy}
 
-By design, {product-proxy} should be transparent to your client application.
-This means that connecting your client application to {product-proxy} should be seamless and nearly identical to the direct cluster connection.
-However, there are some considerations and adjustments you might need to make for {product-proxy}.
+By design, {zdm-proxy} should be transparent to your client application.
+This means that connecting your client application to {zdm-proxy} should be seamless and nearly identical to the direct cluster connection.
+However, there are some considerations and adjustments you might need to make for {zdm-proxy}.
 
-=== Understand how {product-proxy} handles certain client behaviors
+=== Understand how {zdm-proxy} handles certain client behaviors
 
-If you haven't done so already, thoroughly review the xref:ROOT:feasibility-checklists.adoc[compatibility requirements for {product-proxy}].
-This ensures that your client application's code is compatible with {product-proxy}, and you understand how certain operations and behaviors are handled by {product-proxy}.
+If you haven't done so already, thoroughly review the xref:ROOT:feasibility-checklists.adoc[compatibility requirements for {zdm-proxy}].
+This ensures that your client application's code is compatible with {zdm-proxy}, and you understand how certain operations and behaviors are handled by {zdm-proxy}.
 For example:
 
 * xref:ROOT:feasibility-checklists.adoc#driver-retry-policy-and-query-idempotence[Driver retry policy and query idempotence]
@@ -111,28 +111,28 @@ For example:
 
 === Set connection points
 
-Connect your client application to {product-proxy} instead of directly to the origin cluster by modifying the client's connection points.
+Connect your client application to {zdm-proxy} instead of directly to the origin cluster by modifying the client's connection points.
 
-Typically, this involves setting the client's connection points to the IP addresses or hostnames of the local {product-proxy} instances.
-The specific connection points for your migration depend on where and how you configured your xref:ROOT:deployment-infrastructure.adoc[{product-proxy} infrastructure].
+Typically, this involves setting the client's connection points to the IP addresses or hostnames of the local {zdm-proxy} instances.
+The specific connection points for your migration depend on where and how you configured your xref:ROOT:deployment-infrastructure.adoc[{zdm-proxy} infrastructure].
 
 [#provide-authentication-credentials]
 === Provide authentication credentials
 
-Make sure {product-proxy} receives the correct authentication credentials from your client application.
+Make sure {zdm-proxy} receives the correct authentication credentials from your client application.
 You might need to change the credentials set in your client application depending on your origin and target cluster configuration.
 
-With or without {product-proxy}, client applications must provide cluster credentials to authenticate requests.
+With or without {zdm-proxy}, client applications must provide cluster credentials to authenticate requests.
 When a client connects directly to a cluster, it provides the authentication credentials for that cluster.
-When a client connects to {product-proxy}, the client still provides only one set of credentials because {product-proxy} is designed to be invisible to the client application.
+When a client connects to {zdm-proxy}, the client still provides only one set of credentials because {zdm-proxy} is designed to be invisible to the client application.
 
-{product-proxy} uses the credentials provided by the client to forward requests to one of the clusters.
-To forward requests to the other cluster, {product-proxy} uses the credentials defined in `xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[zdm_proxy_cluster_config.yml]`.
+{zdm-proxy} uses the credentials provided by the client to forward requests to one of the clusters.
+To forward requests to the other cluster, {zdm-proxy} uses the credentials defined in `xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[zdm_proxy_cluster_config.yml]`.
 
-.Credential usage by {product-proxy} when authentication is required for both clusters
-image::ROOT:zdm-proxy-credential-usage.png[{product-proxy} credentials usage when authentication is required for both clusters, 550]
+.Credential usage by {zdm-proxy} when authentication is required for both clusters
+image::ROOT:zdm-proxy-credential-usage.png[{zdm-proxy} credentials usage when authentication is required for both clusters, 550]
 
-The credentials that {product-proxy} expects to receive from the client depend on the authentication requirements of the origin and target clusters.
+The credentials that {zdm-proxy} expects to receive from the client depend on the authentication requirements of the origin and target clusters.
 Make sure the client passes the correct credentials for your cluster configuration:
 
 * *Authentication required for both clusters*: Your client application must supply credentials for the target cluster.
@@ -151,14 +151,14 @@ Then, in your client application, set the `username` to the literal string `toke
 +
 [IMPORTANT]
 ====
-_Don't_ provide a xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb}] when connecting your client application to {product-proxy}.
+_Don't_ provide a xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb}] when connecting your client application to {zdm-proxy}.
 
-If you include the {scb-short}, the driver ignores the {product-proxy} connection points and connects exclusively to your {astra-db} database instead of {product-proxy}.
+If you include the {scb-short}, the driver ignores the {zdm-proxy} connection points and connects exclusively to your {astra-db} database instead of {zdm-proxy}.
 ====
 +
 For connections to early {astra} databases with long-lived tokens created prior to the unified `token` approach, you can set the `username` to the token's `clientId` and the `password` to the token's `secret`.
 
-For more information about cluster credentials for {product-proxy}, see xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[Cluster and core configuration].
+For more information about cluster credentials for {zdm-proxy}, see xref:ROOT:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[Cluster and core configuration].
 
 == Sample client applications
 
@@ -169,50 +169,50 @@ They are not intended for production use or for production-scale performance tes
 
 To test your target cluster's ability to handle production workloads, you can xref:ROOT:enable-async-dual-reads.adoc[enable asynchronous dual reads].
 
-To assess the performance of {product-proxy}, {company} recommends http://docs.nosqlbench.io/getting-started/[NoSQLBench].
+To assess the performance of {zdm-proxy}, {company} recommends http://docs.nosqlbench.io/getting-started/[NoSQLBench].
 ====
 
-The following sample client applications demonstrate how to use the Java driver with {product-proxy} and the origin and target for that proxy.
+The following sample client applications demonstrate how to use the Java driver with {zdm-proxy} and the origin and target for that proxy.
 
 See your driver's documentation for code samples that are specific to your chosen driver, including cluster connection examples and statement execution examples.
 
-You can use the provided sample client applications, in addition to your own client applications, to validate that your {product-proxy} deployment orchestrates read and write requests as expected between the origin cluster, target cluster, and client applications.
+You can use the provided sample client applications, in addition to your own client applications, to validate that your {zdm-proxy} deployment orchestrates read and write requests as expected between the origin cluster, target cluster, and client applications.
 
-{product-demo}::
-https://github.com/alicel/zdm-demo-client/[{product-demo}] is a minimal Java web application which provides a simple, stripped-down example of an application built to work with {product-proxy}.
+{zdm-short} Demo Client::
+https://github.com/alicel/zdm-demo-client/[{zdm-short} Demo Client] is a minimal Java web application which provides a simple, stripped-down example of an application built to work with {zdm-proxy}.
 After updating connection information you can compile and run the application locally and interact with it using HTTP clients such as `curl` or `wget`.
 +
-You can find the details of building and running {product-demo} in the https://github.com/alicel/zdm-demo-client/blob/master/README.md[README].
+You can find the details of building and running {zdm-short} Demo Client in the https://github.com/alicel/zdm-demo-client/blob/master/README.md[README].
 
 [[_themis_client]]
 Themis client::
-https://github.com/absurdfarce/themis[Themis] is a Java command-line client application that allows you to write randomly generated data directly to the origin cluster, directly to the target cluster, or indirectly to both clusters through {product-proxy}.
-Then, you can use the client application to query the data and confirm that {product-proxy} is reading and writing data from the expected sources.
+https://github.com/absurdfarce/themis[Themis] is a Java command-line client application that allows you to write randomly generated data directly to the origin cluster, directly to the target cluster, or indirectly to both clusters through {zdm-proxy}.
+Then, you can use the client application to query the data and confirm that {zdm-proxy} is reading and writing data from the expected sources.
 +
-Configuration details for the clusters and {product-proxy} are defined in a YAML file.
+Configuration details for the clusters and {zdm-proxy} are defined in a YAML file.
 For more information, see the https://github.com/absurdfarce/themis/blob/main/README.md[Themis README].
 +
-In addition to being a validation tool, Themis also provides an example of a larger client application that uses the Java driver to connect to {product-proxy}, or directly to a {cass-short} cluster, and perform operations.
+In addition to being a validation tool, Themis also provides an example of a larger client application that uses the Java driver to connect to {zdm-proxy}, or directly to a {cass-short} cluster, and perform operations.
 The configuration logic, as well as the cluster and session management code, are separated into distinct packages to make them easy to understand.
 
-== Connect the {cql-shell} to {product-proxy}
+== Connect the {cql-shell} to {zdm-proxy}
 
 The {cql-shell} (`cqlsh`) is a command-line tool that you can use to send CQL and `cqlsh` commands to your {cass-short}-based clusters, including {astra-db}, {dse-short}, {hcd-short}, and {cass} databases.
 
 When issuing these commands directly to a cluster, you can use your database's included version of `cqlsh`, or you can download and run a standalone `cqlsh`.
 
-With {product-proxy}, you use a standalone `cqlsh` installation to issue commands to both clusters through {product-proxy}.
+With {zdm-proxy}, you use a standalone `cqlsh` installation to issue commands to both clusters through {zdm-proxy}.
 
 Your origin and target clusters must have a common `cql_version` between them.
-If there is no CQL version that is compatible with both clusters, `cqlsh` won't be able to connect to {product-proxy}.
+If there is no CQL version that is compatible with both clusters, `cqlsh` won't be able to connect to {zdm-proxy}.
 
-To connect `cqlsh` to a {product-proxy} instance, do the following:
+To connect `cqlsh` to a {zdm-proxy} instance, do the following:
 
-. On a machine that can connect to your {product-proxy} instance, xref:cql:cqlsh:use-cql-shell.adoc[download and install the {cql-shell}].
+. On a machine that can connect to your {zdm-proxy} instance, xref:cql:cqlsh:use-cql-shell.adoc[download and install the {cql-shell}].
 +
-Any version of `cqlsh` can connect to {product-proxy}, but some clusters require a specific `cqlsh` version.
+Any version of `cqlsh` can connect to {zdm-proxy}, but some clusters require a specific `cqlsh` version.
 
-. Start `cqlsh` with your {product-proxy} connection details:
+. Start `cqlsh` with your {zdm-proxy} connection details:
 +
 [source,shell,subs="+quotes"]
 ----
@@ -221,8 +221,8 @@ Any version of `cqlsh` can connect to {product-proxy}, but some clusters require
 +
 Replace the following:
 +
-* `**ZDM_PROXY_IP**`: The IP address of your {product-proxy} instance.
-* `**PORT**`: The port on which the {product-proxy} instance listens for client connections.
+* `**ZDM_PROXY_IP**`: The IP address of your {zdm-proxy} instance.
+* `**PORT**`: The port on which the {zdm-proxy} instance listens for client connections.
 If you are using the default port, 9042, you can omit this argument.
 * `**USERNAME**` and `**PASSWORD**`: Valid cluster authentication credentials, depending on the authentication requirements for your origin and target clusters:
 +
@@ -239,13 +239,13 @@ For {astra-db}, the username is the literal string `token`, and the password is 
 
 [IMPORTANT]
 ====
-For {astra-db}, _don't_ use the {scb-short} to connect `cqlsh` to {product-proxy}.
+For {astra-db}, _don't_ use the {scb-short} to connect `cqlsh` to {zdm-proxy}.
 Only use an application token.
 
-If you include the {scb-short}, `cqlsh` ignores all other connection arguments and connects exclusively to your {astra-db} database instead of {product-proxy}.
+If you include the {scb-short}, `cqlsh` ignores all other connection arguments and connects exclusively to your {astra-db} database instead of {zdm-proxy}.
 ====
 --
 
 == Next steps
 
-After you connect your client applications to {product-proxy}, you can begin xref:ROOT:migrate-and-validate-data.adoc[Phase 2] of the migration, which is the data migration phase.
+After you connect your client applications to {zdm-proxy}, you can begin xref:ROOT:migrate-and-validate-data.adoc[Phase 2] of the migration, which is the data migration phase.

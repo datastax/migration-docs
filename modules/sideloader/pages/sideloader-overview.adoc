@@ -4,7 +4,7 @@
 
 {sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshot backups that you've uploaded to {astra-db} from an existing {cass-reg}, {dse}, or {hcd} cluster.
 
-Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like xref:dsbulk:overview:dsbulk-about.adoc[{dsbulk}] and xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator}], including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
+Because it imports data directly, {sstable-sideloader} can offer several advantages over CQL-based tools like xref:dsbulk:overview:dsbulk-about.adoc[{dsbulk}] and {cass-migrator-repo-url}[{cass-migrator}], including faster, more cost-effective data loading, and minimal performance impacts on your origin cluster and target database.
 
 == {sstable-sideloader} concepts
 
@@ -44,7 +44,7 @@ Each snapshot for each node in the origin cluster must include all the keyspaces
 
 These snapshots are ideal for database migrations because creating snapshots has a negligible performance impact on the origin cluster, and the snapshots preserve metadata like `writetime` and `ttl` values.
 
-When using {sstable-sideloader} with {product-proxy}, {cass-short}'s last-write-wins semantics ensure that new, real-time writes accurately take precedence over historical writes.
+When using {sstable-sideloader} with {zdm-proxy}, {cass-short}'s last-write-wins semantics ensure that new, real-time writes accurately take precedence over historical writes.
 Last-write-wins compares the `writetime` of conflicting records, and then retains the most recent write.
 For example, if a new write occurs in your target database with a `writetime` of `2023-10-01T12:05:00Z`, and then {sstable-sideloader} migrates a record against the same row with a `writetime` of `2023-10-01T12:00:00Z`, the target database retains the data from the new write because it has the most recent `writetime`.
 
@@ -157,7 +157,7 @@ Once {sstable-sideloader} begins to import SSTable metadata (the next step), you
 +
 If the dataset contains tombstones, any read operations on the target database can return inconsistent results during this step.
 Since compaction is disabled, there is no risk of permanent inconsistencies.
-However, in the context of xref:ROOT:introduction.adoc[{product}], it's important that the {product-short} proxy continues to read from the origin cluster.
+However, in the context of xref:ROOT:introduction.adoc[{zdm}], it's important that the {zdm-short} proxy continues to read from the origin cluster.
 
 . Re-enables compactions on the {astra-db} Serverless database.
 
@@ -172,11 +172,11 @@ For instructions and more information, see xref:sideloader:migrate-sideloader.ad
 
 include::sideloader:partial$validate.adoc[]
 
-== Use {sstable-sideloader} with {product-proxy}
+== Use {sstable-sideloader} with {zdm-proxy}
 
-If you need to migrate a live database, you can use {sstable-sideloader} instead of {dsbulk-short} or {cass-migrator-short} during of xref:ROOT:migrate-and-validate-data.adoc[Phase 2 of {product}].
+If you need to migrate a live database, you can use {sstable-sideloader} instead of {dsbulk-short} or {cass-migrator-short} during of xref:ROOT:migrate-and-validate-data.adoc[Phase 2 of {zdm}].
 
-.Use {sstable-sideloader} with {product-proxy}
+.Use {sstable-sideloader} with {zdm-proxy}
 svg::sideloader:astra-migration-toolkit.svg[]
 
 == Next steps

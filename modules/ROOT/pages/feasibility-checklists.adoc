@@ -1,8 +1,8 @@
-= Compatibility requirements for {product-proxy}
+= Compatibility requirements for {zdm-proxy}
 :navtitle: Compatibility requirements
 :page-aliases: ROOT:preliminary-steps.adoc
 
-True zero downtime migration with {product-proxy} is possible only if your clusters, data model, and application logic meet the compatibility requirements described on this page.
+True zero downtime migration with {zdm-proxy} is possible only if your clusters, data model, and application logic meet the compatibility requirements described on this page.
 
 You might need to adjust your data model or application logic to ensure compatibility between the origin and target clusters during the migration and ongoing compatibility with the target cluster after the migration.
 
@@ -13,16 +13,16 @@ If you cannot meet these requirements, particularly the cluster and schema compa
 
 include::ROOT:partial$cassandra-protocol-versions.adoc[]
 
-When a specific protocol version is requested, {product-proxy} handles protocol negotiation to ensure the requested version is supported by both clusters.
-For example, to use protocol `V5` with {product-proxy}, both the origin and target clusters must support `V5`, such as {hcd-short} or open source {cass-reg} 4.0 or later.
+When a specific protocol version is requested, {zdm-proxy} handles protocol negotiation to ensure the requested version is supported by both clusters.
+For example, to use protocol `V5` with {zdm-proxy}, both the origin and target clusters must support `V5`, such as {hcd-short} or open source {cass-reg} 4.0 or later.
 Otherwise, a lower protocol version must be used.
 
-If the requested version isn't mutually supported, then {product-proxy} can force the client application to downgrade to a mutually supported protocol version.
+If the requested version isn't mutually supported, then {zdm-proxy} can force the client application to downgrade to a mutually supported protocol version.
 If automatic forced downgrade isn't possible, then the connection fails, and you must modify your client application to request a different protocol version.
 
 === Determine your client application's supported and negotiated protocol versions
 
-Outside of a migration scenario (without {product-proxy}), the supported protocol versions depend on your origin cluster's version and client application's driver version.
+Outside of a migration scenario (without {zdm-proxy}), the supported protocol versions depend on your origin cluster's version and client application's driver version.
 
 Generally, when connecting to a cluster, the driver requests the highest protocol version that it supports.
 If the cluster supports that version, then the connection uses that version.
@@ -32,12 +32,12 @@ For example, if the cluster and driver both support `V5`, then your client appli
 
 If you upgrade your cluster, driver, or both to a version with a higher mutually supported protocol version, then the driver automatically starts using the higher version unless you explicitly disable it in your driver configuration.
 
-When you introduce {product-proxy}, the target cluster is integrated into the protocol negotiation process to ensure that the negotiated protocol version is supported by the origin cluster, target cluster, and driver.
+When you introduce {zdm-proxy}, the target cluster is integrated into the protocol negotiation process to ensure that the negotiated protocol version is supported by the origin cluster, target cluster, and driver.
 
 === Considerations and requirements for `V5`
 
-Required {product-proxy} version::
-Official support for `V5` requires {product-proxy} version 2.4.0 or later.
+Required {zdm-proxy} version::
+Official support for `V5` requires {zdm-proxy} version 2.4.0 or later.
 
 Use cases requiring `V5`::
 You are required to use `V5` only if your client application uses `V5`-specific functionality.
@@ -47,7 +47,7 @@ Protocol `V5` has improved integrity checks compared to earlier versions.
 This can cause slight performance degradation when your client application begins to use `V5` after using an earlier version.
 +
 {company} performance tests showed potential throughput reductions ranging from 0 to 15 percent.
-This performance impact can occur with and without {product-proxy}.
+This performance impact can occur with and without {zdm-proxy}.
 +
 [TIP]
 ====
@@ -57,16 +57,16 @@ If your client application already uses `V5`, it is likely that you already adju
 If you plan to upgrade to a `V5`-compatible driver before or during your migration, then the potential performance impact depends on which clusters support `V5`:
 +
 --
-* **Neither cluster supports `V5`**: You won't notice any protocol-related performance impact before or during the migration because the driver and {product-proxy} cannot negotiate `V5` in this scenario.
+* **Neither cluster supports `V5`**: You won't notice any protocol-related performance impact before or during the migration because the driver and {zdm-proxy} cannot negotiate `V5` in this scenario.
 
-* **Only the target cluster supports `V5`**: You won't notice any protocol-related performance impact during the migration because {product-proxy} must negotiate a protocol version that is supported by both clusters.
-If the origin cluster doesn't support `V5`, then {product-proxy} cannot negotiate `V5` during the migration, and the driver cannot negotiate `V5` before the migration.
+* **Only the target cluster supports `V5`**: You won't notice any protocol-related performance impact during the migration because {zdm-proxy} must negotiate a protocol version that is supported by both clusters.
+If the origin cluster doesn't support `V5`, then {zdm-proxy} cannot negotiate `V5` during the migration, and the driver cannot negotiate `V5` before the migration.
 +
 However, you might experience a protocol-related performance impact at the end of the migration when you connect your client application directly to the target cluster.
-This phase removes {product-proxy} and the origin cluster from the protocol negotiation, allowing the driver to negotiate directly with the target cluster.
+This phase removes {zdm-proxy} and the origin cluster from the protocol negotiation, allowing the driver to negotiate directly with the target cluster.
 If the target cluster supports `V5`, the driver can use `V5` automatically.
 
-* **Both clusters support `V5`**: Unless you <<disallow-or-explicitly-downgrade-the-protocol-version,block `V5`>>, you might experience performance impacts because the driver and {product-proxy} can use `V5` automatically in this scenario.
+* **Both clusters support `V5`**: Unless you <<disallow-or-explicitly-downgrade-the-protocol-version,block `V5`>>, you might experience performance impacts because the driver and {zdm-proxy} can use `V5` automatically in this scenario.
 Consider upgrading the driver before or after the migration so you can isolate the impact of that change without the added complexity of the migration.
 As a best practice for any significant version upgrade, run performance tests in lower environments to evaluate the potential impact before making the change in production.
 --
@@ -74,7 +74,7 @@ As a best practice for any significant version upgrade, run performance tests in
 [#disallow-or-explicitly-downgrade-the-protocol-version]
 === Disallow or explicitly downgrade the protocol version
 
-You can restrict protocol versions in the driver and {product-proxy} configuration:
+You can restrict protocol versions in the driver and {zdm-proxy} configuration:
 
 Driver configuration::
 You can explicitly downgrade the protocol version in your client application's driver configuration.
@@ -85,21 +85,21 @@ For example:
 +
 * Both clusters and the driver support `V5` but you don't want to use `V5`: Configure the protocol version in the driver before the migration if you haven't done so already.
 * The origin cluster _doesn't_ support `V5` and you want to ensure `V5` isn't used automatically after the migration: Configure the protocol version in the driver at any point before the end of the migration when you connect your client application directly to the target cluster.
-* You observe unacceptable performance degradation when using `V5` before the migration (without {product-proxy}):
+* You observe unacceptable performance degradation when using `V5` before the migration (without {zdm-proxy}):
 Either mitigate the performance issues before the migration, or configure the protocol version in the driver before the migration.
 
-{product-proxy} configuration::
+{zdm-proxy} configuration::
 You can use the `xref:ROOT:manage-proxy-instances.adoc#blocked-protocol-versions[blocked_protocol_versions]` configuration variable to block specific protocol versions at the proxy level.
 Make sure at least one mutually supported protocol version isn't blocked.
 +
-This option applies _only_ while {product-proxy} is in use.
+This option applies _only_ while {zdm-proxy} is in use.
 It _doesn't_ persist after the migration.
 +
-Use this option if you observe unacceptable performance degradation when {product-proxy} is active _and_ it negotiates `V5`.
-If unacceptable performance degradation occurs _without_ {product-proxy}, then configure the protocol version in the driver instead.
-However, be aware that {product-proxy} itself can have a performance impact, regardless of the protocol version.
+Use this option if you observe unacceptable performance degradation when {zdm-proxy} is active _and_ it negotiates `V5`.
+If unacceptable performance degradation occurs _without_ {zdm-proxy}, then configure the protocol version in the driver instead.
+However, be aware that {zdm-proxy} itself can have a performance impact, regardless of the protocol version.
 
-=== Thrift isn't supported by {product-proxy}
+=== Thrift isn't supported by {zdm-proxy}
 
 If you are using an earlier driver or cluster version that only supports Thrift, you must change your client application to use {cql} statements, and, if needed, upgrade your cluster before starting the migration process.
 
@@ -111,17 +111,17 @@ include::ROOT:partial$migration-scenarios.adoc[]
 
 [IMPORTANT]
 ====
-To successfully migrate with {product-proxy}, the origin and target clusters must have matching schemas, including keyspace names, table names, column names, and data types.
-A CQL statement produced by your client application must be able to succeed _without modification_ on both clusters because {product-proxy} routes the exact same CQL statements to both clusters.
+To successfully migrate with {zdm-proxy}, the origin and target clusters must have matching schemas, including keyspace names, table names, column names, and data types.
+A CQL statement produced by your client application must be able to succeed _without modification_ on both clusters because {zdm-proxy} routes the exact same CQL statements to both clusters.
 
-Even without {product-proxy}, matching schemas are required for most CQL-based data migration tools, such as {sstable-sideloader} and {cass-migrator}.
-If it is impossible to match the schemas, your migration cannot use {product-proxy}.
+Even without {zdm-proxy}, matching schemas are required for most CQL-based data migration tools, such as {sstable-sideloader} and {cass-migrator}.
+If it is impossible to match the schemas, your migration cannot use {zdm-proxy}.
 See xref:ROOT:components.adoc[] for alternative migration tools and strategies, such as extract, transform, and load (ETL) processes.
 ====
 
-{product-proxy} _doesn't_ modify or transform CQL statements with the exception of <<cql-function-replacement,optional replacement for `now()`>>.
+{zdm-proxy} _doesn't_ modify or transform CQL statements with the exception of <<cql-function-replacement,optional replacement for `now()`>>.
 
-A CQL statement that your client application sends to {product-proxy} must be able to succeed on both clusters.
+A CQL statement that your client application sends to {zdm-proxy} must be able to succeed on both clusters.
 This means that any keyspace that your client application uses must exist on both the origin and target clusters with the same keyspace name, table names, column names, and compatible data types.
 However, the keyspaces can have different replication strategies and durable write settings.
 
@@ -133,9 +133,9 @@ Before you decide to omit a column from the target cluster, make sure that it is
 In some cases, you can change the primary key on the target cluster.
 For example, if your compound primary key is `PRIMARY KEY (A, B)`, and you always provide parameters for the `A` and `B` columns in your CQL statements, then you could change the key to `PRIMARY KEY (B, A)` when creating the schema on the target because your CQL statements will still run successfully.
 
-== Request and error handling with {product-proxy}
+== Request and error handling with {zdm-proxy}
 
-See xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[How {product-proxy} handles reads and writes].
+See xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[How {zdm-proxy} handles reads and writes].
 
 [[non-idempotent-operations]]
 == Lightweight Transactions and other non-idempotent operations
@@ -149,11 +149,11 @@ Examples of non-idempotent operations include the following:
 * Collection updates with `+=` and `-=` operators
 * Non-deterministic functions like `now()` and `uuid()` (see <<cql-function-replacement>>)
 
-By design, a {product-short} migration involves two separate clusters, and it is possible for the clusters to have differences due to non-idempotent operations.
+By design, a {zdm-short} migration involves two separate clusters, and it is possible for the clusters to have differences due to non-idempotent operations.
 
 If you use non-idempotent operations, {company} recommends adding a reconciliation phase to your migration before and after xref:ROOT:change-read-routing.adoc[Phase 4].
 This allows you an additional opportunity to resolve any data inconsistencies that are produced by non-idempotent operations.
-The xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator-short}] is ideal for detecting and reconciling these types of inconsistencies.
+The {cass-migrator-repo-url}[{cass-migrator-short}] is ideal for detecting and reconciling these types of inconsistencies.
 
 However, if your application workloads can tolerate inconsistencies produced by LWTs and non-idempotent operations, you might not need to perform any additional validation or reconciliation steps.
 This depends entirely on your application business logic and requirements.
@@ -162,20 +162,20 @@ It is your responsibility to determine whether your workloads can tolerate these
 [[_lightweight_transactions_and_the_applied_flag]]
 === Lightweight Transactions and the applied flag
 
-{product-proxy} handles LWTs in the same way as other xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[write requests]: It sends the request to both clusters concurrently, and then it waits for both to respond.
-{product-proxy} returns a `success` status to the client _only_ if both clusters send successful acknowledgements; otherwise, it returns a `failure` status.
+{zdm-proxy} handles LWTs in the same way as other xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[write requests]: It sends the request to both clusters concurrently, and then it waits for both to respond.
+{zdm-proxy} returns a `success` status to the client _only_ if both clusters send successful acknowledgements; otherwise, it returns a `failure` status.
 
 However, clusters can consider an LWT to be successful with or without data modification, because LWTs modify data only if a specific condition is met, and they don't fail if the condition isn't met.
-With {product-proxy}, this means both clusters can return successful acknowledgements with _different outcomes on each cluster_.
+With {zdm-proxy}, this means both clusters can return successful acknowledgements with _different outcomes on each cluster_.
 This is because the evaluation of an LWT's condition is based on the state of the data on the cluster at the time of the request.
 For example, if the condition is met on the origin cluster but not on the target cluster, then the data is modified on the origin cluster only.
 
-If your application logic includes LWTs, you must reconcile any inconsistences caused by LWTs, and understand how the `applied` flag is handled by {product-proxy}:
+If your application logic includes LWTs, you must reconcile any inconsistences caused by LWTs, and understand how the `applied` flag is handled by {zdm-proxy}:
 
 Repeatedly validate and reconcile data to catch all inconsistencies::
-During the {product-short} process, the clusters aren't fully synchronized until the data has been completely replicated and thoroughly validated at the end of xref:ROOT:migrate-and-validate-data.adoc[Phase 2].
+During the {zdm-short} process, the clusters aren't fully synchronized until the data has been completely replicated and thoroughly validated at the end of xref:ROOT:migrate-and-validate-data.adoc[Phase 2].
 Up to that point, LWTs can produce inconsistent data that you must reconcile at the end of Phase 2.
-Furthermore, because {product-proxy} is designed to continuously route writes to both clusters, you might need to validate and reconcile the data multiple times to catch additional inconsistencies that occurred while you were reconciling previous inconsistencies.
+Furthermore, because {zdm-proxy} is designed to continuously route writes to both clusters, you might need to validate and reconcile the data multiple times to catch additional inconsistencies that occurred while you were reconciling previous inconsistencies.
 
 Don't rely on the `applied` flag::
 A cluster's response to an LWT includes an `applied` flag.
@@ -183,10 +183,10 @@ If `applied` is `True`, then the LWT's condition was met and the data was actual
 If `applied` is `False`, then the condition wasn't met and the data wasn't modified.
 +
 Outside of a migration scenario, this flag is passed to the client application from the one cluster that the client is connected to.
-However, with {product-proxy}, the responses from both clusters are passed to {product-proxy}, which then passes only _one_ response back to the client application.
-This is intentional because {product-proxy} is designed to be transparent to the client application: The client application believes it is interacting with a single cluster.
+However, with {zdm-proxy}, the responses from both clusters are passed to {zdm-proxy}, which then passes only _one_ response back to the client application.
+This is intentional because {zdm-proxy} is designed to be transparent to the client application: The client application believes it is interacting with a single cluster.
 +
-Specifically, {product-proxy} returns the response, including the `applied` flag, from the xref:ROOT:faqs.adoc#what-are-origin-target-primary-and-secondary-clusters[primary cluster].
+Specifically, {zdm-proxy} returns the response, including the `applied` flag, from the xref:ROOT:faqs.adoc#what-are-origin-target-primary-and-secondary-clusters[primary cluster].
 For the majority of the migration process, the origin cluster is the primary cluster.
 Near the end of the migration (xref:ROOT:change-read-routing.adoc[Phase 4]), the target cluster becomes the primary cluster.
 +
@@ -204,7 +204,7 @@ If these functions are used for regular non-primary key columns, you must determ
 However, if these functions are used in any primary key column, then your data migration phase will fail because of data inconsistencies between the two clusters.
 Effectively, the clusters will never be truly in sync from a programmatic perspective.
 
-{product-proxy} has an option to replace `now()` with a timeUUID calculated at the proxy level to ensure that these records write the same value to both clusters.
+{zdm-proxy} has an option to replace `now()` with a timeUUID calculated at the proxy level to ensure that these records write the same value to both clusters.
 
 To enable this feature, set `replace_cql_functions` to `true`.
 For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
@@ -226,14 +226,14 @@ For more information, see your driver's documentation and xref:6.9@dse:drivers:t
 
 [IMPORTANT]
 ====
-The {product-short} process requires you to perform rolling restarts of your client applications during the migration.
+The {zdm-short} process requires you to perform rolling restarts of your client applications during the migration.
 This is standard practice for client applications that are deployed over multiple instances, and it is a widely used approach to roll out releases and configuration changes.
 ====
 
-Throughout the migration process, you must restart {product-proxy} instances to apply configuration changes.
+Throughout the migration process, you must restart {zdm-proxy} instances to apply configuration changes.
 Client applications handle this in the same way as typical rolling restarts of {dse-short} or {cass-short} clusters.
 
-If your applications already tolerate rolling restarts of your origin cluster, then you shouldn't expect any issues during rolling restarts of {product-proxy} instances.
+If your applications already tolerate rolling restarts of your origin cluster, then you shouldn't expect any issues during rolling restarts of {zdm-proxy} instances.
 
 To ensure that your client application retries requests that fail due to connection errors caused by the rolling restart process, check your driver's retry policies and whether your requests are marked as idempotent.
 Most drivers treat all statements as non-idempotent by default, and they don't automatically retry them.
@@ -245,51 +245,51 @@ For more information, see xref:6.9@dse:drivers:idempotence.adoc[] and xref:6.9@d
 
 [IMPORTANT]
 ====
-LZ4 and Snappy compression algorithms require {product-proxy} version 2.4.0 or later.
+LZ4 and Snappy compression algorithms require {zdm-proxy} version 2.4.0 or later.
 ====
 
 The binary protocol used by {astra}, {dse-short}, {hcd-short}, and open-source {cass-short} supports optional compression of transport-level requests and responses that reduces network traffic at the cost of CPU overhead.
 
-When establishing connections from client applications, {product-proxy} responds with a list of compression algorithms supported by both clusters.
+When establishing connections from client applications, {zdm-proxy} responds with a list of compression algorithms supported by both clusters.
 The compression algorithm configured in your {company}-compatible driver must match any item from the common list, or CQL request compression must be disabled completely.
-{product-proxy} cannot decompress and recompress CQL requests using different compression algorithms.
+{zdm-proxy} cannot decompress and recompress CQL requests using different compression algorithms.
 
 This isn't related to storage compression, which you can configure on specific tables with the `compression` table property.
-Storage/table compression doesn't affect the client application or {product-proxy} in any way.
+Storage/table compression doesn't affect the client application or {zdm-proxy} in any way.
 
 [#zdm-proxy-ignores-token-aware-routing]
-== {product-proxy} ignores token-aware routing
+== {zdm-proxy} ignores token-aware routing
 
-Token-aware routing isn't enforced when connecting through {product-proxy} because these instances don't hold actual token ranges in the same way as database nodes.
-Instead, each {product-proxy} instance has a unique, non-overlapping set of synthetic tokens that simulate token ownership and enable balanced load distribution across the instances.
+Token-aware routing isn't enforced when connecting through {zdm-proxy} because these instances don't hold actual token ranges in the same way as database nodes.
+Instead, each {zdm-proxy} instance has a unique, non-overlapping set of synthetic tokens that simulate token ownership and enable balanced load distribution across the instances.
 
-Upon receiving a request, a {product-proxy} instance routes the request to appropriate origin and target database nodes, independent of token ownership.
+Upon receiving a request, a {zdm-proxy} instance routes the request to appropriate origin and target database nodes, independent of token ownership.
 
-If your clients have token-aware routing enabled, you don't need to disable this behavior while using {product-proxy}.
+If your clients have token-aware routing enabled, you don't need to disable this behavior while using {zdm-proxy}.
 Clients can continue to operate with token-aware routing enabled without negative impacts to functionality or performance.
 
 == Authenticator and authorizer configuration
 
-A cluster's _authorizer_ doesn't affect client applications or {product-proxy}, which means that you can use any kind of authorizer configuration on your clusters, and they can use different authorizers.
+A cluster's _authorizer_ doesn't affect client applications or {zdm-proxy}, which means that you can use any kind of authorizer configuration on your clusters, and they can use different authorizers.
 
-In contrast, a cluster's _authenticator_ must be compatible with {product-proxy}.
-{product-proxy} supports the following cluster authenticator configurations:
+In contrast, a cluster's _authenticator_ must be compatible with {zdm-proxy}.
+{zdm-proxy} supports the following cluster authenticator configurations:
 
 * No authenticator
 * `PasswordAuthenticator`
 * `DseAuthenticator` with `internal` or `ldap` scheme
 
-{product-proxy} _doesn't_ support `DseAuthenticator` with `kerberos` scheme.
+{zdm-proxy} _doesn't_ support `DseAuthenticator` with `kerberos` scheme.
 
-The origin and target clusters can have different authentication configurations because {product-proxy} treats them independently.
+The origin and target clusters can have different authentication configurations because {zdm-proxy} treats them independently.
 
 == {dse-short} advanced workloads
 
-This section describes how {product-proxy} handles certain {dse-short} advanced workloads.
+This section describes how {zdm-proxy} handles certain {dse-short} advanced workloads.
 For more {dse-short}-specific migration considerations, see xref:6.9@dse:managing:operations/migrate-data.adoc[].
 
 {dse-short} Graph::
-{product-proxy} handles all {dse-short} Graph requests as write requests even if the traversals are read-only.
+{zdm-proxy} handles all {dse-short} Graph requests as write requests even if the traversals are read-only.
 There is no special handling for these requests, so you must consider the traversals that your client application sends and determine whether the traversals are idempotent.
 If the traversals are non-idempotent, then your must thoroughly validate and reconcile the data and the end of xref:ROOT:migrate-and-validate-data.adoc[Phase 2] to ensure that the target cluster is truly consistent with the origin cluster.
 For more information, see <<non-idempotent-operations>>.
@@ -298,9 +298,9 @@ For more information, see <<non-idempotent-operations>>.
 They _cannot_ be used with the earlier Graph engine in {dse-short} versions prior to 6.8.
 
 {dse-short} Search::
-Read-only {dse-short} Search workloads can be moved directly from the origin to the target without {product-proxy} being involved.
-If your client application uses Search and also issues writes, or if you need the read routing capabilities from {product-proxy}, then you can connect your Search workloads to {product-proxy} as long as you are using xref:6.9@dse:drivers:cassandra-drivers-overview.adoc[{dse-short}-compatible drivers] to submit these queries.
-This approach means the queries are regular CQL `SELECT` statements, so {product-proxy} handles them as regular read requests.
+Read-only {dse-short} Search workloads can be moved directly from the origin to the target without {zdm-proxy} being involved.
+If your client application uses Search and also issues writes, or if you need the read routing capabilities from {zdm-proxy}, then you can connect your Search workloads to {zdm-proxy} as long as you are using xref:6.9@dse:drivers:cassandra-drivers-overview.adoc[{dse-short}-compatible drivers] to submit these queries.
+This approach means the queries are regular CQL `SELECT` statements, so {zdm-proxy} handles them as regular read requests.
 +
 If you use the HTTP API then you can either modify your applications to use the CQL API instead, or you must move those applications directly from the origin to the target when the migration is complete, if that is acceptable for your use case.
 
@@ -308,7 +308,7 @@ If you use the HTTP API then you can either modify your applications to use the 
 
 This section describes specific considerations for {astra} migrations.
 If you need to make any changes to your data model or application logic for compatibility with {astra}, do so before starting the migration.
-As mentioned previously, this is because {product-proxy} requires that the same CQL statements can be executed successfully on both clusters, and the data migration tools require matching schemas.
+As mentioned previously, this is because {zdm-proxy} requires that the same CQL statements can be executed successfully on both clusters, and the data migration tools require matching schemas.
 
 {astra} guardrails, limits, and CQL compatibility::
 As a managed database-as-a-service (DBaaS) offering, {astra} implements xref:astra-db-serverless:databases:database-limits.adoc[guardrails and limits] on its databases, and xref:astra-db-serverless:cql:develop-with-cql.adoc[{astra} doesn't support all CQL functionality].
@@ -318,8 +318,8 @@ In self-managed clusters, such as {dse-short} and {cass-short}, you can configur
 However, the xref:astra-db-serverless:databases:database-limits.adoc#cassandra-configuration-properties[{astra} `cassandra.yml`] cannot be changed unless explicitly approved and implemented by {company}.
 
 {astra} doesn't support consistency level ONE::
-`CL.ONE` isn't supported by {astra}, and read and write requests sent through {product-proxy} with `CL.ONE` to {astra-db} databases always fail.
-{product-proxy} doesn't mute these failures because you need to be aware of them.
+`CL.ONE` isn't supported by {astra}, and read and write requests sent through {zdm-proxy} with `CL.ONE` to {astra-db} databases always fail.
+{zdm-proxy} doesn't mute these failures because you need to be aware of them.
 You must adapt your client application to use a consistency level that is supported by both clusters to ensure that the migration is seamless and error-free.
 
 {astra} doesn't support the Stargate APIs::
@@ -329,25 +329,25 @@ Before you migrate, you must change your applications to use other programmatic 
 For more information, see xref:astra-db-serverless:api-reference:compare-dataapi-to-stargate.adoc[].
 
 [[_read_only_applications]]Read-only applications::
-In versions 2.1.0 and later, {product-proxy} sends periodic heartbeats to keep idle cluster connections alive.
-The default interval is 30,000 milliseconds, and it can be configured with the `xref:ROOT:manage-proxy-instances.adoc#change-mutable-config-variable[heartbeat_interval_ms]` variable, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you aren't using {product-automation}.
+In versions 2.1.0 and later, {zdm-proxy} sends periodic heartbeats to keep idle cluster connections alive.
+The default interval is 30,000 milliseconds, and it can be configured with the `xref:ROOT:manage-proxy-instances.adoc#change-mutable-config-variable[heartbeat_interval_ms]` variable, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you aren't using {zdm-automation}.
 +
-In {product-proxy} versions earlier than 2.1.0, read-only applications require special handling to avoid connection termination due to inactivity.
+In {zdm-proxy} versions earlier than 2.1.0, read-only applications require special handling to avoid connection termination due to inactivity.
 +
-{company} recommends that you use {product-proxy} version 2.1.0 or later to benefit from the heartbeat feature.
+{company} recommends that you use {zdm-proxy} version 2.1.0 or later to benefit from the heartbeat feature.
 If you cannot use version 2.1.0 or later, see the alternatives described in xref:ROOT:troubleshooting-tips.adoc#client-application-closed-connection-errors-every-10-minutes-when-migrating-to-astra-db[Client application closed connection errors every 10 minutes when migrating to {astra-db}].
 
 [#multi-datacenter-clusters-and-other-complex-migrations]
 == Multi-datacenter clusters and other complex migrations
 
-Complex migration scenarios, such as multi-datacenter migrations or many-to-one migrations, require additional planning to configure {product-proxy} and migrate the data efficiently.
+Complex migration scenarios, such as multi-datacenter migrations or many-to-one migrations, require additional planning to configure {zdm-proxy} and migrate the data efficiently.
 
 include::ROOT:partial$multi-region-migrations.adoc[]
 
-To configure {product-proxy} for a multi-datacenter migration, see the xref:ROOT:deployment-infrastructure.adoc[{product-proxy} infrastructure guidelines for multi-datacenter clusters].
+To configure {zdm-proxy} for a multi-datacenter migration, see the xref:ROOT:deployment-infrastructure.adoc[{zdm-proxy} infrastructure guidelines for multi-datacenter clusters].
 
 For more guidance on migrations to {astra}, see the xref:sideloader:prepare-sideloader.adoc#additional-preparation-for-specific-migration-scenarios[{sstable-sideloader} preparations for specific migration scenarios].
 
 == Next steps
 
-Next, xref:ROOT:deployment-infrastructure.adoc[prepare the {product-proxy} infrastructure].
+Next, xref:ROOT:deployment-infrastructure.adoc[prepare the {zdm-proxy} infrastructure].

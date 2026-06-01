@@ -1,10 +1,10 @@
-= Deploy {product-proxy}
+= Deploy {zdm-proxy}
 :page-aliases: ROOT:tls.adoc
 
-After you xref:setup-ansible-playbooks.adoc[set up the jumphost and {product-automation}], use the Ansible playbooks to deploy your {product-proxy} instances.
-Then, xref:ROOT:metrics.adoc[deploy the monitoring stack] to complete your {product-proxy} deployment.
+After you xref:setup-ansible-playbooks.adoc[set up the jumphost and {zdm-automation}], use the Ansible playbooks to deploy your {zdm-proxy} instances.
+Then, xref:ROOT:metrics.adoc[deploy the monitoring stack] to complete your {zdm-proxy} deployment.
 
-Aside from xref:ROOT:deployment-infrastructure.adoc[preparing the infrastructure], you don't need to install any {product-proxy} dependencies on the {product-proxy} machines. The playbook automatically installs all required software packages.
+Aside from xref:ROOT:deployment-infrastructure.adoc[preparing the infrastructure], you don't need to install any {zdm-proxy} dependencies on the {zdm-proxy} machines. The playbook automatically installs all required software packages.
 
 == Access the Control Host and locate the configuration files
 
@@ -29,29 +29,29 @@ ubuntu@52772568517c:~$
 . List the contents of the `vars` directory, and then find the following YAML configuration files:
 +
 * `zdm_proxy_container_config.yml`: Internal configuration for the proxy container itself.
-* `zdm_proxy_cluster_config.yml`: Configuration properties to connect {product-proxy} to the origin and target clusters.
+* `zdm_proxy_cluster_config.yml`: Configuration properties to connect {zdm-proxy} to the origin and target clusters.
 This is always required.
 * `zdm_proxy_core_config.yml`: Important configuration properties that are commonly used and changed during the migration.
 * `zdm_proxy_advanced_config.yml`: Advanced configuration properties that aren't always required.
 Leave these to their default values unless you have a specific use case that requires changing them.
 * `zdm_proxy_custom_tls_config.yml`: Optional TLS encryption properties.
 
-The following sections explain how to configure each of these files before deploying your {product-proxy} instances.
+The following sections explain how to configure each of these files before deploying your {zdm-proxy} instances.
 
 [[_configure_the_zdm_proxy]]
-== Configure {product-proxy}
+== Configure {zdm-proxy}
 
-After you locate the configuration files on the Control Host, you must prepare the configuration properties for your {product-proxy} deployment.
+After you locate the configuration files on the Control Host, you must prepare the configuration properties for your {zdm-proxy} deployment.
 
 === Container configuration
 
 . Edit the `zdm_proxy_container_config.yml` file.
 
-. Set your {product-proxy} version.
+. Set your {zdm-proxy} version.
 
 . Create a strategy to inject configuration parameters.
 +
-In all versions of {product-proxy}, you can use environment variables to set the {product-proxy} configuration.
+In all versions of {zdm-proxy}, you can use environment variables to set the {zdm-proxy} configuration.
 +
 In versions 2.3.0 and later, you can inject the configuration with a YAML file generated from automation scripts.
 
@@ -61,10 +61,10 @@ In versions 2.3.0 and later, you can inject the configuration with a YAML file g
 
 For the cluster and core configuration, you need to provide connection credentials and details for both the origin and target clusters.
 
-.Configuration file change in {product-automation} version 2.2.0
+.Configuration file change in {zdm-automation} version 2.2.0
 [IMPORTANT]
 ====
-Starting in version 2.2.0 of {product-automation}, all origin and target cluster configuration variables are stored in `zdm_proxy_cluster_config.yml`.
+Starting in version 2.2.0 of {zdm-automation}, all origin and target cluster configuration variables are stored in `zdm_proxy_cluster_config.yml`.
 In earlier versions, these variables are in the `zdm_proxy_core_config.yml` file.
 
 This change is backward compatible.
@@ -89,12 +89,12 @@ For legacy authentication to earlier {astra-db} databases with an older token ge
 . Edit the `zdm_proxy_cluster_config.yml` file.
 The `vi` and `nano` text editors are available in the container.
 
-. In the `ORIGIN CONFIGURATION` and `TARGET CONFIGURATION` sections, uncomment and configure all variables that are required for {product-proxy} to connect to the origin and target clusters.
+. In the `ORIGIN CONFIGURATION` and `TARGET CONFIGURATION` sections, uncomment and configure all variables that are required for {zdm-proxy} to connect to the origin and target clusters.
 +
 [IMPORTANT]
 ====
 You must provide connection details for both `ORIGIN CONFIGURATION` and `TARGET CONFIGURATION`.
-If either set is missing, {product-proxy} cannot connect to both clusters.
+If either set is missing, {zdm-proxy} cannot connect to both clusters.
 ====
 +
 The variables are the same in both sections, but they are set separately for each cluster.
@@ -130,7 +130,7 @@ The unused option must be unset.
 For example, if you use `target_astra_db_id` and `target_astra_token`, then `target_astra_secure_connect_bundle_path` must be unset.
 +
 --
-** **Both `{asterisk}_astra_db_id` and `{asterisk}_astra_token`**: If you want {product-automation} to automatically download your database's {scb}, use `*_astra_db_id` and `*_astra_token`.
+** **Both `{asterisk}_astra_db_id` and `{asterisk}_astra_token`**: If you want {zdm-automation} to automatically download your database's {scb}, use `*_astra_db_id` and `*_astra_token`.
 Set `*_astra_db_id` to your xref:astra-db-serverless:databases:create-database.adoc#get-db-id[database's ID], and set `*_astra_token` to your application token (`AstraCS:...`).
 ** **Only `{asterisk}_astra_secure_connect_bundle_path`**: If you want to manually provide your database's {scb-short} to the jumphost, use `*_astra_secure_connect_bundle_path`, and manually upload the {scb-short} to the jumphost:
 +
@@ -193,8 +193,8 @@ Unless you are investigating an issue, leave this set to the default value of `I
 
 [IMPORTANT]
 ====
-The origin credentials, target credentials, and the `primary_cluster` variable are mutable variables that you can change after deploying {product-proxy}.
-All other cluster connection configuration variables are immutable; the only way to change these values is by completely recreating the {product-proxy} deployment.
+The origin credentials, target credentials, and the `primary_cluster` variable are mutable variables that you can change after deploying {zdm-proxy}.
+All other cluster connection configuration variables are immutable; the only way to change these values is by completely recreating the {zdm-proxy} deployment.
 For more information, see xref:ROOT:manage-proxy-instances.adoc[].
 ====
 
@@ -207,13 +207,13 @@ Only modify the variables in `zdm_proxy_advanced_config.yml` if you have a speci
 [IMPORTANT]
 ====
 The following advanced configuration variables are immutable.
-If you need to change these variables, {company} recommends that you do so _before_ deploying {product-proxy}.
-Future changes require you to re-create your entire {product-proxy} deployment.
+If you need to change these variables, {company} recommends that you do so _before_ deploying {zdm-proxy}.
+Future changes require you to re-create your entire {zdm-proxy} deployment.
 For more information, see xref:ROOT:manage-proxy-instances.adoc#change-immutable-configuration-variables[Change immutable configuration variables].
 ====
 
 Multi-datacenter clusters::
-For xref:ROOT:deployment-infrastructure.adoc#multiple-datacenter-clusters[multi-datacenter origin clusters], specify the name of the datacenter that {product-proxy} should consider local.
+For xref:ROOT:deployment-infrastructure.adoc#multiple-datacenter-clusters[multi-datacenter origin clusters], specify the name of the datacenter that {zdm-proxy} should consider local.
 To do this, set the `origin_local_datacenter` property to the local datacenter name.
 Similarly, for multi-datacenter target clusters, set the `target_local_datacenter` property to the local datacenter name.
 These two variables are stored in `zdm_proxy_advanced_config.yml`.
@@ -223,17 +223,17 @@ For information about downloading a region-specific {scb-short}, see xref:astra-
 
 [#ports]
 Ports::
-Each {product-proxy} instance listens on port 9042 by default, like a default {cass-short} cluster.
+Each {zdm-proxy} instance listens on port 9042 by default, like a default {cass-short} cluster.
 You can override this by setting `zdm_proxy_listen_port` to your preferred port.
-This can be useful if the origin nodes listen on a port that is not 9042 and you want to configure {product-proxy} to listen on that same port to avoid changing the port in your client application configuration.
+This can be useful if the origin nodes listen on a port that is not 9042 and you want to configure {zdm-proxy} to listen on that same port to avoid changing the port in your client application configuration.
 +
-{product-proxy} exposes metrics on port 14001 by default.
+{zdm-proxy} exposes metrics on port 14001 by default.
 This port is used by Prometheus to scrape the application-level proxy metrics.
 This can be changed by setting `metrics_port` to a different value if desired.
 
 All other advanced configuration variables in `zdm_proxy_advanced_config.yml` are mutable.
-You can seamlessly change them after deploying {product-proxy} with a rolling restart.
-Immutable variables require you to re-create the entire deployment and result in downtime for your {product-proxy} deployment.
+You can seamlessly change them after deploying {zdm-proxy} with a rolling restart.
+Immutable variables require you to re-create the entire deployment and result in downtime for your {zdm-proxy} deployment.
 For more information, see xref:manage-proxy-instances.adoc[].
 
 [#enable-tls-encryption]
@@ -241,26 +241,26 @@ For more information, see xref:manage-proxy-instances.adoc[].
 
 Transportation Layer Security (TLS) encryption is optional and disabled by default.
 
-{product-proxy} supports TLS encryption between {product-proxy} and either or both clusters, and between {product-proxy} and your client application.
+{zdm-proxy} supports TLS encryption between {zdm-proxy} and either or both clusters, and between {zdm-proxy} and your client application.
 
 To enable TLS encryption, you must provide the necessary files and configure TLS settings in the `zdm_proxy_custom_tls_config.yml` file before running the deployment playbook.
 
-When you deploy the {product-proxy} instances with {product-automation}, the deployment playbook automatically distributes the TLS files and applies the TLS configuration to all {product-proxy} instances.
+When you deploy the {zdm-proxy} instances with {zdm-automation}, the deployment playbook automatically distributes the TLS files and applies the TLS configuration to all {zdm-proxy} instances.
 If you want to enable TLS after the initial deployment, you must rerun the deployment playbook to redeploy the instances with the new TLS configuration.
 
 ==== Configure proxy-to-cluster TLS
 
-Use these steps to enable TLS encryption between {product-proxy} and one or both clusters if required.
+Use these steps to enable TLS encryption between {zdm-proxy} and one or both clusters if required.
 
 Each cluster has its own TLS configuration.
 One-way TLS and Mutual TLS (mTLS) are both supported, and they can be enabled as needed for each cluster's requirements.
 
-In this case, {product-proxy} acts as the TLS client and the cluster acts as the TLS server.
+In this case, {zdm-proxy} acts as the TLS client and the cluster acts as the TLS server.
 
 [TIP]
 ====
 This is required for self-managed clusters only.
-For {astra-db}, {product-proxy} uses mTLS automatically with the xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb-short}].
+For {astra-db}, {zdm-proxy} uses mTLS automatically with the xref:astra-db-serverless:databases:secure-connect-bundle.adoc[{scb-short}].
 ====
 
 . Find the required files for each cluster where you want to enable TLS encryption.
@@ -273,9 +273,9 @@ All files must be in plain-text, non-binary format.
 +
 If your client application and origin cluster already use TLS encryption, then the required files should already be used in the client application's configuration (TLS client files) and the origin cluster's configuration (TLS Server files).
 
-. For each self-managed cluster (origin or target) where you want to enable TLS encrypted {product-proxy} connections, do the following:
+. For each self-managed cluster (origin or target) where you want to enable TLS encrypted {zdm-proxy} connections, do the following:
 +
-.. If your TLS files are in a JKS keystore, you must extract them as plain text because {product-proxy} cannot accept a JKS keystore.
+.. If your TLS files are in a JKS keystore, you must extract them as plain text because {zdm-proxy} cannot accept a JKS keystore.
 You must provide the raw files.
 +
 --
@@ -341,7 +341,7 @@ docker exec -it zdm-ansible-container bash
 . Uncomment and populate the TLS configuration variables for the clusters where you want to enable TLS encryption.
 For example, if you want to enable TLS encryption for both clusters, configure both sets of variables (`origin_tls_{asterisk}` and `target_tls_{asterisk}`).
 +
-In the proxy-to-cluster configuration, the word `server` in the variable names refers to the cluster, which acts as the TLS server, and the word `client` refers to {product-proxy}, which acts as the TLS client.
+In the proxy-to-cluster configuration, the word `server` in the variable names refers to the cluster, which acts as the TLS server, and the word `client` refers to {zdm-proxy}, which acts as the TLS client.
 +
 Origin cluster TLS encryption variables::
 +
@@ -363,9 +363,9 @@ Must be unset for one-way TLS.
 
 ==== Configure client application-to-proxy TLS
 
-Use these steps to enable TLS encryption between your client application and {product-proxy} if required.
+Use these steps to enable TLS encryption between your client application and {zdm-proxy} if required.
 
-In this case, your client application is the TLS client, and {product-proxy} is the TLS server.
+In this case, your client application is the TLS client, and {zdm-proxy} is the TLS server.
 
 One-way TLS and Mutual TLS (mTLS) are both supported.
 
@@ -376,7 +376,7 @@ If your client application and origin cluster already use TLS encryption, then t
 
 . If your TLS files are in a JKS keystore, extract them as plain text.
 +
-{product-proxy} cannot accept a JKS keystore.
+{zdm-proxy} cannot accept a JKS keystore.
 You must provide the raw files.
 +
 .. Get the files contained in your JKS keystore and their aliases:
@@ -427,7 +427,7 @@ docker exec -it zdm-ansible-container bash
 . From this shell, edit the `zdm_proxy_tls_config.yml` file at `zdm-proxy-automation/ansible/vars/zdm_proxy_custom_tls_config.yml`.
 
 . Uncomment and populate the following TLS configuration variables, which are prefixed with `zdm_proxy_*`.
-The word `server` in the variable names refers to {product-proxy}, which acts as the TLS server in this configuration.
+The word `server` in the variable names refers to {zdm-proxy}, which acts as the TLS server in this configuration.
 +
 * `zdm_proxy_tls_user_dir_path_name`: Use the default value of `/home/ubuntu/zdm_proxy_tls_files`.
 * `zdm_proxy_tls_server_ca_filename`: Required. Provide the filename (without the path) of the server CA that the proxy must use.
@@ -439,7 +439,7 @@ Set to `true` to enable mTLS between the application and the proxy.
 [#run-the-deployment-playbook]
 == Run the deployment playbook
 
-After modifying all necessary configuration variables, you are ready to deploy your {product-proxy} instances.
+After modifying all necessary configuration variables, you are ready to deploy your {zdm-proxy} instances.
 
 . From your shell connected to the Control Host, make sure you are in the `ansible` directory at `/home/ubuntu/zdm-proxy-automation/ansible`.
 +
@@ -452,19 +452,19 @@ If you are in the `vars` directory, then you must go up one level to the `ansibl
 ansible-playbook deploy_zdm_proxy.yml -i zdm_ansible_inventory
 ----
 
-. Wait while {product-proxy} containers are deployed to each of your {product-proxy} machines.
+. Wait while {zdm-proxy} containers are deployed to each of your {zdm-proxy} machines.
 +
-The playbook creates one {product-proxy} instance for each proxy host listed in the inventory file.
+The playbook creates one {zdm-proxy} instance for each proxy host listed in the inventory file.
 While the playbook runs, activity is printed to the shell along with any errors.
 If the entire operation is successful, the final output is a confirmation message.
 
-. Confirm that the {product-proxy} instances are running by checking the Docker logs.
+. Confirm that the {zdm-proxy} instances are running by checking the Docker logs.
 +
-Alternatively, after you xref:ROOT:metrics.adoc[deploy the monitoring stack], you can xref:ROOT:metrics.adoc#call-the-liveliness-and-readiness-endpoints[call the `liveliness` and `readiness` endpoints] to confirm that each {product-proxy} instance is running.
+Alternatively, after you xref:ROOT:metrics.adoc[deploy the monitoring stack], you can xref:ROOT:metrics.adoc#call-the-liveliness-and-readiness-endpoints[call the `liveliness` and `readiness` endpoints] to confirm that each {zdm-proxy} instance is running.
 +
 To check the Docker logs, do the following:
 +
-.. SSH into one of the servers where a deployed {product-proxy} instance is running.
+.. SSH into one of the servers where a deployed {zdm-proxy} instance is running.
 You can do this from within the Ansible Control Host Docker container, or directly from the jumphost machine:
 +
 [source,bash,subs="+quotes"]
@@ -472,7 +472,7 @@ You can do this from within the Ansible Control Host Docker container, or direct
 ssh **USER**@**ZDM_PROXY_IP_ADDRESS**
 ----
 
-.. Use the `docker logs` command to view the logs for the {product-proxy} instance:
+.. Use the `docker logs` command to view the logs for the {zdm-proxy} instance:
 +
 [source,bash]
 ----
@@ -515,10 +515,10 @@ CONTAINER ID  IMAGE                     COMMAND  CREATED      STATUS     PORTS  
 
 == Troubleshoot deployment issues
 
-If the {product-proxy} instances fail to start due to errors in the configuration, edit the configuration files and then rerun the deployment playbook.
+If the {zdm-proxy} instances fail to start due to errors in the configuration, edit the configuration files and then rerun the deployment playbook.
 
 For specific troubleshooting scenarios, see xref:ROOT:troubleshooting-tips.adoc[].
 
 == Next steps
 
-To continue Phase 1 of the migration, xref:ROOT:metrics.adoc[deploy the {product-proxy} monitoring stack].
+To continue Phase 1 of the migration, xref:ROOT:metrics.adoc[deploy the {zdm-proxy} monitoring stack].

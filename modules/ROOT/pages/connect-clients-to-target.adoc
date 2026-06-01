@@ -4,7 +4,7 @@
 Phase 5 is the last phase of the xref:ROOT:introduction.adoc[migration process], after you route all read requests to the target cluster in xref:ROOT:change-read-routing.adoc[Phase 4].
 
 In this final phase, you connect your client applications directly and exclusively to the target cluster.
-This removes the dependency on {product-proxy} and the origin cluster, thereby completing the migration process.
+This removes the dependency on {zdm-proxy} and the origin cluster, thereby completing the migration process.
 
 image::ROOT:migration-phase5ra.svg[In Phase 5, your applications no longer use the proxy and, instead, connect directly to the target cluster]
 
@@ -272,6 +272,6 @@ For more information, see the following:
 
 Your migration is now complete, and your target cluster is the source of truth for your client applications and data.
 
-When you are ready, you can decommission your origin cluster and {product-proxy} because these are no longer needed and xref:ROOT:rollback.adoc[seamless rollback] is no longer possible.
+When you are ready, you can decommission your origin cluster and {zdm-proxy} because these are no longer needed and xref:ROOT:rollback.adoc[seamless rollback] is no longer possible.
 
 If you need to revert to the origin cluster after this point, you must perform a full migration in the opposite direction, with your previous origin cluster as the target, to ensure that all data is rewritten and synchronized back to the origin.

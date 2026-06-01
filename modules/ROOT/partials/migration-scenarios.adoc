@@ -1,7 +1,7 @@
-You can use {product-proxy} to support migrations between {astra}, {dse}, {hcd}, open-source {cass-reg}, and and other {cass-short}-based databases.
+You can use {zdm-proxy} to support migrations between {astra}, {dse}, {hcd}, open-source {cass-reg}, and and other {cass-short}-based databases.
 Supported migration paths include cross-platform migrations and same-platform upgrades.
 
-{company} tests {product-proxy} compatibility with {astra}, {dse-short}, {hcd-short}, and open-source {cass-short}.
+{company} tests {zdm-proxy} compatibility with {astra}, {dse-short}, {hcd-short}, and open-source {cass-short}.
 Support for other {cass-short}-based databases is possible if the origin and target clusters share a common xref:ROOT:feasibility-checklists.adoc[protocol version].
 However, {company} doesn't test all data store providers, and {company} doesn't guarantee full support for any specific data store aside from the platforms and versions listed here.
 
@@ -13,7 +13,7 @@ Migrate from one of the following:
 * {dse} version 4.7.1 and later.
 * {cass-reg} version 2.1.6 and later.
 +
-{product-proxy} requires that the origin and target clusters share a common xref:ROOT:feasibility-checklists.adoc[protocol version].
+{zdm-proxy} requires that the origin and target clusters share a common xref:ROOT:feasibility-checklists.adoc[protocol version].
 Therefore, {cass-short} 2.0 migrations are only possible when migrating to 2.1 or 2.2 because {cass-short} 2.0 supports only `v2`.
 * Other {cass-short}-based databases that are based on a compatible {cass-short} version, such as ScyllaDB and Yugabyte.
 
@@ -31,6 +31,6 @@ Check the xref:6.9@dse:planning:compatibility.adoc[built-in {cass-short} version
 
 [TIP]
 ====
-You can use {product-short} for major version upgrades to your current database platform, such as upgrades from {dse-short} 5.0 to {dse-short} 6.9.
-Using {product-short} reduces the risk of data loss or corruption due to breaking changes between versions, provides a seamless rollback option, and streamlines the upgrade process, eliminating the need for interim upgrades and progressive manual reconfiguration.
+You can use {zdm-short} for major version upgrades to your current database platform, such as upgrades from {dse-short} 5.0 to {dse-short} 6.9.
+Using {zdm-short} reduces the risk of data loss or corruption due to breaking changes between versions, provides a seamless rollback option, and streamlines the upgrade process, eliminating the need for interim upgrades and progressive manual reconfiguration.
 ====

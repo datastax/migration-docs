@@ -6,14 +6,14 @@
 * xref:ROOT:hcd-migration-paths.adoc[]
 * xref:ROOT:mc-migration-paths.adoc[]
 
-.{product}
+.{zdm}
 * xref:ROOT:introduction.adoc[]
 * Plan and prepare
 ** xref:ROOT:feasibility-checklists.adoc[]
 ** xref:ROOT:deployment-infrastructure.adoc[]
 ** xref:ROOT:create-target.adoc[]
 ** xref:ROOT:rollback.adoc[]
-* Phase 1: Deploy {product-proxy}
+* Phase 1: Deploy {zdm-proxy}
 ** xref:ROOT:phase1.adoc[]
 ** xref:ROOT:setup-ansible-playbooks.adoc[]
 ** xref:ROOT:deploy-proxy-monitoring.adoc[]
@@ -28,8 +28,8 @@
 * xref:ROOT:troubleshooting-tips.adoc[]
 * xref:ROOT:faqs.adoc[]
 * Release notes
-** {product-proxy-repo}/releases[{product-proxy} release notes]
-** {product-automation-repo}/releases[{product-automation} release notes]
+** {zdm-proxy-repo-url}/releases[{zdm-proxy} release notes]
+** {zdm-automation-repo-url}/releases[{zdm-automation} release notes]
 
 .{sstable-sideloader}
 * xref:sideloader:sideloader-overview.adoc[]
@@ -40,8 +40,7 @@
 * xref:sideloader:troubleshoot-sideloader.adoc[]
 
 .{cass-migrator}
-* xref:ROOT:cassandra-data-migrator.adoc[]
-* {cass-migrator-repo}/releases[{cass-migrator-short} release notes]
+* {cass-migrator-repo-url}[About {cass-migrator-short}]
 
 .{dsbulk}
 * xref:dsbulk:overview:dsbulk-about.adoc[]

@@ -1,6 +1,6 @@
 = Phase 4: Route reads to the target
 
-After you migrate and validate your data in xref:ROOT:migrate-and-validate-data.adoc[Phase 2], and then test your target cluster's production readiness in xref:ROOT:enable-async-dual-reads.adoc[Phase 3], you can configure {product-proxy} to route _all_ read requests to the target cluster instead of the origin cluster.
+After you migrate and validate your data in xref:ROOT:migrate-and-validate-data.adoc[Phase 2], and then test your target cluster's production readiness in xref:ROOT:enable-async-dual-reads.adoc[Phase 3], you can configure {zdm-proxy} to route _all_ read requests to the target cluster instead of the origin cluster.
 
 [IMPORTANT]
 ====
@@ -8,7 +8,7 @@ This phase routes production read requests to the target cluster exclusively.
 Make sure all data is present on the target cluster, and it is prepared to handle full-scale production workloads.
 ====
 
-image::ROOT:migration-phase4ra.svg[In migration Phase 4, {product-proxy}'s read routing switches to the target cluster]
+image::ROOT:migration-phase4ra.svg[In migration Phase 4, {zdm-proxy}'s read routing switches to the target cluster]
 
 == Prerequisites
 
@@ -20,7 +20,7 @@ If your migration was idle for some time after completing Phase 2, or you skippe
 
 * Complete xref:ROOT:enable-async-dual-reads.adoc[Phase 3], and then disable asynchronous dual reads by setting `read_mode` to `PRIMARY_ONLY`.
 +
-If you don't disable asynchronous dual reads, {product-proxy} sends asynchronous, duplicate read requests to your origin cluster.
+If you don't disable asynchronous dual reads, {zdm-proxy} sends asynchronous, duplicate read requests to your origin cluster.
 This is harmless but unnecessary.
 
 [#change-the-read-routing-configuration]
@@ -28,26 +28,26 @@ This is harmless but unnecessary.
 
 Read routing is controlled by a xref:manage-proxy-instances.adoc#change-mutable-config-variable[mutable configuration variable].
 
-. Edit the {product-proxy} core configuration file `vars/zdm_proxy_core_config.yml`.
+. Edit the {zdm-proxy} core configuration file `vars/zdm_proxy_core_config.yml`.
 
 . Change the `primary_cluster` variable to `TARGET`.
 
-. xref:ROOT:manage-proxy-instances.adoc#perform-a-rolling-restart-of-the-proxies[Perform a rolling restart] to apply the configuration change to your entire {product-proxy} deployment.
+. xref:ROOT:manage-proxy-instances.adoc#perform-a-rolling-restart-of-the-proxies[Perform a rolling restart] to apply the configuration change to your entire {zdm-proxy} deployment.
 
 Once the instances are restarted, all reads are routed to the target cluster instead of the origin cluster.
 
-At this point, the target cluster is considered the primary cluster, but {product-proxy} still keeps the origin cluster synchronized through dual writes.
+At this point, the target cluster is considered the primary cluster, but {zdm-proxy} still keeps the origin cluster synchronized through dual writes.
 
 == Verify the read routing change
 
 Once the read routing configuration change has been rolled out, you might want to verify that reads are being sent to the target cluster as expected.
 This isn't required, but it can provide confirmation that the change was applied successfully.
 
-However, it is difficult to assess read routing because the purpose of {product-short} is to align the clusters and provide an invisible proxy layer between your client application and the database clusters.
+However, it is difficult to assess read routing because the purpose of {zdm-short} is to align the clusters and provide an invisible proxy layer between your client application and the database clusters.
 By design, the data is expected to be identical on both clusters, and your client application has no awareness of which cluster is servicing its requests.
 
 For this reason, the only way to manually test read routing is to intentionally write mismatched test data to the clusters.
-Then, you can send a read request to {product-proxy} and see which cluster-specific data is returned, which indicates the cluster that received the read request.
+Then, you can send a read request to {zdm-proxy} and see which cluster-specific data is returned, which indicates the cluster that received the read request.
 There are two ways to do this:
 
 Manually create mismatched tables::
@@ -56,7 +56,7 @@ To manually create mismatched data, you can create a test table on each cluster,
 [IMPORTANT]
 ====
 When you write the mismatched data to the tables, make sure you connect to each cluster directly.
-Don't connect to {product-proxy}, because {product-proxy} will, by design, write the same data to both clusters through dual writes.
+Don't connect to {zdm-proxy}, because {zdm-proxy} will, by design, write the same data to both clusters through dual writes.
 ====
 +
 . Create a small test table on both clusters, such as a simple key/value table.
@@ -84,7 +84,7 @@ For example:
 INSERT INTO test_keyspace.test_table(k, v) VALUES ('1', 'Hello from the target cluster!');
 ----
 +
-. Use `cqlsh` to xref:connect-clients-to-proxy.adoc#_connecting_cqlsh_to_the_zdm_proxy[connect to {product-proxy}], and then issue a read request to your test table.
+. Use `cqlsh` to xref:connect-clients-to-proxy.adoc#_connecting_cqlsh_to_the_zdm_proxy[connect to {zdm-proxy}], and then issue a read request to your test table.
 For example:
 +
 [source,cql]
@@ -104,26 +104,26 @@ For example:
 If you created dedicated test keyspaces, drop the keyspaces as well.
 
 Use the Themis sample client application::
-The xref:connect-clients-to-proxy.adoc#_themis_client[Themis sample client application] connects directly to the origin cluster, the target cluster, and {product-proxy}.
+The xref:connect-clients-to-proxy.adoc#_themis_client[Themis sample client application] connects directly to the origin cluster, the target cluster, and {zdm-proxy}.
 It inserts some test data in its own, dedicated table.
 Then, you can view the results of reads from each source.
 For more information, see the https://github.com/absurdfarce/themis/blob/main/README.md[Themis README].
 
 === System tables cannot validate read routing
 
-Issuing a `DESCRIBE` command or read request to any system table through {product-proxy} cannot sufficiently validate read routing.
+Issuing a `DESCRIBE` command or read request to any system table through {zdm-proxy} cannot sufficiently validate read routing.
 
-When {product-proxy} receives system reads, it intercepts them and always routes them to the origin, regardless of the `primary_cluster` variable.
-In some cases, {product-proxy} partially populates these queries at the proxy level.
+When {zdm-proxy} receives system reads, it intercepts them and always routes them to the origin, regardless of the `primary_cluster` variable.
+In some cases, {zdm-proxy} partially populates these queries at the proxy level.
 
-This means that system reads don't represent how {product-proxy} routes regular read requests.
+This means that system reads don't represent how {zdm-proxy} routes regular read requests.
 
 Although `DESCRIBE` requests aren't system reads, they are also resolved differently than other `DESCRIBE` requests.
 Don't use `DESCRIBE` requests to verify read routing behavior.
 
 == Monitor and troubleshoot read performance
 
-After changing read routing, monitor the performance of {product-proxy} and the target cluster to ensure reads are succeeding and meeting your performance expectations.
+After changing read routing, monitor the performance of {zdm-proxy} and the target cluster to ensure reads are succeeding and meeting your performance expectations.
 
 If read requests fail or perform poorly, you can <<change-the-read-routing-configuration>> back to `ORIGIN` while you investigate the issue.
 
@@ -137,6 +137,6 @@ If your target cluster performs poorly, or you skipped Phase 3 previously, go ba
 == Next steps
 
 You can stay at this phase as long as you like.
-{product-proxy} continues to perform dual writes to both clusters, keeping the origin and target clusters synchronized.
+{zdm-proxy} continues to perform dual writes to both clusters, keeping the origin and target clusters synchronized.
 
 When you're ready to complete the migration and stop using your origin cluster, proceed to xref:ROOT:connect-clients-to-target.adoc[Phase 5] to disable dual writes and cut over to the target cluster exclusively.

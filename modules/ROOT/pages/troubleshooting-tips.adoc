@@ -1,22 +1,22 @@
-= Troubleshoot {product}
-:navtitle: Troubleshoot {product-short}
+= Troubleshoot {zdm}
+:navtitle: Troubleshoot {zdm-short}
 :page-aliases: ROOT:troubleshooting.adoc, ROOT:troubleshooting-scenarios.adoc
-:description: Get help with {product}.
+:description: Get help with {zdm}.
 
-This page provides general troubleshooting advice and describes some common issues you might encounter with {product} ({product-short}).
+This page provides general troubleshooting advice and describes some common issues you might encounter with {zdm}.
 
 For additional assistance, you can <<report-an-issue,report an issue>>, contact your {company} account representative, or contact {support-url}[IBM Support].
 
 [#proxy-logs]
-== Check {product-proxy} logs
+== Check {zdm-proxy} logs
 
 include::ROOT:partial$zdm-logs-intro.adoc[]
 For more information, see xref:ROOT:zdm-logs.adoc[].
 
 [#check-version]
-== Check your {product-proxy} version
+== Check your {zdm-proxy} version
 
-The {product-proxy} version is printed at startup, and it is the first message in the logs, immediately before the long `Parsed configuration` string:
+The {zdm-proxy} version is printed at startup, and it is the first message in the logs, immediately before the long `Parsed configuration` string:
 
 [source,console]
 ----
@@ -24,7 +24,7 @@ time="2023-01-13T13:37:28+01:00" level=info msg="Starting ZDM proxy version 2.1.
 time="2023-01-13T13:37:28+01:00" level=info msg="Parsed configuration: ..."
 ----
 
-You can also pass the `-version` flag to {product-proxy} to print the version.
+You can also pass the `-version` flag to {zdm-proxy} to print the version.
 For example, you can use the following Docker command, replacing `**TAG**` with the `zdm_proxy_image` tag set in `vars/zdm_proxy_container.yml`:
 
 [source,bash,subs="+quotes"]
@@ -32,7 +32,7 @@ For example, you can use the following Docker command, replacing `**TAG**` with 
 docker run --rm datastax/zdm-proxy:**TAG** -version
 ----
 
-The output shows the binary version of {product-proxy} that is currently running:
+The output shows the binary version of {zdm-proxy} that is currently running:
 
 .Result
 [source,console]
@@ -42,15 +42,15 @@ ZDM proxy version 2.1.0
 
 [IMPORTANT]
 ====
-Don't use `--rm` when you launch the {product-proxy} container.
-This flag will prevent you from accessing the logs when {product-proxy} stops or crashes.
+Don't use `--rm` when you launch the {zdm-proxy} container.
+This flag will prevent you from accessing the logs when {zdm-proxy} stops or crashes.
 ====
 
 == Query system.peers and system.local to check for configuration issues
 
-Querying `system.peers` and `system.local` can help you investigate {product-proxy} configuration issues:
+Querying `system.peers` and `system.local` can help you investigate {zdm-proxy} configuration issues:
 
-. xref:ROOT:connect-clients-to-proxy.adoc#connect-cqlsh-to-zdm-proxy[Connect the {cql-shell} to a {product-proxy} instance].
+. xref:ROOT:connect-clients-to-proxy.adoc#connect-cqlsh-to-zdm-proxy[Connect the {cql-shell} to a {zdm-proxy} instance].
 
 . Query `system.peers`:
 +
@@ -66,9 +66,9 @@ SELECT * FROM system.peers
 SELECT * FROM system.local
 ----
 
-. Repeat for each of your {product-proxy} instances.
+. Repeat for each of your {zdm-proxy} instances.
 +
-Because `system.peers` and `system.local` reflect the local {product-proxy} instance's configuration, you must query all instances to get all information and identify potential misconfigurations.
+Because `system.peers` and `system.local` reflect the local {zdm-proxy} instance's configuration, you must query all instances to get all information and identify potential misconfigurations.
 
 . Compare the results from each instance by searching for values related to an error that you are troubleshooting, such as IP addresses or tokens.
 +
@@ -76,14 +76,14 @@ For example, you might compare `cluster_name` to ensure that all instances are c
 
 == Troubleshooting scenarios
 
-The following sections provide troubleshooting advice for specific issues or error messages related to {product}.
+The following sections provide troubleshooting advice for specific issues or error messages related to {zdm}.
 
 [#configuration-changes-arent-applied-by-zdm-automation]
-=== Configuration changes aren't applied by {product-automation}
+=== Configuration changes aren't applied by {zdm-automation}
 
-If some configuration changes aren't applied to your {product-proxy} instances after a rolling restart, this typically means that you modified an immutable configuration variable.
+If some configuration changes aren't applied to your {zdm-proxy} instances after a rolling restart, this typically means that you modified an immutable configuration variable.
 
-Not all {product-proxy} configuration variables can be changed after deployment, with or without a rolling restart.
+Not all {zdm-proxy} configuration variables can be changed after deployment, with or without a rolling restart.
 For a list of variables that you can change on a live deployment, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change mutable configuration variables].
 
 Any configuration variables excluded from the mutable variables list are considered _immutable_, and you must fully redeploy your instances to change them.
@@ -92,9 +92,9 @@ Allowing these values to change from a rolling restart could propagate a misconf
 
 If you change the value of an immutable configuration variable, you must run the `deploy_zdm_proxy.yml` playbook again.
 You can run this playbook as many times as needed.
-Each time, {product-automation} re-creates your entire {product-proxy} deployment with the new configuration.
-However, this doesn't happen in a rolling fashion: The existing {product-proxy} instances are torn down simultaneously, and then they are re-created.
-This results in a brief period of downtime where the entire {product-proxy} deployment is unavailable.
+Each time, {zdm-automation} re-creates your entire {zdm-proxy} deployment with the new configuration.
+However, this doesn't happen in a rolling fashion: The existing {zdm-proxy} instances are torn down simultaneously, and then they are re-created.
+This results in a brief period of downtime where the entire {zdm-proxy} deployment is unavailable.
 
 === Client application throws unsupported protocol version error
 
@@ -132,9 +132,9 @@ For more information, see the documentation for your version of the Java driver:
 
 === Logs report protocol errors but clients connect successfully
 
-`PROTOCOL ERROR` messages in {product-proxy} logs are a normal part of the handshake process while the protocol version is being negotiated.
+`PROTOCOL ERROR` messages in {zdm-proxy} logs are a normal part of the handshake process while the protocol version is being negotiated.
 
-These messages indicate that a protocol version downgrades happened because {product-proxy} or one of the clusters doesn't support the version requested by the client.
+These messages indicate that a protocol version downgrades happened because {zdm-proxy} or one of the clusters doesn't support the version requested by the client.
 
 Protocol version downgrades result from a request by a cluster that doesn't support the version that the client requested.
 include::ROOT:partial$cassandra-protocol-versions.adoc[]
@@ -150,14 +150,14 @@ msg=Invalid or unsupported protocol version (5)).\"\n","stream":"stderr","time":
 
 `PROTOCOL ERROR` messages recorded at a higher log level, especially `level=error`, might indicate a bug because this means that the error occurred outside of the handshake process.
 This is a fatal unexpected error that terminates the connection.
-If you observe this behavior in your logs, <<report-an-issue,report an issue>> so the issue can be investigated by the {product-short} team.
+If you observe this behavior in your logs, <<report-an-issue,report an issue>> so the issue can be investigated by the {zdm-short} team.
 
 === Proxy fails to start due to invalid or unsupported protocol version
 
-If the {product-proxy} logs contain `debug` messages with `Invalid or unsupported protocol version: 3`, this means that one of the origin clusters doesn't support protocol `V3` or later.
+If the {zdm-proxy} logs contain `debug` messages with `Invalid or unsupported protocol version: 3`, this means that one of the origin clusters doesn't support protocol `V3` or later.
 
 Specifically, this happens with {cass-short} 2.0 and {dse-short} 4.6.
-{product-short} cannot be used for these migrations because the {product-proxy} control connections don't perform protocol version negotiation; they only attempt to use `V3`.
+{zdm-short} cannot be used for these migrations because the {zdm-proxy} control connections don't perform protocol version negotiation; they only attempt to use `V3`.
 
 .Example: Invalid or unsupported protocol version logs
 [source,log]
@@ -192,33 +192,33 @@ time="2022-10-01T19:58:15+01:00" level=error msg="Couldn't start proxy, retrying
 
 Authentication errors indicate that credentials are incorrect or have insufficient permissions.
 
-There are three sets of credentials used with {product-proxy}:
+There are three sets of credentials used with {zdm-proxy}:
 
-* Target cluster: Credentials that you set in the {product-proxy} configuration through the `ZDM_TARGET_USERNAME` and `ZDM_TARGET_PASSWORD` settings.
+* Target cluster: Credentials that you set in the {zdm-proxy} configuration through the `ZDM_TARGET_USERNAME` and `ZDM_TARGET_PASSWORD` settings.
 
-* Origin cluster: Credentials that you set in the {product-proxy} configuration through the `ZDM_ORIGIN_USERNAME` and `ZDM_ORIGIN_PASSWORD` settings.
+* Origin cluster: Credentials that you set in the {zdm-proxy} configuration through the `ZDM_ORIGIN_USERNAME` and `ZDM_ORIGIN_PASSWORD` settings.
 
 * Client application: Credentials that the client application sends to the proxy during the connection handshake.
 These are set in the application configuration, not the proxy configuration.
 
 Authentication errors mean that at least one of these three sets of credentials is incorrect or has insufficient permissions.
 
-If the authentication error prevents {product-proxy} from starting, then the issue is in the origin or target cluster credentials.
+If the authentication error prevents {zdm-proxy} from starting, then the issue is in the origin or target cluster credentials.
 The log message shows whether the origin or target handshake failed.
 
-If {product-proxy} starts but the logs contain a message like `Proxy started. Waiting for SIGINT/SIGTERM to shutdown`, then the authentication error occurs when a client application tries to open a connection to the proxy.
+If {zdm-proxy} starts but the logs contain a message like `Proxy started. Waiting for SIGINT/SIGTERM to shutdown`, then the authentication error occurs when a client application tries to open a connection to the proxy.
 This means that the client application itself has invalid credentials, such as an incorrect username/password, expired token, or insufficient permissions.
 
 [TIP]
 ====
 Proxy startup messages are reported at `level=info`.
-If your configured log level is `warning` or `error`, you won't see these messages in the logs, and you must use another method to determine if {product-proxy} started correctly.
-For example, you can check if the {product-proxy} process or Docker container is running, or check for log messages like `Error launching proxy`.
+If your configured log level is `warning` or `error`, you won't see these messages in the logs, and you must use another method to determine if {zdm-proxy} started correctly.
+For example, you can check if the {zdm-proxy} process or Docker container is running, or check for log messages like `Error launching proxy`.
 ====
 
-=== {product-proxy} listens on a custom port, and all applications connect to one proxy instance only
+=== {zdm-proxy} listens on a custom port, and all applications connect to one proxy instance only
 
-If {product-proxy} is listening on a custom port (not 9042), you might see either of the following issues:
+If {zdm-proxy} is listening on a custom port (not 9042), you might see either of the following issues:
 
 * The Grafana dashboard shows only one proxy instance receiving all the connections from the application.
 * Only one proxy instance has log messages like `level=info msg="Accepted connection from 10.4.77.210:39458"`.
@@ -226,7 +226,7 @@ If {product-proxy} is listening on a custom port (not 9042), you might see eithe
 This happens because the application specifies the custom port as part of the contact points using the format
 `**PROXY_IP_ADDRESS**:**CUSTOM_PORT**`.
 
-For example, if the {product-proxy} instances were listening on port 14035, the contact points for the {cass-short} Java driver might be specified as `.addContactPoints("172.18.10.36:14035", "172.18.11.48:14035", "172.18.12.61:14035")`.
+For example, if the {zdm-proxy} instances were listening on port 14035, the contact points for the {cass-short} Java driver might be specified as `.addContactPoints("172.18.10.36:14035", "172.18.11.48:14035", "172.18.12.61:14035")`.
 
 The contact point is the first point of contact to the cluster, but the driver discovers the rest of the nodes through CQL queries.
 However, this discovery process finds the addresses only, not the ports.
@@ -245,7 +245,7 @@ For example, for the Java driver, use `.withPort(**CUSTOM_PORT**)`:
 
 === Proxy logs contain SyntaxError no viable alternative at input 'CALL'
 
-{product-proxy} log messages such as the following indicate that the server doesn't recognize the word "CALL" in the query string,  which typically means that it is a remote procedure call (RPC):
+{zdm-proxy} log messages such as the following indicate that the server doesn't recognize the word "CALL" in the query string,  which typically means that it is a remote procedure call (RPC):
 
 [source,log]
 ----
@@ -264,26 +264,26 @@ For example, in the Java driver, you can set `{java-driver-url}/blob/4.x/core/sr
 
 === Default Grafana credentials don't work
 
-When you deploy the {product-automation} metrics component, a Grafana instance is deployed that _doesn't_ use Grafana's default `admin`/`admin` credentials.
+When you deploy the {zdm-automation} metrics component, a Grafana instance is deployed that _doesn't_ use Grafana's default `admin`/`admin` credentials.
 
-Instead, {product-automation} specifies a custom set of credentials.
+Instead, {zdm-automation} specifies a custom set of credentials.
 
-You can find the credentials for your {product-automation} Grafana instance in the `vars/zdm_monitoring_config.yml` file in the {product-automation} directory.
+You can find the credentials for your {zdm-automation} Grafana instance in the `vars/zdm_monitoring_config.yml` file in the {zdm-automation} directory.
 You can also modify these credentials before deploying the metrics stack.
 
 === Proxy starts but client cannot connect (connection timed out or connection closed)
 
-If the {product-proxy} logs contain messages like `Couldn't connect to`, `context timed out or cancelled while opening connection`, and `context deadline exceeded`, it can indicate that the {product-proxy} couldn't establish a connection with a particular node.
+If the {zdm-proxy} logs contain messages like `Couldn't connect to`, `context timed out or cancelled while opening connection`, and `context deadline exceeded`, it can indicate that the {zdm-proxy} couldn't establish a connection with a particular node.
 
-This can happen because {product-proxy} has connectivity to a specific subset of the nodes.
-The control connection, which is established during {product-proxy} startup, cycles through the nodes until it finds one that it can connect to successfully.
+This can happen because {zdm-proxy} has connectivity to a specific subset of the nodes.
+The control connection, which is established during {zdm-proxy} startup, cycles through the nodes until it finds one that it can connect to successfully.
 
 For client connections, each proxy instance cycles through its assigned nodes only.
 Each proxy instance has a different group of _assigned nodes_, which are a subset of the cluster nodes.
 Generally, these are unique for each proxy instances to avoid interference with load balancing that is already in place at client-side driver level.
 The assigned nodes aren't necessarily contact points: Even discovered nodes undergo assignment to proxy instances.
 
-In the following example, {product-proxy} doesn't have connectivity to `10.0.63.20`, which was chosen as the origin node for the incoming client connection, but it connected to `10.0.63.163` during startup:
+In the following example, {zdm-proxy} doesn't have connectivity to `10.0.63.20`, which was chosen as the origin node for the incoming client connection, but it connected to `10.0.63.163` during startup:
 
 [source,log]
 ----
@@ -313,21 +313,21 @@ ERRO[0066] [openTCPConnectionWithBackoff] Couldn't connect to 10.0.63.20:9042, r
 ERRO[0076] Client Handler could not be created: ORIGIN-CONNECTOR context timed out or cancelled while opening connection to ORIGIN: context deadline exceeded
 ----
 
-To avoid this issue, ensure that a stable network connection exists between the {product-proxy} instances and all nodes of your origin and target clusters in the client application's local datacenter.
+To avoid this issue, ensure that a stable network connection exists between the {zdm-proxy} instances and all nodes of your origin and target clusters in the client application's local datacenter.
 
 === Client application driver takes too long to reconnect to a proxy instance
 
-When a {product-proxy} instance comes back online after being unavailable for some time, then your client application might take too long to reconnect.
+When a {zdm-proxy} instance comes back online after being unavailable for some time, then your client application might take too long to reconnect.
 
-If {product-proxy} doesn't send topology events to the client application, the driver's reconnection policy determines the time required for the driver to reconnect to the {product-proxy} instance.
+If {zdm-proxy} doesn't send topology events to the client application, the driver's reconnection policy determines the time required for the driver to reconnect to the {zdm-proxy} instance.
 
 You can restart the client application to force an immediate reconnection attempt.
 
-If you expect {product-proxy} instances to go down frequently, change the driver's reconnection policy to shorten the interval between reconnection attempts.
+If you expect {zdm-proxy} instances to go down frequently, change the driver's reconnection policy to shorten the interval between reconnection attempts.
 
-=== {astra} DevOps API errors when using {product-automation}
+=== {astra} DevOps API errors when using {zdm-automation}
 
-{product-automation} logs might report errors that contain your {astra} DevOps API endpoint:
+{zdm-automation} logs might report errors that contain your {astra} DevOps API endpoint:
 
 [source,log]
 ----
@@ -337,11 +337,11 @@ Connection failure: Remote end closed connection without response", "redirected"
 ----
 
 This can indicate that the {astra} DevOps API is temporarily unavailable.
-You can either wait to retry the operation, or you can xref:astra-db-serverless:databases:secure-connect-bundle.adoc[download your database's {scb} from the {astra-ui}], and then provide the path the {scb-short} zip file in the xref:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[{product-automation} configuration].
+You can either wait to retry the operation, or you can xref:astra-db-serverless:databases:secure-connect-bundle.adoc[download your database's {scb} from the {astra-ui}], and then provide the path the {scb-short} zip file in the xref:deploy-proxy-monitoring.adoc#cluster-and-core-configuration[{zdm-automation} configuration].
 
 === Metadata service returned not successful status code (4xx or 5xx)
 
-If {product-proxy} doesn't start, the logs might contain messages with `not successful status code`:
+If {zdm-proxy} doesn't start, the logs might contain messages with `not successful status code`:
 
 [source,log]
 ----
@@ -351,7 +351,7 @@ metadata service (Astra) returned not successful status code
 
 There are two possible causes for this:
 
-* The credentials that {product-proxy} is using for {astra-db} don't have sufficient permissions.
+* The credentials that {zdm-proxy} is using for {astra-db} don't have sufficient permissions.
 * The {astra-db} database is hibernated or otherwise unavailable.
 
 To resolve this issue, sign in to the {astra-ui}, and then check the xref:astra-db-serverless:databases:database-statuses.adoc[database status].
@@ -364,7 +364,7 @@ Try using an xref:astra-db-serverless:administration:manage-application-tokens.a
 [[_async_read_timeouts_stream_id_map_exhausted]]
 === Async read timeouts / stream id map exhausted
 
-When dual reads are enabled, you might find the following messages in the {product-proxy} logs:
+When dual reads are enabled, you might find the following messages in the {zdm-proxy} logs:
 
 [source,log]
 ----
@@ -388,63 +388,63 @@ In this case the async connection might not recover.
 
 Starting in version 2.1.0, you can tune the maximum number of stream IDs available per connection.
 The default is 2048, and you can increase it to match your driver configuration with the `xref:manage-proxy-instances.adoc#zdm_proxy_max_stream_ids[zdm_proxy_max_stream_ids]` property.
-If you are running a version prior to 2.1.0, upgrade {product-proxy}.
+If you are running a version prior to 2.1.0, upgrade {zdm-proxy}.
 
-If these errors are constantly written to the log files over a period of minutes or hours, then you likely need to restart the client application _or_ {product-proxy} to fix the issue.
-If you find an error like this, <<report-an-issue,report an issue>> so the {product-short} team can investigate it.
+If these errors are constantly written to the log files over a period of minutes or hours, then you likely need to restart the client application _or_ {zdm-proxy} to fix the issue.
+If you find an error like this, <<report-an-issue,report an issue>> so the {zdm-short} team can investigate it.
 
 [#client-application-closed-connection-errors-every-10-minutes-when-migrating-to-astra-db]
 === Client application closed connection errors every 10 minutes when migrating to {astra-db}
 
-This issue is fixed in {product-proxy} 2.1.0.
+This issue is fixed in {zdm-proxy} 2.1.0.
 
-In {product-proxy} versions earlier than 2.1.0, the logs can report that the {astra-db} `TARGET-CONNECTOR` is disconnected every 10 minutes.
+In {zdm-proxy} versions earlier than 2.1.0, the logs can report that the {astra-db} `TARGET-CONNECTOR` is disconnected every 10 minutes.
 This happens because {astra-db} terminates idle connections after 10 minutes of inactivity.
-In the absence of asynchronous dual reads, the target cluster won't get any traffic when the client application produces only read requests because {product-short} forwards all reads to the origin cluster only.
+In the absence of asynchronous dual reads, the target cluster won't get any traffic when the client application produces only read requests because {zdm-short} forwards all reads to the origin cluster only.
 
-To resolve this issue, {company} recommends that you upgrade your {product-proxy} instances to 2.1.0 or later to take advantage of the heartbeats feature, which keeps the connection alive during periods of inactivity.
-You can tune the heartbeat interval with the `xref:ROOT:manage-proxy-instances.adoc#change-mutable-config-variable[heartbeat_interval_ms]` variable, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you aren't using {product-automation}.
+To resolve this issue, {company} recommends that you upgrade your {zdm-proxy} instances to 2.1.0 or later to take advantage of the heartbeats feature, which keeps the connection alive during periods of inactivity.
+You can tune the heartbeat interval with the `xref:ROOT:manage-proxy-instances.adoc#change-mutable-config-variable[heartbeat_interval_ms]` variable, or by directly setting the `ZDM_HEARTBEAT_INTERVAL_MS` environment variable if you aren't using {zdm-automation}.
 
 If upgrading is impossible, you can try the following alternatives:
 
-* Don't connect the read-only client applications to {product-proxy}, and then manually ensure that these client applications switch reads to the target at any point after all the data has been migrated, validated, and reconciled on the target cluster.
+* Don't connect the read-only client applications to {zdm-proxy}, and then manually ensure that these client applications switch reads to the target at any point after all the data has been migrated, validated, and reconciled on the target cluster.
 
 * Implement a mechanism in your client application that creates a new `Session` periodically to avoid the {astra-db} inactivity timeout.
 
 * Implement a mechanism in your client application to issue a periodic meaningless write request to prevent the {astra-db} connection from becoming idle.
 
-=== Performance degradation with {product-proxy}
+=== Performance degradation with {zdm-proxy}
 
-If you run separate benchmarks against {astra-db} directly, the origin cluster directly, and {product-proxy} with both {astra-db} and the origin cluster, then the results of these tests might show that latency or throughput is worse with {product-proxy} than when connecting to {astra-db} or origin cluster directly.
+If you run separate benchmarks against {astra-db} directly, the origin cluster directly, and {zdm-proxy} with both {astra-db} and the origin cluster, then the results of these tests might show that latency or throughput is worse with {zdm-proxy} than when connecting to {astra-db} or origin cluster directly.
 
-This is observed because {product-short} always increases latency and, depending on the nature of the test, reduces throughput.
-Whether this performance hit is expected or not depends on the difference between the {product-short} test results and the test results with the cluster that performed the worst.
+This is observed because {zdm-short} always increases latency and, depending on the nature of the test, reduces throughput.
+Whether this performance hit is expected or not depends on the difference between the {zdm-short} test results and the test results with the cluster that performed the worst.
 
-Writes through {product-short} require successful acknowledgement from both clusters, whereas reads require only the result from the primary cluster, which is typically the origin cluster.
-This means that if the origin cluster has better performance than the target cluster, then {product-short} will inevitably have worse write performance than the target cluster alone.
+Writes through {zdm-short} require successful acknowledgement from both clusters, whereas reads require only the result from the primary cluster, which is typically the origin cluster.
+This means that if the origin cluster has better performance than the target cluster, then {zdm-short} will inevitably have worse write performance than the target cluster alone.
 
-Although it is typical for latency to increase with {product-proxy}, you can minimize performance degradation with {product-proxy}:
+Although it is typical for latency to increase with {zdm-proxy}, you can minimize performance degradation with {zdm-proxy}:
 
-* Make sure your {product-proxy} infrastructure or configuration doesn't unnecessarily increase latency.
+* Make sure your {zdm-proxy} infrastructure or configuration doesn't unnecessarily increase latency.
 +
-For example, make sure your {product-proxy} instances are in the same availability zone (AZ) as your origin cluster or application instances.
+For example, make sure your {zdm-proxy} instances are in the same availability zone (AZ) as your origin cluster or application instances.
 
 * Understand the impact of simple and batch statements on latency, as compared to typical prepared statements.
 +
-Avoid simple statements with {product-proxy} because they require significant time for {product-proxy} to parse the queries.
+Avoid simple statements with {zdm-proxy} because they require significant time for {zdm-proxy} to parse the queries.
 +
 As an alternative, use prepared statements, which are parsed once, and then reused on subsequent requests if repreparation isn't required.
-However, inefficient use of prepared statements can degrade performance further, but this would be observed even without {product-proxy}.
+However, inefficient use of prepared statements can degrade performance further, but this would be observed even without {zdm-proxy}.
 
 * Increase the number of proxies only if the VMs resources (CPU, RAM or network IO) are near capacity.
-{product-proxy} doesn't use a lot of RAM, but it uses a lot of CPU and network IO.
-Deploying the proxy instances on VMs with faster CPUs and faster network IO might help, but there is no standardized approach to scaling these resources for {product-proxy}.
+{zdm-proxy} doesn't use a lot of RAM, but it uses a lot of CPU and network IO.
+Deploying the proxy instances on VMs with faster CPUs and faster network IO might help, but there is no standardized approach to scaling these resources for {zdm-proxy}.
 This is because the ideal balance of resources depends on the workload type and your environment, such as network/VPC configurations and hardware.
 If you choose to adjust the infrastructure, you must repeat your tests to determine if there was any benefit
 
 === Permission errors related to InsightsRpc
 
-If the {product-proxy} logs contain messages such as the following, it's likely that you have an origin {dse-short} cluster where {metrics-collector} is enabled, and the user named in the logs doesn't have sufficient permissions to report Insights data:
+If the {zdm-proxy} logs contain messages such as the following, it's likely that you have an origin {dse-short} cluster where {metrics-collector} is enabled, and the user named in the logs doesn't have sufficient permissions to report Insights data:
 
 [source,log]
 ----
@@ -452,7 +452,7 @@ time="2023-05-05T19:14:31Z" level=debug msg="Recording ORIGIN-CONNECTOR other er
 time="2023-05-05T19:14:31Z" level=debug msg="Recording TARGET-CONNECTOR other error: ERROR SERVER ERROR (code=ErrorCode ServerError [0x00000000], msg=Unexpected persistence error: Unable to authorize statement com.datastax.bdp.cassandra.cql3.RpcCallStatement)"
 ----
 
-These are reported as `level=debug`, so {product-proxy} isn't affected by them.
+These are reported as `level=debug`, so {zdm-proxy} isn't affected by them.
 
 There are two ways to resolve this issue:
 
@@ -487,12 +487,12 @@ Replace **USER** with the actual username given in the logs.
 [#report-an-issue]
 == Report an issue
 
-To report an issue or get additional support, submit an issue in the {product-short} component GitHub repositories:
+To report an issue or get additional support, submit an issue in the {zdm-short} component GitHub repositories:
 
-* {product-proxy-repo}/issues[{product-proxy} repository]
-* {product-automation-repo}/issues[{product-automation} repository] (includes {product-automation} and {product-utility})
-* {cass-migrator-repo}/issues[{cass-migrator-short} repository]
-* {dsbulk-repo}/issues[{dsbulk-short} repository]
+* {zdm-proxy-repo-url}/issues[{zdm-proxy} repository]
+* {zdm-automation-repo-url}/issues[{zdm-automation} repository] (includes {zdm-automation} and {zdm-utility})
+* {cass-migrator-repo-url}/issues[{cass-migrator-short} repository]
+* {dsbulk-repo-url}/issues[{dsbulk-short} repository]
 
 [IMPORTANT]
 ====
@@ -503,14 +503,14 @@ Don't include any proprietary or private information in issues, pull requests, o
 
 In the issue description, include as much of the following information as possible, and make sure to remove all proprietary and private information before submitting the issue:
 
-* Your <<check-version,{product-proxy} version>>.
+* Your <<check-version,{zdm-proxy} version>>.
 
-* <<proxy-logs,{product-proxy} logs>>, ideally at `DEBUG` level, if you can easily reproduce the issue and tolerate restarting the proxy instances to apply the log level configuration change.
+* <<proxy-logs,{zdm-proxy} logs>>, ideally at `DEBUG` level, if you can easily reproduce the issue and tolerate restarting the proxy instances to apply the log level configuration change.
 
 * Database deployment type ({dse-short}, {hcd-short}, {cass-short}, or {astra-db}) and version for the origin and target clusters.
 The version isn't required for {astra-db}.
 
-* Screenshots of the xref:ROOT:metrics.adoc[{product-proxy} metrics] dashboards from Grafana or your chosen visualization tool.
+* Screenshots of the xref:ROOT:metrics.adoc[{zdm-proxy} metrics] dashboards from Grafana or your chosen visualization tool.
 +
 Direct read access to your metrics dashboard is preferred, if permitted by your security policy.
 This is particularly helpful for performance-related issues.
@@ -534,8 +534,8 @@ For performance-related issues, provide the following additional information:
 This feature is disabled by default.
 To determine if this feature is enabled, check the following variables:
 +
-** If you use {product-automation}, check the Ansible advanced configuration variable `replace_cql_functions`.
-** If you don't use {product-automation}, check the environment variable `ZDM_REPLACE_CQL_FUNCTIONS`.
+** If you use {zdm-automation}, check the Ansible advanced configuration variable `replace_cql_functions`.
+** If you don't use {zdm-automation}, check the environment variable `ZDM_REPLACE_CQL_FUNCTIONS`.
 
 == See also
 
