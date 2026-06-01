@@ -40,7 +40,7 @@
 * xref:sideloader:troubleshoot-sideloader.adoc[]
 
 .{cass-migrator}
-* {cass-migrator-repo}[About {cass-migrator}]
+* {cass-migrator-repo-url}[About {cass-migrator}]
 
 .{dsbulk}
 * xref:dsbulk:overview:dsbulk-about.adoc[]

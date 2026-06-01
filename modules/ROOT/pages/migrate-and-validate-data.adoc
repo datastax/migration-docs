@@ -39,7 +39,7 @@ It offers extensive functionality and configuration options to support large and
 
 You can use {cass-migrator-short} alone, with {product-proxy}, or for data validation after using another data migration tool.
 
-For more information, see the {cass-migrator-repo}[{cass-migrator-short} repository].
+For more information, see the {cass-migrator-repo-url}[{cass-migrator-short} repository].
 
 == {dsbulk}
 
