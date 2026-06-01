@@ -153,7 +153,7 @@ By design, a {product-short} migration involves two separate clusters, and it is
 
 If you use non-idempotent operations, {company} recommends adding a reconciliation phase to your migration before and after xref:ROOT:change-read-routing.adoc[Phase 4].
 This allows you an additional opportunity to resolve any data inconsistencies that are produced by non-idempotent operations.
-The xref:ROOT:cassandra-data-migrator.adoc[{cass-migrator-short}] is ideal for detecting and reconciling these types of inconsistencies.
+{cass-migrator-repo}[{cass-migrator-short}] is ideal for detecting and reconciling these types of inconsistencies.
 
 However, if your application workloads can tolerate inconsistencies produced by LWTs and non-idempotent operations, you might not need to perform any additional validation or reconciliation steps.
 This depends entirely on your application business logic and requirements.

@@ -237,7 +237,7 @@ The number of node snapshots that you uploaded to the migration bucket doesn't d
 The success of the import depends primarily on the validity of the schemas and the data in the snapshots.
 
 . After the import, validate the migrated data to ensure that it matches the data in the origin cluster.
-For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator-short} in validation mode].
+For example, you can {cass-migrator-repo}?tab=readme-ov-file#steps-for-data-validation[run {cass-migrator-short} in validation mode].
 
 ==== Migrate multiple nodes to multiple databases
 
@@ -278,7 +278,7 @@ The number of node snapshots that you uploaded to the migration bucket doesn't d
 The success of the import depends primarily on the validity of the schemas and the data in the snapshots.\
 
 . After the import, validate the migrated data to ensure that it matches the data in the origin cluster.
-For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator-short} in validation mode].
+For example, you can {cass-migrator-repo}?tab=readme-ov-file#steps-for-data-validation[run {cass-migrator-short} in validation mode].
 
 === Multiple migrations to the same database
 
@@ -297,7 +297,7 @@ For example, if you have 10 migration IDs for the same database, you must run 10
 Each import must completely finish before starting the next import.
 
 After all of the imports are complete, validate the migrated data in your target database to ensure that it matches the data in the origin cluster.
-For example, you can xref:ROOT:cassandra-data-migrator.adoc#cdm-validation-steps[run {cass-migrator-short} in validation mode].
+For example, you can {cass-migrator-repo}?tab=readme-ov-file#steps-for-data-validation[run {cass-migrator-short} in validation mode].
 
 == Next steps
 
