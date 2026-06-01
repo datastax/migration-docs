@@ -173,7 +173,7 @@ Your administration server must have SSH access to each node in your origin clus
 
 {company} recommends that you install the following additional software on your administration server:
 
-* {cass-migrator-repo-url}[{cass-migrator-short}] to validate imported data and, with {product-proxy}, reconcile it with the origin cluster.
+* {cass-migrator-repo-url}[{cass-migrator-short}] to validate imported data and, with {zdm-proxy}, reconcile it with the origin cluster.
 * https://jqlang.github.io/jq/[jq] to format JSON responses from the {astra} {devops-api}.
 The {devops-api} commands in this guide use this tool.
 

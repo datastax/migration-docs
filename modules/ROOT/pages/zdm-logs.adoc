@@ -1,35 +1,35 @@
-= Configure and read {product-proxy} logs
-:navtitle: Get {product-short} logs
-:description: Configure and retrieve {product-proxy} logs.
+= Configure and read {zdm-proxy} logs
+:navtitle: Get {zdm-short} logs
+:description: Configure and retrieve {zdm-proxy} logs.
 
 include::ROOT:partial$zdm-logs-intro.adoc[]
 
 [#set-the-zdm-proxy-log-level]
-== Set the {product-proxy} log level
+== Set the {zdm-proxy} log level
 
-Set the {product-proxy} log level to print the messages that you need.
+Set the {zdm-proxy} log level to print the messages that you need.
 
 The default log level is `INFO`, which is adequate for most logging.
 
 If you need more detail for temporary troubleshooting, you can set the log level to `DEBUG`.
 However, this can slightly degrade performance, and {company} recommends that you revert to `INFO` logging as soon as possible.
 
-How you set the log level depends on how you deployed {product-proxy}:
+How you set the log level depends on how you deployed {zdm-proxy}:
 
-* If you used {product-automation} to deploy {product-proxy}, set `log_level` in `vars/zdm_proxy_core_config.yml`, and then run the `rolling_update_zdm_proxy.yml` playbook.
+* If you used {zdm-automation} to deploy {zdm-proxy}, set `log_level` in `vars/zdm_proxy_core_config.yml`, and then run the `rolling_update_zdm_proxy.yml` playbook.
 For more information, see xref:manage-proxy-instances.adoc#change-mutable-config-variable[Change a mutable configuration variable].
 
-* If you didn't use {product-automation} to deploy {product-proxy}, set the `ZDM_LOG_LEVEL` environment variable on each proxy instance, and then restart each instance.
+* If you didn't use {zdm-automation} to deploy {zdm-proxy}, set the `ZDM_LOG_LEVEL` environment variable on each proxy instance, and then restart each instance.
 
-== Get {product-proxy} log files
+== Get {zdm-proxy} log files
 
-If you used {product-automation} to deploy {product-proxy}, then you can get logs for a single proxy instance, and you can use a playbook to retrieve logs for all instances.
+If you used {zdm-automation} to deploy {zdm-proxy}, then you can get logs for a single proxy instance, and you can use a playbook to retrieve logs for all instances.
 
 === View or tail logs for one instance
 
-{product-proxy} runs as a Docker container on each proxy host.
+{zdm-proxy} runs as a Docker container on each proxy host.
 
-To view the logs for a single {product-proxy} instance, connect to a proxy host, and then run the following command:
+To view the logs for a single {zdm-proxy} instance, connect to a proxy host, and then run the following command:
 
 [source,bash]
 ----
@@ -47,7 +47,7 @@ Keep in mind that Docker logs are deleted if the container is re-created.
 
 === Collect logs for multiple instances
 
-{product-automation} has a dedicated playbook, `collect_zdm_proxy_logs.yml`, that you can use to collect logs for all {product-proxy} instances in a deployment.
+{zdm-automation} has a dedicated playbook, `collect_zdm_proxy_logs.yml`, that you can use to collect logs for all {zdm-proxy} instances in a deployment.
 
 You can view the playbook's configuration in `vars/zdm_proxy_log_collection_config.yml`, but no changes are required to run it.
 
@@ -87,9 +87,9 @@ Replace the following:
 * `**TIMESTAMP**`: The timestamp from the name of your log file archive
 * `**DESTINATION_DIRECTORY_ON_JUMPHOST**`: The path to the directory where you want to copy the archive
 
-=== Get logs for deployments that don't use {product-automation}
+=== Get logs for deployments that don't use {zdm-automation}
 
-If you didn't use {product-automation} to deploy {product-proxy}, you must access the logs another way, depending on your deployment configuration and infrastructure.
+If you didn't use {zdm-automation} to deploy {zdm-proxy}, you must access the logs another way, depending on your deployment configuration and infrastructure.
 
 For example, if you used Docker, you can use the following command to export a container's logs to a `log.txt` file:
 
@@ -114,17 +114,17 @@ However, they can help you find the source of a problem by providing information
 
 * `level=warn`: Reports an event that wasn't fatal to the overall process but might indicate an issue with an individual request or connection.
 
-* `level=error`: Indicates an issue with {product-proxy}, the client application, or the clusters.
+* `level=error`: Indicates an issue with {zdm-proxy}, the client application, or the clusters.
 These messages require further examination.
 
 If the meaning of a `warn` or `error` message isn't clear, you can <<report-an-issue,report an issue>>.
 
 == Common log messages
 
-Here are some of the most common messages in the {product-proxy} logs.
+Here are some of the most common messages in the {zdm-proxy} logs.
 
-{product-proxy} startup message::
-If the log level doesn't filter out `info` entries, you can look for a `Proxy started` log message to verify that {product-proxy} started correctly.
+{zdm-proxy} startup message::
+If the log level doesn't filter out `info` entries, you can look for a `Proxy started` log message to verify that {zdm-proxy} started correctly.
 For example:
 +
 [source,json]
@@ -134,8 +134,8 @@ msg=\"Proxy started. Waiting for SIGINT/SIGTERM to shutdown.
 \"\n","stream":"stderr","time":"2023-01-13T11:50:48.522097083Z"}
 ----
 
-{product-proxy} configuration message::
-If the log level doesn't filter out `info` entries, the first few lines of a {product-proxy} log file contain all configuration variables and values in a long JSON string.
+{zdm-proxy} configuration message::
+If the log level doesn't filter out `info` entries, the first few lines of a {zdm-proxy} log file contain all configuration variables and values in a long JSON string.
 +
 The following example log message is truncated for readability:
 +

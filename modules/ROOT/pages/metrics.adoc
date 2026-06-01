@@ -1,28 +1,28 @@
-= Monitor {product-proxy}
+= Monitor {zdm-proxy}
 
-{product-proxy} can gather a large number of metrics that provide you with insight into its health and operations, communication with client applications and clusters, and request handling.
+{zdm-proxy} can gather a large number of metrics that provide you with insight into its health and operations, communication with client applications and clusters, and request handling.
 
 This visibility is important to your migration.
 It builds confidence in the health of your deployment, and it helps you investigate errors or performance degradation.
 
-{company} strongly recommends that you use {product-automation} to deploy the {product-proxy} monitoring stack, or import the pre-built Grafana dashboards into your own monitoring infrastructure.
+{company} strongly recommends that you use {zdm-automation} to deploy the {zdm-proxy} monitoring stack, or import the pre-built Grafana dashboards into your own monitoring infrastructure.
 
-Do this after you xref:ROOT:setup-ansible-playbooks.adoc[set up {product-automation}] and xref:ROOT:deploy-proxy-monitoring.adoc[deploy the {product-proxy} instances].
+Do this after you xref:ROOT:setup-ansible-playbooks.adoc[set up {zdm-automation}] and xref:ROOT:deploy-proxy-monitoring.adoc[deploy the {zdm-proxy} instances].
 
 == Deploy the monitoring stack
 
-{product-automation} enables you to easily set up a self-contained monitoring stack that is preconfigured to collect metrics from your {product-proxy} instances and display them in ready-to-use Grafana dashboards.
+{zdm-automation} enables you to easily set up a self-contained monitoring stack that is preconfigured to collect metrics from your {zdm-proxy} instances and display them in ready-to-use Grafana dashboards.
 
 The monitoring stack is deployed entirely on Docker.
 It includes the following components, all deployed as Docker containers:
 
-* Prometheus node exporter, which runs on each {product-proxy} host and makes OS- and host-level metrics available to Prometheus.
-* Prometheus server, to collect metrics from {product-proxy}, its Golang runtime, and the Prometheus node exporter.
+* Prometheus node exporter, which runs on each {zdm-proxy} host and makes OS- and host-level metrics available to Prometheus.
+* Prometheus server, to collect metrics from {zdm-proxy}, its Golang runtime, and the Prometheus node exporter.
 * Grafana, to visualize the metrics in preconfigured dashboards.
 
-After running the monitoring playbook, you will have a fully configured monitoring stack connected to your {product-proxy} deployment.
+After running the monitoring playbook, you will have a fully configured monitoring stack connected to your {zdm-proxy} deployment.
 
-Aside from xref:ROOT:deployment-infrastructure.adoc[preparing the infrastructure], you don't need to install any {product-proxy} dependencies on the monitoring host machine. The playbook automatically installs all required software packages.
+Aside from xref:ROOT:deployment-infrastructure.adoc[preparing the infrastructure], you don't need to install any {zdm-proxy} dependencies on the monitoring host machine. The playbook automatically installs all required software packages.
 
 . Connect to the Ansible Control Host Docker container.
 You can do this from the jumphost machine by running the following command:
@@ -76,9 +76,9 @@ If you deployed your monitoring stack on another machine, replace `**MONITORING_
 [#call-the-liveliness-and-readiness-endpoints]
 == Call the `liveness` and `readiness` HTTP endpoints
 
-{product-short} metrics provide `/health/liveness` and `/health/readiness` HTTP endpoints, that you can call to determine the state of the {product-proxy} instances.
+{zdm-short} metrics provide `/health/liveness` and `/health/readiness` HTTP endpoints, that you can call to determine the state of the {zdm-proxy} instances.
 
-For example, after deploying the {product-proxy} monitoring stack, you can use the `liveness` and `readiness` HTTP endpoints to confirm that your {product-proxy} instances are running.
+For example, after deploying the {zdm-proxy} monitoring stack, you can use the `liveness` and `readiness` HTTP endpoints to confirm that your {zdm-proxy} instances are running.
 
 === Liveliness endpoint
 
@@ -92,7 +92,7 @@ Replace the following:
 * `**METRICS_PORT**`: The `metrics_port` you set in the `zdm_monitoring_config.yml` file.
 The default port is 14001.
 
-* `**ZDM_PROXY_PRIVATE_IP**`: The private IP address, hostname, or other valid identifier for the {product-proxy} instance you want to check.
+* `**ZDM_PROXY_PRIVATE_IP**`: The private IP address, hostname, or other valid identifier for the {zdm-proxy} instance you want to check.
 
 Example request with variables:
 
@@ -120,7 +120,7 @@ Replace the following:
 * `**METRICS_PORT**`: The `metrics_port` you set in the `zdm_monitoring_config.yml` file.
 The default port is 14001.
 
-* `**ZDM_PROXY_PRIVATE_IP**`: The private IP address, hostname, or other valid identifier for the {product-proxy} instance you want to check.
+* `**ZDM_PROXY_PRIVATE_IP**`: The private IP address, hostname, or other valid identifier for the {zdm-proxy} instance you want to check.
 
 Example request with variables:
 
@@ -157,23 +157,23 @@ Example result:
 }
 ----
 
-== Inspect {product-proxy} metrics
+== Inspect {zdm-proxy} metrics
 
-{product-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format.
+{zdm-proxy} exposes an HTTP endpoint that returns metrics in the Prometheus format.
 
-After you deploy the monitoring stack, the {product-proxy} Grafana dashboards automatically start displaying these metrics as they are scraped from the instances.
+After you deploy the monitoring stack, the {zdm-proxy} Grafana dashboards automatically start displaying these metrics as they are scraped from the instances.
 
-If you already have a Grafana deployment, then you can import the dashboards from the {product-automation-repo}/tree/main/grafana-dashboards[{product-short} dashboard files] in the {product-short} GitHub repository.
+If you already have a Grafana deployment, then you can import the dashboards from the {zdm-automation-repo-url}/tree/main/grafana-dashboards[{zdm-short} dashboard files] in the {zdm-short} GitHub repository.
 
-=== Grafana dashboard for {product-proxy} metrics
+=== Grafana dashboard for {zdm-proxy} metrics
 
-The {product-proxy} metrics dashboard includes proxy level metrics, node level metrics, and asynchronous read requests metrics.
+The {zdm-proxy} metrics dashboard includes proxy level metrics, node level metrics, and asynchronous read requests metrics.
 
-image::ROOT:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of {product-short} metrics for the proxy.]
+image::ROOT:zdm-grafana-proxy-dashboard1.png[Grafana dashboard shows three categories of {zdm-short} metrics for the proxy.]
 
 This dashboard can help you identify issues such as the following:
 
-* If the number of client connections is near 1000 per {product-proxy} instance, be aware that {product-proxy} will start rejecting client connections after accepting 1000 connections.
+* If the number of client connections is near 1000 per {zdm-proxy} instance, be aware that {zdm-proxy} will start rejecting client connections after accepting 1000 connections.
 * If Prepared Statement cache metrics are always increasing, check the **entries** and **misses** metrics.
 * If you have error metrics reporting for specific error types, evaluate these issues on a case-by-case basis.
 
@@ -182,10 +182,10 @@ This dashboard can help you identify issues such as the following:
 
 * **Latency**:
 +
-** **Read Latency**: Total latency measured by {product-proxy} per read request, including post-processing, such as response aggregation.
+** **Read Latency**: Total latency measured by {zdm-proxy} per read request, including post-processing, such as response aggregation.
 This metric has two labels: `reads_origin` and `reads_target`.
 The label that has data depends on which cluster is receiving the reads, which is the current xref:ROOT:faqs.adoc#what-are-origin-target-primary-and-secondary-clusters[primary cluster].
-** **Write Latency**: Total latency measured by {product-proxy} per write request, including post-processing, such as response aggregation.
+** **Write Latency**: Total latency measured by {zdm-proxy} per write request, including post-processing, such as response aggregation.
 This metric is measured as the total latency across both clusters for a single xref:ROOT:components.adoc#how-zdm-proxy-handles-reads-and-writes[bifurcated write request].
 
 * **Throughput**: Follows the same structure as the latency metrics but measures **Read Throughput** and **Write Throughput**.
@@ -196,7 +196,7 @@ This metric is measured as the total latency across both clusters for a single x
 
 * **Prepared Statement cache**:
 +
-** **Cache Misses**: If a prepared statement is sent to {product-proxy} but the statement's `preparedID` isn't present in the node's cache, then {product-proxy} sends an `UNPREPARED` response to the client to reprepare the statement.
+** **Cache Misses**: If a prepared statement is sent to {zdm-proxy} but the statement's `preparedID` isn't present in the node's cache, then {zdm-proxy} sends an `UNPREPARED` response to the client to reprepare the statement.
 This metric tracks the number of times this happens.
 ** **Number of cached prepared statements**
 
@@ -213,7 +213,7 @@ The label that contains data depends on which cluster is currently considered th
 *** `failed_on=both`: The write request failed on both the origin and target clusters.
 
 * **Request Failure Counters**: Number of total request failures.
-Resets if the {product-proxy} instance restarts.
+Resets if the {zdm-proxy} instance restarts.
 +
 ** **Connect Failure Counters**: Has the same labels as the connect failure rate.
 ** **Read Failure Counters**: Has the same labels as the read failure rate.
@@ -227,8 +227,8 @@ For error metrics by error type, see the <<_node_level_metrics,node-level error 
 * **Latency**: Node-level latency metrics report combined read and write latency per cluster, not per request.
 For latency by request type, see <<proxy-level-metrics>>.
 +
-** **Origin**: Latency, as measured by {product-proxy}, up to the point that it received a response from the origin connection.
-** **Target**: Latency, as measured by {product-proxy}, up to the point it received a response from the target connection.
+** **Origin**: Latency, as measured by {zdm-proxy}, up to the point that it received a response from the origin connection.
+** **Target**: Latency, as measured by {zdm-proxy}, up to the point it received a response from the target connection.
 
 * **Throughput**: Same as the node-level latency metrics.
 Reads and writes are combined.
@@ -263,9 +263,9 @@ These metrics track the following information for asynchronous read requests:
 
 === Go runtime metrics dashboard
 
-The Go runtime metrics dashboard is used less often than the {product-proxy} metrics dashboard.
+The Go runtime metrics dashboard is used less often than the {zdm-proxy} metrics dashboard.
 
-This dashboard can be helpful for troubleshooting {product-proxy} performance issues.
+This dashboard can be helpful for troubleshooting {zdm-proxy} performance issues.
 It provides metrics for memory usage, Garbage Collection (GC) duration, open FDs (file descriptors), and the number of goroutines.
 
 image::ROOT:zdm-golang-dashboard.png[Golang metrics dashboard example is shown.]
@@ -279,10 +279,10 @@ Watch for the following problem areas on the Go runtime metrics dashboard:
 
 === System-level metrics dashboard
 
-The {product-short} monitoring stack's system-level dashboard metrics are collected through the Prometheus Node Exporter.
+The {zdm-short} monitoring stack's system-level dashboard metrics are collected through the Prometheus Node Exporter.
 This dashboard contains hardware and OS-level metrics for the host on which the proxy runs.
 This can be useful to check the available resources and identify low-level bottlenecks or issues.
 
 == Next steps
 
-To continue Phase 1 of the migration, xref:ROOT:connect-clients-to-proxy.adoc[connect your client applications to {product-proxy}].
+To continue Phase 1 of the migration, xref:ROOT:connect-clients-to-proxy.adoc[connect your client applications to {zdm-proxy}].

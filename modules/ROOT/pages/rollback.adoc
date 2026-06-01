@@ -8,14 +8,14 @@ image::ROOT:migration-all-phases.svg[Migration phases from start to finish.]
 
 == Phase 5 is the point of no return
 
-After moving your client applications off the {product-proxy} instances (Phase 5), writes are no longer sent to both the origin and target clusters.
+After moving your client applications off the {zdm-proxy} instances (Phase 5), writes are no longer sent to both the origin and target clusters.
 The data on origin cluster is no longer kept up-to-date, and you lose this seamless rollback option.
 This is the point at which you commit to using the target cluster permanently.
-The {product-proxy} deployment can be destroyed, and the origin cluster is no longer needed by the client applications that have been migrated.
+The {zdm-proxy} deployment can be destroyed, and the origin cluster is no longer needed by the client applications that have been migrated.
 
 However, should you decide to move back to the origin cluster later, or if you want to move to a new cluster entirely, you can rerun the same migration process.
 In this case, you use your original target cluster as the new origin cluster, and you set the new target cluster to whatever cluster you want to migrate to (which could even be the original ancestor origin cluster).
 
 == Next steps
 
-After preparing the infrastructure for {product-proxy} and your target cluster, begin xref:ROOT:phase1.adoc[Phase 1] of the migration.
+After preparing the infrastructure for {zdm-proxy} and your target cluster, begin xref:ROOT:phase1.adoc[Phase 1] of the migration.

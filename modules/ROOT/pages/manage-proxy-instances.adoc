@@ -1,13 +1,13 @@
-= Manage your {product-proxy} instances
+= Manage your {zdm-proxy} instances
 
-After you deploy {product-proxy} instances, you might need to perform various management operations, such as rolling restarts, configuration changes, log inspection, version upgrades, and infrastructure changes.
+After you deploy {zdm-proxy} instances, you might need to perform various management operations, such as rolling restarts, configuration changes, log inspection, version upgrades, and infrastructure changes.
 
-If you are using {product-automation}, you can use Ansible playbooks for all of these operations.
+If you are using {zdm-automation}, you can use Ansible playbooks for all of these operations.
 
 [#perform-a-rolling-restart-of-the-proxies]
 == Perform a rolling restart of the proxies
 
-Rolling restarts of the {product-proxy} instances are useful to apply configuration changes or to upgrade the {product-proxy} version without impacting the availability of the deployment.
+Rolling restarts of the {zdm-proxy} instances are useful to apply configuration changes or to upgrade the {zdm-proxy} version without impacting the availability of the deployment.
 
 [IMPORTANT]
 ====
@@ -15,9 +15,9 @@ A rolling restart is a destructive action because it stops the previous containe
 xref:ROOT:zdm-logs.adoc[Collect the logs] before you apply the configuration change if you want to keep them.
 ====
 
-=== Rolling restart with {product-automation}
+=== Rolling restart with {zdm-automation}
 
-If you use {product-automation} to manage your {product-proxy} deployment, you can use a dedicated playbook to perform rolling restarts of all {product-proxy} instances in a deployment:
+If you use {zdm-automation} to manage your {zdm-proxy} deployment, you can use a dedicated playbook to perform rolling restarts of all {zdm-proxy} instances in a deployment:
 
 . Connect to your Ansible Control Host container.
 +
@@ -48,29 +48,29 @@ ubuntu@52772568517c:~$
 ansible-playbook rolling_update_zdm_proxy.yml -i zdm_ansible_inventory
 ----
 
-The rolling restart playbook re-creates each {product-proxy} container, one by one.
-The {product-proxy} deployment remains available at all times, and you can safely use it throughout this operation.
+The rolling restart playbook re-creates each {zdm-proxy} container, one by one.
+The {zdm-proxy} deployment remains available at all times, and you can safely use it throughout this operation.
 If you modified mutable configuration variables, the new containers use the updated configuration files.
 
 The playbook performs the following actions automatically:
 
-. {product-automation} stops one container gracefully, and then waits for it to shut down.
-. {product-automation} re-creates the container, and then starts it.
-. {product-automation} calls the xref:ROOT:metrics.adoc#call-the-liveliness-and-readiness-endpoints[readiness endpoint] to check the container's status:
+. {zdm-automation} stops one container gracefully, and then waits for it to shut down.
+. {zdm-automation} re-creates the container, and then starts it.
+. {zdm-automation} calls the xref:ROOT:metrics.adoc#call-the-liveliness-and-readiness-endpoints[readiness endpoint] to check the container's status:
 +
-* If the status check fails, {product-automation} repeats the check up to six times at 5-second intervals.
-If all six attempts fail, {product-automation} interrupts the entire rolling restart process.
-* If the check succeeds, {product-automation} waits a fixed amount of time, and then moves on to the next container.
+* If the status check fails, {zdm-automation} repeats the check up to six times at 5-second intervals.
+If all six attempts fail, {zdm-automation} interrupts the entire rolling restart process.
+* If the check succeeds, {zdm-automation} waits a fixed amount of time, and then moves on to the next container.
 The default pause between containers is 10 seconds.
 You can change the pause duration in `zdm-proxy-automation/ansible/vars/zdm_playbook_internal_config.yml`.
 
-=== Rolling restart without {product-automation}
+=== Rolling restart without {zdm-automation}
 
-If you don't use {product-automation}, you must manually restart each instance.
+If you don't use {zdm-automation}, you must manually restart each instance.
 
 To avoid downtime, wait for each instance to fully restart and begin receiving traffic before restarting the next instance.
 
-== Inspect {product-proxy} logs
+== Inspect {zdm-proxy} logs
 
 include::ROOT:partial$zdm-logs-intro.adoc[]
 For more information, see xref:ROOT:zdm-logs.adoc[].
@@ -78,11 +78,11 @@ For more information, see xref:ROOT:zdm-logs.adoc[].
 [[change-mutable-config-variable]]
 == Change mutable configuration variables
 
-Some, but not all, configuration variables can be changed after you deploy a {product-proxy} instance.
+Some, but not all, configuration variables can be changed after you deploy a {zdm-proxy} instance.
 
-This section lists the _mutable_ configuration variables that you can change on an existing {product-proxy} deployment.
+This section lists the _mutable_ configuration variables that you can change on an existing {zdm-proxy} deployment.
 
-After you edit mutable variables in their corresponding configuration files (`vars/zdm_proxy_core_config.yml`, `vars/zdm_proxy_cluster_config.yml`, or `vars/zdm_proxy_advanced_config.yml`), you must <<perform-a-rolling-restart-of-the-proxies,perform a rolling restart>> to apply the configuration changes to your {product-proxy} instances.
+After you edit mutable variables in their corresponding configuration files (`vars/zdm_proxy_core_config.yml`, `vars/zdm_proxy_cluster_config.yml`, or `vars/zdm_proxy_advanced_config.yml`), you must <<perform-a-rolling-restart-of-the-proxies,perform a rolling restart>> to apply the configuration changes to your {zdm-proxy} instances.
 
 === Mutable variables in `vars/zdm_proxy_core_config.yml`
 
@@ -93,7 +93,7 @@ At the start of the migration, the primary cluster is the origin cluster because
 After all the existing data has been transferred and validated/reconciled on the new cluster, you can switch the primary cluster to the target cluster.
 
 `read_mode`::
-Determines how reads are handled by {product-proxy}:
+Determines how reads are handled by {zdm-proxy}:
 +
 * **`PRIMARY_ONLY` (default)**: Reads are sent synchronously to the primary cluster only.
 * **`DUAL_ASYNC_ON_SECONDARY`**: Reads are sent synchronously to the primary cluster, and also asynchronously to the secondary cluster.
@@ -104,7 +104,7 @@ This is because asynchronous dual reads are primarily intended to help test prod
 When you are ready to switch `primary_cluster` to `TARGET`, revert `read_mode` to `PRIMARY_ONLY` because there is no need to send writes to both clusters at that point in the migration.
 
 `log_level`::
-Set the {product-proxy} log level as `INFO` (default) or `DEBUG`.
+Set the {zdm-proxy} log level as `INFO` (default) or `DEBUG`.
 +
 Only use `DEBUG` while temporarily troubleshooting an issue.
 Revert to `INFO` as soon as possible because the extra logging can impact performance slightly.
@@ -118,7 +118,7 @@ In `vars/zdm_proxy_cluster_config.yml`, you can change the connection credential
 === Mutable variables in `vars/zdm_proxy_advanced_config.yml`
 
 `zdm_proxy_max_clients_connections`::
-The maximum number of client connections that {product-proxy} can accept.
+The maximum number of client connections that {zdm-proxy} can accept.
 Each client connection results in additional cluster connections and causes the allocation of several in-memory structures.
 A high number of client connections per proxy instance can cause performance degradation, especially at high throughput.
 Adjust this variable to limit the total number of connections on each instance.
@@ -126,10 +126,10 @@ Adjust this variable to limit the total number of connections on each instance.
 Default: `1000`
 
 `replace_cql_functions`::
-Whether {product-proxy} replaces standard `now()` CQL function calls in write requests with an explicit timeUUID value computed at proxy level.
+Whether {zdm-proxy} replaces standard `now()` CQL function calls in write requests with an explicit timeUUID value computed at proxy level.
 +
 * **`false` (default)**: Replacement of `now()` is disabled.
-* **`true`**: {product-proxy} replaces instances of `now()` in write requests with an explicit timeUUID value before sending the write to each cluster.
+* **`true`**: {zdm-proxy} replaces instances of `now()` in write requests with an explicit timeUUID value before sending the write to each cluster.
 +
 [IMPORTANT]
 ====
@@ -149,14 +149,14 @@ For more information, see xref:ROOT:feasibility-checklists.adoc#cql-function-rep
 [[zdm_proxy_request_timeout_ms]]
 `zdm_proxy_request_timeout_ms`::
 Global timeout in milliseconds of a request at proxy level.
-Determines how long {product-proxy} waits for one cluster (for reads) or both clusters (for writes) to reply to a request.
-Upon reaching the timeout limit, {product-proxy} abandons the request and no longer considers it pending, which frees up internal resources to processes other requests.
+Determines how long {zdm-proxy} waits for one cluster (for reads) or both clusters (for writes) to reply to a request.
+Upon reaching the timeout limit, {zdm-proxy} abandons the request and no longer considers it pending, which frees up internal resources to processes other requests.
 +
-When a request is abandoned due to a timeout, {product-proxy} doesn't return any result or error.
+When a request is abandoned due to a timeout, {zdm-proxy} doesn't return any result or error.
 A timeout warning or error is only returned when the client application's own timeout is reached and the request is expired on the driver side.
 +
 Make sure `zdm_proxy_request_timeout_ms` is always greater than your client application's client-side timeout.
-If the client has an especially high timeout because it routinely generates long-running requests, you must increase the `zdm_proxy_request_timeout_ms` timeout accordingly so that the {product-proxy} doesn't abandon requests prematurely.
+If the client has an especially high timeout because it routinely generates long-running requests, you must increase the `zdm_proxy_request_timeout_ms` timeout accordingly so that the {zdm-proxy} doesn't abandon requests prematurely.
 +
 Default: `10000`
 
@@ -169,7 +169,7 @@ Default: `30000`
 Timeout in milliseconds for the initialization (handshake) of the connection that is used solely for asynchronous dual reads between the proxy and the secondary cluster.
 +
 Upon reaching the timeout limit, the asynchronous reads aren't sent because the connection failed to be established.
-This has no impact on the handling of synchronous requests: {product-proxy} continues to handle all synchronous reads and writes as normal against the primary cluster.
+This has no impact on the handling of synchronous requests: {zdm-proxy} continues to handle all synchronous reads and writes as normal against the primary cluster.
 +
 Default: `4000`
 
@@ -182,30 +182,30 @@ Default: `30000`
 `metrics_enabled`::
 Whether to enable metrics collection.
 +
-* **`true` (default)**: {product-proxy} collects and exposes metrics.
-* **`false`**: {product-proxy} metrics collection is completely disabled.
+* **`true` (default)**: {zdm-proxy} collects and exposes metrics.
+* **`false`**: {zdm-proxy} metrics collection is completely disabled.
 This isn't recommended.
 
 [[zdm_proxy_max_stream_ids]]
 `zdm_proxy_max_stream_ids`::
-Set the maximum pool size of available stream IDs managed by {product-proxy} per client connection.
+Set the maximum pool size of available stream IDs managed by {zdm-proxy} per client connection.
 Use the same value as your driver's maximum stream IDs configuration.
 +
 In the CQL protocol, every request has a unique stream ID.
 However, if there are a lot of requests in a given amount of time, errors can occur due to xref:6.9@dse:drivers:speculative-execution.adoc#stream-id-exhaustion[stream ID exhaustion].
 +
 In the client application, the stream IDs are managed internally by the driver.
-For most drivers, the maximum is 2048, which is the same default value used by {product-proxy}.
+For most drivers, the maximum is 2048, which is the same default value used by {zdm-proxy}.
 If you have a custom driver configuration with a higher value, make sure `zdm_proxy_max_stream_ids` matches your driver's maximum stream IDs.
 +
 Default: `2048`
 
 [#blocked-protocol-versions]
 `blocked_protocol_versions`::
-This variable requires {product-proxy} and {product-automation} version 2.4.0 or later.
+This variable requires {zdm-proxy} and {zdm-automation} version 2.4.0 or later.
 +
-Use `blocked_protocol_versions` to block specific {cass-short} Native Protocol versions that are supported by {product-proxy}.
-Blocking unsupported versions isn't necessary because {product-proxy} automatically rejects those versions.
+Use `blocked_protocol_versions` to block specific {cass-short} Native Protocol versions that are supported by {zdm-proxy}.
+Blocking unsupported versions isn't necessary because {zdm-proxy} automatically rejects those versions.
 +
 Allowed values include the following:
 +
@@ -237,7 +237,7 @@ For more information, see xref:ROOT:feasibility-checklists.adoc#supported-cassan
 
 === Deprecated mutable variables
 
-Deprecated variables will be removed in a future {product-proxy} release.
+Deprecated variables will be removed in a future {zdm-proxy} release.
 Replace them with their recommended alternatives as soon as possible.
 
 `forward_client_credentials_to_origin`::
@@ -249,7 +249,7 @@ Whether to use the credentials provided by the client application to connect to 
 +
 This deprecated variable is no longer functional.
 Instead, the expected credentials are based on the authentication requirements of the origin and target clusters.
-For more information, see xref:ROOT:connect-clients-to-proxy.adoc#connect-applications-to-zdm-proxy[Connect applications to {product-proxy}].
+For more information, see xref:ROOT:connect-clients-to-proxy.adoc#connect-applications-to-zdm-proxy[Connect applications to {zdm-proxy}].
 
 [#change-immutable-configuration-variables]
 == Change immutable configuration variables
@@ -262,15 +262,15 @@ ansible-playbook deploy_zdm_proxy.yml -i zdm_ansible_inventory
 ----
 
 You can re-run the deployment playbook as many times as necessary.
-However, this playbook decommissions and re-creates _all_ {product-proxy} instances simultaneously.
-This results in a brief period of time where the entire {product-proxy} deployment is offline because no instances are available.
+However, this playbook decommissions and re-creates _all_ {zdm-proxy} instances simultaneously.
+This results in a brief period of time where the entire {zdm-proxy} deployment is offline because no instances are available.
 
-For more information, see xref:ROOT:troubleshooting-tips.adoc#configuration-changes-arent-applied-by-zdm-automation[Configuration changes aren't applied by {product-automation}].
+For more information, see xref:ROOT:troubleshooting-tips.adoc#configuration-changes-arent-applied-by-zdm-automation[Configuration changes aren't applied by {zdm-automation}].
 
 [[_upgrade_the_proxy_version]]
 == Upgrade the proxy version
 
-The same playbook that you use for configuration changes can also be used to upgrade the {product-proxy} version in a rolling fashion.
+The same playbook that you use for configuration changes can also be used to upgrade the {zdm-proxy} version in a rolling fashion.
 All containers are re-created with the given image version.
 
 [IMPORTANT]
@@ -279,10 +279,10 @@ A version change is a destructive action because the rolling restart playbook re
 xref:ROOT:zdm-logs.adoc[Collect the logs] before you run the playbook if you want to keep them.
 ====
 
-To check your current {product-proxy} version, see xref:ROOT:troubleshooting-tips.adoc#check-version[Check your {product-proxy} version].
+To check your current {zdm-proxy} version, see xref:ROOT:troubleshooting-tips.adoc#check-version[Check your {zdm-proxy} version].
 
 . In `vars/zdm_proxy_container.yml`, set `zdm_proxy_image` to the desired tag.
-For available tags, see the https://hub.docker.com/r/datastax/zdm-proxy/tags[{product-proxy} Docker Hub repository].
+For available tags, see the https://hub.docker.com/r/datastax/zdm-proxy/tags[{zdm-proxy} Docker Hub repository].
 +
 [source,yaml,subs="+quotes"]
 ----
@@ -296,36 +296,36 @@ For example:
 zdm_proxy_image: datastax/zdm-proxy:2.3.4
 ----
 
-. <<perform-a-rolling-restart-of-the-proxies,Perform a rolling restart>> to update all {product-proxy} instances to the new version.
+. <<perform-a-rolling-restart-of-the-proxies,Perform a rolling restart>> to update all {zdm-proxy} instances to the new version.
 
-== Scale {product-proxy} instances
+== Scale {zdm-proxy} instances
 
-The process for scaling your {product-proxy} instance depends on whether you use {product-automation} to manage your deployment.
+The process for scaling your {zdm-proxy} instance depends on whether you use {zdm-automation} to manage your deployment.
 
-=== Scale with {product-automation}
+=== Scale with {zdm-automation}
 
-{product-automation} doesn't provide a way to scale operations up or down in a rolling fashion.
-If you are using {product-automation} and you need a larger {product-proxy} deployment, you can create a new deployment, or you can add instances to an existing deployment.
+{zdm-automation} doesn't provide a way to scale operations up or down in a rolling fashion.
+If you are using {zdm-automation} and you need a larger {zdm-proxy} deployment, you can create a new deployment, or you can add instances to an existing deployment.
 
 Create a new deployment (recommended)::
-This option is the recommended way to scale your {product-proxy} deployment because it requires no downtime.
+This option is the recommended way to scale your {zdm-proxy} deployment because it requires no downtime.
 +
-Create a new {product-proxy} deployment, and then reconfigure your client application to use the new instance:
+Create a new {zdm-proxy} deployment, and then reconfigure your client application to use the new instance:
 +
-. xref:ROOT:setup-ansible-playbooks.adoc[Create a new {product-proxy} deployment] with the desired topology on a new set of machines.
-. Change the contact points in the application configuration so that the application instances point to the new {product-proxy} deployment.
+. xref:ROOT:setup-ansible-playbooks.adoc[Create a new {zdm-proxy} deployment] with the desired topology on a new set of machines.
+. Change the contact points in the application configuration so that the application instances point to the new {zdm-proxy} deployment.
 . Perform a rolling restart of the application instances to apply the new contact point configuration.
 +
 The rolling restart ensures there is no interruption of service.
 The application instances switch seamlessly from the old deployment to the new one, and they are able to serve requests immediately.
-. After restarting all application instances, you can safely remove the old {product-proxy} deployment.
+. After restarting all application instances, you can safely remove the old {zdm-proxy} deployment.
 
 Add instances to an existing deployment::
 This option requires manual configuration and a small amount of downtime.
 +
-Change the topology of your existing {product-proxy} deployment, and then restart the entire deployment to apply the change:
+Change the topology of your existing {zdm-proxy} deployment, and then restart the entire deployment to apply the change:
 +
-. Amend the inventory file so that it contains one line for each machine where you want to deploy a {product-proxy} instance.
+. Amend the inventory file so that it contains one line for each machine where you want to deploy a {zdm-proxy} instance.
 +
 For example, if you want to add three nodes to a deployment with six nodes, then the amended inventory file must contain nine total IPs, including the six existing IPs and the three new IPs.
 +
@@ -337,51 +337,51 @@ ansible-playbook deploy_zdm_proxy.yml -i zdm_ansible_inventory
 ----
 +
 Rerunning the playbook stops the existing instances, destroys them, and then creates and starts a new deployment with new instances based on the amended inventory.
-This results in a brief interruption of service for your entire {product-proxy} deployment.
+This results in a brief interruption of service for your entire {zdm-proxy} deployment.
 
-=== Scale without {product-automation}
+=== Scale without {zdm-automation}
 
-If you aren't using {product-automation}, use these steps to add, change, or remove {product-proxy} instances.
+If you aren't using {zdm-automation}, use these steps to add, change, or remove {zdm-proxy} instances.
 
 Add an instance::
 +
-. Prepare and configure the new {product-proxy} instances appropriately based on your other instances.
-Make sure the new instance's configuration references all planned {product-proxy} cluster nodes.
-. On all {product-proxy} instances, add the new instance's address to the `ZDM_PROXY_TOPOLOGY_ADDRESSES` environment variable.
+. Prepare and configure the new {zdm-proxy} instances appropriately based on your other instances.
+Make sure the new instance's configuration references all planned {zdm-proxy} cluster nodes.
+. On all {zdm-proxy} instances, add the new instance's address to the `ZDM_PROXY_TOPOLOGY_ADDRESSES` environment variable.
 Make sure to include all new nodes.
-. On the new {product-proxy} instance, set the `ZDM_PROXY_TOPOLOGY_INDEX` to the next sequential integer after the greatest one in your existing deployment.
-. Perform a rolling restart of all {product-proxy} instances, one at a time.
+. On the new {zdm-proxy} instance, set the `ZDM_PROXY_TOPOLOGY_INDEX` to the next sequential integer after the greatest one in your existing deployment.
+. Perform a rolling restart of all {zdm-proxy} instances, one at a time.
 
 Vertically scale existing instances::
-Use these steps to increase or decrease resources for existing {product-proxy} instances, such as CPU or memory.
+Use these steps to increase or decrease resources for existing {zdm-proxy} instances, such as CPU or memory.
 To avoid downtime, perform the following steps on one instance at a time:
 +
-. Stop the first {product-proxy} instance that you want to modify.
+. Stop the first {zdm-proxy} instance that you want to modify.
 . Modify the instance's resources as required.
 Make sure the instance's IP address remains the same.
 If the IP address changes, you must treat it as a new instance; follow the steps to **Add an instance** instead.
-. Restart the modified {product-proxy} instance.
+. Restart the modified {zdm-proxy} instance.
 . Wait until the instance starts, and then confirm that it is receiving traffic.
 . Repeat these steps to modify each additional instance, one at a time.
 
 Remove an instance::
 +
-. On all {product-proxy} instances, remove the unused instance's address from the `ZDM_PROXY_TOPOLOGY_ADDRESSES` environment variable.
-. Perform a rolling restart of all remaining {product-proxy} instances.
+. On all {zdm-proxy} instances, remove the unused instance's address from the `ZDM_PROXY_TOPOLOGY_ADDRESSES` environment variable.
+. Perform a rolling restart of all remaining {zdm-proxy} instances.
 . Clean up resources used by the removed instance, such as the container or VM.
 
 === Proxy topology addresses enable failover and high availability
 
-When you configure a {product-proxy} deployment, either through {product-automation} or manually-managed {product-proxy} instances, you specify the addresses of your instances.
+When you configure a {zdm-proxy} deployment, either through {zdm-automation} or manually-managed {zdm-proxy} instances, you specify the addresses of your instances.
 These are populated in the `ZDM_PROXY_TOPOLOGY_ADDRESSES` variable, either manually or automatically depending on how you manage your instances.
 
 {cass-short} drivers look up nodes on a cluster by querying the `system.peers` table.
-{product-proxy} uses the topology addresses to effectively respond to the driver's request for connection nodes.
-If there are no topology addresses specified, {product-proxy} defaults to a single-instance configuration.
-This means that driver connections use only that one {product-proxy} instance rather than all instances in your {product-proxy} deployment.
+{zdm-proxy} uses the topology addresses to effectively respond to the driver's request for connection nodes.
+If there are no topology addresses specified, {zdm-proxy} defaults to a single-instance configuration.
+This means that driver connections use only that one {zdm-proxy} instance rather than all instances in your {zdm-proxy} deployment.
 
-If that one instance goes down, {product-proxy} won't know that there are other instances available, and your application can experience an outage.
-Additionally, if you need to restart {product-proxy} instances, and there is only one instance specified in the topology addresses, your migration will have downtime while that one instance restarts.
+If that one instance goes down, {zdm-proxy} won't know that there are other instances available, and your application can experience an outage.
+Additionally, if you need to restart {zdm-proxy} instances, and there is only one instance specified in the topology addresses, your migration will have downtime while that one instance restarts.
 
 == See also
 

@@ -1,13 +1,13 @@
-= Deploy and connect {product-proxy}
+= Deploy and connect {zdm-proxy}
 
-After you plan and prepare for your migration, you can start Phase 1 of the migration process where you deploy and connect {product-proxy}.
+After you plan and prepare for your migration, you can start Phase 1 of the migration process where you deploy and connect {zdm-proxy}.
 
-image::ROOT:migration-phase1ra.svg[In migration Phase 1, you deploy {product-proxy} instances, and then connect your client applications to the proxies]
+image::ROOT:migration-phase1ra.svg[In migration Phase 1, you deploy {zdm-proxy} instances, and then connect your client applications to the proxies]
 
 To complete Phase 1, do the following:
 
 . xref:setup-ansible-playbooks.adoc[].
 . xref:deploy-proxy-monitoring.adoc[].
-. Deploy the xref:metrics.adoc[{product-proxy} monitoring stack] and learn about {product-proxy} metrics.
+. Deploy the xref:metrics.adoc[{zdm-proxy} monitoring stack] and learn about {zdm-proxy} metrics.
 . xref:connect-clients-to-proxy.adoc[].
-. Learn how to xref:manage-proxy-instances.adoc[manage {product-proxy} instances], including scaling, upgrading, reconfiguring, and restarting them.
+. Learn how to xref:manage-proxy-instances.adoc[manage {zdm-proxy} instances], including scaling, upgrading, reconfiguring, and restarting them.

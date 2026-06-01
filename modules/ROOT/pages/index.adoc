@@ -16,7 +16,7 @@
     <p class="!mb-2">Bulk-load terabytes while shifting traffic with little or no downtime, securely and reliably.</p>
 
     <div class="flex gap-2 !mt-4">
-      xref:ROOT:introduction.adoc[Get started with {product},role="btn btn-primary btn-solid"]
+      xref:ROOT:introduction.adoc[Get started with {zdm},role="btn btn-primary btn-solid"]
       xref:ROOT:components.adoc[Compare tools,role="btn btn-neutral btn-outlined"]
     </div>
 
@@ -43,11 +43,11 @@ svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-
 
     svg:common:ROOT:icons/datastax/cloud-backup-restore.svg[role="mx-auto max-w-xs md:mx-0 lg:max-w-none"]
 
-    <h3 class="discrete !text-h2 !m-0">{product-proxy}</h3>
+    <h3 class="discrete !text-h2 !m-0">{zdm-proxy}</h3>
 
-    <p>To support live migrations, {product-proxy} orchestrates activity-in-transition on your clusters, allowing your applications to run while you migrate data.</p>
+    <p>To support live migrations, {zdm-proxy} orchestrates activity-in-transition on your clusters, allowing your applications to run while you migrate data.</p>
     <div class="landing-a mt-auto">
-        xref:ROOT:introduction.adoc[Get started with {product-short}]
+        xref:ROOT:introduction.adoc[Get started with {zdm-short}]
     </div>
 
   </div>
