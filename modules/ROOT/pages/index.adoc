@@ -24,7 +24,7 @@
   <div class="hidden lg:block flex basis-1/2 relative">
 ++++
 
-svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-y-1/2 right-0 w-full"]
+svg::astra-db-serverless:sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-y-1/2 right-0 w-full"]
 
 ++++
 </div>
@@ -60,7 +60,7 @@ svg::sideloader:astra-migration-toolkit.svg[role="absolute bottom-1/2 translate-
     <p>{sstable-sideloader} is a service running in {astra-db} that directly imports data from snapshots of your existing {cass-short}-based cluster.</p>
 
     <div class="landing-a mt-auto">
-        xref:sideloader:sideloader-overview.adoc[Get started with {sstable-sideloader}]
+        xref:astra-db-serverless:sideloader:sideloader-overview.adoc[Get started with {sstable-sideloader}]
     </div>
 
   </div>
