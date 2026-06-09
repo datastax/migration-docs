@@ -32,6 +32,13 @@ endif::[]
 // External URLs:
 :asciidoc-language: https://docs.asciidoctor.org/asciidoc/latest/
 
+[IMPORTANT]
+====
+🚨*This repository is deprecated and archived*🚨
+
+The content in this repository has moved to https://github.com/riptano/docs-common.
+====
+
 This repository contains the source files for the {company} {product} documentation.
 
 toc::[]
